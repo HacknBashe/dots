@@ -1,0 +1,30 @@
+[alias]
+        # Colorful master log listing
+    l = log --oneline --decorate --graph --date=relative --abbrev-commit --pretty=format:'%C(yellow)%h%Creset - %s %C(red)%d%Creset %Cgreen(%cr BY %ae)%Creset'
+        # ...with tree commits
+    la = !git l --all
+[color]
+    ui = true
+[core]
+    autocrlf = false
+    preloadindex = true
+    fscache = true
+    symlinks = false
+    whitespace = -trailing-space,space-before-tab
+[fetch]
+    prune = true
+[http]
+    sslVerify = false
+[log]
+    decorate = short
+[pack]
+    useSparse = true
+[pager]
+    branch = false
+[push]
+    default = current
+[include]
+    path = ~/.gitconfig.local
+[user]
+    name = Nick Hackford
+    email = nhackford@wayfair.com
