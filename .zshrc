@@ -100,7 +100,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-alias dots='/usr/bin/git --git-dir=$HOME/codebase/dots --work-tree=$HOME'
+alias dots='/usr/bin/git --git-dir=$HOME/.config/dots --work-tree=$HOME'
 
 alias vim="nvim"
 alias vi="nvim"
