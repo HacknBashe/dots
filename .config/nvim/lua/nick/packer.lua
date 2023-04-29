@@ -60,6 +60,9 @@ return require("packer").startup(function(use)
 		end,
 	})
 
+	-- Tmux
+	use("christoomey/vim-tmux-navigator")
+
 	-- Git
 	use("tpope/vim-fugitive")
 	use({

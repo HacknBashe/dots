@@ -4,3 +4,6 @@
 [submodule ".nvm"]
 	path = .nvm
 	url = https://github.com/nvm-sh/nvm.git
+[submodule "/Users/nh470c/.tmux/plugins/tpm"]
+	path = /Users/nh470c/.tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm
