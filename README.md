@@ -17,5 +17,8 @@ Install Git
 Install nvim
 `brew install neovim`
 
+Install ripgrep
+`brew install ripgrep`
+
 Install Tmux
 `brew install tmux`

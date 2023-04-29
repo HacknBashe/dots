@@ -73,6 +73,9 @@ end
 
 require("nvim-tree").setup({
 	disable_netrw = true,
+	hijack_netrw = true,
+	hijack_cursor = true,
+	sync_root_with_cwd = true,
 	renderer = {
 		icons = {
 			glyphs = {
