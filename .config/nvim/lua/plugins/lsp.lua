@@ -6,9 +6,6 @@ return {
 		config = function()
 			-- This is where you modify the settings for lsp-zero
 			-- Note: autocompletion settings will not take effect
-
-			-- require('lsp-zero.settings').preset({})
-
 			local lsp = require("lsp-zero")
 
 			lsp.preset("recommended")
@@ -23,12 +20,17 @@ return {
 
 			lsp.set_preferences({
 				suggest_lsp_servers = false,
-				sign_icons = {
-					error = "E",
-					warn = "W",
-					hint = "H",
-					info = "I",
-				},
+			})
+
+			lsp.set_sign_icons({
+				error = "",
+				warn = "",
+				hint = "",
+				info = "",
+				-- error = "✘",
+				-- warn = "▲",
+				-- hint = "⚑",
+				-- info = "»",
 			})
 
 			vim.diagnostic.config({
@@ -50,7 +52,6 @@ return {
 			-- Here is where you configure the autocompletion settings.
 			-- The arguments for .extend() have the same shape as `manage_nvim_cmp`:
 			-- https://github.com/VonHeikemen/lsp-zero.nvim/blob/v2.x/doc/md/api-reference.md#manage_nvim_cmp
-
 			require("lsp-zero.cmp").extend()
 
 			-- -- And you can configure cmp even more, if you want to.
@@ -60,8 +61,6 @@ return {
 			local cmp_select = { behavior = cmp.SelectBehavior.Select }
 			cmp.setup({
 				window = {
-					-- completion = "single",
-					-- documentation = "single",
 					completion = cmp.config.window.bordered(),
 					documentation = cmp.config.window.bordered(),
 				},
@@ -101,18 +100,6 @@ return {
 		},
 		config = function()
 			-- This is where all the LSP shenanigans will live
-
-			-- local lsp = require('lsp-zero')
-
-			-- lsp.on_attach(function(client, bufnr)
-			--   lsp.default_keymaps({buffer = bufnr})
-			-- end)
-
-			-- -- (Optional) Configure lua language server for neovim
-			-- require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
-
-			-- lsp.setup()
-			--
 			local lsp = require("lsp-zero")
 
 			lsp.on_attach(function(_, bufnr)
@@ -151,6 +138,8 @@ return {
 			end)
 
 			lsp.setup()
+
+			vim.keymap.set("n", "<leader>vm", ":Mason <CR>", {}, "view mason")
 
 			vim.diagnostic.config({
 				virtual_text = true,
