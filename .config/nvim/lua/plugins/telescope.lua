@@ -19,16 +19,16 @@ return {
 		-- 	builtin.grep_string({ search = vim.fn.input("Grep > ") })
 		-- end)
 		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>")
-		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles <CR>", {}, "find recent files")
-		vim.keymap.set("n", "<leader>fh", "<<cmd> Telescope help_tags <CR>", {}, "help page")
+		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles <CR>")
+		vim.keymap.set("n", "<leader>fh", "<cmd> Telescope help_tags <CR>")
 
 		-- ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "find all" },
 		-- ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "find buffers" },
 		-- ["<leader>fz"] = { "<cmd> Telescope current_buffer_fuzzy_find <CR>", "find in current buffer" },
 
 		-- git
-		vim.keymap.set("n", "<leader>gc", "<cmd> Telescope git_commits <CR>", {}, "git commits")
-		vim.keymap.set("n", "<leader>gs", "<cmd> Telescope git_status <CR>", {}, "git status")
+		vim.keymap.set("n", "<leader>gc", "<cmd> Telescope git_commits <CR>")
+		vim.keymap.set("n", "<leader>gs", "<cmd> Telescope git_status <CR>")
 
 		require("telescope").load_extension("fzf")
 		require("telescope").setup({
