@@ -59,10 +59,12 @@ return {
 			local cmp_action = require("lsp-zero.cmp").action()
 			local lspkind = require("lspkind")
 			local cmp_select = { behavior = cmp.SelectBehavior.Select }
+
+			local myborder = cmp.config.window.bordered()
 			cmp.setup({
 				window = {
-					completion = cmp.config.window.bordered(),
-					documentation = cmp.config.window.bordered(),
+					completion = myborder,
+					documentation = myborder,
 				},
 				formatting = {
 					format = lspkind.cmp_format(),
