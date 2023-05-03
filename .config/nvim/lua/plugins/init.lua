@@ -7,4 +7,5 @@ return {
 	"tpope/vim-commentary",
 	-- sa to surround
 	"machakann/vim-sandwich",
+	"mg979/vim-visual-multi",
 }
