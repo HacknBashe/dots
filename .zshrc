@@ -108,16 +108,23 @@ alias vi="nvim"
 compinit
 
 # Path
+addToPathFront() {
+  if [[ "$PATH" != *"$1"* ]]; then
+    export PATH=$1:$PATH
+  fi
+}
 # Default bin
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+addToPathFront $HOME/bin:/usr/local/bin
+addToPathFront $HOME/bin/.local/scripts
+addToPathFront $HOME/.yarn/bin
+addToPathFront $HOME/.config/yarn/global/node_modules/.bin
+
 # Load Node Version Manager
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Yarn
-export PATH="$HOME/.yarn/bin:$PATH"
-export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+bindkey -s ^f "tmux-sessionizer.sh\n"
 
 if [ -f ~/.zshrc.local ]; then
   # Import local settings

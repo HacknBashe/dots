@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Nightfox colors for Tmux
-# Style: nordfox
+# Heavily modified nordfox
 # Upstream: https://github.com/edeneast/nightfox.nvim/raw/main/extra/nordfox/nightfox_tmux.tmux
 
 %hidden thm_fg="#7e8188"
