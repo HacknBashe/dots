@@ -18,13 +18,18 @@ autocmd("TextYankPost", {
 	end,
 })
 
+function PositionHelp()
+	vim.cmd("wincmd L")
+	vim.api.nvim_win_set_width(0, 80)
+end
+
 autocmd("BufEnter", {
 	group = yank_group,
 	pattern = "",
 	callback = function()
+		-- local rightmost_win = winnr('r')
 		if vim.api.nvim_buf_get_option(0, "buftype") == "help" then
-			vim.cmd("wincmd L")
-			vim.api.nvim_win_set_width(0, 80)
+			vim.defer_fn(PositionHelp, 1)
 		end
 	end,
 })

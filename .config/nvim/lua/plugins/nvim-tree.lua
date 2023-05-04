@@ -4,7 +4,6 @@ return {
 	dependencies = { "nvim-tree/nvim-web-devicons" }, -- optional
 	config = function()
 		local treeApi = require("nvim-tree.api")
-		-- vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 		vim.keymap.set("n", "<leader>ft", function()
 			treeApi.tree.open({ current_window = true, find_file = true })
 		end)
@@ -29,7 +28,9 @@ return {
 			vim.keymap.set("n", "<CR>", function()
 				local previous_alternate_file = vim.fn.expand("#")
 				treeApi.node.open.replace_tree_buffer()
-				vim.cmd('let @# = "' .. previous_alternate_file .. '"')
+				if string.len(previous_alternate_file) == 0 then
+					vim.cmd('let @# = "' .. previous_alternate_file .. '"')
+				end
 			end, opts("Open: In Place"))
 			vim.keymap.set("n", "<Tab>", api.node.open.preview, opts("Open Preview"))
 			vim.keymap.set("n", ">", api.node.navigate.sibling.next, opts("Next Sibling"))

@@ -2,7 +2,8 @@ return {
 	"goolord/alpha-nvim",
 	config = function()
 		local dashboard = require("alpha.themes.dashboard")
-		dashboard.section.header.val = {
+		local theta = require("alpha.themes.theta")
+		theta.header.val = {
 			"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀           ⠀⠀⠀⠀⢀⣀⣀⣀⡀⠀⠀⠀",
 			"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣶⣾⣿⣿⣿⣿⡏⠀⠀⠀⠀",
 			"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠀⠀⠀⠀",
@@ -26,9 +27,9 @@ return {
 			"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠷⣄⠀⠀⠀⠀⠀",
 			"   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⠀⠀⠀⠀",
 		}
-		dashboard.section.header.opts.hl = "Constant"
+		theta.header.opts.hl = "Constant"
 
-		dashboard.section.buttons.val = {
+		theta.buttons.val = {
 			dashboard.button("e", "  New file", "<cmd>ene <CR>"),
 			dashboard.button("SPC f t", "󰙅  File tree"),
 			dashboard.button("SPC f f", "  Find file"),
@@ -40,6 +41,7 @@ return {
 
 		vim.keymap.set("n", "<leader>va", ":Alpha <CR>", {}, "view alpha")
 
-		require("alpha").setup(dashboard.opts)
+		-- require("alpha").setup(dashboard.opts)
+		require("alpha").setup(theta.config)
 	end,
 }

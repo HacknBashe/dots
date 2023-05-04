@@ -47,5 +47,5 @@ set -g status-right "#[fg=$thm_black,bg=$thm_bg,nobold,nounderscore,noitalics]$T
 setw -g window-status-activity-style "underscore,fg=$thm_fg,bg=$thm_black"
 setw -g window-status-separator ""
 setw -g window-status-style "NONE,fg=$thm_fg,bg=$thm_bg"
-setw -g window-status-format "#[fg=$thm_black,bg=$thm_bg,nobold,nounderscore,noitalics]$BR#[fg=$thm_fg,bg=$thm_black] #I $FS #W #F #[fg=$thm_black,bg=$thm_bg,nobold,nounderscore,noitalics]$TL"
+setw -g window-status-format "#[fg=$thm_black,bg=$thm_bg,nobold,nounderscore,noitalics]$BR#[fg=$thm_fg,bg=$thm_black] #I $FS #(echo #{pane_current_path} | sed 's#$HOME#~#g') #F #W #[fg=$thm_black,bg=$thm_bg,nobold,nounderscore,noitalics]$TL"
 setw -g window-status-current-format "#[fg=$thm_grey,bg=$thm_bg,nobold,nounderscore,noitalics]$BR#[fg=$thm_black,bg=$thm_grey,bold] #I $FS #W #F #[fg=$thm_grey,bg=$thm_bg,nobold,nounderscore,noitalics]$TL"
