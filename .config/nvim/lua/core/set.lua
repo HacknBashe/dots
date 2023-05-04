@@ -18,6 +18,17 @@ autocmd("TextYankPost", {
 	end,
 })
 
+autocmd("BufEnter", {
+	group = yank_group,
+	pattern = "",
+	callback = function()
+		if vim.api.nvim_buf_get_option(0, "buftype") == "help" then
+			vim.cmd("wincmd L")
+			vim.api.nvim_win_set_width(0, 80)
+		end
+	end,
+})
+
 vim.opt.nu = true
 vim.opt.relativenumber = true
 

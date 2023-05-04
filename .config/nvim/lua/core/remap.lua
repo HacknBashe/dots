@@ -17,6 +17,7 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("x", "<leader>p", '"_dP')
 -- past on new line
 vim.keymap.set("n", "<leader>o", ":put<CR>")
+vim.keymap.set("n", "<leader>O", ":-1put<CR>")
 
 -- super delete
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
@@ -26,7 +27,14 @@ vim.keymap.set("n", "<leader>y", '"+y')
 vim.keymap.set("n", "<leader>Y", '"+Y')
 vim.keymap.set("v", "<leader>y", '"+y')
 
+-- Start find and replace with selected text
+function FindAndReplace()
+	vim.api.nvim_input(":%s/" .. vim.fn.getreg("r") .. "/")
+end
+vim.api.nvim_set_keymap("v", "<Leader>r", '"ry:lua FindAndReplace()<CR>', { noremap = true, silent = false })
+
 -- vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+--
 
 -- navigate through errors
 -- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
