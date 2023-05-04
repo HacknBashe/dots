@@ -28,6 +28,10 @@
 # %hidden RIGHT1=
 # %hidden RIGHT2=
 
+# Set the foreground/background color for the active window
+setw -g window-style bg=default
+setw -g window-active-style bg=default
+
 set -g mode-style "fg=$thm_black,bg=$thm_grey"
 set -g message-style "fg=$thm_yellow,bg=$thm_bg"
 set -g message-command-style "fg=$thm_pink,bg=$thm_bg"
@@ -41,11 +45,10 @@ set -g status-right-length "100"
 set -g status-left-style NONE
 set -g status-right-style NONE
 
-
 set -g status-left "#[fg=$thm_black,bg=$thm_blue,bold] #S #[fg=$thm_blue,bg=$thm_bg,nobold,nounderscore,noitalics]$TL"
 set -g status-right "#[fg=$thm_black,bg=$thm_bg,nobold,nounderscore,noitalics]$TR#[fg=$thm_blue,bg=$thm_black] #{?client_prefix,#[fg=$thm_orange],#[fg=$thm_cyan]}󰄚 #[fg=$thm_black,bg=$thm_grey,nobold,nounderscore,noitalics]$BL#[fg=$thm_black,bg=$thm_grey] %Y-%m-%d $BS %I:%M %p #[fg=$thm_blue,bg=$thm_grey,nobold,nounderscore,noitalics]$TR#[fg=$thm_black,bg=$thm_blue,bold] #h "
 setw -g window-status-activity-style "underscore,fg=$thm_fg,bg=$thm_black"
 setw -g window-status-separator ""
 setw -g window-status-style "NONE,fg=$thm_fg,bg=$thm_bg"
 setw -g window-status-format "#[fg=$thm_black,bg=$thm_bg,nobold,nounderscore,noitalics]$BR#[fg=$thm_fg,bg=$thm_black] #I $FS #(echo #{pane_current_path} | sed 's#$HOME#~#g') #F #W #[fg=$thm_black,bg=$thm_bg,nobold,nounderscore,noitalics]$TL"
-setw -g window-status-current-format "#[fg=$thm_grey,bg=$thm_bg,nobold,nounderscore,noitalics]$BR#[fg=$thm_black,bg=$thm_grey,bold] #I $FS #(echo #{pane_current_path} | sed 's#$HOME#~#g') #F #W #[fg=$thm_grey,bg=$thm_bg,nobold,nounderscore,noitalics]$TL"
+setw -g window-status-current-format "#[fg=$thm_grey,bg=$thm_bg,nobold,nounderscore,noitalics]$BR#[fg=$thm_black,bg=$thm_grey,bold] #F $FS #W #[fg=$thm_grey,bg=$thm_bg,nobold,nounderscore,noitalics]$TL"
