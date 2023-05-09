@@ -40,7 +40,7 @@ Install other dependencies
 Install [Nerdfont](https://www.nerdfonts.com/)
 
 
-`sudo dnf install neovim ripgrep fzf tmux btop`
+`sudo dnf install neovim alacritty ripgrep fzf tmux btop`
 
 
 `brew install neovim ripgrep fzf tmux btop`
