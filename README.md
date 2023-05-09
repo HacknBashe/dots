@@ -1,34 +1,26 @@
 # dots
-my dotfiles repo
+my dotfiles
 
-## Things to do on setup
-
-use this alias to interact with this repo
-`alias dots=/usr/bin/git --git-dir=$HOME/.config/dots --work-tree=$HOME`
-
-usage example
-`dots checkout`
+## Setup Instructions
 
 Install Brew
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 
 Install Git
-`brew install git`
 `git --version` # on macOS this will prompt to install xcode tools that come with git
+`brew install git`
+`sudo dnf install git`
+`sudo apt install git`
 
+Setup dots
+`git clone --bare https://www.github.com/nickhackford/dots $HOME/.dots`
+use this alias to interact with this repo
+`alias dots="/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME"`
+`echo ".dots" >> .gitignore`
+`dots checkout`
+`dots config --local status.showUntrackedFiles no`
+
+Install other dependencies
 Install [Nerdfont](https://www.nerdfonts.com/)
-
-Install nvim
-`brew install neovim`
-
-Install ripgrep
-`brew install ripgrep`
-
-Install fzf
-`brew install fzf`
-
-Install Tmux
-`brew install tmux`
-
-Install Btop
-`brew install btop`
+`sudo dnf install neovim ripgrep fzf tmux btop`
+`brew install neovim ripgrep fzf tmux btop`

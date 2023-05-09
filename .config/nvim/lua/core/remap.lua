@@ -32,6 +32,7 @@ function FindAndReplace()
 	vim.api.nvim_input(":%s/" .. vim.fn.getreg("r") .. "/")
 end
 vim.api.nvim_set_keymap("v", "<Leader>r", '"ry:lua FindAndReplace()<CR>', { noremap = true, silent = false })
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 --
@@ -41,6 +42,3 @@ vim.api.nvim_set_keymap("v", "<Leader>r", '"ry:lua FindAndReplace()<CR>', { nore
 -- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 -- vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 -- vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
-
--- find and replace?
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
