@@ -4,7 +4,7 @@ return {
 	config = function()
 		-- nnoremap mymap :lua require"bufferline".go_to(num)<CR>
 		local bufferline = require("bufferline")
-		vim.keymap.set("n", "<leader>bd", ":bd")
+		vim.keymap.set("n", "<leader>bd", ":bd<CR>")
 
 		vim.keymap.set("n", "<leader>b1", ":lua require('bufferline').go_to(1)<CR>")
 		vim.keymap.set("n", "<leader>b2", ":lua require('bufferline').go_to(2)<CR>")
