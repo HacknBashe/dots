@@ -12,8 +12,8 @@ return {
 		vim.keymap.set("n", "<leader>b4", ":lua require('bufferline').go_to(4)<CR>")
 		vim.keymap.set("n", "<leader>b5", ":lua require('bufferline').go_to(5)<CR>")
 
-		vim.keymap.set("n", "<leader>bh", ":BufferLineCyclePrev<CR>")
-		vim.keymap.set("n", "<leader>bl", ":BufferLineCycleNext<CR>")
+		vim.keymap.set("n", "<leader>bj", ":BufferLineCyclePrev<CR>")
+		vim.keymap.set("n", "<leader>bk", ":BufferLineCycleNext<CR>")
 
 		bufferline.setup()
 	end,

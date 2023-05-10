@@ -130,3 +130,5 @@ if [ -f ~/.zshrc.local ]; then
   # Import local settings
     source ~/.zshrc.local
 fi
+
+source /Users/nh470c/.docker/init-zsh.sh || true # Added by Docker Desktop
