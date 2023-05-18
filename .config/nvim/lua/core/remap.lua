@@ -20,7 +20,7 @@ vim.keymap.set("n", "<leader>o", ":put<CR>")
 vim.keymap.set("n", "<leader>O", ":-1put<CR>")
 
 -- super delete
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+vim.keymap.set({ "n", "v" }, "<leader>x", [["_d]])
 
 -- yank to clipboard
 vim.keymap.set("n", "<leader>y", '"+y')

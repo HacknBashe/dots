@@ -102,7 +102,6 @@ source $ZSH/oh-my-zsh.sh
 
 alias dots="/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME"
 
-alias vim="nvim"
 alias vi="nvim"
 
 compinit
