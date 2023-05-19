@@ -31,6 +31,6 @@ my dotfiles
 ### Install other dependencies
 [Nerdfont](https://www.nerdfonts.com/)
 
-`sudo dnf install neovim alacritty ripgrep fzf tmux btop`
+`sudo dnf install neofetch neovim alacritty ripgrep nodejs make gcc gcc-c++ fzf tmux btop`
 
 `brew install neovim alacritty ripgrep fzf tmux btop`
