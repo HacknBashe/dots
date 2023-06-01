@@ -28,7 +28,7 @@ return {
 			vim.keymap.set("n", "<CR>", function()
 				local previous_alternate_file = vim.fn.expand("#")
 				treeApi.node.open.replace_tree_buffer()
-				if string.len(previous_alternate_file) == 0 then
+				if string.len(previous_alternate_file) ~= 0 then
 					vim.cmd('let @# = "' .. previous_alternate_file .. '"')
 				end
 			end, opts("Open: In Place"))
