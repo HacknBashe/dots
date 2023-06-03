@@ -1,3 +1,6 @@
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 return {
 	-- File tree
 	"nvim-tree/nvim-tree.lua",
@@ -5,7 +8,7 @@ return {
 	config = function()
 		local treeApi = require("nvim-tree.api")
 		vim.keymap.set("n", "<leader>ft", function()
-			treeApi.tree.open({ current_window = true, find_file = true })
+			treeApi.tree.open({ find_file = true })
 		end)
 
 		local function on_attach(bufnr)
@@ -25,13 +28,7 @@ return {
 			vim.keymap.set("n", "<C-v>", api.node.open.vertical, opts("Open: Vertical Split"))
 			vim.keymap.set("n", "<C-x>", api.node.open.horizontal, opts("Open: Horizontal Split"))
 			vim.keymap.set("n", "<BS>", api.node.navigate.parent_close, opts("Close Directory"))
-			vim.keymap.set("n", "<CR>", function()
-				local previous_alternate_file = vim.fn.expand("#")
-				treeApi.node.open.replace_tree_buffer()
-				if string.len(previous_alternate_file) ~= 0 then
-					vim.cmd('let @# = "' .. previous_alternate_file .. '"')
-				end
-			end, opts("Open: In Place"))
+			vim.keymap.set("n", "<CR>", api.node.open.edit, opts("Open"))
 			vim.keymap.set("n", "<Tab>", api.node.open.preview, opts("Open Preview"))
 			vim.keymap.set("n", ">", api.node.navigate.sibling.next, opts("Next Sibling"))
 			vim.keymap.set("n", "<", api.node.navigate.sibling.prev, opts("Previous Sibling"))
@@ -82,6 +79,17 @@ return {
 			hijack_netrw = true,
 			hijack_cursor = true,
 			sync_root_with_cwd = true,
+			view = {
+				float = {
+					enable = true,
+					open_win_config = {
+						relative = "win",
+						col = vim.api.nvim_list_uis()[1].width - 1,
+						row = vim.api.nvim_list_uis()[1].height - 1,
+						anchor = "SE",
+					},
+				},
+			},
 			renderer = {
 				icons = {
 					glyphs = {
