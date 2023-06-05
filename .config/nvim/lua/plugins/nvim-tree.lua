@@ -86,6 +86,7 @@ return {
 						relative = "win",
 						col = vim.api.nvim_list_uis()[1].width - 1,
 						row = vim.api.nvim_list_uis()[1].height - 1,
+						width = 50,
 						anchor = "SE",
 					},
 				},
