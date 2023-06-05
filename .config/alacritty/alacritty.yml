@@ -62,13 +62,13 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background and no title bar buttons
-  decorations: buttonless
+  decorations: full
 
   # Background opacity
   #
   # Window opacity as a floating point number from `0.0` to `1.0`.
   # The value `0.0` is completely transparent and `1.0` is opaque.
-  opacity: 0.91
+  opacity: 0.92
 
   # Startup Mode (changes require restart)
   #
@@ -201,6 +201,7 @@ colors:
   # Default colors
   primary:
    background: '0x2e3440'
+   background: '0x1c2028'
    foreground: '0xcdcecf'
 
     # Bright and dim foreground colors
