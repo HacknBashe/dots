@@ -1,6 +1,9 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+# Prevent nvm from slowing down zsh
+zstyle ':omz:plugins:nvm' lazy yes
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -70,7 +73,10 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(
+  git
+  nvm
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -117,11 +123,6 @@ addToPathFront $HOME/bin:/usr/local/bin
 addToPathFront $HOME/bin/.local/scripts
 addToPathFront $HOME/.yarn/bin
 addToPathFront $HOME/.config/yarn/global/node_modules/.bin
-
-# Load Node Version Manager
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 bindkey -s ^f "tmux-sessionizer.sh\n"
 
