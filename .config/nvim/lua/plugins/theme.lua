@@ -28,6 +28,12 @@ return {
 		"EdenEast/nightfox.nvim",
 		config = function()
 			require("nightfox").setup({
+				palettes = {
+					nordfox = {
+						-- bg1 = "#000000", -- Black background
+						bg0 = "none", -- Alt backgrounds (floats, statusline, ...)
+					},
+				},
 				options = {
 					transparent = true,
 				},
