@@ -42,6 +42,9 @@ addToPathFront $HOME/bin/.local/scripts
 addToPathFront $HOME/.yarn/bin
 addToPathFront $HOME/.config/yarn/global/node_modules/.bin
 
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+
 alias dots="/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME"
 alias vi="nvim"
 
