@@ -48,7 +48,8 @@ set -g status-left-style NONE
 set -g status-right-style NONE
 
 set -g status-left "#[fg=$thm_blue,bg=$thm_bg,bold] #S $LEFT2"
-set -g status-right "#[fg=$thm_blue,bg=$thm_bg]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_cyan]}󰄚 #[fg=$thm_grey,bg=$thm_bg]$RIGHT2 %Y-%m-%d $RIGHT2 %I:%M %p #[fg=$thm_blue,bg=$thm_bg]$RIGHT2#[bold] #h "
+# set -g status-right "#[fg=$thm_blue,bg=$thm_bg]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_cyan]}󰄚 #[fg=$thm_grey,bg=$thm_bg]$RIGHT2 %Y-%m-%d $RIGHT2 %I:%M %p #[fg=$thm_blue,bg=$thm_bg]$RIGHT2#[bold] #h "
+set -g status-right "#[bg=$thm_bg]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_blue]}%y-%m-%d $RIGHT2 %H:%M:%S "
 setw -g window-status-activity-style "underscore,fg=$thm_fg,bg=$thm_black"
 setw -g window-status-separator ""
 setw -g window-status-format "#[fg=$thm_fg,bg=$thm_bg] #I $LEFT2 #(echo #{pane_current_path} | sed 's#$HOME#~#g') #F #W $LEFT2"

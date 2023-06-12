@@ -5,8 +5,31 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-autoload -Uz compinit
-source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
+autoload -U compinit && compinit
+
+source ~/.config/powerlevel10k/powerlevel10k.zsh-theme
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+source ~/.config/powerlevel10k/config/p10k-robbyrussell.zsh
+source ~/.config/.p10k.zsh
+
+# history setup
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+HISTFILE=$HOME/.zhistory
+SAVEHIST=1000
+HISTSIZE=999
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt EXTENDED_HISTORY
+
+# Start typing + [Up-Arrow] - fuzzy find history forward
+autoload -U up-line-or-beginning-search
+zle -N up-line-or-beginning-search
+bindkey '\e[A' up-line-or-beginning-search
+# Start typing + [Down-Arrow] - fuzzy find history backward
+autoload -U down-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '\e[B' down-line-or-beginning-search
 
 # Path
 addToPathFront() {
@@ -22,12 +45,7 @@ addToPathFront $HOME/.config/yarn/global/node_modules/.bin
 alias dots="/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME"
 alias vi="nvim"
 
-compinit
-
 bindkey -s ^f "tmux-sessionizer.sh\n"
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 if [ -f ~/.zshrc.local ]; then
   # Import local settings

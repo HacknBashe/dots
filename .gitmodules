@@ -13,3 +13,6 @@
 [submodule ".zsh/powerlevel10k"]
 	path = .zsh/powerlevel10k
 	url = https://github.com/romkatv/powerlevel10k.git
+[submodule ".config/powerlevel10k"]
+	path = .config/powerlevel10k
+	url = https://github.com/romkatv/powerlevel10k.git
