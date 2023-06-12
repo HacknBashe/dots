@@ -1,4 +1,7 @@
 # Manually written to extend robbyrussel
+# Tip: Looking for a nice color? Here's a one-liner to print colormap.
+#
+#   for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
 () {
   # Green prompt symbol if the last command succeeded.
   typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS}_FOREGROUND=green
