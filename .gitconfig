@@ -1,5 +1,6 @@
 [alias]
     c = clone
+    ca = commit --amend
     co = checkout
     fmm = fetch origin main:main
     l = log --oneline --decorate --graph --date=relative --abbrev-commit --pretty=format:'%C(yellow)%h%Creset - %s %C(red)%d%Creset %Cgreen(%cr BY %ae)%Creset'
