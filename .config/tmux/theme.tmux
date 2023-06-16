@@ -39,7 +39,7 @@ set -g status-right-length "100"
 set -g status-left-style NONE
 set -g status-right-style NONE
 
-set -g status-left "#{pane_input_off}#[fg=$thm_blue,bg=$thm_bg,bold] #S $LEFT2"
+set -g status-left "#[fg=$thm_blue,bg=$thm_bg,bold] #S $LEFT2"
 set -g status-right "#[bg=$thm_bg]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_blue]}%y-%m-%d $RIGHT2 %H:%M:%S "
 setw -g window-status-activity-style "underscore,fg=$thm_fg,bg=$thm_black"
 setw -g window-status-separator ""
