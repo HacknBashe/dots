@@ -104,6 +104,10 @@ return {
 			-- This is where all the LSP shenanigans will live
 			local lsp = require("lsp-zero")
 
+			local getOpts = function(bufnr, desc)
+				return { buffer = bufnr, remap = false, desc = desc }
+			end
+
 			lsp.on_attach(function(_, bufnr)
 				local opts = { buffer = bufnr, remap = false }
 
@@ -118,7 +122,7 @@ return {
 				end, opts)
 				vim.keymap.set("n", "<leader>vd", function()
 					vim.diagnostic.open_float()
-				end, opts)
+				end, getOpts(bufnr, "View Diagnostic Float"))
 				vim.keymap.set("n", "[d", function()
 					vim.diagnostic.goto_next()
 				end, opts)

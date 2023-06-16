@@ -1,8 +1,15 @@
 [alias]
-        # Colorful master log listing
+    c = clone
+    co = checkout
+    fmm = fetch origin main:main
     l = log --oneline --decorate --graph --date=relative --abbrev-commit --pretty=format:'%C(yellow)%h%Creset - %s %C(red)%d%Creset %Cgreen(%cr BY %ae)%Creset'
-        # ...with tree commits
     la = !git l --all
+    pf = push origin -f
+    puf = push origin -uf
+    rh = reset --hard
+    rb = rebase
+    rbm = rebase main
+    s = status
 [color]
     ui = true
 [core]

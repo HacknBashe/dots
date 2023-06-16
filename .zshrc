@@ -36,7 +36,7 @@ addToPathFront() {
   fi
 }
 addToPathFront $HOME/bin:/usr/local/bin
-addToPathFront $HOME/bin/.local/scripts
+addToPathFront $HOME/.local/bin/scripts
 addToPathFront $HOME/.yarn/bin
 addToPathFront $HOME/.config/yarn/global/node_modules/.bin
 
