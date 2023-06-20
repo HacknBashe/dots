@@ -24,13 +24,23 @@ my dotfiles
 
 `dots checkout`
 
-`git submodule update --init`
+`dots submodule update --init`
 
 `dots config --local status.showUntrackedFiles no`
+
 
 ### Install other dependencies
 [Nerdfont](https://www.nerdfonts.com/)
 
-`sudo dnf install neofetch neovim alacritty ripgrep nodejs make gcc gcc-c++ fzf tmux btop`
+`sudo dnf install`
 
-`brew install neovim alacritty ripgrep fzf tmux btop`
+`pacman -S`
+
+`brew install`
+
+`zsh neofetch neovim alacritty ripgrep nodejs make gcc gcc-c++ fzf tmux btop`
+
+
+### Final config
+
+`chsh -s /bin/zsh`
