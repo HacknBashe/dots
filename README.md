@@ -40,6 +40,7 @@ my dotfiles
 
 `zsh neofetch neovim alacritty ripgrep nodejs make gcc gcc-c++ fzf tmux btop`
 
+### Install Brave
 
 ### Final config
 

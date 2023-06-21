@@ -21,7 +21,7 @@ setopt HIST_EXPIRE_DUPS_FIRST
 setopt EXTENDED_HISTORY
 
 # vi mode
-bindkey -v
+# bindkey -v
 export KEYTIMEOUT=1
 source ~/.config/zsh/vi-mode.plugin.zsh
 VI_MODE_SET_CURSOR=true
@@ -42,7 +42,8 @@ addToPathFront() {
   fi
 }
 addToPathFront $HOME/bin:/usr/local/bin
-addToPathFront $HOME/.local/bin/scripts
+addToPathFront $HOME/.local/bin
+addToPathFront $HOME/.local/scripts
 addToPathFront $HOME/.yarn/bin
 addToPathFront $HOME/.config/yarn/global/node_modules/.bin
 
