@@ -22,9 +22,9 @@ setopt EXTENDED_HISTORY
 
 # vi mode
 # bindkey -v
-export KEYTIMEOUT=1
-source ~/.config/zsh/vi-mode.plugin.zsh
-VI_MODE_SET_CURSOR=true
+# export KEYTIMEOUT=1
+# source ~/.config/zsh/vi-mode.plugin.zsh
+# VI_MODE_SET_CURSOR=true
 
 # Start typing + [Up-Arrow] - fuzzy find history forward
 autoload -U up-line-or-beginning-search
