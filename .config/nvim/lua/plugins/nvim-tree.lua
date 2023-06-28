@@ -83,10 +83,11 @@ return {
 					enable = true,
 					open_win_config = {
 						relative = "win",
+						anchor = "SE",
 						col = vim.api.nvim_list_uis()[1].width - 1,
 						row = vim.api.nvim_list_uis()[1].height - 1,
-						width = 50,
-						anchor = "SE",
+						width = math.floor(vim.api.nvim_list_uis()[1].width / 3),
+						height = vim.api.nvim_list_uis()[1].height,
 					},
 				},
 			},
