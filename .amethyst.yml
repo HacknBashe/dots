@@ -31,7 +31,7 @@ layouts:
   # - floating
   - widescreen-tall
   # - widescreen-tall-right
-  # - bsp
+  - bsp
 
 # First mod (default option + shift).
 mod1:
@@ -205,7 +205,7 @@ swap-cw:
 # Toggle the floating state of the currently focused window; i.e., if it was floating make it tiled and if it was tiled make it floating.
 toggle-float:
   mod: mod1
-  key: t
+  key: f
 
 # Display the layout HUD with the current layout on each screen.
 display-current-layout:
@@ -213,9 +213,9 @@ display-current-layout:
   key: i
 
 # Turn on or off tiling entirely.
-toggle-tiling:
-  mod: mod1
-  key: t
+# toggle-tiling:
+#   mod: mod1
+#   key: t
 
 # Rerun the current layout's algorithm.
 reevaluate-windows:

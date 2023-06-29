@@ -70,14 +70,7 @@ return {
 					format = lspkind.cmp_format(),
 				},
 				mapping = {
-					["<C-Space>"] = cmp.mapping.complete(),
-					["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-					["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
-					["<C-y>"] = cmp.mapping.confirm({ select = true }),
-					["<C-f>"] = cmp_action.luasnip_jump_forward(),
-					["<C-b>"] = cmp_action.luasnip_jump_backward(),
-					-- cmp_mappings["<Tab>"] = nil
-					-- cmp_mappings["<S-Tab>"] = nil
+					["<Tab>"] = cmp.mapping.confirm({ select = true }),
 				},
 			})
 		end,
