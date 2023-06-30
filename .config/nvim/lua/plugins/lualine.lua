@@ -47,6 +47,10 @@ local my_theme = {
 	},
 }
 
+local function codeium()
+	return vim.fn["codeium#GetStatusString"]()
+end
+
 return {
 	"nvim-lualine/lualine.nvim",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -75,7 +79,8 @@ return {
 				},
 				lualine_b = { "branch", "diff" },
 				lualine_c = { { "filename", path = 1 } },
-				lualine_x = { "diagnostics", "filetype" },
+				lualine_x = { "diagnostics", codeium, "filetype" },
+				-- lualine_x = { "diagnostics", "require'codeium'.GetStatusString()", "filetype" },
 				lualine_y = { "progress" },
 				lualine_z = { "location" },
 			},
