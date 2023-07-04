@@ -45,6 +45,7 @@ addToPathFront $HOME/bin:/usr/local/bin
 addToPathFront $HOME/.local/bin
 addToPathFront $HOME/.local/scripts
 addToPathFront $HOME/.yarn/bin
+addToPathFront $HOME/.cargo/bin
 addToPathFront $HOME/.config/yarn/global/node_modules/.bin
 
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
