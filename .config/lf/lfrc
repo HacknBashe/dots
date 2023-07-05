@@ -4,6 +4,9 @@ set drawbox true
 set icons true
 set ignorecase true
 
+set previewer ~/.config/lf/preview.sh
+set cleaner ~/.config/lf/cleaner.sh
+
 # Custom Functions
 cmd open ${{
     case $(file --mime-type "$f" -bL) in

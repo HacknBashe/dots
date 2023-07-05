@@ -54,8 +54,12 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
+export CLICOLOR=1
+export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
+
 alias dots="/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME"
 alias vi="nvim"
+alias ll="ls -alG"
 
 bindkey -s ^f "tmux-sessionizer.sh\n"
 
