@@ -63,22 +63,22 @@ config.color_scheme = "My Nordfox"
 config.window_background_opacity = 0.92
 
 config.keys = {
-  {
-    key = 't',
-    mods = 'ALT',
-    action = wezterm.action.ShowLauncherArgs { flags = 'WORKSPACES|TABS' },
-  },
+	{
+		key = "t",
+		mods = "ALT",
+		action = wezterm.action.ShowLauncherArgs({ flags = "WORKSPACES|TABS" }),
+	},
 }
 
-wezterm.on('update-right-status', function(window, pane)
-  local date = wezterm.strftime '%Y-%m-%d %H:%M:%S'
+wezterm.on("update-right-status", function(window, pane)
+	local date = wezterm.strftime("%Y-%m-%d %H:%M:%S")
 
-  -- Make it italic and underlined
-  window:set_right_status(wezterm.format {
-    { Attribute = { Underline = 'Single' } },
-    { Attribute = { Italic = true } },
-    { Text = 'Hello ' .. date },
-  })
+	-- Make it italic and underlined
+	window:set_right_status(wezterm.format({
+		{ Attribute = { Underline = "Single" } },
+		{ Attribute = { Italic = true } },
+		{ Text = "Hello " .. date },
+	}))
 end)
 
 config.enable_kitty_graphics = true

@@ -4,8 +4,15 @@ set drawbox true
 set icons true
 set ignorecase true
 
-set previewer ~/.config/lf/preview.sh
-set cleaner ~/.config/lf/cleaner.sh
+# Kitty preview doesn't work in tmux
+# set previewer ~/.config/lf/preview.sh
+# set cleaner ~/.config/lf/cleaner.sh
+
+# Blurry until lf gets sixel support
+set previewer ctpv
+set cleaner ctpvclear
+&ctpv -s $id
+&ctpvquit $id
 
 # Custom Functions
 cmd open ${{
@@ -66,4 +73,3 @@ map e $$EDITOR "$f"
 # Movement
 map gh cd ~/home
 map gc cd ~/codebase
-
