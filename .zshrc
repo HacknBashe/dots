@@ -5,6 +5,11 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh" ] && source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
+plug "zsh-users/zsh-autosuggestions"
+plug "zsh-users/zsh-syntax-highlighting"
+plug "zap-zsh/vim"
+
 autoload -U compinit && compinit
 
 source ~/.config/powerlevel10k/powerlevel10k.zsh-theme
@@ -14,17 +19,11 @@ source ~/.config/.p10k.zsh
 # history setup
 setopt APPEND_HISTORY
 setopt SHARE_HISTORY
-HISTFILE=$HOME/.zhistory
+HISTFILE=$HOME/.zsh_history
 SAVEHIST=1000
 HISTSIZE=999
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt EXTENDED_HISTORY
-
-# vi mode
-bindkey -v
-export KEYTIMEOUT=1
-source ~/.config/zsh/vi-mode.plugin.zsh
-VI_MODE_SET_CURSOR=true
 
 # Start typing + [Up-Arrow] - fuzzy find history forward
 autoload -U up-line-or-beginning-search
@@ -45,8 +44,8 @@ addToPathFront $HOME/bin:/usr/local/bin
 addToPathFront $HOME/.local/bin
 addToPathFront $HOME/.local/scripts
 addToPathFront $HOME/.yarn/bin
-addToPathFront $HOME/.cargo/bin
 addToPathFront $HOME/.config/yarn/global/node_modules/.bin
+addToPathFront $HOME/.cargo/bin
 
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
@@ -54,8 +53,8 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
-export CLICOLOR=1
-export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
+# export CLICOLOR=1
+# export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 
 alias dots="/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME"
 alias vi="nvim"

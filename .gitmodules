@@ -16,3 +16,6 @@
 [submodule ".config/powerlevel10k"]
 	path = .config/powerlevel10k
 	url = https://github.com/romkatv/powerlevel10k.git
+[submodule "/Users/nh470c/.local/share/zap"]
+	path = /Users/nh470c/.local/share/zap
+	url = https://github.com/zap-zsh/zap
