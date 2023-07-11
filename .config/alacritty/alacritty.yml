@@ -337,8 +337,8 @@ colors:
   #   `- { index: 16, color: '#ff00ff' }`
   #
   indexed_colors:
-    - { index: 16, color: '0xc9826b' }
-    - { index: 17, color: '0xbf88bc' }
+    - { index: 16, color: '0x7e8188' }
+    - { index: 17, color: '0xc9826b' }
 
   # Transparent cell backgrounds
   #

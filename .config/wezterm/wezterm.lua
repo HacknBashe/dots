@@ -58,6 +58,7 @@ config.cursor_blink_ease_out = "Constant"
 
 local nordfox = wezterm.color.get_builtin_schemes()["nordfox"]
 nordfox.background = "#1c2028"
+nordfox.indexed = { [16] = "#7e8188", [17] = "#c9826b" }
 
 config.color_schemes = {
 	["My Nordfox"] = nordfox,
