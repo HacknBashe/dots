@@ -53,6 +53,9 @@ config.font_rules = {
 
 config.font_size = 24
 
+config.cursor_blink_ease_in = "Constant"
+config.cursor_blink_ease_out = "Constant"
+
 local nordfox = wezterm.color.get_builtin_schemes()["nordfox"]
 nordfox.background = "#1c2028"
 

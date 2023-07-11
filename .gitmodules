@@ -1,6 +1,3 @@
-[submodule ".oh-my-zsh"]
-	path = .oh-my-zsh
-	url = https://github.com/ohmyzsh/ohmyzsh.git
 [submodule ".nvm"]
 	path = .nvm
 	url = https://github.com/nvm-sh/nvm.git
@@ -10,12 +7,6 @@
 [submodule "notes"]
 	path = notes
 	url = git@github.com:NickHackford/notes.git
-[submodule ".zsh/powerlevel10k"]
-	path = .zsh/powerlevel10k
-	url = https://github.com/romkatv/powerlevel10k.git
-[submodule ".config/powerlevel10k"]
-	path = .config/powerlevel10k
-	url = https://github.com/romkatv/powerlevel10k.git
 [submodule "/Users/nh470c/.local/share/zap"]
 	path = /Users/nh470c/.local/share/zap
 	url = https://github.com/zap-zsh/zap
