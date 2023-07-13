@@ -1,0 +1,49 @@
+{
+    "output": "DP-1",
+    "margin": "10 10 0 10",
+
+    "modules-left": ["hyprland/workspaces"],
+    "modules-center": ["clock", "custom/weather"],
+    "modules-right": ["wireplumber", "memory", "tray"],
+
+    //***************************
+    //*  Modules configuration  *
+    //***************************
+
+    "hyprland/workspaces": {
+    },
+
+    "clock": {
+        // "timezone": "America/New_York",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": "{:%a, %d %b, %I:%M %p}"
+    },
+
+    "custom/weather": {
+        "format": "{}",
+        "tooltip": true,
+        "interval": 1800,
+        "exec": "$HOME/.config/waybar/scripts/wttr.py",
+        "return-type": "json"
+    },
+
+    "wireplumber": {
+        "format": "{volume}%",
+        "format-muted": "",
+        "on-click": "pavucontrol",
+        "on-click-right": "qpwgraph",
+        "max-volume": 150,
+        "scroll-step": 0.2
+    },
+
+    "memory": {
+        "interval": 30,
+        "format": "{}% ",
+        "max-length": 10
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 0
+    },
+}

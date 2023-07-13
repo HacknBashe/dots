@@ -7,6 +7,6 @@
 [submodule "notes"]
 	path = notes
 	url = git@github.com:NickHackford/notes.git
-[submodule "/Users/nh470c/.local/share/zap"]
-	path = /Users/nh470c/.local/share/zap
-	url = https://github.com/zap-zsh/zap
+[submodule ".local/share/zap"]
+	path = .local/share/zap
+	url = https://github.com/zap-zsh/zap.git

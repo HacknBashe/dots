@@ -18,7 +18,7 @@ my dotfiles
 ### Setup dots
 `git clone --bare https://www.github.com/nickhackford/dots $HOME/.dots`
 
-`alias dots="/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME"`
+`alias dots="$(which git) --git-dir=$HOME/.dots --work-tree=$HOME"`
 
 `echo ".dots" >> .gitignore`
 
