@@ -8,20 +8,18 @@ return {
 	config = function()
 		local autocmd = vim.api.nvim_create_autocmd
 
-		-- Highlight text on yank
 		autocmd("BufRead", {
-			-- group = yank_group,
-			pattern = "*.conf,*config",
+			pattern = "*.conf",
 			command = "set filetype=hocon",
+		})
+
+		autocmd("BufRead", {
+			pattern = "*config",
+			command = "set filetype=json5",
 		})
 
 		vim.api.nvim_set_hl(0, "TreesitterContext", {})
 		vim.api.nvim_set_hl(0, "TreesitterContextBottom", {})
-
-		-- Update the existing GitConfig parser configuration
-		-- vim.cmd([[
-		--   autocmd BufRead,BufNewFile conf set filetype=gitconfig
-		-- ]])
 
 		require("nvim-treesitter.configs").setup({
 			-- A list of parser names, or "all" (the five listed parsers should always be installed)

@@ -6,5 +6,10 @@ return {
 			pattern = "nix",
 			command = "setlocal commentstring=#%s"
 		})
+
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "json5",
+			command = "setlocal commentstring=//%s"
+		})
 	end
 }
