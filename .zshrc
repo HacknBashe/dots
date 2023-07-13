@@ -61,6 +61,7 @@ export CLICOLOR=1
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 
 alias dots="$(which git) --git-dir=$HOME/.dots --work-tree=$HOME"
+alias nc="sudo nvim /etc/nixos"
 
 alias vi="nvim"
 alias ll="ls -alG"
