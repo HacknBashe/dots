@@ -6,9 +6,23 @@ return {
 		"nvim-treesitter/nvim-treesitter-context",
 	},
 	config = function()
-		-- Not sure why I can't get the color to match what I want
+		local autocmd = vim.api.nvim_create_autocmd
+
+		-- Highlight text on yank
+		autocmd("BufRead", {
+			-- group = yank_group,
+			pattern = "*.conf,*config",
+			command = "set filetype=hocon",
+		})
+
 		vim.api.nvim_set_hl(0, "TreesitterContext", {})
 		vim.api.nvim_set_hl(0, "TreesitterContextBottom", {})
+
+		-- Update the existing GitConfig parser configuration
+		-- vim.cmd([[
+		--   autocmd BufRead,BufNewFile conf set filetype=gitconfig
+		-- ]])
+
 		require("nvim-treesitter.configs").setup({
 			-- A list of parser names, or "all" (the five listed parsers should always be installed)
 			ensure_installed = { "php", "javascript", "typescript", "c", "lua", "vimdoc", "query" },
