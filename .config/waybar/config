@@ -1,6 +1,6 @@
 {
     "layer": "top", // Waybar at top layer
-    // "output": "DP-1, DP-2",
+    // "output": "DP-1",
     "margin": "10 10 0 10",
 
     "modules-left": ["hyprland/workspaces", "hyprland/window"],
