@@ -64,9 +64,9 @@ alias dots="$(which git) --git-dir=$HOME/.dots --work-tree=$HOME"
 alias nc="sudo nvim /etc/nixos"
 alias nixclean="sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d"
 
-
 alias vi="nvim"
 alias ll="ls -alG"
+cl() { cd "$@" && ls; }
 
 bindkey -s ^f "tmux-sessionizer.sh\n"
 
