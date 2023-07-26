@@ -1,3 +1,10 @@
+function telescope_search_subdirectory(subdirectory)
+	require("telescope.builtin").find_files({
+		prompt_title = "Search Subdirectory",
+		cwd = subdirectory,
+	})
+end
+
 return {
 	-- Fuzzy finder
 	"nvim-telescope/telescope.nvim",
@@ -14,17 +21,14 @@ return {
 		local builtin = require("telescope.builtin")
 		-- find
 		vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
-		vim.keymap.set("n", "<leader>fg", builtin.git_files, {})
-		-- vim.keymap.set("n", "<leader>fs", function()
-		-- 	builtin.grep_string({ search = vim.fn.input("Grep > ") })
-		-- end)
+		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>")
+
+		-- You can also create a mapping that prompts for a subdirectory input.
+		local fdcmd = ':lua telescope_search_subdirectory(vim.fn.input("Find in subdirectory: "))<CR>'
+		vim.keymap.set("n", "<leader>fd", fdcmd, { noremap = true, silent = true })
 		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>")
 		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles <CR>")
 		vim.keymap.set("n", "<leader>fh", "<cmd> Telescope help_tags <CR>")
-
-		-- ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "find all" },
-		-- ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "find buffers" },
-		-- ["<leader>fz"] = { "<cmd> Telescope current_buffer_fuzzy_find <CR>", "find in current buffer" },
 
 		-- git
 		vim.keymap.set("n", "<leader>gc", "<cmd> Telescope git_commits <CR>")
