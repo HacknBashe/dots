@@ -1,12 +1,27 @@
 return {
 	{
 		"iamcco/markdown-preview.nvim",
-		build = "cd app && npm install",
-		setup = function()
+		init = function()
 			vim.g.mkdp_filetypes = { "markdown" }
-			vim.g.mkdp_browser = { [[/Applications/Google\ Chrome.app/]] }
 		end,
 		ft = { "markdown" },
+		cmd = {
+			"MarkdownPreview",
+			"MarkdownPreviewStop",
+			"MarkdownPreviewToggle",
+		},
+		event = "BufRead",
+		build = function()
+			vim.fn["mkdp#util#install"]()
+		end,
 	},
 	"dhruvasagar/vim-table-mode",
+	{
+		"mzlogin/vim-markdown-toc",
+		config = function()
+			vim.g["vmt_list_item_char"] = "-"
+			vim.g["vmt_fence_text"] = "TOC"
+			vim.g["vmt_fence_closing_text"] = "/TOC"
+		end,
+	},
 }

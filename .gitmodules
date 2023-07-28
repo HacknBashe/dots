@@ -1,12 +1,18 @@
-[submodule ".nvm"]
-	path = .nvm
-	url = https://github.com/nvm-sh/nvm.git
 [submodule ".tmux/plugins/tpm"]
 	path = .tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
 [submodule "notes"]
 	path = notes
 	url = git@github.com:NickHackford/notes.git
-[submodule ".local/share/zap"]
-	path = .local/share/zap
-	url = https://github.com/zap-zsh/zap.git
+[submodule ".config/zsh/plugins/vim"]
+	path = .config/zsh/plugins/vim
+	url = https://github.com/zap-zsh/vim.git
+[submodule ".config/zsh/plugins/zsh-autosuggestions"]
+	path = .config/zsh/plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule ".config/zsh/plugins/zsh-syntax-highlighting"]
+	path = .config/zsh/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule ".config/zsh/plugins/powerlevel10k"]
+	path = .config/zsh/plugins/powerlevel10k
+	url = https://github.com/romkatv/powerlevel10k.git

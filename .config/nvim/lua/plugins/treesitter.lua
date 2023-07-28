@@ -8,10 +8,10 @@ return {
 	config = function()
 		local autocmd = vim.api.nvim_create_autocmd
 
-		autocmd("BufRead", {
-			pattern = "*rc",
-			command = "set filetype=sh",
-		})
+		-- autocmd("BufRead", {
+		-- 	pattern = "*rc",
+		-- 	command = "set filetype=sh",
+		-- })
 
 		autocmd("BufRead", {
 			pattern = "*.conf",

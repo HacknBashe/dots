@@ -1,24 +1,23 @@
 # zmodload zsh/zprof
 
+eval "$(fnm env --use-on-cd)"
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
-[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh" ] && source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
-plug "zsh-users/zsh-autosuggestions"
-plug "zsh-users/zsh-syntax-highlighting"
-plug "zap-zsh/vim"
-plug "romkatv/powerlevel10k"
+# Source plugin submodules
+source ~/.config/zsh/plugins/vim/vim.plugin.zsh
+source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.config/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme
+source ~/.config/zsh/plugins/powerlevel10k/config/p10k-robbyrussell.zsh
+source ~/.config/zsh/.p10k.zsh
 
 autoload -U compinit && compinit
-
-source ~/.local/share/zap/plugins/powerlevel10k/config/p10k-robbyrussell.zsh
-source ~/.config/zsh/.p10k.zsh
-zstyle ':omz:plugins:nvm' lazy yes
-source ~/.config/zsh/nvm.plugin.zsh
 
 # history setup
 setopt APPEND_HISTORY
@@ -50,9 +49,6 @@ addToPathFront $HOME/.local/scripts
 addToPathFront $HOME/.yarn/bin
 addToPathFront $HOME/.config/yarn/global/node_modules/.bin
 addToPathFront $HOME/.cargo/bin
-
-# export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"
