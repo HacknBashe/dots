@@ -19,6 +19,11 @@ return {
 		})
 
 		autocmd("BufRead", {
+			pattern = "*.region",
+			command = "set filetype=html",
+		})
+
+		autocmd("BufRead", {
 			pattern = "*config",
 			command = "set filetype=json5",
 		})

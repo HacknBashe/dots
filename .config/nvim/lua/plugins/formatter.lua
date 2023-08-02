@@ -2,6 +2,7 @@ return {
 	-- Apply formatters installed with Mason
 	"mhartington/formatter.nvim",
 	config = function()
+		local util = require("formatter.util")
 		-- Provides the Format, FormatWrite, FormatLock, and FormatWriteLock commands
 		require("formatter").setup({
 			-- Enable or disable logging
@@ -10,29 +11,27 @@ return {
 			log_level = vim.log.levels.WARN,
 			-- All formatter configurations are opt-in
 			filetype = {
-				-- Formatter configurations for filetype "lua" go here
-				-- and will be executed in order
 				lua = {
-					-- "formatter.filetypes.lua" defines default configurations for the
-					-- "lua" filetype
 					require("formatter.filetypes.lua").stylua,
 				},
 
+				html = {
+					require("formatter.filetypes.html").prettier,
+				},
+
 				javascript = {
-					-- "formatter.filetypes.lua" defines default configurations for the
-					-- "lua" filetype
 					require("formatter.filetypes.javascript").prettier,
 				},
 
+				json = {
+					require("formatter.filetypes.json").prettier,
+				},
+
 				typescript = {
-					-- "formatter.filetypes.lua" defines default configurations for the
-					-- "lua" filetype
 					require("formatter.filetypes.typescript").prettier,
 				},
 
 				typescriptreact = {
-					-- "formatter.filetypes.lua" defines default configurations for the
-					-- "lua" filetype
 					require("formatter.filetypes.typescriptreact").prettier,
 				},
 
