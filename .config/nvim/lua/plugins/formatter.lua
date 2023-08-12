@@ -19,6 +19,14 @@ return {
 					require("formatter.filetypes.html").prettier,
 				},
 
+				css = {
+					require("formatter.filetypes.css").prettier,
+				},
+
+				less = {
+					require("formatter.filetypes.css").prettier,
+				},
+
 				javascript = {
 					require("formatter.filetypes.javascript").prettier,
 				},
