@@ -1,40 +1,39 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-    ];
+  imports = [ ./hardware-configuration.nix ];
 
- boot.loader = {
-   # systemd-boot.enable = true;
-   efi = {
-     canTouchEfiVariables = true;
-     efiSysMountPoint = "/boot/efi";
-   };
-   grub = {
-     enable = true;
-     efiSupport = true;
-     useOSProber = true;
-     copyKernels = true;
-     # efiInstallAsRemovable = true; # in case canTouchEfiVariables doesn't work for your system
-     # device = "/dev/nvme0n1";
-     device = "nodev";
-     default = "3";
-     extraEntriesBeforeNixOS = true;
-     extraEntries = ''
-       menuentry "UEFI Firmware Settings" {
-         fwsetup
-       }
-       menuentry "Reboot" {
-         reboot
-       }
-       menuentry "Power" {
-         halt
-       }
-     '';
-   };
- };
+  boot = {
+    kernelModules = [ "sg" ];
+    supportedFilesystems = [ "ntfs" ];
+    loader = {
+      # systemd-boot.enable = true;
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot/efi";
+      };
+      grub = {
+        enable = true;
+        efiSupport = true;
+        useOSProber = true;
+        copyKernels = true;
+        device = "nodev";
+        default = "3";
+        extraEntriesBeforeNixOS = true;
+        extraEntries = ''
+          menuentry "UEFI Firmware Settings" {
+            fwsetup
+          }
+          menuentry "Reboot" {
+            reboot
+          }
+          menuentry "Power" {
+            halt
+          }
+        '';
+      };
+    };
+  };
 
   networking.hostName = "nixos";
   # networking.wireless.enable = true;
@@ -58,23 +57,26 @@
   };
 
   hardware = {
-      opengl = {
-          enable = true;
-      };
-      nvidia = {
-          modesetting.enable = true;
-          nvidiaSettings = true;
-          package = config.boot.kernelPackages.nvidiaPackages.stable;
-      };
+    opengl = { enable = true; };
+    nvidia = {
+      modesetting.enable = true;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
   };
 
   # Enable window and display manager
-  programs.hyprland.enable = true;
+  # programs.hyprland.enable = true;
+  programs.hyprland = {
+    enable = true;
+    enableNvidiaPatches = true;
+    xwayland.enable = true;
+  };
   services.xserver = {
     enable = true;
     layout = "us";
     xkbVariant = "";
-    videoDrivers = ["nvidia"];
+    videoDrivers = [ "nvidia" ];
     displayManager = {
       gdm.enable = true;
       #autoLogin = {
@@ -82,6 +84,15 @@
       #  user = "nick";
       #};
     };
+  };
+  environment.sessionVariables = {
+    WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
+  };
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    xdgOpenUsePortal = true;
   };
 
   # Enable sound with pipewire.
@@ -100,6 +111,9 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
+  services.gnome.gnome-keyring.enable = true;
+  programs.seahorse.enable = true;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -109,41 +123,46 @@
   environment.shells = with pkgs; [ zsh ];
 
   security.sudo.configFile = ''
-	Defaults !always_set_home, !set_home
-	Defaults env_keep+=HOME
+    Defaults !always_set_home, !set_home
+    Defaults env_keep+=HOME
   '';
 
   nix = {
-      package = pkgs.nixFlakes;
-      extraOptions = "experimental-features = nix-command flakes";
-      settings = {
-        substituters = ["https://hyprland.cachix.org"];
-        trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-      };
+    package = pkgs.nixFlakes;
+    extraOptions = "experimental-features = nix-command flakes";
+    settings = {
+      substituters = [ "https://hyprland.cachix.org" ];
+      trusted-public-keys = [
+        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      ];
+    };
   };
 
   nixpkgs.config.allowUnfree = true;
+
+  virtualisation.docker.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nick = {
     isNormalUser = true;
     description = "nick";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-    ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    packages = with pkgs; [ ];
   };
 
+  programs.steam.enable = true;
   environment.systemPackages = with pkgs; [
     android-tools
     alacritty
     brave
     btop
+    cargo
     cava
-    gnumake
     conda
     curl
     ctpv
-    #discord
+    direnv
+    distrobox
     (pkgs.writeShellApplication {
       name = "discord";
       text = "${pkgs.discord}/bin/discord --use-gl=desktop";
@@ -154,32 +173,49 @@
       desktopName = "Discord";
     })
     dos2unix
+    dunst
     efibootmgr
     firefox
     fzf
     gcc
     git
+    gimp
+    gnumake
     go
     hyprland
     helvum
     inotify-tools
+    libnotify
+    libsecret
     lf
+    makemkv
     neofetch
     neovim
+    nixfmt
+    p7zip
     pavucontrol
-    (python311.withPackages(ps: with ps; [requests pyserial]))
+    (python311.withPackages (ps: with ps; [ requests pyserial ]))
     qbittorrent
     qpwgraph
     ripgrep
+    rustc
     spotify
     swaybg
     xfce.thunar
     tmux
+    ungoogled-chromium
     vim
-    waybar
+    vlc
+    (pkgs.waybar.overrideAttrs (oldAttrs: {
+      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+    }))
+    wezterm
     wl-clipboard
-    wofi
+    wlogout
     wget
+    wofi
+    yarn
+    yarn2nix
   ];
 
   services.openssh.enable = true;

@@ -1,13 +1,17 @@
 # zmodload zsh/zprof
 
-eval "$(fnm env --use-on-cd)"
+#!/bin/bash
+
+if command -v fnm &>/dev/null; then
+    eval "$(fnm env --use-on-cd)"
+fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
 
 # Source plugin submodules
 source ~/.config/zsh/plugins/vim/vim.plugin.zsh
@@ -56,8 +60,10 @@ export EDITOR="$VISUAL"
 export CLICOLOR=1
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 
+alias pi="ssh 192.168.86.33"
+
 alias dots="$(which git) --git-dir=$HOME/.dots --work-tree=$HOME"
-alias nc="sudo nvim /etc/nixos"
+alias nixbuild="sudo nixos-rebuild switch --flake ~/.config/nixos"
 alias nixclean="sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d"
 
 alias vi="nvim"
@@ -65,6 +71,8 @@ alias ll="ls -alG"
 cl() { cd "$@" && ls; }
 
 bindkey -s ^f "tmux-sessionizer.sh\n"
+
+eval "$(direnv hook zsh)"
 
 if [ -f ~/.zshrc.local ]; then
   # Import local settings

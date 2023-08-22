@@ -4,29 +4,40 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 {
-  imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
-    ];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules =
+    [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/557ef2ec-2864-4165-a055-95160e23e17c";
-      fsType = "ext4";
-    };
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/557ef2ec-2864-4165-a055-95160e23e17c";
+    fsType = "ext4";
+  };
 
-  fileSystems."/boot/efi" =
-    { device = "/dev/disk/by-uuid/5CE8-5304";
-      fsType = "vfat";
-    };
+  fileSystems."/boot/efi" = {
+    device = "/dev/disk/by-uuid/5CE8-5304";
+    fsType = "vfat";
+  };
 
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/d0cdbddb-f40c-447e-a990-298bf8f1b9c7";
-      fsType = "ext4";
-    };
+  fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/d0cdbddb-f40c-447e-a990-298bf8f1b9c7";
+    fsType = "ext4";
+  };
+
+  # Only works when plugged in
+  # fileSystems."/mnt/passport" = {
+  #   device = "/dev/disk/by-uuid/38A018D3A0189988";
+  #   fsType = "ntfs-3g";
+  #   options = [ "rw" "uid=1000" ];
+  # };
+
+  # fileSystems."/mnt/alphami" = {
+  #   device = "/dev/sr0";
+  #   fsType = "udf";
+  # };
 
   swapDevices = [ ];
 
@@ -41,5 +52,6 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.intel.updateMicrocode =
+    lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

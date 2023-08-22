@@ -30,9 +30,9 @@ window#waybar.hidden {
     font-size: 18px;
 }
 
-#workspaces button.persistent {
-    color: #7c818c;
-    font-size: 12px;
+#workspaces button.active {
+    background: white;
+    border-radius: inherit;
 }
 
 #workspaces button:hover {
@@ -42,10 +42,6 @@ window#waybar.hidden {
     border-radius: inherit;
     color: #383c4a;
     background: #7c818c;
-}
-
-#workspaces button.focused {
-    color: white;
 }
 
 #window {

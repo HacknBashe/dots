@@ -6,8 +6,7 @@
 
     hyprland.url = "github:hyprwm/Hyprland";
 
-    home-manager =
-    {
+    home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -31,17 +30,18 @@
         ];
       };
     };
-    homeConfigurations."nick@nixos" = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      modules = [
-        hyprland.nixosModules.default
-        {
-          programs.hyprland = {
-            enable = true;
-            nvidiaPatches = true;
-          };
-        }
-      ];
-    };
+    homeConfigurations."nick@nixos" =
+      home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [
+          hyprland.nixosModules.default
+          {
+            programs.hyprland = {
+              enable = true;
+              nvidiaPatches = true;
+            };
+          }
+        ];
+      };
   };
 }

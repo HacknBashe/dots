@@ -8,7 +8,7 @@ return {
 			-- Enable or disable logging
 			logging = true,
 			-- Set the log level
-			log_level = vim.log.levels.WARN,
+			log_level = vim.log.levels.DEBUG,
 			-- All formatter configurations are opt-in
 			filetype = {
 				lua = {
@@ -25,6 +25,10 @@ return {
 
 				less = {
 					require("formatter.filetypes.css").prettier,
+				},
+
+				nix = {
+					require("formatter.filetypes.nix").nixfmt,
 				},
 
 				javascript = {
@@ -62,11 +66,11 @@ return {
 
 				-- Use the special "*" filetype for defining formatter configurations on
 				-- any filetype
-				["*"] = {
-					-- "formatter.filetypes.any" defines default configurations for any
-					-- filetype
-					require("formatter.filetypes.any").remove_trailing_whitespace,
-				},
+				-- ["*"] = {
+				-- 	-- "formatter.filetypes.any" defines default configurations for any
+				-- 	-- filetype
+				-- 	require("formatter.filetypes.any").remove_trailing_whitespace,
+				-- },
 			},
 		})
 
