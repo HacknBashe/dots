@@ -31,6 +31,38 @@ return {
 				},
 			}
 
+			dap.adapters["pwa-node"] = {
+				type = "server",
+				host = "localhost",
+				port = "${port}",
+				executable = {
+					command = "node",
+					args = {
+
+						os.getenv("HOME")
+							.. "/.local/share/nvim/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js",
+						"${port}",
+					},
+				},
+			}
+
+			dap.configurations.javascript = {
+				{
+					type = "pwa-node",
+					request = "launch",
+					name = "Launch file",
+					program = "${file}",
+					cwd = "${workspaceFolder}",
+				},
+				{
+					type = "pwa-node",
+					request = "attach",
+					name = "Attach",
+					processId = require("dap.utils").pick_process,
+					cwd = "${workspaceFolder}",
+				},
+			}
+
 			vim.keymap.set("n", "<F5>", function()
 				dap.continue()
 			end)
@@ -50,6 +82,9 @@ return {
 				require("dap.ui.widgets").hover()
 			end)
 		end,
+		dependencies = {
+			"williamboman/mason.nvim",
+		},
 	},
 
 	{
