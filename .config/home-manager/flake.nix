@@ -10,14 +10,13 @@
   };
 
   outputs = { nixpkgs, home-manager, ... }:
-    let arch = "x86_64-darwin"; # or aarch64-darwin
+    let arch = "x86_64-darwin";
     in {
       defaultPackage.${arch} = home-manager.defaultPackage.${arch};
 
-      homeConfigurations.nh470c = # REPLACE ME
-        home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${arch};
-          modules = [ ./home.nix ];
-        };
+      homeConfigurations.nh470c = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${arch};
+        modules = [ ./home.nix ];
+      };
     };
 }

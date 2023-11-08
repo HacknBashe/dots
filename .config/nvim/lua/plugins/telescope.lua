@@ -1,15 +1,20 @@
-function telescope_search_subdirectory(subdirectory)
+function telescope_find_directory_file(subdirectory)
 	require("telescope.builtin").find_files({
-		prompt_title = "Search Subdirectory",
+		prompt_title = "Search directory for file",
+		cwd = subdirectory,
+	})
+end
+
+function telescope_find_directory_string(subdirectory)
+	require("telescope.builtin").live_grep({
+		prompt_title = "Search directory for string",
 		cwd = subdirectory,
 	})
 end
 
 return {
-	-- Fuzzy finder
 	"nvim-telescope/telescope.nvim",
 	tag = "0.1.1",
-	-- or                            , branch = '0.1.x',
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		{
@@ -19,18 +24,17 @@ return {
 	},
 	config = function()
 		local builtin = require("telescope.builtin")
-		-- find
-		vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
-		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>")
-
-		-- You can also create a mapping that prompts for a subdirectory input.
-		local fdcmd = ':lua telescope_search_subdirectory(vim.fn.input("Find in subdirectory: "))<CR>'
-		vim.keymap.set("n", "<leader>fd", fdcmd, { noremap = true, silent = true })
+		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files follow=true hidden=true <CR>")
 		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>")
+
+		local fdfcmd = ':lua telescope_find_directory_file(vim.fn.input("Search subdirectory for file: "))<CR>'
+		vim.keymap.set("n", "<leader>fdf", fdfcmd, { noremap = true, silent = true })
+		local fdscmd = ':lua telescope_find_directory_string(vim.fn.input("Search subdirectory for string: "))<CR>'
+		vim.keymap.set("n", "<leader>fds", fdscmd, { noremap = true, silent = true })
+
 		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles <CR>")
 		vim.keymap.set("n", "<leader>fh", "<cmd> Telescope help_tags <CR>")
 
-		-- git
 		vim.keymap.set("n", "<leader>gc", "<cmd> Telescope git_commits <CR>")
 		vim.keymap.set("n", "<leader>gs", "<cmd> Telescope git_status <CR>")
 
@@ -68,7 +72,7 @@ return {
 					preview_cutoff = 120,
 				},
 				file_sorter = require("telescope.sorters").get_fuzzy_file,
-				file_ignore_patterns = { "node_modules" },
+				-- file_ignore_patterns = { "node_modules" },
 				generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
 				path_display = { "truncate" },
 				winblend = 0,

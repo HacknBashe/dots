@@ -23,6 +23,10 @@ return {
 					require("formatter.filetypes.css").prettier,
 				},
 
+				scss = {
+					require("formatter.filetypes.css").prettier,
+				},
+
 				less = {
 					require("formatter.filetypes.css").prettier,
 				},

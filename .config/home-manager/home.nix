@@ -6,12 +6,16 @@
 
   home.packages = with pkgs; [
     btop
+    fnm
     fzf
     highlight
     lf
     neofetch
     neovim
     nixfmt
+    # nodejs_16
+    # nodejs_18
+    # python3
     ripgrep
     tmux
   ];
