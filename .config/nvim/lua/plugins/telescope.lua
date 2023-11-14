@@ -23,13 +23,14 @@ return {
 		},
 	},
 	config = function()
-		local builtin = require("telescope.builtin")
 		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files follow=true hidden=true <CR>")
 		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>")
 
-		local fdfcmd = ':lua telescope_find_directory_file(vim.fn.input("Search subdirectory for file: "))<CR>'
+		local fdfcmd =
+			[[:lua telescope_find_directory_file(vim.fn.input("Search subdirectory for file: ", vim.fn.getreg('"'))<CR>]]
 		vim.keymap.set("n", "<leader>fdf", fdfcmd, { noremap = true, silent = true })
-		local fdscmd = ':lua telescope_find_directory_string(vim.fn.input("Search subdirectory for string: "))<CR>'
+		local fdscmd =
+			[[:lua telescope_find_directory_string(vim.fn.input("Search subdirectory for string: ", vim.fn.getreg('"')))<CR>]]
 		vim.keymap.set("n", "<leader>fds", fdscmd, { noremap = true, silent = true })
 
 		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles <CR>")
