@@ -15,7 +15,7 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- delete and paste
 vim.keymap.set("x", "<leader>p", '"_dP')
--- past on new line
+-- paste on new line
 vim.keymap.set("n", "<leader>o", ":put<CR>")
 vim.keymap.set("n", "<leader>O", ":-1put<CR>")
 

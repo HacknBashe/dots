@@ -31,10 +31,6 @@ return {
 					require("formatter.filetypes.css").prettier,
 				},
 
-				nix = {
-					require("formatter.filetypes.nix").nixfmt,
-				},
-
 				javascript = {
 					require("formatter.filetypes.javascript").prettier,
 				},
@@ -49,6 +45,14 @@ return {
 
 				typescriptreact = {
 					require("formatter.filetypes.typescriptreact").prettier,
+				},
+
+				nix = {
+					require("formatter.filetypes.nix").nixfmt,
+				},
+
+				go = {
+					require("formatter.filetypes.go").gofmt,
 				},
 
 				php = {

@@ -53,6 +53,7 @@ addToPathFront $HOME/.local/scripts
 addToPathFront $HOME/.yarn/bin
 addToPathFront $HOME/.config/yarn/global/node_modules/.bin
 addToPathFront $HOME/.cargo/bin
+addToPathFront $HOME/go/bin
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"
@@ -72,7 +73,7 @@ cl() { cd "$@" && ls; }
 
 bindkey -s ^f "tmux-sessionizer.sh\n"
 
-eval "$(direnv hook zsh)"
+# eval "$(direnv hook zsh)"
 
 if [ -f ~/.zshrc.local ]; then
   # Import local settings
