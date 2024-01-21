@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
 
-{
+let
+  monitorsXmlContent = builtins.readFile ./monitors.xml;
+  monitorsConfig = pkgs.writeText "gdm_monitors.xml" monitorsXmlContent;
+in {
   imports = [ ./hardware-configuration.nix ];
 
   boot = {
@@ -18,7 +21,7 @@
         useOSProber = true;
         copyKernels = true;
         device = "nodev";
-        default = "3";
+        default = "saved";
         extraEntriesBeforeNixOS = true;
         extraEntries = ''
           menuentry "UEFI Firmware Settings" {
@@ -36,9 +39,7 @@
   };
 
   networking.hostName = "nixos";
-  # networking.wireless.enable = true;
   networking.wireless.iwd.enable = true;
-  # networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
 
   time.timeZone = "America/New_York";
@@ -65,11 +66,8 @@
     };
   };
 
-  # Enable window and display manager
-  # programs.hyprland.enable = true;
   programs.hyprland = {
     enable = true;
-    enableNvidiaPatches = true;
     xwayland.enable = true;
   };
   services.xserver = {
@@ -77,21 +75,26 @@
     layout = "us";
     xkbVariant = "";
     videoDrivers = [ "nvidia" ];
+    # desktopManager.gnome.enable = true;
     displayManager = {
       gdm.enable = true;
-      #autoLogin = {
-      #  enable = true;
-      #  user = "nick";
-      #};
+      sddm.enable = false;
+      lightdm.enable = false;
+      # autoLogin = {
+      #   enable = true;
+      #   user = "nick";
+      # };
     };
   };
+  systemd.tmpfiles.rules =
+    [ "L+ /run/gdm/.config/monitors.xml - - - - ${monitorsConfig}" ];
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
   };
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
     xdgOpenUsePortal = true;
   };
 
@@ -107,17 +110,14 @@
     wireplumber.enable = true;
   };
 
-  # Enable bluetooth
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
   services.gnome.gnome-keyring.enable = true;
   programs.seahorse.enable = true;
 
-  # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Configure shell
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
   environment.shells = with pkgs; [ zsh ];
@@ -142,7 +142,6 @@
 
   virtualisation.docker.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.nick = {
     isNormalUser = true;
     description = "nick";
@@ -158,20 +157,21 @@
     btop
     cargo
     cava
+    chntpw
     conda
     curl
     ctpv
     direnv
     distrobox
-    (pkgs.writeShellApplication {
-      name = "discord";
-      text = "${pkgs.discord}/bin/discord --use-gl=desktop";
-    })
-    (pkgs.makeDesktopItem {
-      name = "discord";
-      exec = "discord";
-      desktopName = "Discord";
-    })
+    # (pkgs.writeShellApplication {
+    #   name = "discord";
+    #   text = "${pkgs.discord}/bin/discord --use-gl=desktop";
+    # })
+    # (pkgs.makeDesktopItem {
+    #   name = "discord";
+    #   exec = "discord";
+    #   desktopName = "Discord";
+    # })
     dos2unix
     dunst
     efibootmgr
@@ -182,8 +182,10 @@
     gimp
     gnumake
     go
+    grim
     hyprland
     helvum
+    jq
     inotify-tools
     libnotify
     libsecret
@@ -192,6 +194,7 @@
     neofetch
     neovim
     nixfmt
+    obs-studio
     p7zip
     pavucontrol
     (python311.withPackages (ps: with ps; [ requests pyserial ]))
@@ -209,6 +212,7 @@
     (pkgs.waybar.overrideAttrs (oldAttrs: {
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     }))
+    webcord
     wezterm
     wl-clipboard
     wlogout
