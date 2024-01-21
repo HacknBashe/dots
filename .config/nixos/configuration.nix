@@ -127,13 +127,27 @@ in {
           },
         },
         {
-          matches = {{{ "node.description", "matches", "GA104 High Definition Audio Controller (HDMI*" }}};
+          matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.7.0" }}};
+          apply_properties = {
+            ["node.description"] = "TV",
+            ["node.nick"] = "TV",
+            ["node.disabled"] = true,
+          },
+        },
+        {
+          matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.3.0" }}};
           apply_properties = {
             ["node.disabled"] = true,
           },
         },
         {
-          matches = {{{ "node.port.name", "matches", "monitor_*" }}};
+          matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.8.0" }}};
+          apply_properties = {
+            ["node.disabled"] = true,
+          },
+        },
+        {
+          matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.9.0" }}};
           apply_properties = {
             ["node.disabled"] = true,
           },
