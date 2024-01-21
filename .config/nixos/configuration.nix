@@ -109,6 +109,38 @@ in {
     pulse.enable = true;
     wireplumber.enable = true;
   };
+  environment.etc = {
+    "wireplumber/main.lua.d/51-device-setup.lua".text = ''
+      alsa_monitor.rules = {
+        {
+          matches = {{{ "device.name", "equals", "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00" }}};
+          apply_properties = {
+            ["device.description"] = "Headset",
+            ["device.nick"] = "Headset",
+          },
+        },
+        {
+          matches = {{{ "device.name", "equals", "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.2" }}};
+          apply_properties = {
+            ["device.description"] = "Soundbar",
+            ["device.nick"] = "Soundbar",
+          },
+        },
+        {
+          matches = {{{ "node.description", "matches", "GA104 High Definition Audio Controller (HDMI*" }}};
+          apply_properties = {
+            ["node.disabled"] = true,
+          },
+        },
+        {
+          matches = {{{ "node.port.name", "matches", "monitor_*" }}};
+          apply_properties = {
+            ["node.disabled"] = true,
+          },
+        },
+      }
+    '';
+  };
 
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
@@ -196,7 +228,7 @@ in {
     nixfmt
     obs-studio
     p7zip
-    pavucontrol
+    pulsemixer
     (python311.withPackages (ps: with ps; [ requests pyserial ]))
     qbittorrent
     qpwgraph

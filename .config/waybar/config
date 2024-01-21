@@ -4,8 +4,8 @@
     "margin": "10 10 0 10",
 
     "modules-left": ["hyprland/workspaces", "hyprland/window"],
-    "modules-center": ["clock", "custom/weather"],
-    "modules-right": ["wireplumber", "bluetooth", "memory", "tray"],
+    "modules-center": [],
+    "modules-right": ["tray", "custom/sound", "bluetooth", "memory", "custom/weather", "clock"],
 
     //***************************
     //*  Modules configuration  *
@@ -17,34 +17,35 @@
     "hyprland/window": {
     },
 
-    "clock": {
-        // "timezone": "America/New_York",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "{:%a, %d %b, %I:%M %p}"
+    "tray": {
+        "icon-size": 16,
+        "spacing": 5
     },
 
-    "custom/weather": {
+    "custom/sound": {
         "format": "{}",
-        "tooltip": true,
-        "interval": 1800,
-        "exec": "$HOME/.config/waybar/scripts/wttr.py",
-        "return-type": "json"
+        "tooltip": false,
+        "exec": "$HOME/.config/waybar/scripts/pipewire.sh",
+        "on-click": "alacritty --command=\"pulsemixer\"",
+        "on-click-middle": "$HOME/.config/waybar/scripts/set_default_sink.sh",
+        "on-click-right": "pulsemixer --toggle-mute",
+        "on-scroll-up": "pulsemixer --change-volume +5",
+        "on-scroll-down": "pulsemixer --change-volume -5",
     },
 
     "wireplumber": {
         "format": "{volume}%",
         "format-muted": "",
-        "on-click": "pavucontrol",
-        "on-click-middle": "pavucontrol",
+        "on-click": "alacritty --command=\"pulsemixer\"",
+        "on-click-middle": "$HOME/.config/waybar/scripts/set_default_sink.sh",
         "on-click-right": "qpwgraph",
         "max-volume": 150,
         "scroll-step": 0.2
     },
 
     "bluetooth": {
-        // "controller": "controller1", // specify the alias of the controller if there are more than 1 on the system
         "format": " {status}",
-        "format-disabled": "", // an empty format will hide the module
+        "format-disabled": "",
         "format-connected": " {num_connections} connected",
         "on-click": "blueman-manager",
         "tooltip-format": "{controller_alias}\t{controller_address}",
@@ -58,8 +59,16 @@
         "max-length": 10
     },
 
-    "tray": {
-        "icon-size": 16,
-        "spacing": 0
+    "custom/weather": {
+        "format": "{}",
+        "tooltip": true,
+        "interval": 1800,
+        "exec": "$HOME/.config/waybar/scripts/wttr.py",
+        "return-type": "json"
+    },
+
+    "clock": {
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": "{:%a, %d %b, %I:%M %p}"
     },
 }

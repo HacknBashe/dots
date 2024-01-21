@@ -6,10 +6,11 @@
 
   programs.home-manager.enable = true;
 
-  # programs.neovim.plugins = with pkgs.vimPlugins; [
-  #   codeium-vim
-  #   nvim-treesitter.withAllGrammars
-  # ];
+  programs.neovim.plugins = with pkgs.vimPlugins;
+    [
+      nvim-treesitter.withAllGrammars
+      # codeium-vim
+    ];
 
   home.file.".gitconfig.local".text = ''
     [credential]
