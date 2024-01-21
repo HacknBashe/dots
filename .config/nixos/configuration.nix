@@ -229,6 +229,7 @@ in {
     obs-studio
     p7zip
     pulsemixer
+    playerctl
     (python311.withPackages (ps: with ps; [ requests pyserial ]))
     qbittorrent
     qpwgraph
