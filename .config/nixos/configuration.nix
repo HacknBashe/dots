@@ -252,7 +252,10 @@ in {
     spotify
     swaybg
     xfce.thunar
+    xfce.thunar-archive-plugin
+    xfce.thunar-volman
     tmux
+    xfce.tumbler
     ungoogled-chromium
     vim
     vlc

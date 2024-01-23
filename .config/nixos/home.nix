@@ -4,6 +4,10 @@
 
   home.stateVersion = "23.05";
 
+  gtk.enable = true;
+  gtk.theme.package = pkgs.adw-gtk3;
+  gtk.theme.name = "adw-gtk3-dark";
+
   programs.home-manager.enable = true;
 
   programs.neovim.plugins = with pkgs.vimPlugins;
