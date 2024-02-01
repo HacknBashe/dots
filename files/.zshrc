@@ -70,7 +70,7 @@ alias vi="nvim"
 alias ll="ls -alG"
 cl() { cd "$@" && ls; }
 
-bindkey -s ^f "tmux-sessionizer.sh\n"
+bindkey -s ^f "tmux_sessionizer.sh\n"
 
 # eval "$(direnv hook zsh)"
 

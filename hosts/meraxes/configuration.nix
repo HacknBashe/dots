@@ -1,16 +1,18 @@
 { config, pkgs, ... }:
 
-let
-  monitorsXmlContent = builtins.readFile ./monitors.xml;
-  monitorsConfig = pkgs.writeText "gdm_monitors.xml" monitorsXmlContent;
-in {
-  imports = [ ./hardware-configuration.nix ];
+{
+  imports = [
+    ./hardware-configuration.nix
+    ../../modules/nixos/core.nix
+    ../../modules/nixos/hyprland.nix
+    ../../modules/nixos/desktop.nix
+    ../../modules/nixos/development.nix
+  ];
 
   boot = {
     kernelModules = [ "sg" ];
     supportedFilesystems = [ "ntfs" ];
     loader = {
-      # systemd-boot.enable = true;
       efi = {
         canTouchEfiVariables = true;
         efiSysMountPoint = "/boot/efi";
@@ -38,10 +40,6 @@ in {
     };
   };
 
-  networking.hostName = "nixos";
-  networking.wireless.iwd.enable = true;
-  networking.networkmanager.wifi.backend = "iwd";
-
   time.timeZone = "America/New_York";
 
   i18n.defaultLocale = "en_US.UTF-8";
@@ -57,6 +55,17 @@ in {
     LC_TIME = "en_US.UTF-8";
   };
 
+  networking.hostName = "nixos";
+  networking.wireless.iwd.enable = true;
+  networking.networkmanager.wifi.backend = "iwd";
+
+  services.openssh.enable = true;
+
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
+  services.printing.enable = true;
+
   hardware = {
     opengl = { enable = true; };
     nvidia = {
@@ -64,38 +73,6 @@ in {
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
-  };
-
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-  };
-  services.xserver = {
-    enable = true;
-    layout = "us";
-    xkbVariant = "";
-    videoDrivers = [ "nvidia" ];
-    # desktopManager.gnome.enable = true;
-    displayManager = {
-      gdm.enable = true;
-      sddm.enable = false;
-      lightdm.enable = false;
-      # autoLogin = {
-      #   enable = true;
-      #   user = "nick";
-      # };
-    };
-  };
-  systemd.tmpfiles.rules =
-    [ "L+ /run/gdm/.config/monitors.xml - - - - ${monitorsConfig}" ];
-  environment.sessionVariables = {
-    WLR_NO_HARDWARE_CURSORS = "1";
-    NIXOS_OZONE_WL = "1";
-  };
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
-    xdgOpenUsePortal = true;
   };
 
   # Enable sound with pipewire.
@@ -156,121 +133,12 @@ in {
     '';
   };
 
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
-
-  services.gnome.gnome-keyring.enable = true;
-  programs.seahorse.enable = true;
-
-  services.printing.enable = true;
-
-  programs.zsh.enable = true;
-  users.defaultUserShell = pkgs.zsh;
-  environment.shells = with pkgs; [ zsh ];
-
-  programs.thunar.enable = true;
-  programs.thunar.plugins = with pkgs.xfce; [
-    thunar-archive-plugin
-    thunar-volman
-  ];
-
-  security.sudo.configFile = ''
-    Defaults !always_set_home, !set_home
-    Defaults env_keep+=HOME
-  '';
-
-  nix = {
-    package = pkgs.nixFlakes;
-    extraOptions = "experimental-features = nix-command flakes";
-    settings = {
-      substituters = [ "https://hyprland.cachix.org" ];
-      trusted-public-keys = [
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      ];
-    };
-  };
-
-  nixpkgs.config.allowUnfree = true;
-
-  virtualisation.docker.enable = true;
-
   users.users.nick = {
     isNormalUser = true;
     description = "nick";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [ ];
   };
-
-  programs.steam.enable = true;
-  environment.systemPackages = with pkgs; [
-    android-tools
-    alacritty
-    brave
-    btop
-    cargo
-    cava
-    chntpw
-    conda
-    curl
-    ctpv
-    direnv
-    distrobox
-    dos2unix
-    dunst
-    efibootmgr
-    firefox
-    fzf
-    gcc
-    git
-    gimp
-    gnumake
-    go
-    grim
-    hyprland
-    helvum
-    jq
-    inotify-tools
-    libnotify
-    libsecret
-    lf
-    lua-language-server
-    makemkv
-    neofetch
-    neovim
-    nixfmt
-    obs-studio
-    p7zip
-    pulsemixer
-    playerctl
-    (python311.withPackages (ps: with ps; [ requests pyserial ]))
-    qbittorrent
-    qpwgraph
-    ripgrep
-    rustc
-    rustup
-    nodejs_21
-    shfmt
-    spotify
-    stylua
-    swaybg
-    tmux
-    ungoogled-chromium
-    vim
-    vlc
-    (pkgs.waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-    }))
-    webcord
-    wezterm
-    wl-clipboard
-    wlogout
-    wget
-    wofi
-    yarn
-    yarn2nix
-  ];
-
-  services.openssh.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

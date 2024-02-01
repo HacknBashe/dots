@@ -15,7 +15,7 @@ set cleaner ctpvclear
 &ctpvquit $id
 
 # Custom Functions
-cmd open ${{
+cmd open &{{
     case $(xdg-mime query filetype "$f") in
         text/*|application/json) $EDITOR "$f" ;;
         *) xdg-open "$f" ;;
@@ -73,5 +73,5 @@ map C clear
 map e $$EDITOR "$f"
 
 # Movement
-map gh cd ~/home
+map gh cd ~
 map gc cd ~/codebase

@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Run the command and capture the output
 output=$(hyprctl getoption -j decoration:screen_shader | jq -r '.str')
 
