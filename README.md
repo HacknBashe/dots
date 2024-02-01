@@ -1,47 +1,11 @@
-# dots
-my dotfiles
+# Nick's dotfiles
 
-## Setup Instructions
+## NixOS
 
-### Install Brew
-`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+`sudo nixos-rebuild switch --flake ~/.config/nix-config`
 
-### Install Git
-`git --version` on macOS this will prompt to install xcode tools that come with git
+## Mac
 
-`brew install git`
+`sh <(curl -L https://nixos.org/nix/install) --no-daemon`
 
-`sudo dnf install git`
-
-`sudo apt install git`
-
-### Setup dots
-`git clone --bare https://www.github.com/nickhackford/dots $HOME/.dots`
-
-`alias dots="$(which git) --git-dir=$HOME/.dots --work-tree=$HOME"`
-
-`echo ".dots" >> .gitignore`
-
-`dots checkout`
-
-`dots submodule update --init`
-
-`dots config --local status.showUntrackedFiles no`
-
-
-### Install other dependencies
-[Nerdfont](https://www.nerdfonts.com/)
-
-`sudo dnf install`
-
-`pacman -S`
-
-`brew install`
-
-`zsh neofetch neovim alacritty ripgrep nodejs make gcc gcc-c++ fzf tmux btop`
-
-### Install Brave
-
-### Final config
-
-`chsh -s /bin/zsh`
+`nix run --flake . switch`

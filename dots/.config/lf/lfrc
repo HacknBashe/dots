@@ -1,0 +1,77 @@
+# Basic Settings
+set hidden true
+set drawbox true
+set icons true
+set ignorecase true
+
+# Kitty preview doesn't work in tmux
+# set previewer ~/.config/lf/preview.sh
+# set cleaner ~/.config/lf/cleaner.sh
+
+# Blurry until lf gets sixel support
+set previewer ctpv
+set cleaner ctpvclear
+&ctpv -s $id
+&ctpvquit $id
+
+# Custom Functions
+cmd open ${{
+    case $(xdg-mime query filetype "$f") in
+        text/*|application/json) $EDITOR "$f" ;;
+        *) xdg-open "$f" ;;
+    esac
+}}
+
+cmd mkdir ${{
+  printf "Directory Name: "
+  read ans
+  mkdir $ans
+}}
+
+cmd mkfile ${{
+  printf "File Name: "
+  read ans
+  $EDITOR $ans
+}}
+
+cmd chmod ${{
+  printf "Mode Bits: "
+  read ans
+
+  for file in "$fx"
+  do
+    chmod $ans $file
+  done
+
+  lf -remote 'send reload'
+}}
+
+# Bindings
+# Remove some defaults
+# map "'"
+# map '"'
+
+
+# Basic Functions
+map . set hidden!
+map X delete
+map R reload
+map c
+map Y $printf "%s" "$fx" | wl-copy
+map y copy
+# Could make this open in tmux
+map <enter> &alacritty
+map m
+map mf mkfile
+map md mkdir
+map ch chmod
+map f
+map / search
+map C clear
+
+# File Openers
+map e $$EDITOR "$f"
+
+# Movement
+map gh cd ~/home
+map gc cd ~/codebase
