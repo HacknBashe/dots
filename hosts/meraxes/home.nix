@@ -65,12 +65,12 @@
   };
   home.file = {
     "nvim-settings" = {
-      source = ../../dots/.config/nvim/lua/core;
+      source = ../../files/.config/nvim/lua/core;
       target = ".config/nvim/lua/core";
       recursive = true;
     };
     "nvim-plugins" = {
-      source = ../../dots/.config/nvim/lua/plugins;
+      source = ../../files/.config/nvim/lua/plugins;
       target = ".config/nvim/lua/plugins";
       recursive = true;
     };
@@ -89,19 +89,19 @@
 
   home.file = {
     "fonts" = {
-      source = ../../dots/.local/share/fonts;
+      source = ../../files/.local/share/fonts;
       target = ".local/share/fonts";
       recursive = true;
     };
 
     "scripts" = {
-      source = ../../dots/.local/scripts;
+      source = ../../files/.local/scripts;
       target = ".local/scripts";
       recursive = true;
     };
 
     ".gitconfig" = {
-      source = ../../dots/.gitconfig;
+      source = ../../files/.gitconfig;
       target = ".gitconfig";
     };
     ".gitconfig.local".text = ''
@@ -112,15 +112,15 @@
     '';
 
     "nvm.plugin.zsh" = {
-      source = ../../dots/.config/zsh/nvm.plugin.zsh;
+      source = ../../files/.config/zsh/nvm.plugin.zsh;
       target = ".config/zsh/nvm.plugin.zsh";
     };
     ".p10l.zsh" = {
-      source = ../../dots/.config/zsh/.p10k.zsh;
+      source = ../../files/.config/zsh/.p10k.zsh;
       target = ".config/zsh/.p10k.zsh";
     };
     ".zshrc" = {
-      source = ../../dots/.zshrc;
+      source = ../../files/.zshrc;
       target = ".zshrc";
     };
     "powerlevel10k" = {
@@ -157,12 +157,12 @@
     };
 
     "alacritty" = {
-      source = ../../dots/.config/alacritty/alacritty.toml;
+      source = ../../files/.config/alacritty/alacritty.toml;
       target = ".config/alacritty/alacritty.toml";
     };
 
     "tmux" = {
-      source = ../../dots/.config/tmux;
+      source = ../../files/.config/tmux;
       target = ".config/tmux";
       recursive = true;
     };
@@ -176,49 +176,49 @@
     };
 
     "lf" = {
-      source = ../../dots/.config/lf;
+      source = ../../files/.config/lf;
       target = ".config/lf";
       recursive = true;
     };
 
     "neofetch" = {
-      source = ../../dots/.config/neofetch/config.conf;
+      source = ../../files/.config/neofetch/config.conf;
       target = ".config/neofetch/config.conf";
     };
 
     "hypr" = {
-      source = ../../dots/.config/hypr/hyprland.conf;
+      source = ../../files/.config/hypr/hyprland.conf;
       target = ".config/hypr/hyprland.conf";
     };
     "hypr/scripts" = {
-      source = ../../dots/.config/hypr/scripts;
+      source = ../../files/.config/hypr/scripts;
       target = ".config/hypr/scripts";
       recursive = true;
     };
     "hypr/shaders" = {
-      source = ../../dots/.config/hypr/shaders;
+      source = ../../files/.config/hypr/shaders;
       target = ".config/hypr/shaders";
       recursive = true;
     };
 
     "waybar" = {
-      source = ../../dots/.config/waybar;
+      source = ../../files/.config/waybar;
       target = ".config/waybar";
       recursive = true;
     };
     "waybar/scripts" = {
-      source = ../../dots/.config/waybar/scripts;
+      source = ../../files/.config/waybar/scripts;
       target = ".config/waybar/scripts";
       recursive = true;
     };
 
     "wofi" = {
-      source = ../../dots/.config/wofi/style.css;
+      source = ../../files/.config/wofi/style.css;
       target = ".config/wofi/style.css";
     };
 
     "wlogout" = {
-      source = ../../dots/.config/wlogout;
+      source = ../../files/.config/wlogout;
       target = ".config/wlogout";
       recursive = true;
     };
