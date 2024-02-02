@@ -3,6 +3,7 @@
   users.defaultUserShell = pkgs.zsh;
   environment.shells = with pkgs; [ zsh ];
 
+  # TODO: Get home dir in su
   security.sudo.configFile = ''
     Defaults !always_set_home, !set_home
     Defaults env_keep+=HOME

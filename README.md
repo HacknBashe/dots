@@ -1,4 +1,4 @@
-# Nick's dotfiles
+# my dotfiles
 
 ## NixOS
 
@@ -7,5 +7,3 @@
 ## Mac
 
 `sh <(curl -L https://nixos.org/nix/install) --no-daemon`
-
-`nix run --flake . switch`

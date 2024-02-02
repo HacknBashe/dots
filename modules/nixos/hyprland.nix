@@ -24,9 +24,9 @@ in {
     xkbVariant = "";
     videoDrivers = [ "nvidia" ];
     displayManager = {
-      gdm.enable = true;
-      sddm.enable = false;
-      lightdm.enable = false;
+      # gdm.enable = false;
+      sddm.enable = true;
+      sddm.theme = "${import ./sddm-theme.nix { inherit pkgs; }}";
       # autoLogin = {
       #   enable = true;
       #   user = "nick";
@@ -48,18 +48,26 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
+    swaybg
+
+    # sddm-theme dependencies
+    libsForQt5.qt5ct
+    libsForQt5.qt5.qtquickcontrols
+    libsForQt5.qt5.qtgraphicaleffects
+
     dunst
-    grim
     inotify-tools
     libnotify
-    slurp
-    swaybg
+
     (pkgs.waybar.overrideAttrs (oldAttrs: {
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     }))
-    wl-clipboard
     wlogout
     wofi
+
+    grim
+    slurp
+    wl-clipboard
     xdg-utils
   ];
 }

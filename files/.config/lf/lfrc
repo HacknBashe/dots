@@ -75,3 +75,5 @@ map e $$EDITOR "$f"
 # Movement
 map gh cd ~
 map gc cd ~/codebase
+map gp cd ~/Pictures
+map gd cd ~/Downloads

@@ -63,6 +63,8 @@ export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 
 alias pi="ssh 192.168.86.33"
 
+alias su="su -p"
+
 alias nixbuild="sudo nixos-rebuild switch --flake ~/.config/nixos"
 alias nixclean="sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d"
 
