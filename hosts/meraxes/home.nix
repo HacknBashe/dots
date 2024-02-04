@@ -119,10 +119,5 @@
       target = ".config/lf";
       recursive = true;
     };
-
-    "neofetch" = {
-      source = ../../files/.config/neofetch/config.conf;
-      target = ".config/neofetch/config.conf";
-    };
   };
 }

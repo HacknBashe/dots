@@ -1,9 +1,4 @@
-{ config, pkgs, ... }:
-let
-  # FIXME: this needs to be dynamic based on the host if I want to reuse this
-  monitorsXmlContent = builtins.readFile ../../hosts/meraxes/monitors.xml;
-  monitorsConfig = pkgs.writeText "gdm_monitors.xml" monitorsXmlContent;
-in {
+{ config, pkgs, ... }: {
   nix = {
     settings = {
       substituters = [ "https://hyprland.cachix.org" ];
@@ -20,21 +15,24 @@ in {
 
   services.xserver = {
     enable = true;
-    layout = "us";
-    xkbVariant = "";
     videoDrivers = [ "nvidia" ];
     displayManager = {
-      # gdm.enable = false;
-      sddm.enable = true;
-      sddm.theme = "${import ./sddm-theme.nix { inherit pkgs; }}";
-      # autoLogin = {
-      #   enable = true;
-      #   user = "nick";
-      # };
+      sddm = {
+        enable = true;
+        theme = "${import ./where-sddm-theme.nix { inherit pkgs; }}";
+      };
     };
+    xrandrHeads = [
+      {
+        output = "DP-1";
+        primary = true;
+      }
+      {
+        output = "DP-2";
+        monitorConfig = ''Option "Enable" "false"'';
+      }
+    ];
   };
-  systemd.tmpfiles.rules =
-    [ "L+ /run/gdm/.config/monitors.xml - - - - ${monitorsConfig}" ];
 
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";

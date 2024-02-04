@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
-{
+let info = builtins.readFile ./info;
+in {
   imports = [
     ./hardware-configuration.nix
     ../../modules/nixos/core.nix
@@ -63,6 +64,11 @@
 
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
+
+  systemd.tmpfiles.rules = [
+    "f+ /var/lib/bluetooth/00:28:F8:2F:1D:71/DC:2C:EE:3E:A6:75/info - - - - "
+    "w+ /var/lib/bluetooth/00:28:F8:2F:1D:71/DC:2C:EE:3E:A6:75/info - - - - ${info}"
+  ];
 
   services.printing.enable = true;
 

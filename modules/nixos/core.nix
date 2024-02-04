@@ -3,7 +3,6 @@
   users.defaultUserShell = pkgs.zsh;
   environment.shells = with pkgs; [ zsh ];
 
-  # TODO: Get home dir in su
   security.sudo.configFile = ''
     Defaults !always_set_home, !set_home
     Defaults env_keep+=HOME
@@ -13,20 +12,20 @@
     btop
     cava
     chntpw
-    curl
     ctpv
+    curl
     efibootmgr
     fzf
     jq
-    libsecret
     lf
-    neofetch
+    libsecret
     neovim
     p7zip
-    pulsemixer
     playerctl
+    pulsemixer
     ripgrep
-    wget
+    tmux
     vim
+    wget
   ];
 }

@@ -10,7 +10,6 @@
     fzf
     highlight
     lf
-    neofetch
     neovim
     nixfmt
     ripgrep

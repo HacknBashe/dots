@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -20,7 +21,7 @@
     };
   };
 
-  outputs = inputs@{ nixpkgs, hyprland, home-manager, codeium, ... }:
+  outputs = inputs@{ nixpkgs, home-manager, hyprland, codeium, ... }:
     let
       system = "x86_64-linux";
       commonConfig = { lib, pkgs, config, ... }: {

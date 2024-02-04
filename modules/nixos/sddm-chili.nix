@@ -8,7 +8,7 @@ let
     sha256 = "1h8x9m5x7k8f3m7l5n5x4s7z6r2s7b6s5k5x7z7m7z7h5x8k3";
   };
 in pkgs.stdenv.mkDerivation {
-  name = "sddm-theme";
+  name = "sddm-chili";
   src = pkgs.fetchFromGitHub {
     owner = "MarianArlt";
     repo = "sddm-chili";
