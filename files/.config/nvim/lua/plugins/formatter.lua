@@ -9,17 +9,18 @@ return {
 				lua = {
 					require("formatter.filetypes.lua").stylua,
 				},
-
 				sh = {
 					require("formatter.filetypes.sh").shfmt,
 				},
-
 				nix = {
 					require("formatter.filetypes.nix").nixfmt,
 				},
 
 				go = {
 					require("formatter.filetypes.go").gofmt,
+				},
+				java = {
+					require("formatter.filetypes.java").google_java_format,
 				},
 
 				html = {

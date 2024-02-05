@@ -3,23 +3,32 @@
 
   environment.systemPackages = with pkgs; [
     android-tools
-    cargo
-    conda
     direnv
     distrobox
-    dos2unix
-    gcc
     git
-    gnumake
-    go
-    lua-language-server
     nixfmt
+    shfmt
+
+    gcc
+    gnumake
+
+    go
+
+    conda
     (python311.withPackages (ps: with ps; [ requests pyserial ]))
+
+    cargo
     rustc
     rustup
-    nodejs_21
-    shfmt
+
+    temurin-bin-21
+    jdt-language-server
+    google-java-format
+
+    lua-language-server
     stylua
+
+    nodejs_21
     yarn
     yarn2nix
   ];

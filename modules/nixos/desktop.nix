@@ -21,6 +21,7 @@
     makemkv
     obs-studio
     qbittorrent
+    qimgv
     spotify
     ungoogled-chromium
     webcord
