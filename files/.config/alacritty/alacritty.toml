@@ -38,6 +38,7 @@ style = "Regular"
 
 [font.normal]
 family = "SauceCodePro Nerd Font Mono"
+# family = "SauceCodeProNerdFontMono"
 style = "ExtraLight"
 
 [window]

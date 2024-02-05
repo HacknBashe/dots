@@ -8,6 +8,9 @@
     Defaults env_keep+=HOME
   '';
 
+  fonts.packages = with pkgs;
+    [ (pkgs.nerdfonts.override { fonts = [ "SourceCodePro" ]; }) ];
+
   environment.systemPackages = with pkgs; [
     btop
     cava

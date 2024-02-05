@@ -12,8 +12,13 @@
   ];
 
   gtk.enable = true;
-  gtk.theme.package = pkgs.adw-gtk3;
-  gtk.theme.name = "adw-gtk3-dark";
+  gtk.theme.package = pkgs.mojave-gtk-theme;
+  gtk.theme.name = "Mojave-Dark-solid";
+  gtk.iconTheme.package = (pkgs.colloid-icon-theme.override {
+    schemeVariants = [ "nord" ];
+    colorVariants = [ "teal" ];
+  });
+  gtk.iconTheme.name = "Colloid-teal-nord-dark";
 
   programs.btop = {
     enable = true;
@@ -27,12 +32,6 @@
   };
 
   home.file = {
-    "fonts" = {
-      source = ../../files/.local/share/fonts;
-      target = ".local/share/fonts";
-      recursive = true;
-    };
-
     "scripts" = {
       source = ../../files/.local/scripts;
       target = ".local/scripts";
