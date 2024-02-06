@@ -8,7 +8,6 @@
       # nvim-dap
       # nvim-dap-ui
 
-      # lsp
       nvim-lspconfig
       nvim-cmp
       codeium-nvim
@@ -25,11 +24,11 @@
       lualine-nvim
       # FIXME Doesn't work for some reason
       markdown-preview-nvim
-      # zbirenbaum/neodim
       nightfox-nvim
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
-      nvim-treesitter-context
+      # TODO disabled because it breaks on format for some reason
+      # nvim-treesitter-context
       playground
       sniprun
       telescope-fzf-native-nvim

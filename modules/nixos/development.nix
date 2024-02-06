@@ -21,6 +21,7 @@
     rustc
     rustup
 
+    gradle
     temurin-bin-21
     jdt-language-server
     google-java-format

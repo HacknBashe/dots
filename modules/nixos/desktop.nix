@@ -15,8 +15,10 @@
   environment.systemPackages = with pkgs; [
     alacritty
     brave
+    drawio
     firefox
     gimp
+    gparted
     helvum
     makemkv
     obs-studio
