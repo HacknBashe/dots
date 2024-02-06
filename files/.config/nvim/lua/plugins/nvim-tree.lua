@@ -1,12 +1,6 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-vim.cmd([[
-	autocmd StdinReadPre * let s:std_in=1
-	autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
-		\ execute 'cd '.argv()[0] | execute 'Alpha' | execute 'bd 1' | endif
-    ]])
-
 local HEIGHT_RATIO = 0.8
 local WIDTH_RATIO = 0.5
 return {
