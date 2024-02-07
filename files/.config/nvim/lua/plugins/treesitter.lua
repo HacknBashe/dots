@@ -15,7 +15,7 @@ return {
 
 		autocmd("BufRead", {
 			pattern = "*.conf",
-			command = "set filetype=hocon",
+			command = "set filetype=sh",
 		})
 
 		autocmd("BufRead", {
