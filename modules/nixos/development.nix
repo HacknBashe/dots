@@ -6,9 +6,11 @@
     direnv
     distrobox
     git
-    nixfmt
     shfmt
 
+    nixfmt
+    nil
+    
     gcc
     gnumake
 

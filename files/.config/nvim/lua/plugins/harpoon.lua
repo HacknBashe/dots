@@ -2,29 +2,49 @@ return {
 	"ThePrimeagen/harpoon",
 	event = "VimEnter",
 	config = function()
-		require("harpoon").setup({
-			menu = {
-				width = vim.api.nvim_list_uis()[1].width - 10,
-			},
-		})
+		local harpoon = require("harpoon")
+		harpoon.setup()
 
-		local mark = require("harpoon.mark")
-		local ui = require("harpoon.ui")
+		-- local conf = require("telescope.config").values
+		-- local function toggle_telescope(harpoon_files)
+		-- 	local file_paths = {}
+		-- 	for _, item in ipairs(harpoon_files.items) do
+		-- 		table.insert(file_paths, item.value)
+		-- 	end
 
-		vim.keymap.set("n", "<leader>a", mark.add_file)
-		vim.keymap.set("n", "<leader>h", ui.toggle_quick_menu, {}, "view harpoon")
+		-- 	require("telescope.pickers")
+		-- 		.new({}, {
+		-- 			prompt_title = "Harpoon",
+		-- 			finder = require("telescope.finders").new_table({
+		-- 				results = file_paths,
+		-- 			}),
+		-- 			previewer = conf.file_previewer({}),
+		-- 			sorter = conf.generic_sorter({}),
+		-- 		})
+		-- 		:find()
+		-- end
+		-- vim.keymap.set("n", "<leader>h", function()
+		-- 	toggle_telescope(harpoon:list())
+		-- end, { desc = "Open harpoon window" })
+
+		vim.keymap.set("n", "<leader>a", function()
+			harpoon:list():append()
+		end)
+		vim.keymap.set("n", "<leader>h", function()
+			harpoon.ui:toggle_quick_menu(harpoon:list())
+		end)
 
 		vim.keymap.set("n", "<leader>j", function()
-			ui.nav_file(1)
+			harpoon:list():select(1)
 		end)
 		vim.keymap.set("n", "<leader>k", function()
-			ui.nav_file(2)
+			harpoon:list():select(2)
 		end)
 		vim.keymap.set("n", "<leader>l", function()
-			ui.nav_file(3)
+			harpoon:list():select(3)
 		end)
 		vim.keymap.set("n", "<leader>;", function()
-			ui.nav_file(4)
+			harpoon:list():select(4)
 		end)
 	end,
 }

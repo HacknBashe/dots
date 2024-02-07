@@ -1,4 +1,15 @@
-{ config, pkgs, system, codeium, ... }: {
+{ config, pkgs, system, codeium, ... }:
+let
+  harpoon2 = pkgs.vimUtils.buildVimPlugin {
+    name = "harpoon2";
+    src = pkgs.fetchFromGitHub {
+      owner = "ThePrimeagen";
+      repo = "harpoon";
+      rev = "7d1aef462a880fcb68419cb63abc50dbdc22d922";
+      hash = "sha256-AXWN7HqlnSsmtCK8jK5vqyzHwKJY3eJL6fnjeJhoNMU=";
+    };
+  };
+in {
   nixpkgs.overlays = [ codeium.overlays.${system}.default ];
 
   programs.neovim = {
@@ -20,14 +31,14 @@
       formatter-nvim
       gitsigns-nvim
       vim-hexokinase
-      harpoon
+      harpoon2
       lualine-nvim
       # FIXME Doesn't work for some reason
       markdown-preview-nvim
       nightfox-nvim
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
-      # TODO disabled because it breaks on format for some reason
+      # TODO disabled because it breaks on format
       # nvim-treesitter-context
       playground
       sniprun
