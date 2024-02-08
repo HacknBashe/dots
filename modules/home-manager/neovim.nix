@@ -63,12 +63,12 @@ in {
   };
   home.file = {
     "nvim-settings" = {
-      source = ../../files/.config/nvim/lua/core;
+      source = ../../files/config/nvim/lua/core;
       target = ".config/nvim/lua/core";
       recursive = true;
     };
     "nvim-plugins" = {
-      source = ../../files/.config/nvim/lua/plugins;
+      source = ../../files/config/nvim/lua/plugins;
       target = ".config/nvim/lua/plugins";
       recursive = true;
     };

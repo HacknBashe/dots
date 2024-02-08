@@ -34,13 +34,13 @@
 
   home.file = {
     "scripts" = {
-      source = ../../files/.local/scripts;
+      source = ../../files/local/scripts;
       target = ".local/scripts";
       recursive = true;
     };
 
     ".gitconfig" = {
-      source = ../../files/.gitconfig;
+      source = ../../files/gitconfig;
       target = ".gitconfig";
     };
     ".gitconfig.local".text = ''
@@ -51,15 +51,15 @@
     '';
 
     "nvm.plugin.zsh" = {
-      source = ../../files/.config/zsh/nvm.plugin.zsh;
+      source = ../../files/config/zsh/nvm.plugin.zsh;
       target = ".config/zsh/nvm.plugin.zsh";
     };
     ".p10l.zsh" = {
-      source = ../../files/.config/zsh/.p10k.zsh;
+      source = ../../files/config/zsh/.p10k.zsh;
       target = ".config/zsh/.p10k.zsh";
     };
     ".zshrc" = {
-      source = ../../files/.zshrc;
+      source = ../../files/zshrc;
       target = ".zshrc";
     };
     "powerlevel10k" = {
@@ -96,12 +96,12 @@
     };
 
     "alacritty" = {
-      source = ../../files/.config/alacritty/alacritty.toml;
+      source = ../../files/config/alacritty/alacritty.toml;
       target = ".config/alacritty/alacritty.toml";
     };
 
     "tmux" = {
-      source = ../../files/.config/tmux;
+      source = ../../files/config/tmux;
       target = ".config/tmux";
       recursive = true;
     };
@@ -115,7 +115,7 @@
     };
 
     "lf" = {
-      source = ../../files/.config/lf;
+      source = ../../files/config/lf;
       target = ".config/lf";
       recursive = true;
     };
