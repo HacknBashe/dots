@@ -73,6 +73,7 @@ alias ll="ls -alG"
 cl() { cd "$@" && ls; }
 
 bindkey -s ^f "tmux_sessionizer.sh\n"
+bindkey -s ^t "nvim ~/notes/todo.md\n"
 
 # eval "$(direnv hook zsh)"
 
