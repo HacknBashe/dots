@@ -1,9 +1,10 @@
 { config, pkgs, ... }: {
   virtualisation.docker.enable = true;
 
+  programs.direnv.enable = true;
+
   environment.systemPackages = with pkgs; [
     android-tools
-    direnv
     distrobox
     git
     shfmt

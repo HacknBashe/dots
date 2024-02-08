@@ -72,10 +72,10 @@ alias vi="nvim"
 alias ll="ls -alG"
 cl() { cd "$@" && ls; }
 
-bindkey -s ^f "tmux_sessionizer.sh\n"
 bindkey -s ^t "nvim ~/notes/todo.md\n"
+bindkey -s ^f "tmux_sessionizer.sh\n"
 
-# eval "$(direnv hook zsh)"
+eval "$(direnv hook zsh)"
 
 if [ -f ~/.zshrc.local ]; then
   # Import local settings
