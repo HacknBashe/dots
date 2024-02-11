@@ -7,18 +7,20 @@
     android-tools
     distrobox
     git
-    shfmt
+    lazygit
+    vscode
 
     nixfmt
     nil
-    
+    shfmt
+
     gcc
     gnumake
 
     go
 
     conda
-    (python311.withPackages (ps: with ps; [ requests pyserial ]))
+    (python311.withPackages (ps: with ps; [ numpy requests pyserial ]))
 
     cargo
     rustc

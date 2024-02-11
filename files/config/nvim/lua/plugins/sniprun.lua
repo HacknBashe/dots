@@ -9,5 +9,9 @@ return {
 				"TempFloatingWindow",
 			},
 		})
+		vim.cmd("highlight! link SniprunVirtualTextOk DiagnosticVirtualTextOk")
+		vim.cmd("highlight! link SniprunFloatingWinOk DiagnosticFloatingOk")
+		vim.cmd("highlight! link SniprunVirtualTextErr DiagnosticVirtualTextError")
+		vim.cmd("highlight! link SniprunFloatingWinErr DiagnosticFloatingError")
 	end,
 }

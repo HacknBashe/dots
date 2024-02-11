@@ -34,6 +34,12 @@
     ];
   };
 
+  security.pam.services.swaylock = {
+    text = ''
+      auth include login
+    '';
+  };
+
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
@@ -47,6 +53,7 @@
 
   environment.systemPackages = with pkgs; [
     swaybg
+    swaylock-effects
 
     # sddm-theme dependencies
     libsForQt5.qt5ct

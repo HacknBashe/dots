@@ -32,12 +32,16 @@ button:focus {
   background-image: image(url("./lock.png"));
 }
 
-#logout {
-  background-image: image(url("./logout.png"));
-}
-
 #suspend {
   background-image: image(url("./sleep.png"));
+}
+
+#hibernate {
+  background-image: image(url("./sleep.png"));
+}
+
+#logout {
+  background-image: image(url("./logout.png"));
 }
 
 #shutdown {
