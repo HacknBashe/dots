@@ -8,7 +8,7 @@
     distrobox
     git
     lazygit
-    vscode
+    vscode.fhs
 
     nixfmt
     nil
