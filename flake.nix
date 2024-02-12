@@ -13,14 +13,9 @@
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    codeium = {
-      url = "github:Exafunction/codeium.nvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, hyprland, codeium, ... }:
+  outputs = inputs@{ nixpkgs, home-manager, hyprland, ... }:
     let
       system = "x86_64-linux";
       commonConfig = { lib, pkgs, config, ... }: {
@@ -42,7 +37,6 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.nick = import ./hosts/meraxes/home.nix;
-              home-manager.extraSpecialArgs = { inherit system codeium; };
             }
           ];
         };

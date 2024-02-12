@@ -1,4 +1,4 @@
-{ config, pkgs, system, codeium, ... }: {
+{ config, pkgs, ... }: {
   home.file = {
     "hypr" = {
       source = ../../files/config/hypr/hyprland.conf;

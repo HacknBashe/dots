@@ -1,4 +1,4 @@
-{ config, pkgs, system, codeium, ... }:
+{ config, pkgs, ... }:
 let
   harpoon2 = pkgs.vimUtils.buildVimPlugin {
     name = "harpoon2";
@@ -10,8 +10,6 @@ let
     };
   };
 in {
-  nixpkgs.overlays = [ codeium.overlays.${system}.default ];
-
   programs.neovim = {
     enable = true;
     extraLuaPackages = luaPkgs: with luaPkgs; [ luasocket ];
