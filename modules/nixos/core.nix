@@ -6,8 +6,13 @@
   fonts.packages = with pkgs;
     [ (pkgs.nerdfonts.override { fonts = [ "SourceCodePro" ]; }) ];
 
+  # for btop GPU support
+  environment.variables = {
+    LD_LIBRARY_PATH = "/run/opengl-driver/lib:/run/opengl-driver-32/lib";
+  };
+
   environment.systemPackages = with pkgs; [
-    btop
+    (pkgs.btop.override { cudaSupport = true; })
     cava
     chntpw
     ctpv
@@ -18,6 +23,8 @@
     lf
     libsecret
     neovim
+    neofetch
+    nvtop
     p7zip
     playerctl
     pulsemixer
