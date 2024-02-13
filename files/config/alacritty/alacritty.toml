@@ -44,3 +44,8 @@ style = "ExtraLight"
 decorations = "full"
 dynamic_padding = true
 opacity = 0.9
+
+[keyboard]
+bindings = [
+{ key = "N", mods = "Control", action = "CreateNewWindow" },
+]
