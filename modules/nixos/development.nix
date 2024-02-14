@@ -18,6 +18,7 @@
     gnumake
 
     go
+    gopls
 
     conda
     (python311.withPackages (ps: with ps; [ numpy requests pyserial ]))

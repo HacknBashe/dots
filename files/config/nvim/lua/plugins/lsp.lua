@@ -21,7 +21,8 @@ lspconfig.lua_ls.setup({
 		},
 	},
 })
-lspconfig.jdtls.setup({ cmd = { "jdtls" } })
+lspconfig.jdtls.setup({})
+lspconfig.gopls.setup({})
 
 vim.diagnostic.config({
 	signs = false,
