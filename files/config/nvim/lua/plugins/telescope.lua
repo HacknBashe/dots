@@ -23,7 +23,7 @@ return {
 		},
 	},
 	config = function()
-		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files follow=true hidden=true <CR>")
+		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files follow=true <CR>")
 		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>")
 
 		local fdfcmd =
