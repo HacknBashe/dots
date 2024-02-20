@@ -18,12 +18,12 @@
     ctpv
     curl
     efibootmgr
+    fastfetch
     fzf
     jq
     lf
     libsecret
     neovim
-    neofetch
     nvtop
     p7zip
     playerctl
