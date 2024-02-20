@@ -36,6 +36,7 @@
     stylua
 
     nodejs_21
+    prettierd
     yarn
     yarn2nix
   ];

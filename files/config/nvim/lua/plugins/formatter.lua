@@ -24,28 +24,31 @@ return {
 				},
 
 				html = {
-					require("formatter.filetypes.html").prettier,
+					require("formatter.filetypes.html").prettierd,
 				},
 				css = {
-					require("formatter.filetypes.css").prettier,
+					require("formatter.filetypes.css").prettierd,
 				},
 				scss = {
-					require("formatter.filetypes.css").prettier,
+					require("formatter.filetypes.css").prettierd,
 				},
 				less = {
-					require("formatter.filetypes.css").prettier,
+					require("formatter.filetypes.css").prettierd,
 				},
 				json = {
-					require("formatter.filetypes.json").prettier,
+					require("formatter.filetypes.json").prettierd,
+				},
+				jsonc = {
+					require("formatter.filetypes.json").prettierd,
 				},
 				javascript = {
-					require("formatter.filetypes.javascript").prettier,
+					require("formatter.filetypes.javascript").prettierd,
 				},
 				typescript = {
-					require("formatter.filetypes.typescript").prettier,
+					require("formatter.filetypes.typescript").prettierd,
 				},
 				typescriptreact = {
-					require("formatter.filetypes.typescriptreact").prettier,
+					require("formatter.filetypes.typescriptreact").prettierd,
 				},
 
 				php = {
