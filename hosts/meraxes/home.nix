@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }: {
   home.username = "nick";
   home.homeDirectory = "/home/nick";
 
@@ -13,22 +13,43 @@
   ];
 
   gtk.enable = true;
-  gtk.theme.package = pkgs.mojave-gtk-theme;
-  gtk.theme.name = "Mojave-Dark-solid";
+  # gtk.theme.package = pkgs.mojave-gtk-theme;
+  # gtk.theme.name = "Mojave-Dark-solid";
   gtk.iconTheme.package = (pkgs.colloid-icon-theme.override {
     schemeVariants = [ "nord" ];
     colorVariants = [ "teal" ];
   });
   gtk.iconTheme.name = "Colloid-teal-nord-dark";
 
-  programs.btop = {
-    enable = true;
-    settings = {
-      color_theme = "tokyo-storm";
-      theme_background = false;
-      rounded_corners = true;
-      vim_keys = true;
-      background_update = false;
+  programs = {
+    alacritty = {
+      enable = true;
+      settings = {
+        font.size = lib.mkForce 20.0;
+        font.bold.style = lib.mkForce "Regular";
+        font.normal.style = lib.mkForce "ExtraLight";
+        window = {
+          decorations = "full";
+          dynamic_padding = true;
+          opacity = lib.mkForce 0.9;
+        };
+        keyboard.bindings = [{
+          key = "N";
+          mods = "Control";
+          action = "CreateNewWindow";
+        }];
+      };
+    };
+
+    btop = {
+      enable = true;
+      settings = {
+        color_theme = "tokyo-storm";
+        theme_background = false;
+        rounded_corners = true;
+        vim_keys = true;
+        background_update = false;
+      };
     };
   };
 
@@ -95,15 +116,53 @@
       target = ".config/zsh/plugins/vim";
     };
 
-    "alacritty" = {
-      source = ../../files/config/alacritty/alacritty.toml;
-      target = ".config/alacritty/alacritty.toml";
+    "fastfetch" = {
+      source = ../../files/config/fastfetch/config.jsonc;
+      target = ".config/fastfetch/config.jsonc";
     };
 
     "tmux" = {
-      source = ../../files/config/tmux;
-      target = ".config/tmux";
-      recursive = true;
+      source = ../../files/config/tmux/tmux.conf;
+      target = ".config/tmux/tmux.conf";
+    };
+    "tmux.theme" = {
+      target = ".config/tmux/theme.tmux";
+      text = ''
+        #!/usr/bin/env bash
+        # Color with ANSI palette
+        %hidden thm_bg="default"
+        %hidden thm_black="${config.lib.stylix.colors.withHashtag.base00}"
+        %hidden thm_yellow="${config.lib.stylix.colors.withHashtag.base0A}"
+        %hidden thm_blue="${config.lib.stylix.colors.withHashtag.base0D}"
+        %hidden thm_pink="${config.lib.stylix.colors.withHashtag.base0E}"
+        %hidden thm_white="${config.lib.stylix.colors.withHashtag.base07}"
+        %hidden thm_grey="${config.lib.stylix.colors.withHashtag.base04}"
+        %hidden thm_orange="${config.lib.stylix.colors.withHashtag.base09}"
+
+        %hidden LEFT=
+        %hidden RIGHT=
+
+        set -g mode-style "fg=$thm_black,bg=$thm_white"
+        set -g message-style "fg=$thm_yellow,bg=$thm_bg"
+        set -g message-command-style "fg=$thm_pink,bg=$thm_bg"
+        set -g pane-border-indicators "colour"
+        set -g pane-border-style "fg=$thm_black"
+        set -g pane-active-border-style "fg=$thm_blue"
+        set -g status "on"
+        set -g status-justify "left"
+        set -g status-style "fg=$thm_white,bg=$thm_bg"
+        set -g status-left-length "100"
+        set -g status-right-length "100"
+        set -g status-left-style NONE
+        set -g status-right-style NONE
+
+        set -g status-left "#[bg=$thm_bg,bold]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_blue]} #[fg=$thm_blue]#S $LEFT"
+        set -g status-right "#[bg=$thm_bg,fg=$thm_blue]%y-%m-%d $RIGHT %H:%M:%S "
+        setw -g window-status-activity-style "underscore,fg=$thm_grey,bg=$thm_black"
+        setw -g window-status-separator ""
+        setw -g window-status-format "#[fg=$thm_grey,bg=$thm_bg] #I $LEFT #{b:pane_current_path} #F #W $LEFT"
+        setw -g window-status-current-format "#[fg=$thm_white,bg=$thm_bg,bold] #I $LEFT #[underscore]./#{b:pane_current_path}#[nounderscore] #F #[underscore]#W#[fg=$thm_white,bg=$thm_bg,nobold,nounderscore,noitalics] $LEFT"
+      '';
     };
     "tpm" = {
       source = builtins.fetchGit {

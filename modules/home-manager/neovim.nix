@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, base16-vim, ... }:
 let
   harpoon2 = pkgs.vimUtils.buildVimPlugin {
     name = "harpoon2";
@@ -16,6 +16,11 @@ in {
     plugins = with pkgs.vimPlugins; [
       # nvim-dap
       # nvim-dap-ui
+      (pkgs.vimUtils.buildVimPlugin {
+        name = "base16-vim";
+        src = base16-vim;
+      })
+      # nightfox-nvim
 
       nvim-lspconfig
       nvim-cmp
@@ -33,7 +38,6 @@ in {
       lualine-nvim
       # FIXME Doesn't work for some reason
       markdown-preview-nvim
-      nightfox-nvim
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
       # TODO disabled because it breaks on format
@@ -54,9 +58,17 @@ in {
       vim-visual-multi
       which-key-nvim
     ];
-
     extraLuaConfig = ''
       require('core.nix-init')
+
+      vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+      vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
+      vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+    '';
+    extraConfig = ''
+      colorscheme base16-tokyo-night-terminal-dark
+      let base16_background_transparent=1 
     '';
   };
   home.file = {

@@ -7,6 +7,7 @@ in {
     ../../modules/nixos/core.nix
     ../../modules/nixos/hyprland.nix
     ../../modules/nixos/desktop.nix
+    ../../modules/nixos/stylix.nix
     ../../modules/nixos/development.nix
   ];
 
