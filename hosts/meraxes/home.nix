@@ -1,4 +1,5 @@
-{ config, pkgs, lib, ... }: {
+{ config, pkgs, lib, ... }:
+with config.lib.stylix.colors.withHashtag; {
   home.username = "nick";
   home.homeDirectory = "/home/nick";
 
@@ -120,6 +121,21 @@
       source = ../../files/config/fastfetch/config.jsonc;
       target = ".config/fastfetch/config.jsonc";
     };
+    "cava" = {
+      text = ''
+        [color]
+        gradient = 1
+        gradient_count = 7
+        gradient_color_1 = '${base0E}'
+        gradient_color_2 = '${base0D}'
+        gradient_color_3 = '${base0C}'
+        gradient_color_4 = '${base0B}'
+        gradient_color_5 = '${base0A}'
+        gradient_color_6 = '${base09}'
+        gradient_color_7 = '${base08}'
+      '';
+      target = ".config/cava/config";
+    };
 
     "tmux" = {
       source = ../../files/config/tmux/tmux.conf;
@@ -131,13 +147,13 @@
         #!/usr/bin/env bash
         # Color with ANSI palette
         %hidden thm_bg="default"
-        %hidden thm_black="${config.lib.stylix.colors.withHashtag.base00}"
-        %hidden thm_yellow="${config.lib.stylix.colors.withHashtag.base0A}"
-        %hidden thm_blue="${config.lib.stylix.colors.withHashtag.base0D}"
-        %hidden thm_pink="${config.lib.stylix.colors.withHashtag.base0E}"
-        %hidden thm_white="${config.lib.stylix.colors.withHashtag.base07}"
-        %hidden thm_grey="${config.lib.stylix.colors.withHashtag.base04}"
-        %hidden thm_orange="${config.lib.stylix.colors.withHashtag.base09}"
+        %hidden thm_black="${base00}"
+        %hidden thm_yellow="${base0A}"
+        %hidden thm_blue="${base0D}"
+        %hidden thm_pink="${base0E}"
+        %hidden thm_white="${base07}"
+        %hidden thm_grey="${base04}"
+        %hidden thm_orange="${base09}"
 
         %hidden LEFT=
         %hidden RIGHT=
