@@ -25,12 +25,14 @@
     libsecret
     neovim
     nvtop
+    pipes
     p7zip
     playerctl
     pulsemixer
     ripgrep
     tmux
     vim
+    vitetris
     wget
   ];
 }
