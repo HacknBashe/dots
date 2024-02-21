@@ -3,7 +3,7 @@
 #!/bin/bash
 
 if command -v fnm &>/dev/null; then
-    eval "$(fnm env --use-on-cd)"
+  eval "$(fnm env --use-on-cd)"
 fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -74,6 +74,12 @@ cl() { cd "$@" && ls; }
 
 bindkey -s ^t "nvim ~/notes/todo.md\n"
 bindkey -s ^f "tmux_sessionizer.sh\n"
+bindkey -s ^v "fzf_vim.sh\n"
+function spawn-alacritty() { 
+  (alacritty --working-directory="$(pwd)" >/dev/null 2>&1 &)
+}
+zle -N spawn-alacritty
+bindkey ^n spawn-alacritty
 
 eval "$(direnv hook zsh)"
 

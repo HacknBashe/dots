@@ -14,8 +14,6 @@ with config.lib.stylix.colors.withHashtag; {
   ];
 
   gtk.enable = true;
-  # gtk.theme.package = pkgs.mojave-gtk-theme;
-  # gtk.theme.name = "Mojave-Dark-solid";
   gtk.iconTheme.package = (pkgs.colloid-icon-theme.override {
     schemeVariants = [ "nord" ];
     colorVariants = [ "teal" ];
@@ -34,11 +32,6 @@ with config.lib.stylix.colors.withHashtag; {
           dynamic_padding = true;
           opacity = lib.mkForce 0.9;
         };
-        keyboard.bindings = [{
-          key = "N";
-          mods = "Control";
-          action = "CreateNewWindow";
-        }];
       };
     };
 
