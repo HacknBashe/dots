@@ -18,29 +18,29 @@ window#waybar.hidden {
 }
 
 #workspaces {
+  background: @base00;
+  color: @base05;
   margin-right: 8px;
   border-radius: 10px;
   transition: none;
-  background: @base03;
 }
 
 #workspaces button {
   transition: none;
-  color: @base07;
   background: transparent;
   padding: 5px;
   font-size: 18px;
 }
 
 #workspaces button.active {
-  background: @base05;
-  color: @base00;
+  background: @base02;
+  color: @base07;
   border-radius: inherit;
 }
 
 #workspaces button:hover {
-  background: @base07;
-  color: @base03;
+  background: @base03;
+  color: @base08;
   transition: none;
   box-shadow: inherit;
   text-shadow: inherit;
@@ -53,8 +53,8 @@ window#waybar.hidden {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
-  background: @base03;
+  background: @base00;
+  color: @base05;
 }
 
 #tray {
@@ -63,8 +63,8 @@ window#waybar.hidden {
   margin-right: 8px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
-  background: @base03;
+  background: @base00;
+  color: @base05;
 }
 
 #custom-sound {
@@ -73,8 +73,8 @@ window#waybar.hidden {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
-  background: @base03;
+  background: @base00;
+  color: @base05;
 }
 
 #wireplumber {
@@ -83,8 +83,8 @@ window#waybar.hidden {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
-  background: @base03;
+  background: @base00;
+  color: @base05;
 }
 
 #bluetooth {
@@ -93,8 +93,8 @@ window#waybar.hidden {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
-  background: @base03;
+  background: @base00;
+  color: @base05;
 }
 
 #memory {
@@ -103,8 +103,8 @@ window#waybar.hidden {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
-  background: @base03;
+  background: @base00;
+  color: @base05;
 }
 
 #custom-weather {
@@ -112,14 +112,14 @@ window#waybar.hidden {
   padding-left: 16px;
   border-radius: 10px 0px 0px 10px;
   transition: none;
-  color: @base07;
-  background: @base03;
+  background: @base00;
+  color: @base05;
 }
 
 #clock {
   padding-right: 16px;
   border-radius: 0px 10px 10px 0px;
   transition: none;
-  color: @base07;
-  background: @base03;
+  background: @base00;
+  color: @base05;
 }
