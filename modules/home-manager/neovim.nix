@@ -20,7 +20,6 @@ in {
         name = "base16-vim";
         src = base16-vim;
       })
-      # nightfox-nvim
 
       nvim-lspconfig
       nvim-cmp
@@ -60,15 +59,10 @@ in {
     ];
     extraLuaConfig = ''
       require('core.nix-init')
-
-      vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-      vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
-      vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
     '';
     extraConfig = ''
-      colorscheme base16-tokyo-night-terminal-dark
       let base16_background_transparent=1 
+      colorscheme base16-default-dark
     '';
   };
   home.file = {
