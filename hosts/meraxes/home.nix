@@ -11,6 +11,7 @@ with config.lib.stylix.colors.withHashtag; {
   imports = [
     ../../modules/home-manager/neovim.nix
     ../../modules/home-manager/hyprland.nix
+    ../../modules/home-manager/btop.nix
   ];
 
   gtk.enable = true;
@@ -32,17 +33,6 @@ with config.lib.stylix.colors.withHashtag; {
           dynamic_padding = true;
           opacity = lib.mkForce 0.9;
         };
-      };
-    };
-
-    btop = {
-      enable = true;
-      settings = {
-        color_theme = "tokyo-storm";
-        theme_background = false;
-        rounded_corners = true;
-        vim_keys = true;
-        background_update = false;
       };
     };
   };
