@@ -72,9 +72,10 @@ alias vi="nvim"
 alias ll="ls -alG"
 cl() { cd "$@" && ls; }
 
-bindkey -s ^t "nvim ~/notes/todo.md\n"
-bindkey -s ^f "tmux_sessionizer.sh\n"
-bindkey -s ^v "fzf_vim.sh\n"
+bindkey -s ^t "^u nvim ~/notes/todo.md\n"
+bindkey -s ^b "^u btop\n"
+bindkey -s ^f "^u tmux_sessionizer.sh\n"
+bindkey -s ^v "^u fzf_vim.sh\n"
 function spawn-alacritty() { 
   (alacritty --working-directory="$(pwd)" >/dev/null 2>&1 &)
 }
