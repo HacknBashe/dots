@@ -57,7 +57,7 @@ in {
     LC_TIME = "en_US.UTF-8";
   };
 
-  networking.hostName = "nixos";
+  networking.hostName = "meraxes";
   networking.wireless.iwd.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
 

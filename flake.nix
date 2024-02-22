@@ -28,8 +28,8 @@
   outputs = { nixpkgs, home-manager, hyprland, stylix, base16-vim, ... }:
     let
       # --- Settings ---- #
-      wallSmall = /home/nick/Pictures/Walls/glowshroom-small.jpg;
       wallLarge = /home/nick/Pictures/Walls/glowshroom-large.jpg;
+      wallSmall = /home/nick/Pictures/Walls/glowshroom-small.jpg;
       # --- Settings ---- #
 
       system = "x86_64-linux";
@@ -42,7 +42,7 @@
       };
     in {
       nixosConfigurations = {
-        nixos = nixpkgs.lib.nixosSystem {
+        meraxes = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
             commonConfig
@@ -55,15 +55,11 @@
               home-manager.users.nick = import ./hosts/meraxes/home.nix;
               home-manager.extraSpecialArgs = {
                 inherit base16-vim;
-                inherit wallSmall;
-                inherit wallLarge;
+                inherit wallLarge wallSmall;
               };
             }
           ];
-          specialArgs = {
-            inherit wallSmall;
-            inherit wallLarge;
-          };
+          specialArgs = { inherit wallLarge wallSmall; };
         };
       };
     };
