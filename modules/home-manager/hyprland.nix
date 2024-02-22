@@ -8,7 +8,7 @@ with config.lib.stylix.colors;
     "hypr" = {
       # source = ../../files/config/hypr/hyprland.conf;
       text = ''
-        $activeColor = ${base0B}
+        $activeColor = ${base0D}
         $inactiveColor = ${base03}
         $shadowColor = ${base01}
         ${builtins.readFile ../../files/config/hypr/hyprland.conf}
