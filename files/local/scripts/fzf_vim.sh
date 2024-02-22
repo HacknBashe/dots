@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find -L ~/ ~/codebase ~/.config -maxdepth 3 -type f | fzf)
+    selected=$(find -L ~/ ~/codebase ~/.config -maxdepth 3 -type f | uniq | fzf)
 fi
 
 if [[ -z $selected ]]; then
