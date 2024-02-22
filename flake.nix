@@ -1,5 +1,5 @@
 {
-  description = "Nix configuration for my machines";
+  description = "Nick's desktop flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -27,6 +27,11 @@
 
   outputs = { nixpkgs, home-manager, hyprland, stylix, base16-vim, ... }:
     let
+      # --- Settings ---- #
+      wallSmall = /home/nick/Pictures/Walls/glowshroom-small.jpg;
+      wallLarge = /home/nick/Pictures/Walls/glowshroom-large.jpg;
+      # --- Settings ---- #
+
       system = "x86_64-linux";
       commonConfig = { lib, pkgs, config, ... }: {
         nix = {
@@ -42,15 +47,23 @@
           modules = [
             commonConfig
             ./hosts/meraxes/configuration.nix
-            home-manager.nixosModules.home-manager
             stylix.nixosModules.stylix
+            home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.nick = import ./hosts/meraxes/home.nix;
-              home-manager.extraSpecialArgs = { inherit base16-vim; };
+              home-manager.extraSpecialArgs = {
+                inherit base16-vim;
+                inherit wallSmall;
+                inherit wallLarge;
+              };
             }
           ];
+          specialArgs = {
+            inherit wallSmall;
+            inherit wallLarge;
+          };
         };
       };
     };

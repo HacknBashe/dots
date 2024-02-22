@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, wallSmall, wallLarge, ... }:
 
 with config.lib.stylix.colors;
 
@@ -11,6 +11,9 @@ with config.lib.stylix.colors;
         $activeColor = ${base0D}
         $inactiveColor = ${base03}
         $shadowColor = ${base01}
+
+        exec = swaybg -o DP-1 -i ${wallLarge}
+        exec = swaybg -o DP-2 -i ${wallSmall}
         ${builtins.readFile ../../files/config/hypr/hyprland.conf}
       '';
       target = ".config/hypr/hyprland.conf";
