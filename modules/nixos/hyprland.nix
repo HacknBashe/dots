@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, wallLarge, ... }: {
   nix = {
     settings = {
       substituters = [ "https://hyprland.cachix.org" ];
@@ -19,7 +19,7 @@
     displayManager = {
       sddm = {
         enable = true;
-        theme = "${import ./where-sddm-theme.nix { inherit pkgs; }}";
+        theme = "${import ./where-sddm-theme.nix { inherit pkgs wallLarge; }}";
       };
     };
     xrandrHeads = [

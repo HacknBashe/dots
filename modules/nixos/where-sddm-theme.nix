@@ -1,13 +1,5 @@
-{ pkgs }:
-
-let
-  imgLink =
-    "https://raw.githubusercontent.com/NickHackford/walls/master/fantasy-alien-planet.jpg";
-  image = pkgs.fetchurl {
-    url = imgLink;
-    sha256 = "3715c9dab5d431563c8e7c8405469c10965b472f903f45b24f75469c39886a74";
-  };
-in pkgs.stdenv.mkDerivation {
+{ pkgs, wallLarge }:
+pkgs.stdenv.mkDerivation {
   name = "sddm-theme";
   src = pkgs.fetchFromGitHub {
     owner = "stepanzubkov";
@@ -19,7 +11,7 @@ in pkgs.stdenv.mkDerivation {
         mkdir -p $out
         cp -R ./where_is_my_sddm_theme/* $out/
         cd $out/
-        cp -r ${image} $out/Background.jpg
+        cp -r ${wallLarge} $out/Background.jpg
         rm theme.conf
     cat <<EOL > theme.conf
     [General]
