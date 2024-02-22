@@ -22,6 +22,8 @@
     helvum
     makemkv
     obs-studio
+    prismlauncher-unwrapped
+    qalculate-gtk
     qbittorrent
     qimgv
     spotify
