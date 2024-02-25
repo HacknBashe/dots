@@ -15,65 +15,47 @@ set cleaner ctpvclear
 &ctpvquit $id
 
 # Custom Functions
-cmd open &{{
-    case $(xdg-mime query filetype "$f") in
-        text/*|application/json) $EDITOR "$f" ;;
-        *) xdg-open "$f" ;;
-    esac
+cmd add %{{
+  printf "Add: "
+  read ans
+  if [[ "${ans: -1}" == "/" ]]; then
+    mkdir -p $ans
+    echo "Directory $ans Created"
+  else
+    path=$(dirname $ans)
+    [ "$path" != "." ] && mkdir -p $path
+    touch $ans
+    echo "Created file $ans."
+  fi
 }}
 
-cmd mkdir ${{
-  printf "Directory Name: "
+cmd commandOnSelection %{{
+  printf "Run on Selection: "
   read ans
-  mkdir $ans
-}}
-
-cmd mkfile ${{
-  printf "File Name: "
-  read ans
-  $EDITOR $ans
-}}
-
-cmd chmod ${{
-  printf "Mode Bits: "
-  read ans
-
-  for file in "$fx"
-  do
-    chmod $ans $file
-  done
-
+  files=$(printf "%s" "$fx" | sed ':a;N;$!ba;s/\n/ /g')
+  $ans $files
+  if [ $? -eq 0 ]; then
+    echo "ran $ans $files"
+  fi
+  read
   lf -remote 'send reload'
 }}
 
+cmd yankFilenames $
+
 # Bindings
-# Remove some defaults
-# map "'"
-# map '"'
-
-
-# Basic Functions
-map . set hidden!
-map X delete
-map R reload
-map c
-map Y $printf "%s" "$fx" | wl-copy
-map y copy
-# Could make this open in tmux
-map <enter> &alacritty
-map m
-map mf mkfile
-map md mkdir
-map ch chmod
-map f
-map / search
+map . commandOnSelection
+map a add 
+map Y $printf "%s" "$fx" | sed ':a;N;$!ba;s/\n/ /g' | wl-copy
+map c copy
+map x cut
 map C clear
-
-# File Openers
-map e $$EDITOR "$f"
+map d delete
+map f filter
 
 # Movement
 map gh cd ~
 map gc cd ~/codebase
 map gp cd ~/Pictures
 map gd cd ~/Downloads
+
