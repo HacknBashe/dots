@@ -9,6 +9,16 @@ let
       hash = "sha256-AXWN7HqlnSsmtCK8jK5vqyzHwKJY3eJL6fnjeJhoNMU=";
     };
   };
+  # TODO: Remove once updated in nixpkgs
+  nvim-treesitter-context-fix = pkgs.vimUtils.buildVimPlugin {
+    name = "nvim-treesitter-context";
+    src = pkgs.fetchFromGitHub {
+      owner = "nvim-treesitter";
+      repo = "nvim-treesitter-context";
+      rev = "f3ec0d8a1b4e07d7ed2da6b9a9f10864a83c4be4";
+      hash = "sha256-93f4YPUwQLkaTGJlK+OGspIFZ8t14iSpFz7+9Akgfc0=";
+    };
+  };
 in {
   programs.neovim = {
     enable = true;
@@ -36,7 +46,7 @@ in {
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
       # TODO disabled because it breaks on format
-      # nvim-treesitter-context
+      nvim-treesitter-context-fix
       playground
       sniprun
       telescope-fzf-native-nvim
