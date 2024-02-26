@@ -9,7 +9,7 @@ with config.lib.stylix.colors;
       # source = ../../files/config/hypr/hyprland.conf;
       text = ''
         $activeColor = ${base0D}
-        $inactiveColor = ${base03}
+        $inactiveColor = ${base00}
         $shadowColor = ${base01}
 
         exec = swaybg -o DP-1 -i ${wallLarge}
