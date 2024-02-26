@@ -68,6 +68,7 @@
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     }))
     wlogout
+    wayland-logout
     wofi
 
     grim
