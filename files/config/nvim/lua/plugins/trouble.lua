@@ -2,7 +2,12 @@
 return {
 	"folke/trouble.nvim",
 	config = function()
-		vim.keymap.set("n", "<leader>vq", "<cmd>TroubleToggle quickfix<cr>", { silent = true, noremap = true })
+		vim.keymap.set(
+			"n",
+			"<leader>vq",
+			"<cmd>TroubleToggle quickfix<cr>",
+			{ desc = "View Quickfix", silent = true, noremap = true }
+		)
 
 		require("trouble").setup({
 			icons = false,

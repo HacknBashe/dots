@@ -71,6 +71,11 @@ return {
 			},
 		})
 
-		vim.keymap.set("n", "<leader>p", ":Format<CR>")
+		vim.keymap.set(
+			"n",
+			"<leader>p",
+			":Format<CR>",
+			{ desc = "Format File", noremap = true, silent = true, nowait = true }
+		)
 	end,
 }

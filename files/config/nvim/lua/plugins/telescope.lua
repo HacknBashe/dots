@@ -23,21 +23,26 @@ return {
 		},
 	},
 	config = function()
-		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files follow=true <CR>")
-		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>")
+		local function opts(desc)
+			return { desc = desc, noremap = true, silent = true, nowait = true }
+		end
+
+		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files follow=true <CR>", opts("Find Files"))
+		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>", opts("Find Strings"))
 
 		local fdfcmd =
 			[[:lua telescope_find_directory_file(vim.fn.input("Search subdirectory for file: ", vim.fn.getreg('"'))<CR>]]
-		vim.keymap.set("n", "<leader>fdf", fdfcmd, { noremap = true, silent = true })
+		vim.keymap.set("n", "<leader>fdf", fdfcmd, opts("Find file in directory"))
 		local fdscmd =
 			[[:lua telescope_find_directory_string(vim.fn.input("Search subdirectory for string: ", vim.fn.getreg('"')))<CR>]]
-		vim.keymap.set("n", "<leader>fds", fdscmd, { noremap = true, silent = true })
+		vim.keymap.set("n", "<leader>fds", fdscmd, opts("Find string in directory"))
 
-		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles <CR>")
-		vim.keymap.set("n", "<leader>fh", "<cmd> Telescope help_tags <CR>")
+		vim.keymap.set("n", "<leader>fb", "<cmd> Telescope buffers <CR>", opts("Find Buffers"))
+		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles <CR>", opts("Find Recent"))
+		vim.keymap.set("n", "<leader>fh", "<cmd> Telescope help_tags <CR>", opts("Find Help"))
 
-		vim.keymap.set("n", "<leader>gc", "<cmd> Telescope git_commits <CR>")
-		vim.keymap.set("n", "<leader>gs", "<cmd> Telescope git_status <CR>")
+		vim.keymap.set("n", "<leader>gc", "<cmd> Telescope git_commits <CR>", opts("Git Commits"))
+		vim.keymap.set("n", "<leader>gs", "<cmd> Telescope git_status <CR>", opts("Git Status"))
 
 		require("telescope").load_extension("fzf")
 		local horiztonal = {

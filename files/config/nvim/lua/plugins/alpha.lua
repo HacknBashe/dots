@@ -77,7 +77,7 @@ return {
 			buttons,
 		}
 
-		vim.keymap.set("n", "<leader>va", ":Alpha <CR>", {}, "view alpha")
+		vim.keymap.set("n", "<leader>va", ":Alpha <CR>", { desc = "View Alpha" })
 
 		require("alpha").setup(theta.config)
 	end,

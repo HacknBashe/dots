@@ -15,7 +15,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-vim.keymap.set("n", "<leader>vl", ":Lazy <CR>", {}, "view lazy")
+vim.keymap.set("n", "<leader>vl", ":Lazy <CR>", { desc = "View Lazy" })
 
 local opts = {}
 

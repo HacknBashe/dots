@@ -11,7 +11,7 @@ return {
 		local treeApi = require("nvim-tree.api")
 		vim.keymap.set("n", "<leader>ft", function()
 			treeApi.tree.open({ find_file = true })
-		end)
+		end, { desc = "File Tree", noremap = true })
 
 		local function on_attach(bufnr)
 			local api = require("nvim-tree.api")
