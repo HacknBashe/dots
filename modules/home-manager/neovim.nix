@@ -1,4 +1,4 @@
-{ config, pkgs, base16-vim, ... }:
+{ config, pkgs, ... }:
 let
   harpoon2 = pkgs.vimUtils.buildVimPlugin {
     name = "harpoon2";
@@ -16,10 +16,6 @@ in {
     plugins = with pkgs.vimPlugins; [
       # nvim-dap
       # nvim-dap-ui
-      (pkgs.vimUtils.buildVimPlugin {
-        name = "base16-vim";
-        src = base16-vim;
-      })
 
       nvim-lspconfig
       nvim-cmp
@@ -60,9 +56,10 @@ in {
     extraLuaConfig = ''
       require('core.nix-init')
     '';
+    # TODO: Remove once base16 fixes md highlighting and stylix adds transparency to floats
     extraConfig = ''
       let base16_background_transparent=1 
-      colorscheme base16-default-dark
+      source ~/.config/nvim/systembase16.vim
     '';
   };
   home.file = {
@@ -76,5 +73,6 @@ in {
       target = ".config/nvim/lua/plugins";
       recursive = true;
     };
+    "base16" = import ./systembase16.nix { inherit config; };
   };
 }

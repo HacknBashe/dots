@@ -18,14 +18,9 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    base16-vim = {
-      url = "github:tinted-theming/base16-vim";
-      flake = false;
-    };
   };
 
-  outputs = { nixpkgs, home-manager, hyprland, stylix, base16-vim, ... }:
+  outputs = { nixpkgs, home-manager, hyprland, stylix, ... }:
     let
       # --- Settings ---- #
       wallLarge = /home/nick/Pictures/Walls/glowshroom-large.jpg;
@@ -53,10 +48,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.nick = import ./hosts/meraxes/home.nix;
-              home-manager.extraSpecialArgs = {
-                inherit base16-vim;
-                inherit wallLarge wallSmall;
-              };
+              home-manager.extraSpecialArgs = { inherit wallLarge wallSmall; };
             }
           ];
           specialArgs = { inherit wallLarge wallSmall; };
