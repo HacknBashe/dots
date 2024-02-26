@@ -40,6 +40,7 @@ in {
       gitsigns-nvim
       vim-hexokinase
       harpoon2
+      lazygit-nvim
       lualine-nvim
       # FIXME Doesn't work for some reason
       markdown-preview-nvim
