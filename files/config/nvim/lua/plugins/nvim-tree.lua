@@ -67,15 +67,15 @@ return {
 			-- vim.keymap.set("n", "]e", api.node.navigate.diagnostics.next, opts("Next Diagnostic"))
 			-- vim.keymap.set("n", "[e", api.node.navigate.diagnostics.prev, opts("Prev Diagnostic"))
 			vim.keymap.set("n", "g?", api.tree.toggle_help, opts("Help"))
-			vim.keymap.set("n", "J", api.node.navigate.sibling.last, opts("Last Sibling")) -- use P }
-			vim.keymap.set("n", "K", api.node.navigate.sibling.first, opts("First Sibling")) -- use P {
+			vim.keymap.set("n", "{", api.node.navigate.sibling.last, opts("Last Sibling"))
+			vim.keymap.set("n", "}", api.node.navigate.sibling.first, opts("First Sibling"))
 			vim.keymap.set("n", "H", api.tree.toggle_hidden_filter, opts("Toggle Filter: Dotfiles"))
 			vim.keymap.set("n", "I", api.tree.toggle_gitignore_filter, opts("Toggle Filter: Git Ignore"))
 			vim.keymap.set("n", "L", api.node.open.toggle_group_empty, opts("Toggle Group Empty"))
 			vim.keymap.set("n", "M", api.tree.toggle_no_bookmark_filter, opts("Toggle Filter: No Bookmark"))
 			-- vim.keymap.set("n", "o", api.node.open.edit, opts("Open"))
 			-- vim.keymap.set("n", "O", api.node.open.no_window_picker, opts("Open: No Window Picker"))
-			-- vim.keymap.set("n", "P", api.node.navigate.parent, opts("Parent Directory"))
+			vim.keymap.set("n", "P", api.node.navigate.parent, opts("Parent Directory"))
 			vim.keymap.set("n", "W", api.tree.collapse_all, opts("Collapse"))
 			-- vim.keymap.set("n", "S", api.tree.search_node, opts("Search"))
 			vim.keymap.set("n", "<2-LeftMouse>", api.node.open.edit, opts("Open"))
