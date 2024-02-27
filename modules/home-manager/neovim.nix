@@ -9,14 +9,13 @@ let
       hash = "sha256-AXWN7HqlnSsmtCK8jK5vqyzHwKJY3eJL6fnjeJhoNMU=";
     };
   };
-  # TODO: Remove once updated in nixpkgs
-  nvim-treesitter-context-fix = pkgs.vimUtils.buildVimPlugin {
-    name = "nvim-treesitter-context";
+  better-vim-tmux-resizer = pkgs.vimUtils.buildVimPlugin {
+    name = "better-vim-tmux-resizer";
     src = pkgs.fetchFromGitHub {
-      owner = "nvim-treesitter";
-      repo = "nvim-treesitter-context";
-      rev = "f3ec0d8a1b4e07d7ed2da6b9a9f10864a83c4be4";
-      hash = "sha256-93f4YPUwQLkaTGJlK+OGspIFZ8t14iSpFz7+9Akgfc0=";
+      owner = "RyanMillerC";
+      repo = "better-vim-tmux-resizer";
+      rev = "a791fe5b4433ac43a4dad921e94b7b5f88751048";
+      hash = "sha256-1uHcQQUnViktDBZt+aytlBF1ZG+/Ifv5VVoKSyM9ML0=";
     };
   };
 in {
@@ -47,8 +46,7 @@ in {
       markdown-preview-nvim
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
-      # TODO disabled because it breaks on format
-      nvim-treesitter-context-fix
+      nvim-treesitter-context
       playground
       sniprun
       telescope-fzf-native-nvim
@@ -62,6 +60,7 @@ in {
       vim-sandwich
       vim-table-mode
       vim-tmux-navigator
+      better-vim-tmux-resizer
       vim-visual-multi
       which-key-nvim
     ];

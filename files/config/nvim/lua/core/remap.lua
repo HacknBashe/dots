@@ -1,8 +1,5 @@
 vim.g.mapleader = " "
 
--- Dont bind Ex because I have nvim tree
--- vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
-
 -- keep screen in place
 vim.keymap.set("n", "J", "mzJ`z")
 -- keep screen centered while paging
@@ -41,11 +38,3 @@ vim.keymap.set(
 	{ desc = "Substitute Selection", noremap = true, silent = false }
 )
 -- TODO: Add v(isual) s(ubstitute)
-
--- vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
-
--- navigate through errors
--- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
--- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
--- vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
--- vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
