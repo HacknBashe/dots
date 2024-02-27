@@ -1,7 +1,10 @@
 local lspconfig = require("lspconfig")
+local luasnip = require("luasnip")
 local lspkind = require("lspkind")
 local cmp = require("cmp")
 local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets/" } })
 
 lspconfig.lua_ls.setup({
 	capabilities = lsp_capabilities,
@@ -73,6 +76,7 @@ local myborder = cmp.config.window.bordered()
 cmp.setup({
 	sources = {
 		{ name = "nvim_lsp" },
+		{ name = "luasnip" },
 		{ name = "codeium" },
 	},
 	formatting = {
@@ -84,9 +88,27 @@ cmp.setup({
 		}),
 	},
 	mapping = {
-		["<Tab>"] = cmp.mapping.confirm({ select = true }),
-		["<Up>"] = cmp.mapping.select_prev_item({ behavior = "select" }),
-		["<Down>"] = cmp.mapping.select_next_item({ behavior = "select" }),
+		["<leader>c"] = cmp.mapping.complete(),
+		["<CR>"] = cmp.mapping.confirm({ select = true }),
+		["<ESC>"] = cmp.mapping.abort(),
+		["<Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			elseif luasnip.locally_jumpable(1) then
+				luasnip.jump(1)
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
+		["<S-Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif luasnip.locally_jumpable(-1) then
+				luasnip.jump(-1)
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
 	},
 	snippet = {
 		expand = function(args)

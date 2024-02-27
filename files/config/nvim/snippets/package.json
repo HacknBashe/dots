@@ -1,0 +1,60 @@
+{
+  "name": "my-snippets",
+  "engines": {
+    "vscode": "^1.11.0"
+  },
+  "contributes": {
+    "snippets": [
+      {
+        "language": "all",
+        "path": "./snippets/global.json"
+      },
+      {
+        "language": [
+          "license"
+        ],
+        "path": "./snippets/license.json"
+      },
+      {
+        "language": [
+          "gitcommit",
+          "NeogitCommitMessage"
+        ],
+        "path": "./snippets/gitcommit.json"
+      },
+      {
+        "language": "nix",
+        "path": "./snippets/nix.json"
+      },
+      {
+        "language": [
+          "shellscript",
+          "shell",
+          "sh",
+          "zsh"
+        ],
+        "path": "./snippets/shell/shell.json"
+      },
+      {
+        "language": [
+          "markdown",
+          "rmd"
+        ],
+        "path": "./snippets/markdown.json"
+      },
+      {
+        "language": [
+          "html",
+          "jade",
+          "pug",
+          "eruby",
+          "javascriptreact",
+          "htmldjango",
+          "astro",
+          "blade"
+        ],
+        "path": "./snippets/html.json"
+      }
+    ]
+  }
+}

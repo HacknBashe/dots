@@ -32,6 +32,7 @@
     jdt-language-server
     google-java-format
 
+    lua
     lua-language-server
     stylua
 

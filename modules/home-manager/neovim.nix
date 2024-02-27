@@ -28,10 +28,11 @@ in {
       # nvim-dap-ui
 
       nvim-lspconfig
-      nvim-cmp
-      codeium-nvim
       cmp-nvim-lsp
       luasnip
+      cmp_luasnip
+      codeium-nvim
+      nvim-cmp
       lspkind-nvim
 
       alpha-nvim
@@ -82,6 +83,11 @@ in {
     "nvim-plugins" = {
       source = ../../files/config/nvim/lua/plugins;
       target = ".config/nvim/lua/plugins";
+      recursive = true;
+    };
+    "snippets" = {
+      source = ../../files/config/nvim/snippets;
+      target = ".config/nvim/snippets";
       recursive = true;
     };
     "base16" = import ./systembase16.nix { inherit config; };
