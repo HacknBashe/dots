@@ -38,9 +38,14 @@ with config.lib.stylix.colors.withHashtag; {
   };
 
   home.file = {
-    "scripts" = {
-      source = ../../files/local/scripts;
-      target = ".local/scripts";
+    "bin" = {
+      source = ../../files/local/bin;
+      target = ".local/bin";
+      recursive = true;
+    };
+    "cht" = {
+      source = ../../files/local/share/cht;
+      target = ".local/share/cht";
       recursive = true;
     };
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 cleanup() {
   tput rmcup
+  exit
 }
 
 trap cleanup SIGINT

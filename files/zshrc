@@ -1,6 +1,6 @@
-# zmodload zsh/zprof
+#!/usr/bin/env bash
 
-#!/bin/bash
+# zmodload zsh/zprof
 
 if command -v fnm &>/dev/null; then
   eval "$(fnm env --use-on-cd)"
@@ -49,7 +49,6 @@ addToPathFront() {
 }
 addToPathFront $HOME/bin:/usr/local/bin
 addToPathFront $HOME/.local/bin
-addToPathFront $HOME/.local/scripts
 addToPathFront $HOME/.yarn/bin
 addToPathFront $HOME/.config/yarn/global/node_modules/.bin
 addToPathFront $HOME/.cargo/bin
@@ -70,7 +69,7 @@ alias nixclean="sudo nix-env -p /nix/var/nix/profiles/system --delete-generation
 
 alias vi="nvim"
 alias ll="ls -alG"
-alias lg="lazygit"
+alias gl="lazygit"
 cl() { cd "$@" && ls; }
 
 bindkey -s ^t "^unvim ~/notes/todo.md\n"
