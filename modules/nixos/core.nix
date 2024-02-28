@@ -34,5 +34,6 @@
     vim
     vitetris
     wget
+    zoxide
   ];
 }

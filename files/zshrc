@@ -70,11 +70,13 @@ alias nixclean="sudo nix-env -p /nix/var/nix/profiles/system --delete-generation
 
 alias vi="nvim"
 alias ll="ls -alG"
+alias lg="lazygit"
 cl() { cd "$@" && ls; }
 
 bindkey -s ^t "^unvim ~/notes/todo.md\n"
 bindkey -s ^b "^ubtop\n"
 bindkey -s ^f "^utmux_sessionizer.sh\n"
+bindkey -s '^ ' "^utmux_launcher.sh\n"
 bindkey -s ^v "^ufzf_vim.sh\n"
 function spawn-alacritty() { 
   (alacritty --working-directory="$(pwd)" >/dev/null 2>&1 &)
@@ -83,6 +85,7 @@ zle -N spawn-alacritty
 bindkey ^n spawn-alacritty
 
 eval "$(direnv hook zsh)"
+eval "$(zoxide init zsh)"
 
 if [ -f ~/.zshrc.local ]; then
   # Import local settings
