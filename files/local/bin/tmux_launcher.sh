@@ -11,8 +11,8 @@ if [[ $# -eq 1 ]]; then
 fi
 
 declare -A items=(
-  ["^"]="$HOME/notes"
-  ["("]="$HOME/codebase"
+  ["^"]="$HOME/codebase"
+  ["("]="$HOME/notes"
   [")"]="$HOME/.config/dots"
 )
 keys=("!" "@" "#" "$" "%" "^" "(" ")")
