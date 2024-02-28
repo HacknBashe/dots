@@ -18,6 +18,15 @@ let
       hash = "sha256-1uHcQQUnViktDBZt+aytlBF1ZG+/Ifv5VVoKSyM9ML0=";
     };
   };
+  obsidian-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "obsidian-nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "epwalsh";
+      repo = "obsidian.nvim";
+      rev = "ebf4cd26f8c69e6ed025d06dfb4144212817878b";
+      hash = "sha256-8JpbqzbAs6fvM3iyyWszBl1LIp1tqNJ4Ngep0EunCRg=";
+    };
+  };
 in {
   programs.neovim = {
     enable = true;
@@ -47,6 +56,7 @@ in {
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
       nvim-treesitter-context
+      obsidian-nvim
       playground
       sniprun
       telescope-fzf-native-nvim
