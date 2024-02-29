@@ -14,7 +14,7 @@ return {
 				name = "+Find/File",
 			},
 			["<leader>fd"] = {
-				name = "+Find in Directory"
+				name = "+Find in Directory",
 			},
 			["<leader>g"] = {
 				name = "+Git",

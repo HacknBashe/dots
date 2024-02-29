@@ -66,7 +66,6 @@ in {
       vim-commentary
       vim-fugitive
       vim-markdown-toc
-      vim-sleuth
       vim-sandwich
       vim-table-mode
       vim-tmux-navigator
