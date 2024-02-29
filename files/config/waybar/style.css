@@ -10,41 +10,43 @@
 }
 
 window#waybar {
-  background: transparent;
+  background: @base00;
+  background: linear-gradient(to bottom, @base00 20%, @base00-00);
 }
 
-window#waybar.hidden {
-  opacity: 0.2;
+tooltip {
+  background: @base00-75;
+  color: @base07;
 }
 
 #workspaces {
-  background: @base00;
-  color: @base05;
   margin-right: 8px;
-  border-radius: 10px;
   transition: none;
 }
 
 #workspaces button {
+  color: @base04;
   transition: none;
-  background: transparent;
-  padding: 5px;
-  font-size: 18px;
+  padding: 3px 8px 3px 5px;
+}
+
+#workspaces button.special {
+  color: @base03;
+}
+
+#workspaces button.visible {
+  background: @base02;
+  color: @base05;
 }
 
 #workspaces button.active {
-  background: @base02;
-  color: @base07;
-  border-radius: inherit;
+  background: @base03;
+  color: @base06;
 }
 
 #workspaces button:hover {
-  background: @base03;
-  color: @base08;
-  transition: none;
-  box-shadow: inherit;
-  text-shadow: inherit;
-  border-radius: inherit;
+  background: @base04;
+  color: @base07;
 }
 
 #window {
@@ -53,8 +55,7 @@ window#waybar.hidden {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  background: @base00;
-  color: @base05;
+  color: @base07;
 }
 
 #tray {
@@ -63,8 +64,7 @@ window#waybar.hidden {
   margin-right: 8px;
   border-radius: 10px;
   transition: none;
-  background: @base00;
-  color: @base05;
+  color: @base07;
 }
 
 #custom-sound {
@@ -73,8 +73,7 @@ window#waybar.hidden {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  background: @base00;
-  color: @base05;
+  color: @base07;
 }
 
 #wireplumber {
@@ -83,8 +82,7 @@ window#waybar.hidden {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  background: @base00;
-  color: @base05;
+  color: @base07;
 }
 
 #bluetooth {
@@ -93,8 +91,7 @@ window#waybar.hidden {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  background: @base00;
-  color: @base05;
+  color: @base07;
 }
 
 #memory {
@@ -103,8 +100,7 @@ window#waybar.hidden {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  background: @base00;
-  color: @base05;
+  color: @base07;
 }
 
 #custom-weather {
@@ -112,14 +108,12 @@ window#waybar.hidden {
   padding-left: 16px;
   border-radius: 10px 0px 0px 10px;
   transition: none;
-  background: @base00;
-  color: @base05;
+  color: @base07;
 }
 
 #clock {
   padding-right: 16px;
   border-radius: 0px 10px 10px 0px;
   transition: none;
-  background: @base00;
-  color: @base05;
+  color: @base07;
 }

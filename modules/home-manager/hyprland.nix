@@ -36,6 +36,8 @@ with config.lib.stylix.colors;
     };
     "waybar/scheme.css" = {
       text = ''
+        @define-color base00-00 rgba(${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}, 0.0);
+        @define-color base00-75 rgba(${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}, 0.75);
         @define-color base00 ${withHashtag.base00};
         @define-color base01 ${withHashtag.base01};
         @define-color base02 ${withHashtag.base02};

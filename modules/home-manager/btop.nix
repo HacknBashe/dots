@@ -40,7 +40,7 @@ with config.lib.stylix.colors.withHashtag;
       theme[title]="${base07}"
 
       # Higlight color for keyboard shortcuts
-      theme[hi_fg]="${base0C}"
+      theme[hi_fg]="${base03}"
 
       # Background color of selected item in processes box
       theme[selected_bg]="${base01}"
@@ -52,25 +52,25 @@ with config.lib.stylix.colors.withHashtag;
       theme[inactive_fg]="${base02}"
 
       # Color of text appearing on top of graphs, i.e uptime and current network graph scaling
-      theme[graph_text]="${base03}"
+      theme[graph_text]="${base05}"
 
       # Misc colors for processes box including mini cpu graphs, details memory graph and details status text
-      theme[proc_misc]="${base04}"
+      theme[proc_misc]="${base06}"
 
       # Cpu box outline color
-      theme[cpu_box]="${base0C}"
+      theme[cpu_box]="${base03}"
 
       # Memory/disks box outline color
-      theme[mem_box]="${base0C}"
+      theme[mem_box]="${base03}"
 
       # Net up/down box outline color
-      theme[net_box]="${base0C}"
+      theme[net_box]="${base03}"
 
       # Processes box outline color
-      theme[proc_box]="${base0C}"
+      theme[proc_box]="${base03}"
 
       # Box divider line and small boxes line color
-      theme[div_line]="${base0C}"
+      theme[div_line]="${base03}"
 
       # Temperature graph colors
       theme[temp_start]="${base0B}"
