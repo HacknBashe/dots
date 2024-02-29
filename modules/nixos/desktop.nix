@@ -10,6 +10,8 @@
 
   services.gnome.gnome-keyring.enable = true;
   programs.seahorse.enable = true;
+  # For obsidian
+  nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ];
 
   programs.steam.enable = true;
   environment.systemPackages = with pkgs; [
@@ -22,6 +24,7 @@
     helvum
     makemkv
     obs-studio
+    obsidian
     prismlauncher-unwrapped
     qalculate-gtk
     qbittorrent
