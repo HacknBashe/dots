@@ -91,53 +91,56 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    wireplumber.enable = true;
-  };
-  environment.etc = {
-    "wireplumber/main.lua.d/51-device-setup.lua".text = ''
-      alsa_monitor.rules = {
-        {
-          matches = {{{ "device.name", "equals", "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00" }}};
-          apply_properties = {
-            ["device.description"] = "Headset",
-            ["device.nick"] = "Headset",
-          },
-        },
-        {
-          matches = {{{ "device.name", "equals", "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.2" }}};
-          apply_properties = {
-            ["device.description"] = "Soundbar",
-            ["device.nick"] = "Soundbar",
-          },
-        },
-        {
-          matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.7.0" }}};
-          apply_properties = {
-            ["node.description"] = "TV",
-            ["node.nick"] = "TV",
-            ["node.disabled"] = true,
-          },
-        },
-        {
-          matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.3.0" }}};
-          apply_properties = {
-            ["node.disabled"] = true,
-          },
-        },
-        {
-          matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.8.0" }}};
-          apply_properties = {
-            ["node.disabled"] = true,
-          },
-        },
-        {
-          matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.9.0" }}};
-          apply_properties = {
-            ["node.disabled"] = true,
-          },
-        },
-      }
-    '';
+    wireplumber = {
+      enable = true;
+      configPackages = [
+        (pkgs.writeTextDir "share/wireplumber/main.lua.d/51-device-setup.lua" ''
+          alsa_monitor.rules = {
+            {
+              matches = {{{ "device.name", "equals", "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00" }}};
+              apply_properties = {
+                ["device.description"] = "Headset",
+                ["device.nick"] = "Headset",
+              },
+            },
+            {
+              matches = {{{ "device.name", "equals", "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.2" }}};
+              apply_properties = {
+                ["device.description"] = "Soundbar",
+                ["device.nick"] = "Soundbar",
+              },
+            },
+            {
+              matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.7.0" }}};
+              apply_properties = {
+                ["node.description"] = "TV",
+                ["node.nick"] = "TV",
+                ["node.disabled"] = true,
+              },
+            },
+            {
+              matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.3.0" }}};
+              apply_properties = {
+                ["node.disabled"] = true,
+              },
+            },
+            {
+              matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.8.0" }}};
+              apply_properties = {
+                ["node.disabled"] = true,
+              },
+            },
+            {
+              matches = {{{ "node.name", "equals", "alsa_output.pci-0000_01_00.1.playback.9.0" }}};
+              apply_properties = {
+                ["node.disabled"] = true,
+              },
+            },
+          }
+        '')
+      ];
+
+    };
   };
 
   users.users.nick = {
