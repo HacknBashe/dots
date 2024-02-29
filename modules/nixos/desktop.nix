@@ -3,9 +3,10 @@
   programs.xfconf.enable = true;
   services.gvfs.enable = true;
   services.tumbler.enable = true;
-  programs.thunar.plugins = with pkgs.xfce; [
-    thunar-archive-plugin
-    thunar-volman
+  programs.thunar.plugins = with pkgs; [
+    xfce.thunar-archive-plugin
+    xfce.thunar-volman
+    gnome.file-roller
   ];
 
   services.gnome.gnome-keyring.enable = true;
