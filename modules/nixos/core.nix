@@ -29,6 +29,7 @@
     p7zip
     playerctl
     pulsemixer
+    renameutils
     ripgrep
     tmux
     vim

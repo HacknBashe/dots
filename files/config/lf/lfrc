@@ -41,9 +41,6 @@ cmd commandOnSelection %{{
   lf -remote 'send reload'
 }}
 
-cmd yankFilenames $
-# bash
-
 cmd z %{{
 	result="$(zoxide query --exclude $PWD $@ | sed 's/\\/\\\\/g;s/"/\\"/g')"
 	lf -remote "send $id cd \"$result\""
@@ -67,6 +64,7 @@ map x cut
 map C clear
 map d delete
 map f filter
+map R $qmv
 
 # Movement
 map gh cd ~
