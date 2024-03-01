@@ -15,6 +15,7 @@
     (pkgs.btop.override { cudaSupport = true; })
     cava
     chntpw
+    cmatrix
     ctpv
     curl
     efibootmgr
