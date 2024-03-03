@@ -61,6 +61,7 @@ in {
   networking.wireless.iwd.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
 
+  security.polkit.enable = true;
   services.openssh.enable = true;
 
   hardware.bluetooth.enable = true;

@@ -51,6 +51,30 @@
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
+  systemd.user = {
+    targets.hyprland = {
+      unitConfig = {
+        Description = "Hyprland Session";
+        BindsTo = [ "graphical-session.target" ];
+        Wants = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session-pre.target" ];
+      };
+    };
+    services.gnome-policykit-agent = {
+      enable = true;
+      description = "GNOME PolicyKit Agent";
+      wantedBy = [ "graphical-session.target" ];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart =
+          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+    };
+  };
+
   environment.systemPackages = with pkgs; [
     swaybg
     swaylock-effects
@@ -59,6 +83,8 @@
     libsForQt5.qt5ct
     libsForQt5.qt5.qtquickcontrols
     libsForQt5.qt5.qtgraphicaleffects
+
+    polkit_gnome
 
     dunst
     inotify-tools
