@@ -51,6 +51,10 @@ return {
 					require("formatter.filetypes.typescriptreact").prettierd,
 				},
 
+                python = {
+					require("formatter.filetypes.python").black,
+                },
+
 				php = {
 					require("formatter.filetypes.php").phpcbf,
 					function()

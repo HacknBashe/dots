@@ -20,6 +20,7 @@
     go
     gopls
 
+    black
     conda
     (python311.withPackages (ps: with ps; [ numpy requests pyserial ]))
 
