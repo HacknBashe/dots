@@ -88,24 +88,22 @@ cmp.setup({
 		}),
 	},
 	mapping = {
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
-		["q"] = cmp.mapping.abort(),
-		["<Tab>"] = cmp.mapping(function(fallback)
+		["<C-y>"] = cmp.mapping.confirm({ select = true }),
+		["<C-c>"] = cmp.mapping.abort(),
+		["<C-n>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
 			elseif luasnip.locally_jumpable(1) then
 				luasnip.jump(1)
 			else
-				fallback()
+                cmp.complete()
 			end
 		end, { "i", "s" }),
-		["<S-Tab>"] = cmp.mapping(function()
+		["<C-p>"] = cmp.mapping(function()
 			if cmp.visible() then
 				cmp.select_prev_item()
 			elseif luasnip.locally_jumpable(-1) then
 				luasnip.jump(-1)
-			else
-				cmp.complete()
 			end
 		end, { "i", "s" }),
 	},
