@@ -52,7 +52,7 @@
               home-manager.extraSpecialArgs = { inherit wallLarge wallSmall; };
             }
           ];
-          specialArgs = { inherit wallLarge wallSmall; };
+          specialArgs = { inherit wallLarge wallSmall hyprland; };
         };
       };
     };
