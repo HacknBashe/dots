@@ -18,9 +18,11 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixos-wsl = { url = "github:nix-community/NixOS-WSL"; };
   };
 
-  outputs = { nixpkgs, home-manager, hyprland, stylix, ... }:
+  outputs = { nixpkgs, home-manager, hyprland, stylix, nixos-wsl, ... }:
     let
       # --- Settings ---- #
       wallLarge = /home/nick/Pictures/Walls/glowshroom-large.jpg;
@@ -38,6 +40,21 @@
       };
     in {
       nixosConfigurations = {
+        meraxes-wsl = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [
+            commonConfig
+            ./hosts/meraxes-wsl/configuration.nix
+            stylix.nixosModules.stylix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.nick = import ./hosts/meraxes-wsl/home.nix;
+            }
+          ];
+          specialArgs = { inherit nixos-wsl; };
+        };
         meraxes = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [

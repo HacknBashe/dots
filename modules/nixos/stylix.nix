@@ -1,6 +1,13 @@
 { config, pkgs, wallSmall, ... }: {
   stylix = {
-    image = wallSmall;
+    # TODO: Remove this or set to null once it's allowed
+    # https://github.com/danth/stylix/issues/200
+    image = pkgs.fetchurl {
+      url =
+        "https://www.pixelstalk.net/wp-content/uploads/2016/05/Epic-Anime-Awesome-Wallpapers.jpg";
+      sha256 = "enQo3wqhgf0FEPHj2coOCvo7DuZv+x5rL/WIo4qPI50=";
+    };
+
     polarity = "dark";
 
     base16Scheme =

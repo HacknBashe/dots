@@ -1,0 +1,19 @@
+import = ["C:/Users/nick/AppData/Roaming/alacritty/theme.toml"]
+[font]
+size = 20.0
+[font.bold]
+style = "Regular"
+
+[font.normal]
+family = "SauceCodePro Nerd Font Mono"
+style = "ExtraLight"
+
+[window]
+decorations = "full"
+dynamic_padding = true
+opacity = 0.9
+
+[keyboard]
+bindings = [
+  { key="Space", mods= "Control", chars= "\u0000" }
+]
