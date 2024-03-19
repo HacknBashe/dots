@@ -12,6 +12,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    bat
     (pkgs.btop.override { cudaSupport = true; })
     cava
     chntpw
@@ -19,6 +20,7 @@
     ctpv
     curl
     efibootmgr
+    eza
     fastfetch
     fzf
     jq

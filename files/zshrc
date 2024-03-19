@@ -68,7 +68,10 @@ alias nr="sudo nixos-rebuild switch --flake ~/.config/dots"
 alias ng="sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d"
 
 alias vi="nvim"
-alias ll="ls -alG"
+alias ls="exa"
+alias ll="exa -l"
+alias la="exa -la"
+alias cat="bat"
 alias gl="lazygit"
 cl() { cd "$@" && ls; }
 
