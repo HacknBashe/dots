@@ -27,7 +27,6 @@
     lf
     libsecret
     neovim
-    nvtop
     pipes
     p7zip
     playerctl
