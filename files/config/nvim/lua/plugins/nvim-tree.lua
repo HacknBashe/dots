@@ -23,6 +23,7 @@ return {
 			-- Shared with LF
 			vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close Directory"))
 			vim.keymap.set("n", "l", api.node.open.edit, opts("Open"))
+			vim.keymap.set("n", "<CR>", api.node.open.edit, opts("Open"))
 			vim.keymap.set("n", ".", api.node.run.cmd, opts("Run Command"))
 			vim.keymap.set("n", "a", api.fs.create, opts("Create File Or Directory"))
 			vim.keymap.set("n", "bd", api.marks.bulk.delete, opts("Delete Bookmarked"))
