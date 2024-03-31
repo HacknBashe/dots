@@ -31,6 +31,7 @@
     qbittorrent
     qimgv
     spotify
+    todoist-electron
     ungoogled-chromium
     webcord
     wezterm
