@@ -13,7 +13,7 @@ DELAY=0.2
 
 while snore $DELAY; do
     COMMAND_OUTPUT=$(wpctl status)
-    SEARCH_STRING="Audio/Sink    alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.playback.0.0"
+    SEARCH_STRING="Audio/Sink    alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo"
 
     WP_OUTPUT=$(wpctl get-volume @DEFAULT_AUDIO_SINK@)
 
