@@ -40,6 +40,21 @@
       };
     in {
       nixosConfigurations = {
+        cla-wsl = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [
+            commonConfig
+            ./hosts/cla-wsl/configuration.nix
+            stylix.nixosModules.stylix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.nick = import ./hosts/meraxes-wsl/home.nix;
+            }
+          ];
+          specialArgs = { inherit nixos-wsl; };
+        };
         meraxes-wsl = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
@@ -70,6 +85,15 @@
             }
           ];
           specialArgs = { inherit wallLarge wallSmall hyprland; };
+        };
+      };
+
+      homeConfigurations = {
+        hack56224 = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.${system};
+          modules =
+            [ stylix.homeManagerModules.stylix ./hosts/cla-vm/home.nix ];
+          extraSpecialArgs = { inherit nixpkgs system; };
         };
       };
     };

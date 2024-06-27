@@ -38,6 +38,7 @@ focus_borders:
     color: "#0000ff"
 
   inactive:
+
     enabled: false
     color: "#ff0000"
 
@@ -50,6 +51,7 @@ bar:
   font_family: "Segoe UI"
   font_size: "13px"
   padding: "4px 6px"
+
   offset_x: "0"
   offset_y: "0"
   border_radius: "0"
@@ -59,8 +61,11 @@ bar:
       displayed_workspace_background: "#00000033"
       default_workspace_background: "transparent"
   components_center:
+
     - type: "window title"
+
   components_right:
+
     - type: "system tray"
     - type: "tiling direction"
       label_horizontal: "⮂"
@@ -68,13 +73,16 @@ bar:
       background: "#ffffff33"
       margin: "0 4px"
       padding: "0 8px"
+
     - type: "binding mode"
+
       background: "#ffffff33"
       margin: "0 4px 0 0"
       padding: "0 8px"
     - type: "clock"
       # Documentation on formatting date/time string:
       # https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
+
       time_formatting: "hh:mm tt  ddd MMM d"
 
 workspaces:
@@ -83,13 +91,17 @@ workspaces:
   - name: "3"
   - name: "4"
   - name: "5"
+
   - name: "6"
   - name: "7"
   - name: "8"
   - name: "9"
   - name: "10"
 
+  - name: "n"
+
 window_rules:
+
   # Task Manager requires admin privileges to manage and should be ignored unless running
   # the WM as admin.
   - command: "ignore"
@@ -102,6 +114,7 @@ window_rules:
   # Do not manage picture-in-picture windows for browsers. Note that the default is for
   # English; change `match_title` to the window's title if you use another language.
   - command: "ignore"
+
     match_title: "[Pp]icture.in.[Pp]icture"
     match_class_name: "Chrome_WidgetWin_1|MozillaDialogClass"
 
@@ -114,6 +127,7 @@ binding_modes:
     keybindings:
       # Resize focused window by a percentage or pixel amount.
       - command: "resize width -2%"
+
         bindings: ["H", "Left"]
       - command: "resize width +2%"
         bindings: ["L", "Right"]
@@ -123,6 +137,7 @@ binding_modes:
         bindings: ["J", "Down"]
       # Press enter/escape to return to default keybindings.
       - command: "binding mode none"
+
         bindings: ["Escape", "Enter"]
 
 keybindings:
@@ -144,6 +159,7 @@ keybindings:
   - command: "move up"
     bindings: ["Alt+Shift+K", "Alt+Shift+Up"]
   - command: "move down"
+
     bindings: ["Alt+Shift+J", "Alt+Shift+Down"]
 
   # Resize focused window by a percentage or pixel amount.
@@ -171,6 +187,7 @@ keybindings:
 
   # Change the focused window to be floating / tiling.
   - command: "toggle floating"
+
     binding: "Alt+Shift+Space"
 
   # Change the focused window to be maximized / unmaximized.
@@ -193,12 +210,13 @@ keybindings:
   - command: "reload config"
     binding: "Alt+Shift+R"
 
+
   # Launch CMD terminal (alternatively `exec wt` or `exec %ProgramFiles%/Git/git-bash.exe`
   # to start Windows Terminal and Git Bash respectively.
   - command: "exec alacritty"
     binding: "Alt+Q"
 
-  - command: "exec brave"
+  - command: "exec msedge"
     binding: "Alt+W"
 
   - command: "exec explorer"
@@ -226,8 +244,12 @@ keybindings:
   - command: "focus workspace 10"
     binding: "Alt+0"
 
+  - command: "focus workspace n"
+    binding: "Alt+N"
+
   # Move focused workspace to a monitor in a given direction.
   - command: "move workspace left"
+
     binding: "Alt+A"
   - command: "move workspace right"
     binding: "Alt+F"
@@ -257,3 +279,5 @@ keybindings:
     bindings: ["Alt+Shift+9"]
   - commands: ["move to workspace 10", "focus workspace 10"]
     bindings: ["Alt+Shift+0"]
+  - commands: ["move to workspace n", "focus workspace n"]
+    bindings: ["Alt+Shift+N"]

@@ -11,6 +11,10 @@ if [[ $# -eq 1 ]]; then
 fi
 
 declare -A items=(
+  ["!"]="$HOME/React-TaskList"
+  ["@"]="$HOME/API-TaskList"
+  ["#"]="$HOME/WorkerJS-Kit"
+  ["$"]="$HOME/Process-Kit"
   ["^"]="$HOME/codebase"
   ["("]="$HOME/notes"
   [")"]="$HOME/.config/dots"

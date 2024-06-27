@@ -77,8 +77,6 @@ cl() { cd "$@" && ls; }
 
 bindkey -s '^ ' "^utmux_launcher.sh\n"
 bindkey -s ^f "^utmux_sessionizer.sh\n"
-bindkey -s ^v "^ufzf_vim.sh\n"
-bindkey -s ^t "^u[[ -e todo.md ]] && nvim todo.md || nvim ~/notes/todo.md\n"
 bindkey -s ^b "^ubtop\n"
 bindkey -s ^g "^ulazygit\n"
 

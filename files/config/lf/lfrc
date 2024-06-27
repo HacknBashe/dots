@@ -53,6 +53,16 @@ cmd zi ${{
 
 cmd on-cd &{{
     zoxide add "$PWD"
+     # display git repository status in your prompt
+    source ~/.local/bin/git-prompt.sh
+    GIT_PS1_SHOWDIRTYSTATE=auto
+    GIT_PS1_SHOWSTASHSTATE=auto
+    GIT_PS1_SHOWUNTRACKEDFILES=auto
+    GIT_PS1_SHOWUPSTREAM=auto
+    GIT_PS1_COMPRESSSPARSESTATE=auto
+    git=$(__git_ps1 " [GIT BRANCH:> %s]") || true
+    fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[33;1m$git\033[0m"
+    lf -remote "send $id set promptfmt \"$fmt\""
 }}
 
 # Bindings
@@ -68,7 +78,7 @@ map R $qmv
 
 # Movement
 map gh cd ~
-map gw cd /mnt/c/Users/nick
+map gw cd /mnt/c/Users/hack56224
 map gc cd ~/codebase
 map gp cd ~/Pictures
 map gd cd ~/Downloads

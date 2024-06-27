@@ -26,8 +26,10 @@ in {
 
   wsl.enable = true;
   wsl.defaultUser = "nick";
+  wsl.wslConf.network.generateResolvConf = false;
 
-  networking.hostName = "meraxes-wsl";
+  networking.hostName = "cla-wsl";
+  networking.nameservers = [ "8.8.8.8" ];
 
   services.gnome.gnome-keyring.enable = true;
 
@@ -38,7 +40,7 @@ in {
     packages = with pkgs; [ ];
   };
 
-  environment.systemPackages = with pkgs; [ gimp ];
+  environment.systemPackages = with pkgs; [ ];
 
   system.activationScripts.windows = {
     text = ''
@@ -70,13 +72,13 @@ in {
       }
 
       copy "/home/nick/.config/dots/windows/.glaze-wm/config.yaml" \
-              "/mnt/c/Users/nick/.glaze-wm/config.yaml"
+              "/mnt/c/Users/hack56224/.glaze-wm/config.yaml"
 
       copy "/home/nick/.config/dots/windows/AppData/Roaming/alacritty/alacritty.toml" \
-              "/mnt/c/Users/nick/AppData/Roaming/alacritty/alacritty.toml"
+              "/mnt/c/Users/hack56224/AppData/Roaming/alacritty/alacritty.toml"
 
       copy "${themeFile}" \
-              "/mnt/c/Users/nick/AppData/Roaming/alacritty/theme.toml"
+              "/mnt/c/Users/hack56224/AppData/Roaming/alacritty/theme.toml"
 
       # WSL doesn't have permissions to copy to program files,
       if [ ! -f '/mnt/c/Program Files/Alacritty/conpty.dll' ]; then

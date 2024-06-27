@@ -39,7 +39,7 @@ in {
       cmp-nvim-lsp
       luasnip
       cmp_luasnip
-      codeium-nvim
+      #codeium-nvim
       nvim-cmp
       lspkind-nvim
 

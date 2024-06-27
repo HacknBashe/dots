@@ -4,7 +4,7 @@ require("core.remap")
 require("plugins.alpha").config()
 require("plugins.bufferline").config()
 require("plugins.better-vim-tmux-resizer")
-require("plugins.codeium").config()
+-- require("plugins.codeium").config()
 require("plugins.commentary").config()
 --require('plugins.dap').config();
 require("plugins.formatter").config()

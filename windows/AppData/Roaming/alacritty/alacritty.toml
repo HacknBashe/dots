@@ -1,4 +1,4 @@
-import = ["C:/Users/nick/AppData/Roaming/alacritty/theme.toml"]
+import = ["C:/Users/hack56224/AppData/Roaming/alacritty/theme.toml"]
 [font]
 size = 20.0
 [font.bold]
@@ -9,9 +9,9 @@ family = "SauceCodePro Nerd Font Mono"
 style = "ExtraLight"
 
 [window]
-decorations = "full"
+decorations = "none"
 dynamic_padding = true
-opacity = 0.9
+opacity = 0.95
 
 [keyboard]
 bindings = [

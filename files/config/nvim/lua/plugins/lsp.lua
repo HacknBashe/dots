@@ -26,6 +26,7 @@ lspconfig.lua_ls.setup({
 })
 lspconfig.jdtls.setup({})
 lspconfig.gopls.setup({})
+lspconfig.tsserver.setup({})
 
 vim.diagnostic.config({
 	signs = false,
