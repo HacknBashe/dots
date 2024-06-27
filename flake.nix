@@ -88,13 +88,18 @@
         };
       };
 
-      homeConfigurations = {
-        hack56224 = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${system};
-          modules =
-            [ stylix.homeManagerModules.stylix ./hosts/cla-vm/home.nix ];
-          extraSpecialArgs = { inherit nixpkgs system; };
-        };
+    homeConfigurations = {
+      nick = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        modules = [
+          ./hosts/toothless/home.nix
+        ];
+        extraSpecialArgs = {inherit nixpkgs system;};
+      };
+      hack56224 = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        modules = [stylix.homeManagerModules.stylix ./hosts/cla-vm/home.nix];
+        extraSpecialArgs = {inherit nixpkgs system;};
       };
     };
 }

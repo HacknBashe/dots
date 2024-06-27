@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   home.username = "nh470c";
   home.homeDirectory = "/Users/nh470c";
   home.stateVersion = "22.11";
@@ -11,10 +11,10 @@
     highlight
     lf
     neovim
-    nixfmt
+    alejandra
     ripgrep
     tmux
   ];
 
-  programs.git = { enable = true; };
+  programs.git = {enable = true;};
 }

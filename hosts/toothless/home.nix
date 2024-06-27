@@ -3,39 +3,99 @@
   pkgs,
   lib,
   ...
-}:
-with config.lib.stylix.colors.withHashtag; {
-  # home.username = "hack56224";
-  # home.homeDirectory = "/home/hack56224";
-  home.username = "azureuser";
-  home.homeDirectory = "/home/azureuser";
+}: let
+  background = "#1a1b26";
+  foreground = "#c0caf5";
+  cursor = "#c0caf5";
+  text = "#1a1b26";
+  default = {
+    black = "#15161e";
+    red = "#f7768e";
+    green = "#9ece6a";
+    yellow = "#e0af68";
+    blue = "#7aa2f7";
+    magenta = "#bb9af7";
+    cyan = "#7dcfff";
+    white = "#a9b1d6";
+  };
+  bright = {
+    black = "#414868";
+    red = "#f7768e";
+    green = "#9ece6a";
+    yellow = "#e0af68";
+    blue = "#7aa2f7";
+    magenta = "#bb9af7";
+    cyan = "#7dcfff";
+    white = "#c0caf5";
+  };
+  indexed = {
+    one = "#ff9e64";
+    two = "#db4b4b";
+  };
+in {
+  home.username = "nick";
+  home.homeDirectory = "/Users/nick";
 
   home.stateVersion = "23.11"; # Please read the comment before changing.
 
   nix.package = pkgs.nix;
   nix.settings.experimental-features = ["nix-command" "flakes"];
-  programs.home-manager.enable = true;
+  fonts.fontconfig.enable = true;
+  programs = {
+    home-manager.enable = true;
+    alacritty = {
+      enable = true;
+      settings = {
+        font.size = 20.0;
+        font.bold.style = lib.mkForce "Regular";
+        font.normal.family = "SauceCodePro Nerd Font Mono";
+        font.normal.style = lib.mkForce "ExtraLight";
+        window = {
+          decorations = "none";
+          dynamic_padding = true;
+          opacity = lib.mkForce 0.9;
+        };
+        colors = {
+          primary = {
+            background = background;
+            foreground = foreground;
+          };
+          cursor = {
+            text = text;
+            cursor = cursor;
+          };
+          normal = default;
+          bright = bright;
+          dim = default;
+          indexed_colors = [
+            {
+              index = 16;
+              color = indexed.one;
+            }
+            {
+              index = 17;
+              color = indexed.two;
+            }
+          ];
+        };
+      };
+    };
+  };
 
   imports = [
     ../../modules/home-manager/neovim.nix
     ../../modules/home-manager/btop.nix
-    ../../modules/home-manager/stylix.nix
   ];
 
   home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
 
-  programs.zsh.enable = true;
-  programs.direnv.enable = true;
-
   home.packages = with pkgs; [
-    # only our vms
-    azure-cli
-    bc
+    (pkgs.nerdfonts.override {fonts = ["SourceCodePro"];})
 
     bat
     btop
     cmatrix
-    ctpv
+    #ctpv
     curl
     delta
     eza
@@ -51,7 +111,6 @@ with config.lib.stylix.colors.withHashtag; {
     tmux
     vim
     wget
-    xdg-utils
     zoxide
     zellij
 
@@ -69,7 +128,7 @@ with config.lib.stylix.colors.withHashtag; {
     gopls
 
     black
-    conda
+    #conda
     (python311.withPackages (ps: with ps; [numpy requests pyserial]))
 
     gradle
@@ -86,7 +145,6 @@ with config.lib.stylix.colors.withHashtag; {
 
     prettierd
     yarn
-    yarn2nix
   ];
 
   home.file = {
@@ -101,16 +159,15 @@ with config.lib.stylix.colors.withHashtag; {
       recursive = true;
     };
 
+    ".amethyst.yml" = {
+      source = ../../files/amethyst.yml;
+      target = ".amethyst.yml";
+    };
+
     ".gitconfig" = {
       source = ../../files/gitconfig;
       target = ".gitconfig";
     };
-    ".gitconfig.local".text = ''
-      [credential]
-        helper = "${
-        pkgs.git.override {withLibsecret = true;}
-      }/bin/git-credential-libsecret";
-    '';
 
     "nvm.plugin.zsh" = {
       source = ../../files/config/zsh/nvm.plugin.zsh;
@@ -170,16 +227,15 @@ with config.lib.stylix.colors.withHashtag; {
       target = ".config/tmux/theme.tmux";
       text = ''
         #!/usr/bin/env bash
-
         # Color with ANSI palette
         %hidden thm_bg="default"
-        %hidden thm_black="${base00}"
-        %hidden thm_yellow="${base0A}"
-        %hidden thm_blue="${base0D}"
-        %hidden thm_pink="${base0E}"
-        %hidden thm_white="${base07}"
-        %hidden thm_grey="${base04}"
-        %hidden thm_orange="${base09}"
+        %hidden thm_black="${default.black}"
+        %hidden thm_yellow="${default.yellow}"
+        %hidden thm_blue="${default.blue}"
+        %hidden thm_pink="${default.magenta}"
+        %hidden thm_white="${default.white}"
+        %hidden thm_grey="${cursor}"
+        %hidden thm_orange="${indexed.one}"
 
         %hidden LEFT=
         %hidden RIGHT=
@@ -220,5 +276,16 @@ with config.lib.stylix.colors.withHashtag; {
       target = ".config/lf";
       recursive = true;
     };
+  };
+  home.activation = {
+    rsync-home-manager-applications = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      rsyncArgs="--archive --checksum --chmod=-w --copy-unsafe-links --delete"
+      apps_source="$genProfilePath/home-path/Applications"
+      moniker="Home Manager Trampolines"
+      app_target_base="${config.home.homeDirectory}/Applications"
+      app_target="$app_target_base/$moniker"
+      mkdir -p "$app_target"
+      ${pkgs.rsync}/bin/rsync $rsyncArgs "$apps_source/" "$app_target"
+    '';
   };
 }
