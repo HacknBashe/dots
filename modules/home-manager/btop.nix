@@ -1,8 +1,9 @@
-{ config, pkgs, lib, ... }:
-
-with config.lib.stylix.colors.withHashtag;
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   programs.btop = {
     enable = true;
     settings = {

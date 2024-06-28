@@ -1,46 +1,32 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
 # NixOS-WSL specific options are documented on the NixOS-WSL repository:
 # https://github.com/nix-community/NixOS-WSL
-
-{ config, lib, pkgs, nixos-wsl, ... }:
-
-let
-  useYaml = false;
-  templateRepo = config.lib.stylix.templates."base16-alacritty${
-      if useYaml then "-yaml" else ""
-    }";
-
-  themeFile = config.lib.stylix.colors { inherit templateRepo; };
-in {
-  imports = [
-    # include NixOS-WSL modules
-    # <nixos-wsl/modules>
-    nixos-wsl.nixosModules.wsl
-    ../../modules/nixos/core.nix
-    ../../modules/nixos/development.nix
-    ../../modules/nixos/stylix.nix
-  ];
-
+{
+  config,
+  lib,
+  pkgs,
+  nixos-wsl,
+  ...
+}: {
   wsl.enable = true;
   wsl.defaultUser = "nick";
   wsl.wslConf.network.generateResolvConf = false;
 
   networking.hostName = "cla-wsl";
-  networking.nameservers = [ "8.8.8.8" ];
+  networking.nameservers = ["8.8.8.8"];
 
   services.gnome.gnome-keyring.enable = true;
 
   users.users.nick = {
     isNormalUser = true;
     description = "nick";
-    extraGroups = [ "wheel" "docker" ];
-    packages = with pkgs; [ ];
+    extraGroups = ["wheel" "docker"];
+    packages = with pkgs; [];
   };
 
-  environment.systemPackages = with pkgs; [ ];
+  environment.systemPackages = with pkgs; [];
 
   system.activationScripts.windows = {
     text = ''
@@ -58,7 +44,7 @@ in {
             [[ -e $dest ]] && {
                 echo "****** REMOVED: $dest exists, removing"
                 rm $dest
-            } 
+            }
             mkdir -p $(dirname $dest)
 
             cp "$src" "$dest" || {
@@ -76,9 +62,6 @@ in {
 
       copy "/home/nick/.config/dots/windows/AppData/Roaming/alacritty/alacritty.toml" \
               "/mnt/c/Users/hack56224/AppData/Roaming/alacritty/alacritty.toml"
-
-      copy "${themeFile}" \
-              "/mnt/c/Users/hack56224/AppData/Roaming/alacritty/theme.toml"
 
       # WSL doesn't have permissions to copy to program files,
       if [ ! -f '/mnt/c/Program Files/Alacritty/conpty.dll' ]; then

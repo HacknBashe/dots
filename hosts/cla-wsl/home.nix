@@ -20,9 +20,6 @@ in {
   programs.home-manager.enable = true;
   home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
 
-  imports = [
-  ];
-
   home.file = {
     "bin" = {
       source = ../../files/local/bin;

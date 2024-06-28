@@ -43,7 +43,9 @@
         modules = [
           ./modules/nix.nix
           ./hosts/cla-wsl/configuration.nix
-          stylix.nixosModules.stylix
+          ./modules/nixos/core.nix
+          ./modules/nixos/development.nix
+          nixos-wsl.nixosModules.wsl
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
