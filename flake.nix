@@ -133,6 +133,7 @@
           ./modules/nix.nix
           ./hosts/toothless/home.nix
           ./modules/home-manager/neovim.nix
+          ./modules/home-manager/tmux.nix
           ./modules/home-manager/btop.nix
         ];
         extraSpecialArgs = {inherit inputs colors;};
@@ -140,8 +141,16 @@
 
       hack56224 = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
-        modules = [stylix.homeManagerModules.stylix ./hosts/cla-vm/home.nix];
-        extraSpecialArgs = {inherit nixpkgs system;};
+        modules = [
+          ./modules/nix.nix
+          ./hosts/cla-vm/home.nix
+          ./modules/home-manager/terminal.nix
+          ./modules/home-manager/development.nix
+          ./modules/home-manager/neovim.nix
+          ./modules/home-manager/tmux.nix
+          ./modules/home-manager/btop.nix
+        ];
+        extraSpecialArgs = {inherit inputs colors;};
       };
     };
   };

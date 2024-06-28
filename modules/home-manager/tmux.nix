@@ -1,40 +1,5 @@
-{
-  config,
-  pkgs,
-  ...
-}: let
-  colors = {
-    background = "#1a1b26";
-    foreground = "#c0caf5";
-    cursor = "#c0caf5";
-    text = "#1a1b26";
-    default = {
-      black = "#15161e";
-      red = "#f7768e";
-      green = "#9ece6a";
-      yellow = "#e0af68";
-      blue = "#7aa2f7";
-      magenta = "#bb9af7";
-      cyan = "#7dcfff";
-      white = "#a9b1d6";
-    };
-    bright = {
-      black = "#414868";
-      red = "#f7768e";
-      green = "#9ece6a";
-      yellow = "#e0af68";
-      blue = "#7aa2f7";
-      magenta = "#bb9af7";
-      cyan = "#7dcfff";
-      white = "#c0caf5";
-    };
-    indexed = {
-      one = "#ff9e64";
-      two = "#db4b4b";
-    };
-  };
-in {
-  home.packages = with pkgs; [tmux];
+{ config, pkgs, colors, ... }: {
+  home.packages = with pkgs; [ tmux ];
 
   home.file = {
     "tmux" = {
@@ -47,13 +12,13 @@ in {
         #!/usr/bin/env bash
         # Color with ANSI palette
         %hidden thm_bg="default"
-        %hidden thm_black="${default.black}"
-        %hidden thm_yellow="${default.yellow}"
-        %hidden thm_blue="${default.blue}"
-        %hidden thm_pink="${default.magenta}"
-        %hidden thm_white="${default.white}"
-        %hidden thm_grey="${cursor}"
-        %hidden thm_orange="${indexed.one}"
+        %hidden thm_black="${colors.default.black}"
+        %hidden thm_yellow="${colors.default.yellow}"
+        %hidden thm_blue="${colors.default.blue}"
+        %hidden thm_pink="${colors.default.magenta}"
+        %hidden thm_white="${colors.default.white}"
+        %hidden thm_grey="${colors.cursor}"
+        %hidden thm_orange="${colors.indexed.one}"
 
         %hidden LEFT=
         %hidden RIGHT=
