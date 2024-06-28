@@ -7,19 +7,34 @@ function ColorMyPencils(color)
 end
 
 return {
-	"EdenEast/nightfox.nvim",
-	config = function()
-		require("nightfox").setup({
-			palettes = {
-				nordfox = {
-					-- bg1 = "#000000", -- Black background
-					bg0 = "none", -- Alt backgrounds (floats, statusline, ...)
-				},
-			},
-			options = {
+	tokyonight = {
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
+		opts = {},
+		config = function()
+			require("tokyonight").setup({
 				transparent = true,
-			},
-		})
-		vim.cmd.colorscheme("nordfox")
-	end,
+			})
+			vim.cmd.colorscheme("tokyonight")
+		end,
+	},
+	nightfox = {
+		"EdenEast/nightfox.nvim",
+
+		config = function()
+			require("nightfox").setup({
+				palettes = {
+					nordfox = {
+						-- bg1 = "#000000", -- Black background
+						bg0 = "none", -- Alt backgrounds (floats, statusline, ...)
+					},
+				},
+				options = {
+					transparent = true,
+				},
+			})
+			vim.cmd.colorscheme("nordfox")
+		end,
+	},
 }

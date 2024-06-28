@@ -7,9 +7,14 @@ return {
 		"nvim-lua/plenary.nvim",
 	},
 	config = function()
-		vim.keymap.set("n", "<leader>fn", "<cmd> ObsidianSearch<CR>", { desc = "Find Notes", noremap = true, silent = true, nowait = true })
+		vim.keymap.set(
+			"n",
+			"<leader>fn",
+			"<cmd> ObsidianSearch<CR>",
+			{ desc = "Find Notes", noremap = true, silent = true, nowait = true }
+		)
 
-		vim.opt.conceallevel = 1
+		vim.opt.conceallevel = 0
 
 		function MarkdownLevel()
 			local line = vim.fn.getline(vim.v.lnum)

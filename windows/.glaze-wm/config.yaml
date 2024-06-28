@@ -25,10 +25,10 @@ general:
 
 gaps:
   # Gap between adjacent windows.
-  inner_gap: "20px"
+  inner_gap: "15px"
 
   # Gap between windows and the screen edge.
-  outer_gap: "20px"
+  outer_gap: "5px 15px 15px 15px"
 
 # Highlight active/inactive windows with a colored border.
 # ** Exclusive to Windows 11 due to API limitations.
@@ -38,18 +38,19 @@ focus_borders:
     color: "#0000ff"
 
   inactive:
-
     enabled: false
     color: "#ff0000"
 
 bar:
   height: "30px"
+
   position: "top"
   opacity: 1.0
   background: "#20242cc4"
   foreground: "#ffffff"
-  font_family: "Segoe UI"
-  font_size: "13px"
+  font_family: "SauceCodePro Nerd Font Mono"
+
+  font_size: "16px"
   padding: "4px 6px"
 
   offset_x: "0"
@@ -66,6 +67,7 @@ bar:
 
   components_right:
 
+
     - type: "system tray"
     - type: "tiling direction"
       label_horizontal: "⮂"
@@ -74,14 +76,19 @@ bar:
       margin: "0 4px"
       padding: "0 8px"
 
+
     - type: "binding mode"
 
       background: "#ffffff33"
       margin: "0 4px 0 0"
       padding: "0 8px"
+    - type: "weather"
+
+      padding: "0 8px"
     - type: "clock"
       # Documentation on formatting date/time string:
       # https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
+
 
       time_formatting: "hh:mm tt  ddd MMM d"
 
@@ -92,13 +99,15 @@ workspaces:
   - name: "4"
   - name: "5"
 
+
   - name: "6"
   - name: "7"
   - name: "8"
   - name: "9"
   - name: "10"
 
-  - name: "n"
+  - name: "󰠮"
+  - name: "󰨜"
 
 window_rules:
 
@@ -106,6 +115,7 @@ window_rules:
   # the WM as admin.
   - command: "ignore"
     match_process_name: "/Taskmgr|ScreenClippingHost/"
+
 
   # Launches system dialogs as floating by default (eg. File Explorer save/open dialog).
   - command: "set floating"
@@ -124,12 +134,14 @@ window_rules:
 
 binding_modes:
   - name: "resize"
+
     keybindings:
       # Resize focused window by a percentage or pixel amount.
       - command: "resize width -2%"
 
         bindings: ["H", "Left"]
       - command: "resize width +2%"
+
         bindings: ["L", "Right"]
       - command: "resize height +2%"
         bindings: ["K", "Up"]
@@ -165,6 +177,7 @@ keybindings:
   # Resize focused window by a percentage or pixel amount.
   - command: "resize width -2%"
     binding: "Alt+U"
+
   - command: "resize width +2%"
     binding: "Alt+P"
   - command: "resize height +2%"
@@ -172,10 +185,14 @@ keybindings:
   - command: "resize height -2%"
     binding: "Alt+I"
 
+
   # As an alternative to the resize keybindings above, resize mode enables resizing via
   # HJKL or arrow keys. The binding mode is defined above with the name "resize".
+
   - command: "binding mode resize"
+
     binding: "Alt+R"
+
 
   # Change tiling direction. This determines where new tiling windows will be inserted.
   - command: "tiling direction toggle"
@@ -189,14 +206,6 @@ keybindings:
   - command: "toggle floating"
 
     binding: "Alt+Shift+Space"
-
-  # Change the focused window to be maximized / unmaximized.
-  - command: "toggle maximized"
-    binding: "Alt+X"
-
-  # Minimize focused window.
-  - command: "set minimized"
-    binding: "Alt+M"
 
   # Close focused window.
   - command: "close"
@@ -244,10 +253,14 @@ keybindings:
   - command: "focus workspace 10"
     binding: "Alt+0"
 
-  - command: "focus workspace n"
+
+  - command: "focus workspace 󰠮"
     binding: "Alt+N"
+  - command: "focus workspace 󰨜"
+    binding: "Alt+M"
 
   # Move focused workspace to a monitor in a given direction.
+
   - command: "move workspace left"
 
     binding: "Alt+A"
@@ -271,13 +284,18 @@ keybindings:
     binding: "Alt+Shift+5"
   - commands: ["move to workspace 6", "focus workspace 6"]
     binding: "Alt+Shift+6"
+
   - commands: ["move to workspace 7", "focus workspace 7"]
     binding: "Alt+Shift+7"
   - commands: ["move to workspace 8", "focus workspace 8"]
+
     binding: "Alt+Shift+8"
   - commands: ["move to workspace 9", "focus workspace 9"]
     bindings: ["Alt+Shift+9"]
   - commands: ["move to workspace 10", "focus workspace 10"]
     bindings: ["Alt+Shift+0"]
-  - commands: ["move to workspace n", "focus workspace n"]
+
+  - commands: ["move to workspace 󰠮", "focus workspace 󰠮"]
     bindings: ["Alt+Shift+N"]
+  - commands: ["move to workspace 󰨜", "focus workspace 󰨜"]
+    bindings: ["Alt+Shift+M"]

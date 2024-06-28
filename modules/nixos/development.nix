@@ -1,4 +1,8 @@
-{ config, pkgs, ... }: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   virtualisation.docker.enable = true;
 
   programs.direnv.enable = true;
@@ -9,8 +13,9 @@
     git
     lazygit
     vscode.fhs
+    docker-compose
 
-    nixfmt
+    alejandra
     nil
     shfmt
 
@@ -22,7 +27,7 @@
 
     black
     conda
-    (python311.withPackages (ps: with ps; [ numpy requests pyserial ]))
+    (python311.withPackages (ps: with ps; [numpy requests pyserial]))
 
     cargo
     rustc
@@ -38,6 +43,7 @@
     stylua
 
     nodejs_21
+    nodePackages.typescript-language-server
     prettierd
     yarn
     yarn2nix

@@ -79,13 +79,14 @@ cmp.setup({
 		{ name = "nvim_lsp" },
 		{ name = "luasnip" },
 		{ name = "codeium" },
+		{ name = "copilot" },
 	},
 	formatting = {
 		format = lspkind.cmp_format({
 			mode = "symbol",
 			maxwidth = 50,
 			ellipsis_char = "...",
-			symbol_map = { Codeium = "" },
+			symbol_map = { Codeium = "", Copilot = "" },
 		}),
 	},
 	mapping = {
@@ -97,7 +98,7 @@ cmp.setup({
 			elseif luasnip.locally_jumpable(1) then
 				luasnip.jump(1)
 			else
-                cmp.complete()
+				cmp.complete()
 			end
 		end, { "i", "s" }),
 		["<C-p>"] = cmp.mapping(function()

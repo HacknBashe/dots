@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
-let
+{
+  config,
+  pkgs,
+  ...
+}: let
   harpoon2 = pkgs.vimUtils.buildVimPlugin {
     name = "harpoon2";
     src = pkgs.fetchFromGitHub {
@@ -7,6 +10,15 @@ let
       repo = "harpoon";
       rev = "7d1aef462a880fcb68419cb63abc50dbdc22d922";
       hash = "sha256-AXWN7HqlnSsmtCK8jK5vqyzHwKJY3eJL6fnjeJhoNMU=";
+    };
+  };
+  copilot-chat = pkgs.vimUtils.buildVimPlugin {
+    name = "copilot-chat";
+    src = pkgs.fetchFromGitHub {
+      owner = "CopilotC-Nvim";
+      repo = "CopilotChat.nvim";
+      rev = "f694ccae14a6f45b783cb386f17431b05162e8d0";
+      hash = "sha256-jZb+dqGaZEs1h2CbvsxbINfHauwHka9t+jmSJQ/mMFM=";
     };
   };
   better-vim-tmux-resizer = pkgs.vimUtils.buildVimPlugin {
@@ -30,9 +42,14 @@ let
 in {
   programs.neovim = {
     enable = true;
-    extraLuaPackages = luaPkgs: with luaPkgs; [ luasocket ];
+
+    extraLuaPackages = luaPkgs: with luaPkgs; [luasocket];
     plugins = with pkgs.vimPlugins; [
+      tokyonight-nvim
+      nightfox-nvim
+
       # nvim-dap
+
       # nvim-dap-ui
 
       nvim-lspconfig
@@ -40,28 +57,38 @@ in {
       luasnip
       cmp_luasnip
       #codeium-nvim
+      copilot-lua
+      copilot-chat
+      copilot-cmp
       nvim-cmp
+
       lspkind-nvim
 
       alpha-nvim
       bufferline-nvim
       formatter-nvim
       gitsigns-nvim
+
       vim-hexokinase
       harpoon2
+
       lazygit-nvim
       lualine-nvim
-      # FIXME Doesn't work for some reason
       markdown-preview-nvim
+
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
+
       nvim-treesitter-context
+
       obsidian-nvim
+      oil-nvim
       playground
       sniprun
       telescope-fzf-native-nvim
       telescope-nvim
       trouble-nvim
+
       vim-closetag
       vim-commentary
       vim-fugitive
@@ -76,11 +103,6 @@ in {
     extraLuaConfig = ''
       require('core.nix-init')
     '';
-    # TODO: Remove once base16 fixes md highlighting and stylix adds transparency to floats
-    extraConfig = ''
-      let base16_background_transparent=1 
-      source ~/.config/nvim/systembase16.vim
-    '';
   };
   home.file = {
     "nvim-settings" = {
@@ -90,6 +112,7 @@ in {
     };
     "nvim-plugins" = {
       source = ../../files/config/nvim/lua/plugins;
+
       target = ".config/nvim/lua/plugins";
       recursive = true;
     };
@@ -98,6 +121,5 @@ in {
       target = ".config/nvim/snippets";
       recursive = true;
     };
-    "base16" = import ./systembase16.nix { inherit config; };
   };
 }

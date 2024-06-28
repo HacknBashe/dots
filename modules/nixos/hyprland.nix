@@ -1,7 +1,14 @@
-{ config, pkgs, wallLarge, hyprland, ... }: {
+{
+  config,
+  pkgs,
+  wallLarge,
+  hyprland,
+  ...
+}: {
   nix = {
     settings = {
-      substituters = [ "https://hyprland.cachix.org" ];
+      substituters = ["https://hyprland.cachix.org"];
+
       trusted-public-keys = [
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
@@ -14,25 +21,29 @@
     xwayland.enable = true;
   };
 
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "nvidia" ];
-    displayManager = {
-      sddm = {
+  services = {
+    xserver = {
+      displayManager.gdm = {
         enable = true;
-        theme = "${import ./where-sddm-theme.nix { inherit pkgs wallLarge; }}";
       };
+      # displayManager.sddm = {
+      #   enable = true;
+      #   theme = "${import ./where-sddm-theme.nix {inherit pkgs wallLarge;}}";
+      # };
+      enable = true;
+      videoDrivers = ["nvidia"];
+      xrandrHeads = [
+        {
+          output = "DP-1";
+
+          primary = true;
+        }
+        {
+          output = "DP-2";
+          monitorConfig = ''Option "Enable" "false"'';
+        }
+      ];
     };
-    xrandrHeads = [
-      {
-        output = "DP-1";
-        primary = true;
-      }
-      {
-        output = "DP-2";
-        monitorConfig = ''Option "Enable" "false"'';
-      }
-    ];
   };
 
   security.pam.services.swaylock = {
@@ -49,26 +60,27 @@
   services.dbus.enable = true;
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
   };
 
   systemd.user = {
     targets.hyprland = {
       unitConfig = {
         Description = "Hyprland Session";
-        BindsTo = [ "graphical-session.target" ];
-        Wants = [ "graphical-session-pre.target" ];
-        After = [ "graphical-session-pre.target" ];
+        BindsTo = ["graphical-session.target"];
+        Wants = ["graphical-session-pre.target"];
+        After = ["graphical-session-pre.target"];
       };
     };
+
     services.gnome-policykit-agent = {
       enable = true;
       description = "GNOME PolicyKit Agent";
-      wantedBy = [ "graphical-session.target" ];
+      wantedBy = ["graphical-session.target"];
       serviceConfig = {
         Type = "simple";
-        ExecStart =
-          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
         Restart = "on-failure";
         RestartSec = 1;
         TimeoutStopSec = 10;
@@ -92,9 +104,10 @@
     libnotify
 
     (pkgs.waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+      mesonFlags = oldAttrs.mesonFlags ++ ["-Dexperimental=true"];
     }))
     wlogout
+
     wayland-logout
     wofi
 

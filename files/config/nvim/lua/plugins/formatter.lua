@@ -13,7 +13,7 @@ return {
 					require("formatter.filetypes.sh").shfmt,
 				},
 				nix = {
-					require("formatter.filetypes.nix").nixfmt,
+					require("formatter.filetypes.nix").alejandra,
 				},
 
 				go = {
@@ -44,6 +44,9 @@ return {
 				javascript = {
 					require("formatter.filetypes.javascript").prettierd,
 				},
+				javascriptreact = {
+					require("formatter.filetypes.javascriptreact").prettierd,
+				},
 				typescript = {
 					require("formatter.filetypes.typescript").prettierd,
 				},
@@ -51,9 +54,9 @@ return {
 					require("formatter.filetypes.typescriptreact").prettierd,
 				},
 
-                python = {
+				python = {
 					require("formatter.filetypes.python").black,
-                },
+				},
 
 				php = {
 					require("formatter.filetypes.php").phpcbf,
