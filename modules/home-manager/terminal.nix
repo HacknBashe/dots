@@ -9,25 +9,32 @@
 
   home.packages = with pkgs; [
     bat
+    cava
+    chntpw
     cmatrix
     ctpv
     curl
     delta
+    efibootmgr
     eza
     fastfetch
     fzf
     jq
     lf
+    libsecret
     pipes
     p7zip
+    playerctl
+    pulsemixer
     renameutils
     ripgrep
     tlrc
     vim
+    vitetris
     wget
     xdg-utils
-    zoxide
     zellij
+    zoxide
   ];
 
   home.file = {

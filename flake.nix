@@ -73,8 +73,7 @@
         modules = [
           ./modules/nix.nix
           ./hosts/cla-wsl/configuration.nix
-          ./modules/nixos/core.nix
-          ./modules/nixos/development.nix
+          # ./modules/nixos/core.nix
           nixos-wsl.nixosModules.wsl
           home-manager.nixosModules.home-manager
           {
@@ -83,10 +82,14 @@
             home-manager.users.nick = {
               imports = [
                 ./hosts/cla-wsl/home.nix
+                ./modules/home-manager/terminal.nix
+                ./modules/home-manager/development.nix
                 ./modules/home-manager/neovim.nix
+                ./modules/home-manager/tmux.nix
                 ./modules/home-manager/btop.nix
               ];
             };
+            home-manager.extraSpecialArgs = {inherit inputs colors;};
           }
         ];
         specialArgs = {inherit inputs nixos-wsl;};

@@ -18,7 +18,11 @@ in {
   home.stateVersion = "23.05";
 
   programs.home-manager.enable = true;
-  home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
+
+  home.packages = with pkgs; [
+    azure-cli
+    bc
+  ];
 
   home.file = {
     "bin" = {

@@ -6,39 +6,52 @@
   programs.direnv.enable = true;
 
   home.packages = with pkgs; [
-    # only our vms
-    azure-cli
-    bc
+    vscode.fhs
+    android-tools
+
+    distrobox
+    docker-compose
 
     git
     lazygit
 
+    # Nix
     alejandra
     nil
     shfmt
 
+    # C
     gcc
     gnumake
 
+    # Go
     go
     gopls
 
+    # Python
     black
     conda
     (python311.withPackages (ps: with ps; [numpy requests pyserial]))
 
+    # Rust
+    # cargo
+    rustc
+    rustup
+
+    # Javay
     gradle
     temurin-bin-21
     jdt-language-server
     google-java-format
 
+    # Lua
     lua
     lua-language-server
     stylua
 
+    # Javascript
     nodejs_21
     nodePackages.typescript-language-server
-
     prettierd
     yarn
     yarn2nix

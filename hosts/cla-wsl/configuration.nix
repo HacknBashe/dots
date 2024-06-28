@@ -18,6 +18,7 @@
   networking.nameservers = ["8.8.8.8"];
 
   services.gnome.gnome-keyring.enable = true;
+  virtualisation.docker.enable = true;
 
   users.users.nick = {
     isNormalUser = true;
@@ -26,7 +27,11 @@
     packages = with pkgs; [];
   };
 
-  environment.systemPackages = with pkgs; [];
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
+  environment.shells = with pkgs; [zsh];
+
+  fonts.packages = with pkgs; [(pkgs.nerdfonts.override {fonts = ["SourceCodePro"];})];
 
   system.activationScripts.windows = {
     text = ''
