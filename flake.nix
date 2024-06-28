@@ -35,6 +35,36 @@
     wallSmall = /home/nick/Pictures/Walls/glowshroom-small.jpg;
     # --- Settings ---- #
 
+    colors = {
+      background = "#1a1b26";
+      foreground = "#c0caf5";
+      cursor = "#c0caf5";
+      text = "#1a1b26";
+      default = {
+        black = "#15161e";
+        red = "#f7768e";
+        green = "#9ece6a";
+        yellow = "#e0af68";
+        blue = "#7aa2f7";
+        magenta = "#bb9af7";
+        cyan = "#7dcfff";
+        white = "#a9b1d6";
+      };
+      bright = {
+        black = "#414868";
+        red = "#f7768e";
+        green = "#9ece6a";
+        yellow = "#e0af68";
+        blue = "#7aa2f7";
+        magenta = "#bb9af7";
+        cyan = "#7dcfff";
+        white = "#c0caf5";
+      };
+      indexed = {
+        one = "#ff9e64";
+        two = "#db4b4b";
+      };
+    };
     system = "x86_64-linux";
   in {
     nixosConfigurations = {
@@ -98,11 +128,14 @@
 
     homeConfigurations = {
       nick = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
         modules = [
+          ./modules/nix.nix
           ./hosts/toothless/home.nix
+          ./modules/home-manager/neovim.nix
+          ./modules/home-manager/btop.nix
         ];
-        extraSpecialArgs = {inherit nixpkgs system;};
+        extraSpecialArgs = {inherit inputs colors;};
       };
 
       hack56224 = home-manager.lib.homeManagerConfiguration {

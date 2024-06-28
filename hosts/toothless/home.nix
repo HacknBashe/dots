@@ -2,44 +2,14 @@
   config,
   pkgs,
   lib,
+  colors,
   ...
-}: let
-  background = "#1a1b26";
-  foreground = "#c0caf5";
-  cursor = "#c0caf5";
-  text = "#1a1b26";
-  default = {
-    black = "#15161e";
-    red = "#f7768e";
-    green = "#9ece6a";
-    yellow = "#e0af68";
-    blue = "#7aa2f7";
-    magenta = "#bb9af7";
-    cyan = "#7dcfff";
-    white = "#a9b1d6";
-  };
-  bright = {
-    black = "#414868";
-    red = "#f7768e";
-    green = "#9ece6a";
-    yellow = "#e0af68";
-    blue = "#7aa2f7";
-    magenta = "#bb9af7";
-    cyan = "#7dcfff";
-    white = "#c0caf5";
-  };
-  indexed = {
-    one = "#ff9e64";
-    two = "#db4b4b";
-  };
-in {
+}: {
   home.username = "nick";
   home.homeDirectory = "/Users/nick";
 
   home.stateVersion = "23.11"; # Please read the comment before changing.
 
-  nix.package = pkgs.nix;
-  nix.settings.experimental-features = ["nix-command" "flakes"];
   fonts.fontconfig.enable = true;
   programs = {
     home-manager.enable = true;
@@ -57,24 +27,24 @@ in {
         };
         colors = {
           primary = {
-            background = background;
-            foreground = foreground;
+            background = colors.background;
+            foreground = colors.foreground;
           };
           cursor = {
-            text = text;
-            cursor = cursor;
+            text = colors.text;
+            cursor = colors.cursor;
           };
-          normal = default;
-          bright = bright;
-          dim = default;
+          normal = colors.default;
+          bright = colors.bright;
+          dim = colors.default;
           indexed_colors = [
             {
               index = 16;
-              color = indexed.one;
+              color = colors.indexed.one;
             }
             {
               index = 17;
-              color = indexed.two;
+              color = colors.indexed.two;
             }
           ];
         };
@@ -82,18 +52,12 @@ in {
     };
   };
 
-  imports = [
-    ../../modules/home-manager/neovim.nix
-    ../../modules/home-manager/btop.nix
-  ];
-
   home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
 
   home.packages = with pkgs; [
     (pkgs.nerdfonts.override {fonts = ["SourceCodePro"];})
 
     bat
-    btop
     cmatrix
     #ctpv
     curl
@@ -108,7 +72,6 @@ in {
     renameutils
     ripgrep
     tlrc
-    tmux
     vim
     wget
     zoxide
@@ -140,7 +103,7 @@ in {
     lua-language-server
     stylua
 
-    nodejs_22
+    nodejs_21
     nodePackages.typescript-language-server
 
     prettierd
@@ -217,58 +180,6 @@ in {
     "fastfetch" = {
       source = ../../files/config/fastfetch/config.jsonc;
       target = ".config/fastfetch/config.jsonc";
-    };
-
-    "tmux" = {
-      source = ../../files/config/tmux/tmux.conf;
-      target = ".config/tmux/tmux.conf";
-    };
-    "tmux.theme" = {
-      target = ".config/tmux/theme.tmux";
-      text = ''
-        #!/usr/bin/env bash
-        # Color with ANSI palette
-        %hidden thm_bg="default"
-        %hidden thm_black="${default.black}"
-        %hidden thm_yellow="${default.yellow}"
-        %hidden thm_blue="${default.blue}"
-        %hidden thm_pink="${default.magenta}"
-        %hidden thm_white="${default.white}"
-        %hidden thm_grey="${cursor}"
-        %hidden thm_orange="${indexed.one}"
-
-        %hidden LEFT=
-        %hidden RIGHT=
-
-        set -g mode-style "fg=$thm_black,bg=$thm_white"
-        set -g message-style "fg=$thm_yellow,bg=$thm_bg"
-        set -g message-command-style "fg=$thm_pink,bg=$thm_bg"
-        set -g pane-border-indicators "colour"
-        set -g pane-border-style "fg=$thm_black"
-        set -g pane-active-border-style "fg=$thm_blue"
-        set -g status "on"
-        set -g status-justify "left"
-        set -g status-style "fg=$thm_white,bg=$thm_bg"
-        set -g status-left-length "100"
-        set -g status-right-length "100"
-        set -g status-left-style NONE
-        set -g status-right-style NONE
-
-        set -g status-left "#[bg=$thm_bg,bold]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_blue]} #[fg=$thm_blue]#S $LEFT"
-        set -g status-right "#[bg=$thm_bg,fg=$thm_blue]%y-%m-%d $RIGHT %H:%M:%S "
-        setw -g window-status-activity-style "underscore,fg=$thm_grey,bg=$thm_black"
-        setw -g window-status-separator ""
-        setw -g window-status-format "#[fg=$thm_grey,bg=$thm_bg] #I $LEFT #{b:pane_current_path} #F #W $LEFT"
-        setw -g window-status-current-format "#[fg=$thm_white,bg=$thm_bg,bold] #I $LEFT #[underscore]./#{b:pane_current_path}#[nounderscore] #F #[underscore]#W#[fg=$thm_white,bg=$thm_bg,nobold,nounderscore,noitalics] $LEFT"
-      '';
-    };
-    "tpm" = {
-      source = builtins.fetchGit {
-        url = "https://github.com/tmux-plugins/tpm";
-        ref = "master";
-        rev = "99469c4a9b1ccf77fade25842dc7bafbc8ce9946";
-      };
-      target = ".tmux/plugins/tpm";
     };
 
     "lf" = {
