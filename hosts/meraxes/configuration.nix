@@ -79,7 +79,7 @@ in {
   services.printing.enable = true;
 
   hardware = {
-    opengl = {enable = true;};
+    graphics = {enable = true;};
     nvidia = {
       modesetting.enable = true;
       nvidiaSettings = true;

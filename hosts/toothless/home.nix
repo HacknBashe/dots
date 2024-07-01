@@ -103,7 +103,7 @@
     lua-language-server
     stylua
 
-    nodejs_21
+    nodejs_22
     nodePackages.typescript-language-server
 
     prettierd
