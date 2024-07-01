@@ -1,22 +1,22 @@
 {
   config,
   pkgs,
+  colors,
   wallSmall,
   wallLarge,
   ...
-}:
-with config.lib.stylix.colors; {
+}: {
   services.dunst.enable = true;
   home.file = {
     "hypr" = {
       # source = ../../files/config/hypr/hyprland.conf;
       text = ''
-        $activeColor = ${base0D}
-        $inactiveColor = ${base00}
-        $shadowColor = ${base01}
+        $activeColor = ${builtins.substring 1 6 colors.default.blue + "cc"}
+        $inactiveColor = ${builtins.substring 1 6 colors.bright.black + "99"}
+        $shadowColor = ${builtins.substring 1 6 colors.text + "ee"}
 
-        exec = swaybg -o DP-3 -i ${wallLarge}
-        exec = swaybg -o DP-4 -i ${wallSmall}
+        exec = swaybg -o DP-4 -i ${wallLarge}
+        exec = swaybg -o DP-3 -i ${wallSmall}
         ${builtins.readFile ../../files/config/hypr/hyprland.conf}
       '';
       target = ".config/hypr/hyprland.conf";
@@ -39,24 +39,15 @@ with config.lib.stylix.colors; {
     };
     "waybar/scheme.css" = {
       text = ''
-        @define-color base00-00 rgba(${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}, 0.0);
-        @define-color base00-75 rgba(${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}, 0.75);
-        @define-color base00 ${withHashtag.base00};
-        @define-color base01 ${withHashtag.base01};
-        @define-color base02 ${withHashtag.base02};
-        @define-color base03 ${withHashtag.base03};
-        @define-color base04 ${withHashtag.base04};
-        @define-color base05 ${withHashtag.base05};
-        @define-color base06 ${withHashtag.base06};
-        @define-color base07 ${withHashtag.base07};
-        @define-color base08 ${withHashtag.base08};
-        @define-color base09 ${withHashtag.base09};
-        @define-color base0A ${withHashtag.base0A};
-        @define-color base0B ${withHashtag.base0B};
-        @define-color base0C ${withHashtag.base0C};
-        @define-color base0D ${withHashtag.base0D};
-        @define-color base0E ${withHashtag.base0E};
-        @define-color base0F ${withHashtag.base0F};
+        @define-color bgnone alpha(${colors.background},0);
+        @define-color bg0 alpha(${colors.background},1);
+        @define-color bg1 alpha(${colors.background},.9);
+        @define-color bg2 alpha(${colors.background},.7);
+        @define-color bg3 alpha(${colors.background},.5);
+        @define-color fg0 alpha(${colors.foreground},1);
+        @define-color fg1 alpha(${colors.foreground},.9);
+        @define-color fg2 alpha(${colors.foreground},.7);
+        @define-color fg3 alpha(${colors.foreground},.5);
       '';
       target = ".config/waybar/scheme.css";
     };
@@ -85,27 +76,27 @@ with config.lib.stylix.colors; {
 
         window {
           font-size: 50pt;
-          background-color: rgba(${base00-rgb-r},${base00-rgb-g},${base00-rgb-b}, 0.5);
+          background-color: ${colors.background}50;
         }
 
         button {
-          color: ${withHashtag.base07};
+          color: ${colors.text};
           border: none;
           box-shadow: none;
           background-repeat: no-repeat;
           background-position: center;
           background-size: 25%;
-          background-color: rgba(${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}, 0);
+          background-color: ${colors.background}00;
           margin: 0px;
           transition: background-color 0.2s ease-in-out;
         }
 
         button:hover {
-          background-color: rgba(${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}, 0.1);
+          background-color: ${colors.default.blue}10;
         }
 
         button:focus {
-          background-color: rgba(${base0D-rgb-r},${base0D-rgb-g},${base0D-rgb-b}, 0.3);
+          background-color: ${colors.default.blue}30;
         }
 
         #lock {

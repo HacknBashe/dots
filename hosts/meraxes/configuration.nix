@@ -7,11 +7,6 @@
 in {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/nixos/core.nix
-    ../../modules/nixos/hyprland.nix
-    ../../modules/nixos/desktop.nix
-    ../../modules/nixos/stylix.nix
-    ../../modules/nixos/development.nix
   ];
 
   boot = {

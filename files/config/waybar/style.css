@@ -10,13 +10,12 @@
 }
 
 window#waybar {
-  background: @base00;
-  background: linear-gradient(to bottom, @base00 20%, @base00-00);
+  background: linear-gradient(to bottom, @bg0 20%, @bgnone);
 }
 
 tooltip {
-  background: @base00-75;
-  color: @base07;
+  background: @bg1;
+  color: @fg1;
 }
 
 #workspaces {
@@ -25,28 +24,28 @@ tooltip {
 }
 
 #workspaces button {
-  color: @base04;
+  color: @fg3;
   transition: none;
   padding: 3px 8px 3px 5px;
 }
 
 #workspaces button.special {
-  color: @base03;
+  color: @fg2;
 }
 
 #workspaces button.visible {
-  background: @base02;
-  color: @base05;
+  background: @fg1;
+  color: @bg1;
 }
 
 #workspaces button.active {
-  background: @base03;
-  color: @base06;
+  background: @fg2;
+  color: @bg2;
 }
 
 #workspaces button:hover {
-  background: @base04;
-  color: @base07;
+  background: @bg3;
+  color: @fg3;
 }
 
 #window {
@@ -55,7 +54,7 @@ tooltip {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
+  color: @fg0;
 }
 
 #tray {
@@ -64,7 +63,7 @@ tooltip {
   margin-right: 8px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
+  color: @fg0;
 }
 
 #custom-sound {
@@ -73,7 +72,7 @@ tooltip {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
+  color: @fg0;
 }
 
 #wireplumber {
@@ -82,7 +81,7 @@ tooltip {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
+  color: @fg0;
 }
 
 #bluetooth {
@@ -91,7 +90,7 @@ tooltip {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
+  color: @fg0;
 }
 
 #memory {
@@ -100,7 +99,7 @@ tooltip {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @base07;
+  color: @fg0;
 }
 
 #custom-weather {
@@ -108,12 +107,12 @@ tooltip {
   padding-left: 16px;
   border-radius: 10px 0px 0px 10px;
   transition: none;
-  color: @base07;
+  color: @fg0;
 }
 
 #clock {
   padding-right: 16px;
   border-radius: 0px 10px 10px 0px;
   transition: none;
-  color: @base07;
+  color: @fg0;
 }

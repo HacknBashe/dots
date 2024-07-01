@@ -1,24 +1,23 @@
-{ config, pkgs, lib, ... }:
-with config.lib.stylix.colors.withHashtag; {
+{
+  config,
+  pkgs,
+  lib,
+  colors,
+  ...
+}: {
   home.username = "nick";
   home.homeDirectory = "/home/nick";
 
   home.stateVersion = "23.05";
 
   programs.home-manager.enable = true;
-  home.sessionVariables = { NIX_SHELL_PRESERVE_PROMPT = 1; };
-
-  imports = [
-    ../../modules/home-manager/neovim.nix
-    ../../modules/home-manager/hyprland.nix
-    ../../modules/home-manager/btop.nix
-  ];
+  home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
 
   gtk.enable = true;
-  gtk.iconTheme.package = (pkgs.colloid-icon-theme.override {
-    schemeVariants = [ "nord" ];
-    colorVariants = [ "teal" ];
-  });
+  gtk.iconTheme.package = pkgs.colloid-icon-theme.override {
+    schemeVariants = ["nord"];
+    colorVariants = ["teal"];
+  };
   gtk.iconTheme.name = "Colloid-teal-nord-dark";
 
   programs = {
@@ -56,8 +55,8 @@ with config.lib.stylix.colors.withHashtag; {
     ".gitconfig.local".text = ''
       [credential]
         helper = "${
-          pkgs.git.override { withLibsecret = true; }
-        }/bin/git-credential-libsecret";
+        pkgs.git.override {withLibsecret = true;}
+      }/bin/git-credential-libsecret";
     '';
 
     "nvm.plugin.zsh" = {
@@ -114,13 +113,13 @@ with config.lib.stylix.colors.withHashtag; {
         [color]
         gradient = 1
         gradient_count = 7
-        gradient_color_1 = '${base0E}'
-        gradient_color_2 = '${base0D}'
-        gradient_color_3 = '${base0C}'
-        gradient_color_4 = '${base0B}'
-        gradient_color_5 = '${base0A}'
-        gradient_color_6 = '${base09}'
-        gradient_color_7 = '${base08}'
+        gradient_color_1 = '${colors.default.magenta}'
+        gradient_color_2 = '${colors.default.blue}'
+        gradient_color_3 = '${colors.default.cyan}'
+        gradient_color_4 = '${colors.default.green}'
+        gradient_color_5 = '${colors.default.yellow}'
+        gradient_color_6 = '${colors.indexed.one}'
+        gradient_color_7 = '${colors.indexed.two}'
       '';
       target = ".config/cava/config";
     };
@@ -135,13 +134,13 @@ with config.lib.stylix.colors.withHashtag; {
         #!/usr/bin/env bash
         # Color with ANSI palette
         %hidden thm_bg="default"
-        %hidden thm_black="${base00}"
-        %hidden thm_yellow="${base0A}"
-        %hidden thm_blue="${base0D}"
-        %hidden thm_pink="${base0E}"
-        %hidden thm_white="${base07}"
-        %hidden thm_grey="${base04}"
-        %hidden thm_orange="${base09}"
+        %hidden thm_black="${colors.default.black}"
+        %hidden thm_yellow="${colors.default.yellow}"
+        %hidden thm_blue="${colors.default.blue}"
+        %hidden thm_pink="${colors.default.magenta}"
+        %hidden thm_white="${colors.default.white}"
+        %hidden thm_grey="${colors.bright.black}"
+        %hidden thm_orange="${colors.indexed.one}"
 
         %hidden LEFT=
         %hidden RIGHT=

@@ -1,12 +1,16 @@
-{ config, pkgs, lib, ... }:
-with config.lib.stylix.colors.withHashtag; {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   home.username = "nick";
   home.homeDirectory = "/home/nick";
 
   home.stateVersion = "23.05";
 
   programs.home-manager.enable = true;
-  home.sessionVariables = { NIX_SHELL_PRESERVE_PROMPT = 1; };
+  home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
 
   imports = [
     ../../modules/home-manager/neovim.nix
@@ -32,8 +36,8 @@ with config.lib.stylix.colors.withHashtag; {
     ".gitconfig.local".text = ''
       [credential]
         helper = "${
-          pkgs.git.override { withLibsecret = true; }
-        }/bin/git-credential-libsecret";
+        pkgs.git.override {withLibsecret = true;}
+      }/bin/git-credential-libsecret";
     '';
 
     "nvm.plugin.zsh" = {

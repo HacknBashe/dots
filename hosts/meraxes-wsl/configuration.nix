@@ -1,27 +1,21 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
 # NixOS-WSL specific options are documented on the NixOS-WSL repository:
 # https://github.com/nix-community/NixOS-WSL
-
-{ config, lib, pkgs, nixos-wsl, ... }:
-
-let
-  useYaml = false;
-  templateRepo = config.lib.stylix.templates."base16-alacritty${
-      if useYaml then "-yaml" else ""
-    }";
-
-  themeFile = config.lib.stylix.colors { inherit templateRepo; };
-in {
+{
+  config,
+  lib,
+  pkgs,
+  nixos-wsl,
+  ...
+}: {
   imports = [
     # include NixOS-WSL modules
     # <nixos-wsl/modules>
     nixos-wsl.nixosModules.wsl
     ../../modules/nixos/core.nix
     ../../modules/nixos/development.nix
-    ../../modules/nixos/stylix.nix
   ];
 
   wsl.enable = true;
@@ -34,11 +28,11 @@ in {
   users.users.nick = {
     isNormalUser = true;
     description = "nick";
-    extraGroups = [ "wheel" "docker" ];
-    packages = with pkgs; [ ];
+    extraGroups = ["wheel" "docker"];
+    packages = with pkgs; [];
   };
 
-  environment.systemPackages = with pkgs; [ gimp ];
+  environment.systemPackages = with pkgs; [gimp];
 
   system.activationScripts.windows = {
     text = ''
@@ -56,7 +50,7 @@ in {
             [[ -e $dest ]] && {
                 echo "****** REMOVED: $dest exists, removing"
                 rm $dest
-            } 
+            }
             mkdir -p $(dirname $dest)
 
             cp "$src" "$dest" || {

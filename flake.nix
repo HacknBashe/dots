@@ -14,11 +14,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    stylix = {
-      url = "github:danth/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nixos-wsl = {url = "github:nix-community/NixOS-WSL";};
   };
 
@@ -26,7 +21,6 @@
     nixpkgs,
     home-manager,
     hyprland,
-    stylix,
     nixos-wsl,
     ...
   } @ inputs: let
@@ -100,7 +94,6 @@
         modules = [
           ./modules/nix.nix
           ./hosts/meraxes-wsl/configuration.nix
-          stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -116,16 +109,26 @@
         modules = [
           ./modules/nix.nix
           ./hosts/meraxes/configuration.nix
-          stylix.nixosModules.stylix
+          ./modules/nixos/core.nix
+          ./modules/nixos/hyprland.nix
+          ./modules/nixos/desktop.nix
+          ./modules/nixos/development.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.nick = import ./hosts/meraxes/home.nix;
-            home-manager.extraSpecialArgs = {inherit wallLarge wallSmall;};
+            home-manager.users.nick = {
+              imports = [
+                ./hosts/meraxes/home.nix
+                ./modules/home-manager/neovim.nix
+                ./modules/home-manager/hyprland.nix
+                ./modules/home-manager/btop.nix
+              ];
+            };
+            home-manager.extraSpecialArgs = {inherit colors wallLarge wallSmall;};
           }
         ];
-        specialArgs = {inherit wallLarge wallSmall hyprland;};
+        specialArgs = {inherit inputs colors wallLarge wallSmall;};
       };
     };
 
