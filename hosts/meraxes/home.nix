@@ -24,13 +24,37 @@
     alacritty = {
       enable = true;
       settings = {
-        font.size = lib.mkForce 20.0;
+        font.size = 20.0;
         font.bold.style = lib.mkForce "Regular";
+        font.normal.family = "SauceCodePro Nerd Font Mono";
         font.normal.style = lib.mkForce "ExtraLight";
         window = {
-          decorations = "full";
+          decorations = "none";
           dynamic_padding = true;
           opacity = lib.mkForce 0.9;
+        };
+        colors = {
+          primary = {
+            background = colors.background;
+            foreground = colors.foreground;
+          };
+          cursor = {
+            text = colors.text;
+            cursor = colors.cursor;
+          };
+          normal = colors.default;
+          bright = colors.bright;
+          dim = colors.default;
+          indexed_colors = [
+            {
+              index = 16;
+              color = colors.indexed.one;
+            }
+            {
+              index = 17;
+              color = colors.indexed.two;
+            }
+          ];
         };
       };
     };
