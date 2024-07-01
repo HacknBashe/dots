@@ -22,24 +22,20 @@
   };
 
   services = {
+    displayManager.sddm = {
+      enable = true;
+      theme = "${import ./where-sddm-theme.nix {inherit pkgs wallLarge;}}";
+    };
     xserver = {
-      displayManager.gdm = {
-        enable = true;
-      };
-      # displayManager.sddm = {
-      #   enable = true;
-      #   theme = "${import ./where-sddm-theme.nix {inherit pkgs wallLarge;}}";
-      # };
       enable = true;
       videoDrivers = ["nvidia"];
       xrandrHeads = [
         {
-          output = "DP-1";
-
+          output = "DP-2";
           primary = true;
         }
         {
-          output = "DP-2";
+          output = "DP-0";
           monitorConfig = ''Option "Enable" "false"'';
         }
       ];
