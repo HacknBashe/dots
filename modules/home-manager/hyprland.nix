@@ -39,15 +39,14 @@
     };
     "waybar/scheme.css" = {
       text = ''
-        @define-color bgnone alpha(${colors.background},0);
-        @define-color bg0 alpha(${colors.background},1);
-        @define-color bg1 alpha(${colors.background},.9);
-        @define-color bg2 alpha(${colors.background},.7);
-        @define-color bg3 alpha(${colors.background},.5);
-        @define-color fg0 alpha(${colors.foreground},1);
-        @define-color fg1 alpha(${colors.foreground},.9);
-        @define-color fg2 alpha(${colors.foreground},.7);
-        @define-color fg3 alpha(${colors.foreground},.5);
+        @define-color bg alpha(${colors.background},1);
+        @define-color bg80 alpha(${colors.background},.8);
+        @define-color bg60 alpha(${colors.background},.6);
+        @define-color bg0 alpha(${colors.background},0);
+        @define-color fg alpha(${colors.foreground},1);
+        @define-color fg80 alpha(${colors.foreground},.8);
+        @define-color fg60 alpha(${colors.foreground},.6);
+        @define-color white80 alpha(${colors.bright.white},.8);
       '';
       target = ".config/waybar/scheme.css";
     };

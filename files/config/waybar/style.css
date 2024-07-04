@@ -10,12 +10,12 @@
 }
 
 window#waybar {
-  background: linear-gradient(to bottom, @bg0 20%, @bgnone);
+  background: linear-gradient(to bottom, @bg 20%, @bg0);
 }
 
 tooltip {
-  background: @bg1;
-  color: @fg1;
+  background: @bg80;
+  color: @fg80;
 }
 
 #workspaces {
@@ -24,28 +24,29 @@ tooltip {
 }
 
 #workspaces button {
-  color: @fg3;
+  color: @fg80;
   transition: none;
   padding: 3px 8px 3px 5px;
 }
 
 #workspaces button.special {
-  color: @fg2;
+  color: @white80;
 }
 
 #workspaces button.visible {
-  background: @fg1;
-  color: @bg1;
+  background: @fg60;
+  color: @bg60;
 }
 
 #workspaces button.active {
-  background: @fg2;
-  color: @bg2;
+  background: @fg80;
+  color: @bg80;
 }
 
 #workspaces button:hover {
-  background: @bg3;
-  color: @fg3;
+  border: none;
+  background: @fg;
+  color: @bg;
 }
 
 #window {
@@ -54,7 +55,7 @@ tooltip {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @fg0;
+  color: @fg80;
 }
 
 #tray {
@@ -63,7 +64,7 @@ tooltip {
   margin-right: 8px;
   border-radius: 10px;
   transition: none;
-  color: @fg0;
+  color: @fg80;
 }
 
 #custom-sound {
@@ -72,7 +73,7 @@ tooltip {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @fg0;
+  color: @fg80;
 }
 
 #wireplumber {
@@ -81,7 +82,7 @@ tooltip {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @fg0;
+  color: @fg80;
 }
 
 #bluetooth {
@@ -90,7 +91,7 @@ tooltip {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @fg0;
+  color: @fg80;
 }
 
 #memory {
@@ -99,7 +100,7 @@ tooltip {
   padding-right: 16px;
   border-radius: 10px;
   transition: none;
-  color: @fg0;
+  color: @fg80;
 }
 
 #custom-weather {
@@ -107,12 +108,12 @@ tooltip {
   padding-left: 16px;
   border-radius: 10px 0px 0px 10px;
   transition: none;
-  color: @fg0;
+  color: @fg80;
 }
 
 #clock {
   padding-right: 16px;
   border-radius: 0px 10px 10px 0px;
   transition: none;
-  color: @fg0;
+  color: @fg80;
 }
