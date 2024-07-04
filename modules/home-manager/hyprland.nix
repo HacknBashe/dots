@@ -75,27 +75,27 @@
 
         window {
           font-size: 50pt;
-          background-color: ${colors.background}50;
+          background-color: alpha(${colors.background},.5);
         }
 
         button {
-          color: ${colors.text};
+          color: ${colors.foreground};
           border: none;
           box-shadow: none;
           background-repeat: no-repeat;
           background-position: center;
           background-size: 25%;
-          background-color: ${colors.background}00;
+          background-color: alpha(${colors.background},0);
           margin: 0px;
           transition: background-color 0.2s ease-in-out;
         }
 
         button:hover {
-          background-color: ${colors.default.blue}10;
+          background-color: alpha(${colors.default.blue},.1);
         }
 
         button:focus {
-          background-color: ${colors.default.blue}30;
+          background-color: alpha(${colors.default.blue},.3);
         }
 
         #lock {
