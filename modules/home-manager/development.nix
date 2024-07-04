@@ -38,7 +38,7 @@
     rustc
     rustup
 
-    # Javay
+    # Java
     gradle
     temurin-bin-21
     jdt-language-server

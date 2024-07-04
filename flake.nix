@@ -112,7 +112,6 @@
           ./modules/nixos/core.nix
           ./modules/nixos/hyprland.nix
           ./modules/nixos/desktop.nix
-          ./modules/nixos/development.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -120,6 +119,7 @@
             home-manager.users.nick = {
               imports = [
                 ./hosts/meraxes/home.nix
+                ./modules/home-manager/development.nix
                 ./modules/home-manager/neovim.nix
                 ./modules/home-manager/hyprland.nix
                 ./modules/home-manager/btop.nix
