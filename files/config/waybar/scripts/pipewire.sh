@@ -19,17 +19,17 @@ while snore $DELAY; do
 
     if [[ $WP_OUTPUT =~ ^Volume:[[:blank:]]([0-9]+)\.([0-9]{2})([[:blank:]].MUTED.)?$ ]]; then
         if [[ -n ${BASH_REMATCH[3]} ]]; then
-            if grep -q "$SEARCH_STRING" <<< "$COMMAND_OUTPUT"; then
-                echo "󰟎  $VOLUME"
-            else
+            if grep -q "$SEARCH_STRING" <<<"$COMMAND_OUTPUT"; then
                 echo "󰓄  $VOLUME"
+            else
+                echo "󰟎  $VOLUME"
             fi
         else
             VOLUME=$((10#${BASH_REMATCH[1]}${BASH_REMATCH[2]}))
-            if grep -q "$SEARCH_STRING" <<< "$COMMAND_OUTPUT"; then
-                echo "󰋋  $VOLUME"
-            else
+            if grep -q "$SEARCH_STRING" <<<"$COMMAND_OUTPUT"; then
                 echo "󰓃  $VOLUME"
+            else
+                echo "󰋋  $VOLUME"
             fi
         fi
     fi

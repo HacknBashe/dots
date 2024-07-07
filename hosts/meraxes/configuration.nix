@@ -113,21 +113,20 @@ in {
                 ]
                 actions = {
                   update-props = {
-                    device.nick = "Headset"
-                    device.description = "Headset"
+                    device.nick = "Soundbar"
+                    device.description = "Soundbar"
                   }
                 }
               }
               {
                 matches = [
                   {
-                    device.name = "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.2"
+                    device.name = "alsa_input.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.mono-fallback"
                   }
                 ]
                 actions = {
                   update-props = {
-                    device.nick = "Soundbar"
-                    device.description = "Soundbar"
+                    device.disabled = true
                   }
                 }
               }
@@ -141,7 +140,18 @@ in {
                   update-props = {
                     node.description = "TV"
                     node.nick = "TV"
-                    node.disabled = true
+                  }
+                }
+              }
+              {
+                matches = [
+                  {
+                    node.name = "alsa_output.usb-Generic_USB_Audio-00.iec958-stereo"
+                  }
+                ]
+                actions = {
+                  update-props = {
+                    device.disabled = true
                   }
                 }
               }
