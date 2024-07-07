@@ -38,6 +38,10 @@
           output = "DP-0";
           monitorConfig = ''Option "Enable" "false"'';
         }
+        {
+          output = "HDMI-0";
+          monitorConfig = ''Option "Enable" "false"'';
+        }
       ];
     };
   };

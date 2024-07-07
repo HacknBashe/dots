@@ -17,6 +17,7 @@
 
         exec = swaybg -o DP-4 -i ${wallLarge}
         exec = swaybg -o DP-3 -i ${wallSmall}
+        exec = swaybg -o HDMI-A-5 -i ${wallSmall}
         ${builtins.readFile ../../files/config/hypr/hyprland.conf}
       '';
       target = ".config/hypr/hyprland.conf";
