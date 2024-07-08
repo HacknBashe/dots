@@ -94,6 +94,15 @@ tooltip {
   color: @fg80;
 }
 
+#custom-tv {
+  margin-right: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 10px;
+  transition: none;
+  color: @fg80;
+}
+
 #memory {
   margin-right: 8px;
   padding-left: 16px;

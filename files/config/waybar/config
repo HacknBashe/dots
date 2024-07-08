@@ -4,7 +4,7 @@
 
     "modules-left": ["hyprland/workspaces", "hyprland/window"],
     "modules-center": [],
-    "modules-right": ["tray", "custom/sound", "bluetooth", "memory", "custom/weather", "clock"],
+    "modules-right": ["tray", "custom/sound", "bluetooth", "custom/tv", "memory", "custom/weather", "clock"],
 
     //***************************
     //*  Modules configuration  *
@@ -59,6 +59,13 @@
         "on-click-right": "qpwgraph",
         "max-volume": 150,
         "scroll-step": 0.2
+    },
+
+    "custom/tv": {
+        "format": "{}",
+        "tooltip": false,
+        "exec": "$HOME/.config/waybar/scripts/tv.sh",
+        "on-click-middle": "$HOME/.config/waybar/scripts/toggle_tv.sh",
     },
 
     "bluetooth": {
