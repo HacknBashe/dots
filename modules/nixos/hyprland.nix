@@ -99,10 +99,6 @@
 
     polkit_gnome
 
-    dunst
-    inotify-tools
-    libnotify
-
     (pkgs.waybar.overrideAttrs (oldAttrs: {
       mesonFlags = oldAttrs.mesonFlags ++ ["-Dexperimental=true"];
     }))

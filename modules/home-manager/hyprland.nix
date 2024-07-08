@@ -6,7 +6,6 @@
   wallLarge,
   ...
 }: {
-  services.dunst.enable = true;
   home.file = {
     "hypr" = {
       # source = ../../files/config/hypr/hyprland.conf;
