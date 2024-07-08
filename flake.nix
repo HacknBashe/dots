@@ -15,6 +15,8 @@
     };
 
     nixos-wsl = {url = "github:nix-community/NixOS-WSL";};
+
+    extest.url = "github:chaorace/extest-nix";
   };
 
   outputs = {

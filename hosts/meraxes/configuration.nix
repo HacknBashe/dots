@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  inputs,
   ...
 }: let
   info = builtins.readFile ./info;
@@ -8,6 +9,12 @@ in {
   imports = [
     ./hardware-configuration.nix
   ];
+
+  nixpkgs = {
+    overlays = [
+      inputs.extest.overlays.default
+    ];
+  };
 
   boot = {
     kernelModules = ["sg"];
