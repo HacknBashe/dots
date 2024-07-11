@@ -55,6 +55,7 @@
     prettierd
     yarn
     yarn2nix
+    cypress
   ];
 
   home.file = {
