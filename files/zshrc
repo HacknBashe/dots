@@ -75,6 +75,11 @@ alias cat="bat"
 alias gl="lazygit"
 cl() { cd "$@" && ls; }
 
+function enterContainer() {
+  docker exec -it "$1" bash
+}
+alias docker-enter=enterContainer
+
 bindkey -s '^ ' "^utmux_launcher.sh\n"
 bindkey -s ^f "^utmux_sessionizer.sh\n"
 bindkey -s ^b "^ubtop\n"
