@@ -11,6 +11,8 @@
     rb = rebase
     rbm = rebase main
     s = status
+    spu = stash push -m 'temp'
+    spo = stash pop
 [color]
     ui = true
 [core]
