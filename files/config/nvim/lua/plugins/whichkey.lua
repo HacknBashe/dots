@@ -26,7 +26,7 @@ return {
 				name = "+View",
 			},
 			["<leader>t"] = {
-				name = "+Tables",
+				name = "+Trouble/Tables",
 			},
 		})
 	end,
