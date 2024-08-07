@@ -19,6 +19,9 @@ return {
 			["<leader>g"] = {
 				name = "+Git",
 			},
+			["<leader>q"] = {
+				name = "+Quickfix",
+			},
 			["<leader>b"] = {
 				name = "+Buffer",
 			},

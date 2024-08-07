@@ -24,6 +24,11 @@ vim.keymap.set("n", "<leader>y", '"+y', { desc = "Yank to clipboard" })
 vim.keymap.set("n", "<leader>Y", '"+Y', { desc = "Yank Line to clipboard" })
 vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank to clipboard" })
 
+--quickfix
+vim.keymap.set("n", "<leader>qf", ":copen<CR>", { desc = "Open quickfix" })
+vim.keymap.set("n", "<leader>qn", ":cnext<CR>", { desc = "Next quickfix" })
+vim.keymap.set("n", "<leader>qp", ":cprev<CR>", { desc = "Prev quickfix" })
+
 -- substitute
 vim.keymap.set(
 	"v",
