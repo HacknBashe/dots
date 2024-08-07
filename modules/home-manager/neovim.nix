@@ -91,6 +91,7 @@ in {
 
       vim-closetag
       vim-commentary
+      nvim-ts-context-commentstring
       vim-fugitive
       vim-markdown-toc
       vim-sandwich
