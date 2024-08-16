@@ -56,6 +56,8 @@
 
   home.packages = with pkgs; [
     (pkgs.nerdfonts.override {fonts = ["SourceCodePro"];})
+    font-awesome
+    raleway
 
     bat
     cmatrix

@@ -140,6 +140,9 @@
         modules = [
           ./modules/nix.nix
           ./hosts/toothless/home.nix
+          # TODO
+          # ./modules/home-manager/terminal.nix
+          # ./modules/home-manager/development.nix
           ./modules/home-manager/neovim.nix
           ./modules/home-manager/tmux.nix
           ./modules/home-manager/btop.nix
