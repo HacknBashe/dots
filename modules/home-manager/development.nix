@@ -2,61 +2,61 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  linuxPackages =
+    if pkgs.stdenv.isLinux
+    then
+      with pkgs; [
+        distrobox
+        vscode.fhs
+        android-tools
+
+        gcc
+        conda
+        cargo
+        cypress
+      ]
+    else [];
+in {
   programs.direnv.enable = true;
 
-  home.packages = with pkgs; [
-    vscode.fhs
-    android-tools
+  home.packages = with pkgs;
+    [
+      git
+      lazygit
+      docker-compose
 
-    distrobox
-    docker-compose
+      alejandra
+      nil
+      shfmt
 
-    git
-    lazygit
+      gnumake
 
-    # Nix
-    alejandra
-    nil
-    shfmt
+      go
+      gopls
 
-    # C
-    gcc
-    gnumake
+      black
+      (python311.withPackages (ps: with ps; [numpy requests pyserial]))
 
-    # Go
-    go
-    gopls
+      rustc
+      rustup
 
-    # Python
-    black
-    conda
-    (python311.withPackages (ps: with ps; [numpy requests pyserial]))
+      gradle
+      temurin-bin-21
+      jdt-language-server
+      google-java-format
 
-    # Rust
-    # cargo
-    rustc
-    rustup
+      lua
+      lua-language-server
+      stylua
 
-    # Java
-    gradle
-    temurin-bin-21
-    jdt-language-server
-    google-java-format
-
-    # Lua
-    lua
-    lua-language-server
-    stylua
-
-    # Javascript
-    nodejs_22
-    nodePackages.typescript-language-server
-    prettierd
-    yarn
-    yarn2nix
-    cypress
-  ];
+      nodejs_22
+      nodePackages.typescript-language-server
+      prettierd
+      yarn
+      yarn2nix
+    ]
+    ++ linuxPackages;
 
   home.file = {
     ".gitconfig" = {

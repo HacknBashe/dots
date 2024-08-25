@@ -58,58 +58,6 @@
     (pkgs.nerdfonts.override {fonts = ["SourceCodePro"];})
     font-awesome
     raleway
-
-    bat
-    cmatrix
-    #ctpv
-    curl
-    delta
-    eza
-    fastfetch
-    fzf
-    jq
-    lf
-    pipes
-    p7zip
-    renameutils
-    ripgrep
-    tlrc
-    vim
-    wget
-    zoxide
-    zellij
-
-    git
-    lazygit
-
-    alejandra
-    nil
-    shfmt
-
-    gcc
-    gnumake
-
-    go
-    gopls
-
-    black
-    #conda
-    (python311.withPackages (ps: with ps; [numpy requests pyserial]))
-
-    gradle
-    temurin-bin-21
-    jdt-language-server
-    google-java-format
-
-    lua
-    lua-language-server
-    stylua
-
-    nodejs_22
-    nodePackages.typescript-language-server
-
-    prettierd
-    yarn
   ];
 
   home.file = {
