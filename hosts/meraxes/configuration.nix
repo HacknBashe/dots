@@ -17,7 +17,8 @@ in {
   };
 
   boot = {
-    kernelModules = ["sg"];
+    kernelParams = ["nvidia.NVreg_PreserveVideoMemoryAllocations=1"];
+    kernelModules = ["kvm-intel sg"];
     supportedFilesystems = ["ntfs"];
     loader = {
       efi = {
@@ -91,8 +92,10 @@ in {
   hardware = {
     graphics = {enable = true;};
     nvidia = {
+      powerManagement.enable = true;
       modesetting.enable = true;
       nvidiaSettings = true;
+      open = false;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
   };
