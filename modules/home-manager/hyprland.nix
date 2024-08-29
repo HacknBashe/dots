@@ -57,7 +57,51 @@
     };
 
     "wofi" = {
-      source = ../../files/config/wofi/style.css;
+      text = ''
+        window {
+          background-color: ${colors.background};
+          color: ${colors.foreground};
+        }
+
+        #entry:nth-child(odd) {
+          background-color: ${colors.background};
+        }
+
+        #entry:nth-child(even) {
+          background-color: ${colors.background};
+        }
+
+        #entry:selected {
+          background-color: ${colors.bright.black};
+        }
+
+        #input {
+          margin: 5px;
+          background-color: ${colors.background};
+          color: ${colors.foreground};
+          border-color: ${colors.bright.black};
+        }
+
+        #input:focus {
+          border-color: ${colors.foreground};
+        }
+
+        #inner-box {
+          margin: 5px;
+        }
+
+        #outer-box {
+          margin: 5px;
+        }
+
+        #scroll {
+          margin: 0px;
+        }
+
+        #text {
+          margin: 5px;
+        }
+      '';
       target = ".config/wofi/style.css";
     };
 
