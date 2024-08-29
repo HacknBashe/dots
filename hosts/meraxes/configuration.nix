@@ -115,69 +115,67 @@ in {
         (pkgs.writeTextDir
           "share/wireplumber/wireplumber.conf.d/51-device-setup.conf" ''
             monitor.alsa.rules = [
-              {
-                matches = [
-                  {
-                    device.name = "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00"
-                  }
-                ]
-                actions = {
-                  update-props = {
-                    device.nick = "Soundbar"
-                    device.description = "Soundbar"
-                  }
+                {
+                   matches = [
+                     {
+                       node.name = "alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo"
+                     }
+                   ]
+                   actions = {
+                     update-props = {
+                       node.description = "Soundbar"
+                     }
+                   }
                 }
-              }
-              {
-                matches = [
-                  {
-                    device.name = "alsa_input.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.mono-fallback"
-                  }
-                ]
-                actions = {
-                  update-props = {
-                    device.disabled = true
-                  }
+                {
+                   matches = [
+                     {
+                       node.name = "alsa_output.usb-Macronix_Razer_Barracuda_Pro_2.4_1234-00.analog-stereo"
+                     }
+                   ]
+                   actions = {
+                     update-props = {
+                       node.description = "Headset"
+                     }
+                   }
                 }
-              }
-              {
-                matches = [
-                  {
-                    node.name = "alsa_output.pci-0000_01_00.1.hdmi-stereo"
-                  }
-                ]
-                actions = {
-                  update-props = {
-                    node.description = "TV"
-                    node.nick = "TV"
-                  }
+                {
+                   matches = [
+                     {
+                       node.name = "alsa_output.pci-0000_01_00.1.hdmi-stereo"
+                     }
+                   ]
+                   actions = {
+                     update-props = {
+                       node.description = "TV"
+                     }
+                   }
                 }
-              }
-              {
-                matches = [
-                  {
-                    node.name = "alsa_output.usb-Generic_USB_Audio-00.iec958-stereo"
-                  }
-                ]
-                actions = {
-                  update-props = {
-                    device.disabled = true
-                  }
+                {
+                   matches = [
+                     {
+                       node.name = "alsa_output.usb-Generic_USB_Audio-00.iec958-stereo"
+                     }
+                   ]
+                   actions = {
+                     update-props = {
+                       node.disabled = true
+                     }
+                   }
                 }
-              }
-              {
-                matches = [
-                  {
-                    device.name = "alsa_card.pci-0000_00_1f.3"
-                  }
-                ]
-                actions = {
-                  update-props = {
-                    device.disabled = true
-                  }
+                {
+                   matches = [
+                     {
+                       node.name = "alsa_input.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.mono-fallback"
+                     }
+                   ]
+                   actions = {
+                     update-props = {
+                       node.disabled = true
+                     }
+                   }
                 }
-              }
-            ]
+             ]
           '')
       ];
     };
