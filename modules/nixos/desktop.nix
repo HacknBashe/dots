@@ -10,7 +10,7 @@
   programs.thunar.plugins = with pkgs; [
     xfce.thunar-archive-plugin
     xfce.thunar-volman
-    gnome.file-roller
+    file-roller
   ];
 
   services.gnome.gnome-keyring.enable = true;
