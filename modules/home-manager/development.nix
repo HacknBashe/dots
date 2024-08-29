@@ -13,7 +13,6 @@
 
         gcc
         conda
-        cargo
         cypress
       ]
     else [];
