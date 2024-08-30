@@ -22,6 +22,7 @@
     efibootmgr
     eza
     fastfetch
+    file
     fzf
     jq
     lf

@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   pkgs,
   ...
@@ -44,7 +45,7 @@
     todoist-electron
     ungoogled-chromium
     webcord
-    wezterm
+    inputs.wezterm.packages.${pkgs.system}.default
     vlc
   ];
 }
