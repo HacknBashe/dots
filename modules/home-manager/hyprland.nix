@@ -6,6 +6,10 @@
   wallLarge,
   ...
 }: {
+  home.packages = with pkgs; [
+    vimix-cursor-theme
+  ];
+
   home.file = {
     "hypr" = {
       # source = ../../files/config/hypr/hyprland.conf;
