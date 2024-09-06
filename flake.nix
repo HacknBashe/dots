@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgsold.url = "github:nixos/nixpkgs?ref=nixos-24.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -30,11 +31,14 @@
 
   outputs = {
     nixpkgs,
+    nixpkgsold,
     home-manager,
     hyprland,
     nixos-wsl,
     ...
   } @ inputs: let
+    system = "x86_64-linux";
+    pkgsold = nixpkgsold.legacyPackages.${system};
     # --- Settings ---- #
     wallLarge = /home/nick/Pictures/Walls/glowshroom-large.jpg;
     wallSmall = /home/nick/Pictures/Walls/glowshroom-small.jpg;
@@ -70,7 +74,6 @@
         two = "#db4b4b";
       };
     };
-    system = "x86_64-linux";
   in {
     nixosConfigurations = {
       cla-wsl = nixpkgs.lib.nixosSystem {
@@ -136,7 +139,7 @@
                 ./modules/home-manager/btop.nix
               ];
             };
-            home-manager.extraSpecialArgs = {inherit inputs colors wallLarge wallSmall;};
+            home-manager.extraSpecialArgs = {inherit pkgsold inputs colors wallLarge wallSmall;};
           }
         ];
         specialArgs = {inherit inputs colors wallLarge wallSmall;};
