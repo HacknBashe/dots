@@ -46,6 +46,7 @@
     };
   };
 
+  # TODO: What is this?
   security.pam.services.swaylock = {
     text = ''
       auth include login
@@ -90,7 +91,7 @@
 
   environment.systemPackages = with pkgs; [
     swaybg
-    swaylock-effects
+    hyprlock
 
     # sddm-theme dependencies
     libsForQt5.qt5ct

@@ -14,6 +14,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprlock = {
+      url = "git+https://github.com/hyprwm/hyprlock";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixos-wsl = {url = "github:nix-community/NixOS-WSL";};
 
     extest.url = "github:chaorace/extest-nix";
@@ -131,7 +136,7 @@
                 ./modules/home-manager/btop.nix
               ];
             };
-            home-manager.extraSpecialArgs = {inherit colors wallLarge wallSmall;};
+            home-manager.extraSpecialArgs = {inherit inputs colors wallLarge wallSmall;};
           }
         ];
         specialArgs = {inherit inputs colors wallLarge wallSmall;};
