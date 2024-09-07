@@ -14,8 +14,6 @@ return {
 			{ desc = "Find Notes", noremap = true, silent = true, nowait = true }
 		)
 
-		vim.opt.conceallevel = 0
-
 		function MarkdownLevel()
 			local line = vim.fn.getline(vim.v.lnum)
 			if string.match(line, "^# .*$") then
@@ -39,6 +37,7 @@ return {
 		vim.api.nvim_command("autocmd BufEnter *.md setlocal foldmethod=expr")
 
 		require("obsidian").setup({
+			ui = { enable = false },
 			workspaces = {
 				{
 					name = "notes",

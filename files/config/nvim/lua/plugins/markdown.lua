@@ -24,4 +24,16 @@ return {
 			vim.g["vmt_fence_closing_text"] = "/TOC"
 		end,
 	},
+	render = {
+		"MeanderingProgrammer/render-markdown.nvim",
+		config = function()
+			require("render-markdown").setup({
+				win_options = {
+					conceallevel = {
+						rendered = 0,
+					},
+				},
+			})
+		end,
+	},
 }

@@ -76,6 +76,7 @@ in {
       lazygit-nvim
       lualine-nvim
       markdown-preview-nvim
+      render-markdown
 
       nvim-tree-lua
       pkgsold.vimPlugins.nvim-treesitter.withAllGrammars
