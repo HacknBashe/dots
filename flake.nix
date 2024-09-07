@@ -38,7 +38,6 @@
     ...
   } @ inputs: let
     system = "x86_64-linux";
-    pkgsold = nixpkgsold.legacyPackages.${system};
     # --- Settings ---- #
     wallLarge = /home/nick/Pictures/Walls/glowshroom-large.jpg;
     wallSmall = /home/nick/Pictures/Walls/glowshroom-small.jpg;
@@ -139,7 +138,7 @@
                 ./modules/home-manager/btop.nix
               ];
             };
-            home-manager.extraSpecialArgs = {inherit pkgsold inputs colors wallLarge wallSmall;};
+            home-manager.extraSpecialArgs = {inherit inputs colors wallLarge wallSmall;};
           }
         ];
         specialArgs = {inherit inputs colors wallLarge wallSmall;};

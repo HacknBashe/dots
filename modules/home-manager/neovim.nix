@@ -1,7 +1,7 @@
 {
   config,
   pkgs,
-  pkgsold,
+  inputs,
   ...
 }: let
   harpoon2 = pkgs.vimUtils.buildVimPlugin {
@@ -79,7 +79,7 @@ in {
       render-markdown
 
       nvim-tree-lua
-      pkgsold.vimPlugins.nvim-treesitter.withAllGrammars
+      inputs.nixpkgsold.legacyPackages.${pkgs.system}.vimPlugins.nvim-treesitter.withAllGrammars
 
       nvim-treesitter-context
 
