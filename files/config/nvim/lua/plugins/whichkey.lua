@@ -9,28 +9,14 @@ return {
 			-- or leave it empty to use the default settings
 			-- refer to the configuration section below
 		})
-		wk.register({
-			["<leader>f"] = {
-				name = "+Find/File",
-			},
-			["<leader>fd"] = {
-				name = "+Find in Directory",
-			},
-			["<leader>g"] = {
-				name = "+Git",
-			},
-			["<leader>q"] = {
-				name = "+Quickfix",
-			},
-			["<leader>b"] = {
-				name = "+Buffer",
-			},
-			["<leader>v"] = {
-				name = "+View",
-			},
-			["<leader>t"] = {
-				name = "+Trouble/Tables",
-			},
+		wk.add({
+			{ "<leader>b", group = "Buffer" },
+			{ "<leader>f", group = "Find/File" },
+			{ "<leader>fd", group = "Find in Directory" },
+			{ "<leader>g", group = "Git" },
+			{ "<leader>q", group = "Quickfix" },
+			{ "<leader>t", group = "Trouble/Tables" },
+			{ "<leader>v", group = "View" },
 		})
 	end,
 }
