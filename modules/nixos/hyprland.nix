@@ -84,6 +84,7 @@
 
   environment.systemPackages = with pkgs; [
     swaybg
+    ags
     hyprlock
 
     # sddm-theme dependencies

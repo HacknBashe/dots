@@ -95,6 +95,12 @@
       target = ".config/hypr/shaders";
       recursive = true;
     };
+    
+    "ags" = {
+      source = ../../files/config/ags;
+      target = ".config/ags";
+      recursive = true;
+    };
 
     "waybar" = {
       source = ../../files/config/waybar;
