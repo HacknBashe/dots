@@ -15,7 +15,7 @@ export function Notifications(monitor = 0) {
       Utils.exec(
         `hyprctl notify -1 5000 "rgb(ff1ea3)" "${n.summary}\n\r${n.body}"`,
       );
-      print(JSON.stringify(n));
+      // print(JSON.stringify(n));
     }
   }
 

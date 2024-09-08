@@ -1,4 +1,5 @@
 import { Notifications } from "./notifications.js";
+import { SoundNotifications } from "./sound-notifications.js";
 
 // Utils.timeout(100, () =>
 //   Utils.notify({
@@ -14,6 +15,6 @@ import { Notifications } from "./notifications.js";
 // );
 
 App.config({
-  style: App.configDir + "/style.css",
-  windows: [Notifications()],
+  // style: App.configDir + "/style.css",
+  windows: [Notifications(), SoundNotifications()],
 });
