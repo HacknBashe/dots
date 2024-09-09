@@ -31,7 +31,6 @@
         window = {
           decorations = "none";
           dynamic_padding = true;
-          opacity = lib.mkForce 0.9;
         };
         colors = {
           primary = {
