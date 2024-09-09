@@ -9,9 +9,9 @@ family = "SauceCodePro Nerd Font Mono"
 style = "ExtraLight"
 
 [window]
-decorations = "none"
 dynamic_padding = true
 opacity = 0.95
+dynamic_title = false
 
 [keyboard]
 bindings = [

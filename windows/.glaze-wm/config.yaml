@@ -35,11 +35,11 @@ gaps:
 focus_borders:
   active:
     enabled: true
-    color: "#0000ff"
+    color: "#5DE2E7"
 
   inactive:
     enabled: false
-    color: "#ff0000"
+    color: "#D20103"
 
 bar:
   height: "30px"
@@ -223,7 +223,7 @@ keybindings:
   # Launch CMD terminal (alternatively `exec wt` or `exec %ProgramFiles%/Git/git-bash.exe`
   # to start Windows Terminal and Git Bash respectively.
   - command: "exec alacritty"
-    binding: "Alt+Q"
+    binding: "Alt+Enter"
 
   - command: "exec msedge"
     binding: "Alt+W"
