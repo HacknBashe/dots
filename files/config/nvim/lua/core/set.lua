@@ -52,3 +52,5 @@ vim.opt.scrolloff = 8
 vim.opt.colorcolumn = "120"
 
 vim.opt.signcolumn = "yes"
+
+vim.opt.foldlevelstart = 99
