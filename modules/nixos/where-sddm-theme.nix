@@ -1,4 +1,7 @@
-{ pkgs, wallLarge }:
+{
+  pkgs,
+  config,
+}:
 pkgs.stdenv.mkDerivation {
   name = "sddm-theme";
   src = pkgs.fetchFromGitHub {
@@ -11,7 +14,7 @@ pkgs.stdenv.mkDerivation {
         mkdir -p $out
         cp -R ./where_is_my_sddm_theme/* $out/
         cd $out/
-        cp -r ${wallLarge} $out/Background.jpg
+        cp -r ${config.theme.wallLarge} $out/Background.jpg
         rm theme.conf
     cat <<EOL > theme.conf
     [General]
@@ -25,5 +28,4 @@ pkgs.stdenv.mkDerivation {
     cursorColor=#FFFFFF
     EOL
   '';
-
 }

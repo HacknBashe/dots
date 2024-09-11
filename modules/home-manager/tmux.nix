@@ -1,5 +1,9 @@
-{ config, pkgs, colors, ... }: {
-  home.packages = with pkgs; [ tmux ];
+{
+  config,
+  pkgs,
+  ...
+}: {
+  home.packages = with pkgs; [tmux];
 
   home.file = {
     "tmux" = {
@@ -12,13 +16,13 @@
         #!/usr/bin/env bash
         # Color with ANSI palette
         %hidden thm_bg="default"
-        %hidden thm_black="${colors.default.black}"
-        %hidden thm_yellow="${colors.default.yellow}"
-        %hidden thm_blue="${colors.default.blue}"
-        %hidden thm_pink="${colors.default.magenta}"
-        %hidden thm_white="${colors.default.white}"
-        %hidden thm_grey="${colors.cursor}"
-        %hidden thm_orange="${colors.indexed.one}"
+        %hidden thm_black="${config.theme.colors.default.black}"
+        %hidden thm_yellow="${config.theme.colors.default.yellow}"
+        %hidden thm_blue="${config.theme.colors.default.blue}"
+        %hidden thm_pink="${config.theme.colors.default.magenta}"
+        %hidden thm_white="${config.theme.colors.default.white}"
+        %hidden thm_grey="${config.theme.colors.cursor}"
+        %hidden thm_orange="${config.theme.colors.indexed.one}"
 
         %hidden LEFT=
         %hidden RIGHT=

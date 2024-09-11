@@ -2,9 +2,6 @@
   config,
   pkgs,
   inputs,
-  colors,
-  wallSmall,
-  wallLarge,
   ...
 }: {
   programs.hyprlock = {
@@ -18,8 +15,9 @@
       };
 
       background = {
-        monitor = "DP-4 DP-3";
-        color = "rgba(25, 20, 20, 1.0)";
+        monitor = "DP-4";
+        # color = "rgba(00640080)";
+        # color = "rgba(25, 20, 20, 1.0)";
         path = "screenshot";
         blur_passes = 1;
         blur_size = 8;
@@ -58,7 +56,7 @@
         '';
         color = "rgba(205, 214, 244, 1)";
         font_size = 120;
-        font_family = "SauceCodePro Nerd Font Mono";
+        font_family = config.theme.fontMono;
         position = "0, -300";
         halign = "center";
         valign = "top";
@@ -74,13 +72,13 @@
     "hypr" = {
       # source = ../../files/config/hypr/hyprland.conf;
       text = ''
-        $activeColor = ${builtins.substring 1 6 colors.default.blue + "cc"}
-        $inactiveColor = ${builtins.substring 1 6 colors.bright.black + "99"}
-        $shadowColor = ${builtins.substring 1 6 colors.text + "ee"}
+        $activeColor = ${builtins.substring 1 6 config.theme.colors.default.blue + "cc"}
+        $inactiveColor = ${builtins.substring 1 6 config.theme.colors.bright.black + "99"}
+        $shadowColor = ${builtins.substring 1 6 config.theme.colors.text + "ee"}
 
-        exec = swaybg -o DP-4 -i ${wallLarge}
-        exec = swaybg -o DP-3 -i ${wallSmall}
-        exec = swaybg -o HDMI-A-5 -i ${wallSmall}
+        exec = swaybg -o DP-4 -i ${config.theme.wallLarge}
+        exec = swaybg -o DP-3 -i ${config.theme.wallSmall}
+        exec = swaybg -o HDMI-A-5 -i ${config.theme.wallSmall}
         ${builtins.readFile ../../files/config/hypr/hyprland.conf}
       '';
       target = ".config/hypr/hyprland.conf";
@@ -95,7 +93,7 @@
       target = ".config/hypr/shaders";
       recursive = true;
     };
-    
+
     "ags" = {
       source = ../../files/config/ags;
       target = ".config/ags";
@@ -109,14 +107,14 @@
     };
     "waybar/scheme.css" = {
       text = ''
-        @define-color bg alpha(${colors.background},1);
-        @define-color bg80 alpha(${colors.background},.8);
-        @define-color bg60 alpha(${colors.background},.6);
-        @define-color bg0 alpha(${colors.background},0);
-        @define-color fg alpha(${colors.foreground},1);
-        @define-color fg80 alpha(${colors.foreground},.8);
-        @define-color fg60 alpha(${colors.foreground},.6);
-        @define-color white80 alpha(${colors.bright.white},.8);
+        @define-color bg alpha(${config.theme.colors.background},1);
+        @define-color bg80 alpha(${config.theme.colors.background},.8);
+        @define-color bg60 alpha(${config.theme.colors.background},.6);
+        @define-color bg0 alpha(${config.theme.colors.background},0);
+        @define-color fg alpha(${config.theme.colors.foreground},1);
+        @define-color fg80 alpha(${config.theme.colors.foreground},.8);
+        @define-color fg60 alpha(${config.theme.colors.foreground},.6);
+        @define-color white80 alpha(${config.theme.colors.bright.white},.8);
       '';
       target = ".config/waybar/scheme.css";
     };
@@ -129,31 +127,31 @@
     "wofi" = {
       text = ''
         window {
-          background-color: ${colors.background};
-          color: ${colors.foreground};
+          background-color: ${config.theme.colors.background};
+          color: ${config.theme.colors.foreground};
         }
 
         #entry:nth-child(odd) {
-          background-color: ${colors.background};
+          background-color: ${config.theme.colors.background};
         }
 
         #entry:nth-child(even) {
-          background-color: ${colors.background};
+          background-color: ${config.theme.colors.background};
         }
 
         #entry:selected {
-          background-color: ${colors.bright.black};
+          background-color: ${config.theme.colors.bright.black};
         }
 
         #input {
           margin: 5px;
-          background-color: ${colors.background};
-          color: ${colors.foreground};
-          border-color: ${colors.bright.black};
+          background-color: ${config.theme.colors.background};
+          color: ${config.theme.colors.foreground};
+          border-color: ${config.theme.colors.bright.black};
         }
 
         #input:focus {
-          border-color: ${colors.foreground};
+          border-color: ${config.theme.colors.foreground};
         }
 
         #inner-box {
@@ -189,27 +187,27 @@
 
         window {
           font-size: 50pt;
-          background-color: alpha(${colors.background},.5);
+          background-color: alpha(${config.theme.colors.background},.5);
         }
 
         button {
-          color: ${colors.foreground};
+          color: ${config.theme.colors.foreground};
           border: none;
           box-shadow: none;
           background-repeat: no-repeat;
           background-position: center;
           background-size: 25%;
-          background-color: alpha(${colors.background},0);
+          background-color: alpha(${config.theme.colors.background},0);
           margin: 0px;
           transition: background-color 0.2s ease-in-out;
         }
 
         button:hover {
-          background-color: alpha(${colors.default.blue},.1);
+          background-color: alpha(${config.theme.colors.default.blue},.1);
         }
 
         button:focus {
-          background-color: alpha(${colors.default.blue},.3);
+          background-color: alpha(${config.theme.colors.default.blue},.3);
         }
 
         #lock {

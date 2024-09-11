@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  wallLarge,
   inputs,
   ...
 }: {
@@ -24,7 +23,7 @@
   services = {
     displayManager.sddm = {
       enable = true;
-      theme = "${import ./where-sddm-theme.nix {inherit pkgs wallLarge;}}";
+      theme = "${import ./where-sddm-theme.nix {inherit pkgs config;}}";
     };
     xserver = {
       enable = true;

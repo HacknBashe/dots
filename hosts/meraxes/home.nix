@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  colors,
   ...
 }: {
   home.username = "nick";
@@ -34,24 +33,24 @@
         };
         colors = {
           primary = {
-            background = colors.background;
-            foreground = colors.foreground;
+            background = config.theme.colors.background;
+            foreground = config.theme.colors.foreground;
           };
           cursor = {
-            text = colors.text;
-            cursor = colors.cursor;
+            text = config.theme.colors.text;
+            cursor = config.theme.colors.cursor;
           };
-          normal = colors.default;
-          bright = colors.bright;
-          dim = colors.default;
+          normal = config.theme.colors.default;
+          bright = config.theme.colors.bright;
+          dim = config.theme.colors.default;
           indexed_colors = [
             {
               index = 16;
-              color = colors.indexed.one;
+              color = config.theme.colors.indexed.one;
             }
             {
               index = 17;
-              color = colors.indexed.two;
+              color = config.theme.colors.indexed.two;
             }
           ];
         };
@@ -136,13 +135,13 @@
         [color]
         gradient = 1
         gradient_count = 7
-        gradient_color_1 = '${colors.default.magenta}'
-        gradient_color_2 = '${colors.default.blue}'
-        gradient_color_3 = '${colors.default.cyan}'
-        gradient_color_4 = '${colors.default.green}'
-        gradient_color_5 = '${colors.default.yellow}'
-        gradient_color_6 = '${colors.indexed.one}'
-        gradient_color_7 = '${colors.indexed.two}'
+        gradient_color_1 = '${config.theme.colors.default.magenta}'
+        gradient_color_2 = '${config.theme.colors.default.blue}'
+        gradient_color_3 = '${config.theme.colors.default.cyan}'
+        gradient_color_4 = '${config.theme.colors.default.green}'
+        gradient_color_5 = '${config.theme.colors.default.yellow}'
+        gradient_color_6 = '${config.theme.colors.indexed.one}'
+        gradient_color_7 = '${config.theme.colors.indexed.two}'
       '';
       target = ".config/cava/config";
     };
@@ -157,13 +156,13 @@
         #!/usr/bin/env bash
         # Color with ANSI palette
         %hidden thm_bg="default"
-        %hidden thm_black="${colors.default.black}"
-        %hidden thm_yellow="${colors.default.yellow}"
-        %hidden thm_blue="${colors.default.blue}"
-        %hidden thm_pink="${colors.default.magenta}"
-        %hidden thm_white="${colors.default.white}"
-        %hidden thm_grey="${colors.bright.black}"
-        %hidden thm_orange="${colors.indexed.one}"
+        %hidden thm_black="${config.theme.colors.default.black}"
+        %hidden thm_yellow="${config.theme.colors.default.yellow}"
+        %hidden thm_blue="${config.theme.colors.default.blue}"
+        %hidden thm_pink="${config.theme.colors.default.magenta}"
+        %hidden thm_white="${config.theme.colors.default.white}"
+        %hidden thm_grey="${config.theme.colors.bright.black}"
+        %hidden thm_orange="${config.theme.colors.indexed.one}"
 
         %hidden LEFT=
         %hidden RIGHT=
