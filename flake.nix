@@ -58,8 +58,9 @@
                 ./hosts/meraxes/home.nix
                 ./modules/theme.nix
                 ./modules/home-manager/development.nix
-                ./modules/home-manager/neovim.nix
                 ./modules/home-manager/hyprland.nix
+                ./modules/home-manager/neovim.nix
+                ./modules/home-manager/tmux.nix
                 ./modules/home-manager/btop.nix
               ];
             };
