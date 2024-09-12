@@ -18,7 +18,7 @@ pkgs.stdenv.mkDerivation {
         rm theme.conf
     cat <<EOL > theme.conf
     [General]
-    passwordCharacter=*
+    passwordCharacter=•
     passwordFontSize=96
     sessionsFontSize=24
     usersFontSize=48
