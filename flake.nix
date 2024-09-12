@@ -91,6 +91,7 @@
         modules = [
           ./modules/nix.nix
           ./hosts/cla-wsl/configuration.nix
+          ./modules/theme.nix
           # ./modules/nixos/core.nix
           nixos-wsl.nixosModules.wsl
           home-manager.nixosModules.home-manager
@@ -100,6 +101,7 @@
             home-manager.users.nick = {
               imports = [
                 ./hosts/cla-wsl/home.nix
+                ./modules/theme.nix
                 ./modules/home-manager/terminal.nix
                 ./modules/home-manager/development.nix
                 ./modules/home-manager/neovim.nix
