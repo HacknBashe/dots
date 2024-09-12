@@ -10,53 +10,6 @@
   home.stateVersion = "23.05";
 
   programs.home-manager.enable = true;
-  home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
-
-  gtk.enable = true;
-  gtk.iconTheme.package = pkgs.colloid-icon-theme.override {
-    schemeVariants = ["nord"];
-    colorVariants = ["teal"];
-  };
-  gtk.iconTheme.name = "Colloid-teal-nord-dark";
-
-  programs = {
-    alacritty = {
-      enable = true;
-      settings = {
-        font.size = 20.0;
-        font.bold.style = lib.mkForce "Regular";
-        font.normal.family = "SauceCodePro Nerd Font Mono";
-        font.normal.style = lib.mkForce "ExtraLight";
-        window = {
-          decorations = "none";
-          dynamic_padding = true;
-        };
-        colors = {
-          primary = {
-            background = config.theme.colors.background;
-            foreground = config.theme.colors.foreground;
-          };
-          cursor = {
-            text = config.theme.colors.text;
-            cursor = config.theme.colors.cursor;
-          };
-          normal = config.theme.colors.default;
-          bright = config.theme.colors.bright;
-          dim = config.theme.colors.default;
-          indexed_colors = [
-            {
-              index = 16;
-              color = config.theme.colors.indexed.one;
-            }
-            {
-              index = 17;
-              color = config.theme.colors.indexed.two;
-            }
-          ];
-        };
-      };
-    };
-  };
 
   home.file = {
     "bin" = {

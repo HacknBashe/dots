@@ -7,7 +7,6 @@
   config,
   lib,
   pkgs,
-  nixos-wsl,
   ...
 }: {
   wsl.enable = true;
@@ -26,12 +25,6 @@
     extraGroups = ["wheel" "docker"];
     packages = with pkgs; [];
   };
-
-  programs.zsh.enable = true;
-  users.defaultUserShell = pkgs.zsh;
-  environment.shells = with pkgs; [zsh];
-
-  fonts.packages = with pkgs; [(pkgs.nerdfonts.override {fonts = ["SourceCodePro"];})];
 
   system.activationScripts.windows = {
     text = ''

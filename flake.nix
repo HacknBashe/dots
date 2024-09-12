@@ -33,20 +33,20 @@
     nixpkgs,
     nixpkgsold,
     home-manager,
-    hyprland,
     nixos-wsl,
     ...
   } @ inputs: let
-    system = "x86_64-linux";
+    systemLinux = "x86_64-linux";
+    systemDarwin = "aarch64-darwin";
   in {
     nixosConfigurations = {
       meraxes = nixpkgs.lib.nixosSystem {
-        inherit system;
+        system = systemLinux;
         modules = [
           ./modules/nix.nix
           ./modules/theme.nix
           ./hosts/meraxes/configuration.nix
-          ./modules/nixos/core.nix
+          ./modules/nixos/shell.nix
           ./modules/nixos/hyprland.nix
           ./modules/nixos/desktop.nix
           home-manager.nixosModules.home-manager
@@ -57,11 +57,13 @@
               imports = [
                 ./hosts/meraxes/home.nix
                 ./modules/theme.nix
+                ./modules/home-manager/shell.nix
                 ./modules/home-manager/development.nix
                 ./modules/home-manager/neovim.nix
                 ./modules/home-manager/tmux.nix
                 ./modules/home-manager/btop.nix
                 ./modules/home-manager/hyprland.nix
+                ./modules/home-manager/alacritty.nix
                 ./modules/home-manager/gtk.nix
               ];
             };
@@ -71,28 +73,13 @@
         specialArgs = {inherit inputs;};
       };
 
-      meraxes-wsl = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = [
-          ./modules/nix.nix
-          ./hosts/meraxes-wsl/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.nick = import ./hosts/meraxes-wsl/home.nix;
-          }
-        ];
-        specialArgs = {inherit nixos-wsl;};
-      };
-
       cla-wsl = nixpkgs.lib.nixosSystem {
-        inherit system;
+        system = systemLinux;
         modules = [
           ./modules/nix.nix
           ./hosts/cla-wsl/configuration.nix
           ./modules/theme.nix
-          # ./modules/nixos/core.nix
+          ./modules/nixos/shell.nix
           nixos-wsl.nixosModules.wsl
           home-manager.nixosModules.home-manager
           {
@@ -102,7 +89,7 @@
               imports = [
                 ./hosts/cla-wsl/home.nix
                 ./modules/theme.nix
-                ./modules/home-manager/terminal.nix
+                ./modules/home-manager/shell.nix
                 ./modules/home-manager/development.nix
                 ./modules/home-manager/neovim.nix
                 ./modules/home-manager/tmux.nix
@@ -118,25 +105,27 @@
 
     homeConfigurations = {
       nick = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+        pkgs = nixpkgs.legacyPackages.${systemDarwin};
         modules = [
           ./modules/nix.nix
+          ./modules/theme.nix
           ./hosts/toothless/home.nix
-          ./modules/home-manager/terminal.nix
+          ./modules/home-manager/shell.nix
           ./modules/home-manager/development.nix
           ./modules/home-manager/neovim.nix
           ./modules/home-manager/tmux.nix
           ./modules/home-manager/btop.nix
+          ./modules/home-manager/alacritty.nix
         ];
         extraSpecialArgs = {inherit inputs;};
       };
 
       hack56224 = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = nixpkgs.legacyPackages.${systemLinux};
         modules = [
           ./modules/nix.nix
           ./hosts/cla-vm/home.nix
-          ./modules/home-manager/terminal.nix
+          ./modules/home-manager/shell.nix
           ./modules/home-manager/development.nix
           ./modules/home-manager/neovim.nix
           ./modules/home-manager/tmux.nix

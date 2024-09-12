@@ -106,6 +106,13 @@ in {
       package = pkgs.adw-gtk3;
       name = "adw-gtk3";
     };
+    iconTheme = {
+      name = "Colloid-teal-nord-dark";
+      package = pkgs.colloid-icon-theme.override {
+        schemeVariants = ["nord"];
+        colorVariants = ["teal"];
+      };
+    };
   };
 
   xdg.configFile = {
