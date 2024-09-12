@@ -20,7 +20,7 @@ return {
 					floats = "transparent",
 				},
 			})
-			vim.cmd.colorscheme("tokyonight")
+			vim.cmd.colorscheme("tokyonight-moon")
 		end,
 	},
 	nightfox = {
@@ -39,6 +39,17 @@ return {
 				},
 			})
 			vim.cmd.colorscheme("nordfox")
+		end,
+	},
+	kanagawa = {
+		"rebelt/kanagawa.nvim",
+
+		config = function()
+			require("kanagawa").setup({
+				transparent = true,
+			})
+
+			vim.cmd("colorscheme kanagawa")
 		end,
 	},
 }

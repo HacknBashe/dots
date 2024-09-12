@@ -48,6 +48,7 @@ in {
     plugins = with pkgs.vimPlugins; [
       tokyonight-nvim
       nightfox-nvim
+      kanagawa-nvim
 
       # nvim-dap
 
