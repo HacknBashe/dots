@@ -43,6 +43,7 @@ in {
       vitetris
       wget
       xdg-utils
+      yazi
       zellij
       zoxide
     ]
