@@ -1,7 +1,7 @@
 {
   pkgs,
   config,
-  lib,
+  inputs,
   ...
 }: let
   colors = config.theme.colors.base16;
@@ -107,11 +107,8 @@ in {
       name = "adw-gtk3";
     };
     iconTheme = {
-      name = "Colloid-teal-nord-dark";
-      package = pkgs.colloid-icon-theme.override {
-        schemeVariants = ["nord"];
-        colorVariants = ["teal"];
-      };
+      name = "Colloid-dark";
+      package = inputs.nixpkgsold.legacyPackages.${pkgs.system}.colloid-icon-theme;
     };
   };
 

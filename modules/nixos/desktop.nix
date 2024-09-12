@@ -1,7 +1,7 @@
 {
-  inputs,
   config,
   pkgs,
+  inputs,
   ...
 }: {
   programs.thunar.enable = true;
