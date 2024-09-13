@@ -65,6 +65,7 @@
                 ./modules/home-manager/hyprland.nix
                 ./modules/home-manager/alacritty.nix
                 ./modules/home-manager/gtk.nix
+                ./modules/home-manager/qt.nix
               ];
             };
             home-manager.extraSpecialArgs = {inherit inputs;};
