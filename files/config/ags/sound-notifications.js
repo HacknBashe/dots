@@ -28,7 +28,7 @@ export function SoundNotifications(monitor = 0) {
     } else if (newMuted !== muted) {
       if (muted !== null) {
         Utils.exec(
-          `hyprctl notify -1 2000 "rgb(ff1ea3)" "${muted ? "󰝟  Muted" : "   Unmuted"} ${newVol}"`,
+          `hyprctl notify -1 2000 "rgb(ff1ea3)" "${newMuted ? "󰝟  Muted" : "   Unmuted"} ${newVol}"`,
         );
       }
       muted = newMuted;
