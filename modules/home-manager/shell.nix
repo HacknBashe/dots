@@ -2,10 +2,47 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  linuxPackages =
+    if pkgs.stdenv.isLinux
+    then
+      with pkgs; [
+        cava
+        ctpv
+        efibootmgr
+        playerctl
+      ]
+    else [];
+in {
   programs.zsh.enable = true;
 
   home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
+  home.packages = with pkgs; [
+    bat
+    chntpw
+    cmatrix
+    curl
+    delta
+    eza
+    fastfetch
+    fzf
+    jq
+    lf
+    libsecret
+    pipes
+    p7zip
+    pulsemixer
+    renameutils
+    ripgrep
+    tlrc
+    vim
+    vitetris
+    wget
+    xdg-utils
+    yazi
+    zellij
+    zoxide
+  ];
 
   home.file = {
     "bin" = {
