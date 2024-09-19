@@ -78,8 +78,8 @@ cmp.setup({
 	sources = {
 		{ name = "nvim_lsp" },
 		{ name = "luasnip" },
-		{ name = "codeium" },
-		{ name = "copilot" },
+		-- { name = "codeium" },
+		-- { name = "copilot" },
 	},
 	formatting = {
 		format = lspkind.cmp_format({

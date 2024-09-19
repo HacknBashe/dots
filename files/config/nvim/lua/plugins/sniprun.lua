@@ -3,7 +3,7 @@ return {
 	config = function()
 		vim.api.nvim_set_keymap("v", "<leader>r", ":SnipRun<CR>", { desc = "Run Selection", silent = true })
 		vim.api.nvim_set_keymap("n", "<leader>r", ":SnipRun<CR>", { desc = "Run Line", silent = true })
-		vim.api.nvim_set_keymap("n", "<leader>R", "gg<S-v><S-g>:SnipRun<CR>", { desc = "Run File", silent = true })
+		vim.api.nvim_set_keymap("n", "<leader>R", "gg<S-v><S-g>:SnipRun<CR><C-o>", { desc = "Run File", silent = true })
 		require("sniprun").setup({
 			display = {
 				"TempFloatingWindow",
