@@ -28,6 +28,12 @@ return {
 		"MeanderingProgrammer/render-markdown.nvim",
 		config = function()
 			require("render-markdown").setup({
+				checkbox = {
+					custom = {
+						todo = { raw = "[-]", rendered = "󰥔 ", highlight = "RenderMarkdownTodo" },
+						blocked = { raw = "[!]", rendered = "󰥕 ", highlight = "RenderMarkdownError" },
+					},
+				},
 				win_options = {
 					conceallevel = {
 						rendered = 0,
