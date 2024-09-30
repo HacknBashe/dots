@@ -36,6 +36,7 @@ in {
 
       black
       (python311.withPackages (ps: with ps; [numpy requests pyserial]))
+      pyright
 
       rustc
       rustup
