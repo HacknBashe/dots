@@ -9,6 +9,9 @@ return {
 				lua = {
 					require("formatter.filetypes.lua").stylua,
 				},
+				markdown = {
+					require("formatter.filetypes.markdown").prettierd,
+				},
 				sh = {
 					require("formatter.filetypes.sh").shfmt,
 				},
