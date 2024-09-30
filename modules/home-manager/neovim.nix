@@ -49,6 +49,8 @@ in {
       tokyonight-nvim
       nightfox-nvim
       kanagawa-nvim
+      noice-nvim
+      nvim-notify
 
       # nvim-dap
 
