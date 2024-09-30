@@ -79,10 +79,10 @@ in {
       lazygit-nvim
       lualine-nvim
       markdown-preview-nvim
-      render-markdown
+      render-markdown-nvim
 
       nvim-tree-lua
-      inputs.nixpkgsold.legacyPackages.${pkgs.system}.vimPlugins.nvim-treesitter.withAllGrammars
+      nvim-treesitter.withAllGrammars
 
       nvim-treesitter-context
 
