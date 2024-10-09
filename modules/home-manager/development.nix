@@ -12,8 +12,6 @@
         android-tools
 
         gcc
-        conda
-        cypress
       ]
     else [];
 in {
