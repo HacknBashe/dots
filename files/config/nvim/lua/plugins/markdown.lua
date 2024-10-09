@@ -29,6 +29,7 @@ return {
 		config = function()
 			require("render-markdown").setup({
 				checkbox = {
+                    position = 'overlay',
 					custom = {
 						todo = { raw = "[-]", rendered = "󰥔 ", highlight = "RenderMarkdownTodo" },
 						blocked = { raw = "[!]", rendered = "󰥕 ", highlight = "RenderMarkdownError" },
@@ -36,6 +37,7 @@ return {
 				},
 				win_options = {
 					conceallevel = {
+                        default = 0,
 						rendered = 0,
 					},
 				},
