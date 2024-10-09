@@ -40,6 +40,15 @@
       hash = "sha256-8JpbqzbAs6fvM3iyyWszBl1LIp1tqNJ4Ngep0EunCRg=";
     };
   };
+  yazi-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "yazi-nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "mikavilpas";
+      repo = "yazi.nvim";
+      rev = "a4e9d2ce9e88dcc146ac621cbb2373e8a5e765c3";
+      hash = "sha256-dQ+KFbFtm3XflQl7optMfceR8F3dtF+11Ly6AGSUtkI=";
+    };
+  };
 in {
   programs.neovim = {
     enable = true;
@@ -105,6 +114,7 @@ in {
       better-vim-tmux-resizer
       vim-visual-multi
       which-key-nvim
+      yazi-nvim
     ];
     extraLuaConfig = ''
       require('core.nix-init')

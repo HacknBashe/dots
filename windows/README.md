@@ -1,5 +1,5 @@
 ```sh
-winget install alacritty brave chrome discord spotify win32get
+winget install alacritty brave chrome discord spotify win32yank
 ```
 
 * [Alacritty Mouse Fix](https://github.com/wez/wezterm/tree/main/assets/windows/conhost)
