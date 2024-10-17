@@ -28,6 +28,7 @@ lspconfig.jdtls.setup({})
 lspconfig.gopls.setup({})
 lspconfig.ts_ls.setup({})
 lspconfig.pyright.setup({})
+lspconfig.nil_ls.setup({})
 
 vim.diagnostic.config({
 	signs = false,
