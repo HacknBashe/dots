@@ -1,6 +1,6 @@
 {
     "label" : "lock",
-    "action" : "hyprlock",
+    "action" : "sleep .1 && grim -o DP-4 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-3 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock",
     "text" : "Lock",
     "keybind" : "l",
 }
@@ -12,13 +12,13 @@
 }
 {
     "label" : "suspend",
-    "action" : "hyprlock & sleep 1 && systemctl suspend",
+    "action" : "sleep .1 && grim -o DP-4 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-3 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock & sleep 1 && systemctl suspend",
     "text" : "Suspend",
     "keybind" : "u"
 }
 {
     "label" : "hibernate",
-    "action" : "hyprlock & sleep 1 && systemctl hibernate",
+    "action" : "sleep .1 && grim -o DP-4 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-3 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock & sleep 1 && systemctl hibernate",
     "text" : "Hibernate",
     "keybind" : "h"
 }

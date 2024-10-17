@@ -14,19 +14,30 @@
         hide_cursor = true;
       };
 
-      background = {
-        monitor = "DP-4";
-        # color = "rgba(00640080)";
-        # color = "rgba(25, 20, 20, 1.0)";
-        path = "screenshot";
-        blur_passes = 1;
-        blur_size = 8;
-        noise = 0.0117;
-        contrast = 0.8916;
-        brightness = 0.8172;
-        vibrancy = 0.1696;
-        vibrancy_darkness = 0.0;
-      };
+      background = [
+        {
+          monitor = "DP-4";
+          path = "/tmp/hyprlock_screenshot1.png";
+          blur_passes = 1;
+          blur_size = 8;
+          noise = 0.0117;
+          contrast = 0.8916;
+          brightness = 0.8172;
+          vibrancy = 0.1696;
+          vibrancy_darkness = 0.0;
+        }
+        {
+          monitor = "DP-3";
+          path = "/tmp/hyprlock_screenshot2.png";
+          blur_passes = 1;
+          blur_size = 8;
+          noise = 0.0117;
+          contrast = 0.8916;
+          brightness = 0.8172;
+          vibrancy = 0.1696;
+          vibrancy_darkness = 0.0;
+        }
+      ];
 
       input-field = {
         monitor = "DP-4";
