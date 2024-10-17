@@ -16,6 +16,10 @@ in {
     ];
   };
 
+  services.xserver.windowManager.i3 = {
+    enable = true;
+  };
+
   boot = {
     kernelParams = ["nvidia.NVreg_PreserveVideoMemoryAllocations=1"];
     kernelModules = ["kvm-intel sg"];
