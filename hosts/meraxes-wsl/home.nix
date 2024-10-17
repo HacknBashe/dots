@@ -4,6 +4,7 @@
   lib,
   ...
 }: let
+  # TODO: replace
   base00 = "#1f2335";
   base0A = "#e0af68";
   base0D = "#7aa2f7";
