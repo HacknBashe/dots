@@ -81,6 +81,14 @@
     };
   };
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      ags = prev.ags.overrideAttrs (old: {
+        buildInputs = old.buildInputs ++ [pkgs.libdbusmenu-gtk3];
+      });
+    })
+  ];
+
   environment.systemPackages = with pkgs; [
     swaybg
     ags
@@ -93,9 +101,6 @@
 
     polkit_gnome
 
-    (pkgs.waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ ["-Dexperimental=true"];
-    }))
     wlogout
 
     wayland-logout

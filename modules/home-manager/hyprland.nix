@@ -110,30 +110,20 @@
       target = ".config/ags";
       recursive = true;
     };
-
-    "waybar" = {
-      source = ../../files/config/waybar;
-      target = ".config/waybar";
-      recursive = true;
-    };
-    "waybar/scheme.css" = {
-      text = ''
-        @define-color bg alpha(${config.theme.colors.background},1);
-        @define-color bg80 alpha(${config.theme.colors.background},.8);
-        @define-color bg60 alpha(${config.theme.colors.background},.6);
-        @define-color bg0 alpha(${config.theme.colors.background},0);
-        @define-color fg alpha(${config.theme.colors.foreground},1);
-        @define-color fg80 alpha(${config.theme.colors.foreground},.8);
-        @define-color fg60 alpha(${config.theme.colors.foreground},.6);
-        @define-color white80 alpha(${config.theme.colors.bright.white},.8);
-      '';
-      target = ".config/waybar/scheme.css";
-    };
-    "waybar/scripts" = {
-      source = ../../files/config/waybar/scripts;
-      target = ".config/waybar/scripts";
-      recursive = true;
-    };
+    # TODO: USE for Ags?
+    # "waybar/scheme.css" = {
+    #   text = ''
+    #     @define-color bg alpha(${config.theme.colors.background},1);
+    #     @define-color bg80 alpha(${config.theme.colors.background},.8);
+    #     @define-color bg60 alpha(${config.theme.colors.background},.6);
+    #     @define-color bg0 alpha(${config.theme.colors.background},0);
+    #     @define-color fg alpha(${config.theme.colors.foreground},1);
+    #     @define-color fg80 alpha(${config.theme.colors.foreground},.8);
+    #     @define-color fg60 alpha(${config.theme.colors.foreground},.6);
+    #     @define-color white80 alpha(${config.theme.colors.bright.white},.8);
+    #   '';
+    #   target = ".config/waybar/scheme.css";
+    # };
 
     "wofi" = {
       text = ''

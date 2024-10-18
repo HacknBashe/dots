@@ -1,20 +1,8 @@
-import { Notifications } from "./notifications.js";
-import { SoundNotifications } from "./sound-notifications.js";
-
-// Utils.timeout(100, () =>
-//   Utils.notify({
-//     summary: "Notification Popup Example",
-//     iconName: "info-symbolic",
-//     body:
-//       "Lorem ipsum dolor sit amet, qui minim labore adipisicing " +
-//       "minim sint cillum sint consectetur cupidatat.",
-//     actions: {
-//       Cool: () => print("pressed Cool"),
-//     },
-//   }),
-// );
+import { Bar } from "./bar.js";
+import { NotificationPopups } from "./notifications.js";
+import { SoundNotificationWatcher } from "./sound-notifications-watcher.js";
 
 App.config({
-  // style: App.configDir + "/style.css",
-  windows: [Notifications(), SoundNotifications()],
+  style: App.configDir + "/style.css",
+  windows: [Bar(1), NotificationPopups(1), SoundNotificationWatcher()],
 });
