@@ -80,9 +80,10 @@ function enterContainer() {
 }
 alias docker-enter=enterContainer
 
-bindkey -s '^ ' "^utmux_launcher.sh\n"
+bindkey -s '^ ' "^utmux_sessionizer.sh\n"
 bindkey -s ^f "^utmux_sessionizer.sh\n"
 bindkey -s ^b "^ubtop\n"
+bindkey -s ^y "^uy\n"
 bindkey -s ^g "^ulazygit\n"
 
 function spawn-alacritty() { 
