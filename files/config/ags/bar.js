@@ -207,15 +207,16 @@ function Volume() {
 }
 
 const date = Variable("", {
-  poll: [1000, 'date "+%I %M %S %p %b %e"'],
+  poll: [1000, 'date "+%I:%M:%S %p %a %b %e"'],
 });
 
 function Clock() {
   return Widget.Box({
     class_name: "clock",
     vertical: true,
+    tooltip_text: date.bind(),
     children: date.bind().as((d) =>
-      d.split(/\s/).map((s, i) =>
+      d.split(/[:\s]/).map((s, i) =>
         Widget.Label({
           class_name: "clock-line clock-line-" + i,
           label: s,
