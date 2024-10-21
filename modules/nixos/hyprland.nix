@@ -92,7 +92,11 @@
   environment.systemPackages = with pkgs; [
     swaybg
     ags
+    hypridle
     hyprlock
+    wlogout
+    wayland-logout
+    wofi
 
     # sddm-theme dependencies
     libsForQt5.qt5ct
@@ -100,11 +104,6 @@
     libsForQt5.qt5.qtgraphicaleffects
 
     polkit_gnome
-
-    wlogout
-
-    wayland-logout
-    wofi
 
     grim
     slurp

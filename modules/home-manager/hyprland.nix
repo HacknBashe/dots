@@ -94,6 +94,10 @@
       '';
       target = ".config/hypr/hyprland.conf";
     };
+    "hypr/hypridle.conf" = {
+      source = ../../files/config/hypr/hypridle.conf;
+      target = ".config/hypr/hypridle.conf";
+    };
     "hypr/scripts" = {
       source = ../../files/config/hypr/scripts;
       target = ".config/hypr/scripts";
