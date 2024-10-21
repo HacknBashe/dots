@@ -82,6 +82,8 @@ export function Weather() {
   Utils.interval(
     10000,
     () => {
+      self.label = "󰼯";
+      self.tooltip_markup = "Wttr.in fetch error.";
       Utils.fetch("https://wttr.in/Lancaster,NewYork?format=j1")
         .then((res) => res.text())
         .then((res) => {
