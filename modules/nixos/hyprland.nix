@@ -95,7 +95,6 @@
     hypridle
     hyprlock
     wayland-logout
-    wofi
 
     # sddm-theme dependencies
     libsForQt5.qt5ct
