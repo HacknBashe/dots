@@ -94,7 +94,6 @@
     ags
     hypridle
     hyprlock
-    wlogout
     wayland-logout
     wofi
 

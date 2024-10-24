@@ -54,6 +54,19 @@ label {
   padding-bottom: 15px;
 }
 
+.system {
+  font-size: 30px;
+}
+
+.system-popup box {
+  font-size: 30px;
+  margin: 0.5em;
+}
+
+.system-popup button {
+  padding: 0.5em;
+}
+
 window.notification-popups box.notifications {
   padding: 0.5em;
 }

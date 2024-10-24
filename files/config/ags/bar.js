@@ -226,16 +226,102 @@ function Clock() {
   });
 }
 
+const WINDOW_NAME = "system-popup";
+function System() {
+  return Widget.Button({
+    class_name: "system",
+    label: "󱄅",
+    onClicked: () => {
+      App.toggleWindow(WINDOW_NAME);
+    },
+  });
+}
+
+export function SystemPopup(monitor = 0) {
+  return Widget.Window({
+    name: WINDOW_NAME,
+    monitor,
+    className: "system-popup",
+    setup: (self) =>
+      self.keybind("Escape", () => {
+        App.closeWindow(WINDOW_NAME);
+      }),
+    visible: false,
+    anchor: ["bottom", "left"],
+    keymode: "exclusive",
+    child: Widget.Box({
+      children: [
+        Widget.Button({
+          label: "󰌾",
+          onClicked: () => {
+            App.toggleWindow(WINDOW_NAME);
+            Utils.execAsync([
+              "bash",
+              "-c",
+              "grim -o DP-4 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-3 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock",
+            ]);
+          },
+        }),
+        Widget.Button({
+          label: "󰍃",
+          onClicked: () => {
+            App.toggleWindow(WINDOW_NAME);
+
+            Utils.execAsync(["wayland-logout"]);
+          },
+        }),
+        Widget.Button({
+          label: "󰤄",
+          onClicked: () => {
+            App.toggleWindow(WINDOW_NAME);
+
+            Utils.execAsync([
+              "bash",
+              "-c",
+              "grim -o DP-4 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-3 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock & sleep 1 && systemctl suspend",
+            ]);
+          },
+        }),
+        Widget.Button({
+          label: "󰒲",
+          onClicked: () => {
+            App.toggleWindow(WINDOW_NAME);
+            Utils.execAsync([
+              "bash",
+              "-c",
+              "grim -o DP-4 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-3 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock & sleep 1 && systemctl hibernate",
+            ]);
+          },
+        }),
+        Widget.Button({
+          label: "󰜉",
+          onClicked: () => {
+            App.toggleWindow(WINDOW_NAME);
+            Utils.execAsync(["systemctl", "reboot"]);
+          },
+        }),
+        Widget.Button({
+          label: "󰐥",
+          onClicked: () => {
+            App.toggleWindow(WINDOW_NAME);
+            Utils.execAsync(["systemctl", "poweroff"]);
+          },
+        }),
+      ],
+    }),
+  });
+}
+
 function Bottom() {
   return Widget.Box({
     vertical: true,
     vpack: "end",
     spacing: 8,
-    children: [SysTray(), Media(), Volume(), Weather(), Clock()],
+    children: [SysTray(), Media(), Volume(), Weather(), Clock(), System()],
   });
 }
 
-function Bar(monitor = 0) {
+export function Bar(monitor = 0) {
   return Widget.Window({
     name: `bar-${monitor}`, // name has to be unique
     monitor,
@@ -249,5 +335,3 @@ function Bar(monitor = 0) {
     }),
   });
 }
-
-export { Bar };
