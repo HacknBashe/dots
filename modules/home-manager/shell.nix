@@ -105,11 +105,5 @@ in {
       source = ../../files/config/fastfetch/config.jsonc;
       target = ".config/fastfetch/config.jsonc";
     };
-
-    "lf" = {
-      source = ../../files/config/lf;
-      target = ".config/lf";
-      recursive = true;
-    };
   };
 }

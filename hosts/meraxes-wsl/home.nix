@@ -149,11 +149,5 @@ in {
       };
       target = ".tmux/plugins/tpm";
     };
-
-    "lf" = {
-      source = ../../files/config/lf;
-      target = ".config/lf";
-      recursive = true;
-    };
   };
 }

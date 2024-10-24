@@ -103,11 +103,5 @@
       source = ../../files/config/wezterm/wezterm.lua;
       target = ".config/wezterm/wezterm.lua";
     };
-
-    "lf" = {
-      source = ../../files/config/lf;
-      target = ".config/lf";
-      recursive = true;
-    };
   };
 }
