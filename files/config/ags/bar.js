@@ -18,7 +18,7 @@ const workspaceIconMap = {
   10: "󰙯",
   11: "󰟴",
   "special:notes": "󰠮",
-  "special:player": "",
+  "special:player": "󰓇",
   "special:moviescreen": "󰨜",
 };
 
@@ -46,7 +46,14 @@ function Workspaces() {
     class_name: "workspaces",
     vertical: true,
     halign: 3,
-    children: workspaces,
+    children: [
+      Widget.Box({
+        class_name: "workspaces",
+        vertical: true,
+        halign: 3,
+        children: workspaces,
+      }),
+    ],
   });
 }
 
@@ -95,12 +102,9 @@ function SysTray() {
   });
 }
 
-const playerClientMap = {
+const mediaIconMap = {
   spotify: " ",
   brave: "󰖟 ",
-};
-
-const playerStatusMap = {
   Playing: "  ",
   Paused: "  ",
   Stopped: "  ",
@@ -111,7 +115,7 @@ function Media() {
     if (mpris.players[0]) {
       const { name, play_back_status, track_artists, track_title } =
         mpris.players[0];
-      return `${playerClientMap[name] || ""}${playerStatusMap[play_back_status]}${track_artists.join(", ")} - ${track_title}`;
+      return `${mediaIconMap[name] || ""}${mediaIconMap[play_back_status]}${track_artists.join(", ")} - ${track_title}`;
     } else {
       return "Nothing is playing";
     }
@@ -146,24 +150,27 @@ function Volume() {
 
   return Widget.Box({
     class_name: "volume",
-    css: "min-height: 180px",
     vertical: true,
 
     children: [
-      Widget.Slider({
-        orientation: 1,
-        inverted: true,
-        draw_value: false,
-        vexpand: true,
-        on_change: ({ value }) => (audio.speaker.volume = value),
-        setup: (self) =>
-          self.hook(audio.speaker, () => {
-            self.value = audio.speaker.volume || 0;
-          }),
-      }),
       Widget.Button({
         onClicked: () => {
           Utils.execAsync(["alacritty", "--command", "pulsemixer"])
+            .then((out) => print(out))
+            .catch((err) => print(err));
+        },
+        onSecondaryClick: () => {
+          Utils.execAsync(["pulsemixer", "--toggle-mute"])
+            .then((out) => print(out))
+            .catch((err) => print(err));
+        },
+        on_scroll_up: () => {
+          Utils.execAsync(["pulsemixer", "--change-volume", "+5"])
+            .then((out) => print(out))
+            .catch((err) => print(err));
+        },
+        on_scroll_down: () => {
+          Utils.execAsync(["pulsemixer", "--change-volume", "-5"])
             .then((out) => print(out))
             .catch((err) => print(err));
         },
@@ -191,11 +198,6 @@ function Volume() {
               );
             }
           });
-        },
-        onSecondaryClick: () => {
-          Utils.execAsync(["pulsemixer", "--toggle-mute"])
-            .then((out) => print(out))
-            .catch((err) => print(err));
         },
         child: Widget.Label({
           justify: 2,

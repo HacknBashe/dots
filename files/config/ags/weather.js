@@ -75,12 +75,17 @@ const formatChances = (hour) => {
 };
 
 export function Weather() {
+  const output = {
+    label: "󰼯",
+    tooltip_markup: "Wttr.in fetch error.",
+  };
+
   const self = Widget.Label({
     className: "weather",
   });
 
   Utils.interval(
-    10000,
+    300000,
     () => {
       self.label = "󰼯";
       self.tooltip_markup = "Wttr.in fetch error.";
@@ -88,8 +93,6 @@ export function Weather() {
         .then((res) => res.text())
         .then((res) => {
           const weather = JSON.parse(res);
-          const output = {};
-
           output["text"] =
             WEATHER_CODES[weather["current_condition"][0]["weatherCode"]] +
             " " +

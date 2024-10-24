@@ -8,6 +8,10 @@ label {
   font-weight: bold;
 }
 
+.workspaces {
+  padding: 0.5em 0em;
+}
+
 .workspaces button {
   padding: 2px;
   font-size: 27px;
