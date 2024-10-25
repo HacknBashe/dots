@@ -25,41 +25,84 @@ const workspaceIconMap = {
 function Workspaces() {
   const activeId = hyprland.active.workspace.bind("id");
 
-  const workspaces = hyprland.bind("workspaces").as((ws) =>
-    ws
+  const workspaces = hyprland.bind("workspaces").as((ws) => {
+    const sorted = ws
       .sort((a, b) => a.id - b.id)
-      .map(({ id, name }) =>
-        Widget.Button({
-          on_clicked: () =>
-            hyprland.messageAsync(
-              id > 0
-                ? `dispatch workspace ${id}`
-                : `dispatch togglespecialworkspace ${name.slice(8)}`,
+      .reduce(
+        (acc, current) => {
+          if (current.id > 5) acc.left.push(current);
+          else if (current.id > 0) acc.right.push(current);
+          else acc.special.push(current);
+          return acc;
+        },
+        { left: [], right: [], special: [] },
+      );
+    return [
+      Widget.Box({
+        children: [
+          Widget.Box({
+            className: "left",
+            vertical: true,
+            children: sorted.left.map((w) =>
+              Widget.Button({
+                on_clicked: () =>
+                  hyprland.messageAsync(
+                    w.id > 0
+                      ? `dispatch workspace ${w.id}`
+                      : `dispatch togglespecialworkspace ${w.name.slice(8)}`,
+                  ),
+                child: Widget.Label(`${workspaceIconMap[w.name] || w.id}`),
+                className: activeId.as((i) => `${i === w.id ? "focused" : ""}`),
+              }),
             ),
-          child: Widget.Label(`${workspaceIconMap[name] || id}`),
-          class_name: activeId.as((i) => `${i === id ? "focused" : ""}`),
-        }),
-      ),
-  );
+          }),
+          Widget.Box({
+            className: "right",
+            vertical: true,
+            children: sorted.right.map((w) =>
+              Widget.Button({
+                on_clicked: () =>
+                  hyprland.messageAsync(
+                    w.id > 0
+                      ? `dispatch workspace ${w.id}`
+                      : `dispatch togglespecialworkspace ${w.name.slice(8)}`,
+                  ),
+                child: Widget.Label(`${workspaceIconMap[w.name] || w.id}`),
+                className: activeId.as((i) => `${i === w.id ? "focused" : ""}`),
+              }),
+            ),
+          }),
+        ],
+      }),
+      Widget.Box({
+        vertical: true,
+        children: sorted.special.map((w) =>
+          Widget.Button({
+            on_clicked: () =>
+              hyprland.messageAsync(
+                w.id > 0
+                  ? `dispatch workspace ${w.id}`
+                  : `dispatch togglespecialworkspace ${w.name.slice(8)}`,
+              ),
+            child: Widget.Label(`${workspaceIconMap[w.name] || w.id}`),
+            className: activeId.as((i) => `${i === w.id ? "focused" : ""}`),
+          }),
+        ),
+      }),
+    ];
+  });
 
   return Widget.Box({
-    class_name: "workspaces",
+    className: "workspaces",
     vertical: true,
     halign: 3,
-    children: [
-      Widget.Box({
-        class_name: "workspaces",
-        vertical: true,
-        halign: 3,
-        children: workspaces,
-      }),
-    ],
+    children: workspaces,
   });
 }
 
 function ClientTitle() {
   return Widget.Label({
-    class_name: "client-title",
+    className: "client-title",
     label: hyprland.active.client.bind("title"),
     justify: 2,
     wrap: true,
@@ -122,7 +165,7 @@ function Media() {
   });
 
   return Widget.Button({
-    class_name: "media",
+    className: "media",
     on_primary_click: () => mpris.getPlayer("")?.playPause(),
     on_scroll_up: () => mpris.getPlayer("")?.next(),
     on_scroll_down: () => mpris.getPlayer("")?.previous(),
@@ -149,7 +192,7 @@ function Volume() {
   }
 
   return Widget.Box({
-    class_name: "volume",
+    className: "volume",
     vertical: true,
 
     children: [
@@ -214,13 +257,13 @@ const date = Variable("", {
 
 function Clock() {
   return Widget.Box({
-    class_name: "clock",
+    className: "clock",
     vertical: true,
-    tooltip_text: date.bind(),
+    tooltipText: date.bind(),
     children: date.bind().as((d) =>
       d.split(/[:\s]/).map((s, i) =>
         Widget.Label({
-          class_name: "clock-line clock-line-" + i,
+          className: "clock-line clock-line-" + i,
           label: s,
         }),
       ),
@@ -231,7 +274,7 @@ function Clock() {
 const WINDOW_NAME = "system-popup";
 function System() {
   return Widget.Button({
-    class_name: "system",
+    className: "system",
     label: "󱄅",
     onClicked: () => {
       App.toggleWindow(WINDOW_NAME);
