@@ -5,7 +5,6 @@
   ...
 }: {
   programs = {
-    home-manager.enable = true;
     alacritty = {
       enable = true;
       settings = {
