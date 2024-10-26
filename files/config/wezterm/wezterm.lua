@@ -1,14 +1,9 @@
 local wezterm = require("wezterm")
 
-if wezterm.config_builder then
-	config = wezterm.config_builder()
-end
-
-config.enable_tab_bar = false
-config.use_fancy_tab_bar = false
-config.tab_bar_at_bottom = true
+local config = wezterm.config_builder()
 
 config.font = wezterm.font("SauceCodePro Nerd Font Mono", { weight = "Light" })
+config.font_size = 20
 config.font_rules = {
 	{
 		intensity = "Bold",
@@ -51,40 +46,17 @@ config.font_rules = {
 	},
 }
 
-config.font_size = 24
-
 config.cursor_blink_ease_in = "Constant"
 config.cursor_blink_ease_out = "Constant"
 
-local nordfox = wezterm.color.get_builtin_schemes()["nordfox"]
-nordfox.background = "#1c2028"
-nordfox.indexed = { [16] = "#7e8188", [17] = "#c9826b" }
+local myTheme = wezterm.color.get_builtin_schemes()["tokyonight"]
+myTheme.background = "#1a1b26"
+myTheme.indexed = { [16] = "#ff966c", [17] = "#c53b53" }
 
 config.color_schemes = {
-	["My Nordfox"] = nordfox,
+	["My Theme"] = myTheme,
 }
-config.color_scheme = "My Nordfox"
-config.window_background_opacity = 0.92
-
-config.keys = {
-	{
-		key = "t",
-		mods = "ALT",
-		action = wezterm.action.ShowLauncherArgs({ flags = "WORKSPACES|TABS" }),
-	},
-}
-
-wezterm.on("update-right-status", function(window, pane)
-	local date = wezterm.strftime("%Y-%m-%d %H:%M:%S")
-
-	-- Make it italic and underlined
-	window:set_right_status(wezterm.format({
-		{ Attribute = { Underline = "Single" } },
-		{ Attribute = { Italic = true } },
-		{ Text = "Hello " .. date },
-	}))
-end)
-
-config.enable_kitty_graphics = true
+config.color_scheme = "My Theme"
+config.window_background_opacity = 0.85
 
 return config
