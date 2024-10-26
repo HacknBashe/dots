@@ -98,10 +98,5 @@
       '';
       target = ".config/cava/config";
     };
-
-    "wezterm" = {
-      source = ../../files/config/wezterm/wezterm.lua;
-      target = ".config/wezterm/wezterm.lua";
-    };
   };
 }

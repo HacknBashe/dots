@@ -64,6 +64,7 @@
                 ./modules/home-manager/btop.nix
                 ./modules/home-manager/hyprland.nix
                 ./modules/home-manager/alacritty.nix
+                ./modules/home-manager/wezterm.nix
                 ./modules/home-manager/gtk.nix
                 ./modules/home-manager/qt.nix
               ];
@@ -73,23 +74,25 @@
         ];
         specialArgs = {inherit inputs;};
       };
+    };
 
-      homeConfigurations = {
-        nick = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${systemDarwin};
-          modules = [
-            ./modules/nix.nix
-            ./modules/theme.nix
-            ./hosts/toothless/home.nix
-            ./modules/home-manager/shell.nix
-            ./modules/home-manager/development.nix
-            ./modules/home-manager/neovim.nix
-            ./modules/home-manager/tmux.nix
-            ./modules/home-manager/btop.nix
-            ./modules/home-manager/alacritty.nix
-          ];
-          extraSpecialArgs = {inherit inputs;};
-        };
+    homeConfigurations = {
+      nick = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${systemDarwin};
+        modules = [
+          ./modules/nix.nix
+          ./modules/theme.nix
+          ./hosts/toothless/home.nix
+          ./modules/home-manager/brew.nix
+          ./modules/home-manager/shell.nix
+          ./modules/home-manager/development.nix
+          ./modules/home-manager/neovim.nix
+          ./modules/home-manager/tmux.nix
+          ./modules/home-manager/btop.nix
+          ./modules/home-manager/alacritty.nix
+          ./modules/home-manager/wezterm.nix
+        ];
+        extraSpecialArgs = {inherit inputs;};
       };
     };
   };
