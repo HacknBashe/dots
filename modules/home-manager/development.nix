@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   linuxPackages =
     if pkgs.stdenv.isLinux
     then
@@ -24,7 +20,7 @@ in {
       docker-compose
 
       alejandra
-      nil
+      nixd
       shfmt
 
       gnumake
