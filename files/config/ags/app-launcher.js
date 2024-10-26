@@ -68,6 +68,7 @@ const AppLauncher = ({ width = 500, height = 500, spacing = 12 }) => {
   return Widget.Box({
     vertical: true,
     css: `margin: ${spacing * 2}px;`,
+    class_name: "app-launcher",
     children: [
       entry,
 

@@ -117,24 +117,28 @@ window.notification-popups box.notifications {
   border: 1px solid lightcoral;
 }
 
-.title {
+.notification .title {
   color: @theme_fg_color;
   font-size: 1.4em;
 }
 
-.body {
+.notification .body {
   color: @theme_unfocused_fg_color;
 }
 
-.actions .action-button {
+.notification .actions .action-button {
   margin: 0 0.4em;
   margin-top: 0.8em;
 }
 
-.actions .action-button:first-child {
+.notification .actions .action-button:first-child {
   margin-left: 0;
 }
 
-.actions .action-button:last-child {
+.notification .actions .action-button:last-child {
   margin-right: 0;
+}
+
+.app-launcher .title {
+  margin-left: 1em;
 }
