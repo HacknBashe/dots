@@ -33,6 +33,26 @@
         "type": "github"
       }
     },
+    "darwin": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1729982130,
+        "narHash": "sha256-HmLLQbX07rYD0RXPxbf3kJtUo66XvEIX9Y+N5QHQ9aY=",
+        "owner": "lnl7",
+        "repo": "nix-darwin",
+        "rev": "2eb472230a5400c81d9008014888b4bff23bcf44",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lnl7",
+        "repo": "nix-darwin",
+        "type": "github"
+      }
+    },
     "extest": {
       "inputs": {
         "extest": "extest_2",
@@ -612,6 +632,7 @@
     },
     "root": {
       "inputs": {
+        "darwin": "darwin",
         "extest": "extest",
         "home-manager": "home-manager",
         "hyprland": "hyprland",

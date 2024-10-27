@@ -2,7 +2,17 @@
 
 ## NixOS
 
-`sudo nixos-rebuild switch --flake ~/.config/dots`
+```
+sudo nixos-rebuild switch --flake ~/.config/dots
+```
+
+## Nix Darwin
+
+```
+sh <(curl -L https://nixos.org/nix/install) --no-daemon
+nix run nix-darwin -- switch --flake ~/.config/dots
+darwin-rebuild switch --flake ~/.config/dots
+```
 
 ## Home Manager
 
@@ -12,19 +22,21 @@ nix-channel --add https://github.com/nix-community/home-manager/archive/master.t
 nix-channel update
 
 nix-shell '<home-manager>' -A install
-nix-shell -p git
 
 home-manager --extra-experimental-features 'nix-command flakes' switch --flake .#hack56224
 ```
 
 ## dconf
+
 Home-manager needs dconf installed to work properly which doesn't come stock on Debian
+
 ```
 sudo apt-get update
 sudo apt install dconf-cli dconf-editor
 ```
 
 ## Docker
+
 Home-manager cannot manage a root docker installation so it should be installed manually
 
 ```

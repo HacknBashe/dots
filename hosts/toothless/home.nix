@@ -4,23 +4,25 @@
   lib,
   ...
 }: {
-  home.username = "nick";
-  home.homeDirectory = "/Users/nick";
-
-  home.stateVersion = "23.11"; # Please read the comment before changing.
-
-  fonts.fontconfig.enable = true;
-  programs = {
-    home-manager.enable = true;
+  home = {
+    stateVersion = "23.11"; # Please read the comment before changing.
+    sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
   };
 
-  home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
-
+  fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
     (pkgs.nerdfonts.override {fonts = ["SourceCodePro"];})
     font-awesome
     raleway
+
+    discord
+    todoist
   ];
+
+  programs = {
+    home-manager.enable = true;
+    spotify-player.enable = true;
+  };
 
   home.file = {
     "bin" = {

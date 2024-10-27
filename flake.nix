@@ -5,11 +5,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgsold.url = "github:nixos/nixpkgs?ref=nixos-24.05";
 
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     hyprland = {
       url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,13 +15,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-wsl = {url = "github:nix-community/NixOS-WSL";};
-
     extest.url = "github:chaorace/extest-nix";
 
     wezterm = {
       url = "github:wez/wezterm?dir=nix";
     };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixos-wsl = {url = "github:nix-community/NixOS-WSL";};
   };
 
   outputs = {
@@ -76,6 +81,35 @@
       };
     };
 
+    darwinConfigurations = {
+      toothless = inputs.darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        modules = [
+          ./hosts/toothless/configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.nick = {
+              imports = [
+                ./modules/theme.nix
+                ./hosts/toothless/home.nix
+                ./modules/home-manager/shell.nix
+                ./modules/home-manager/development.nix
+                ./modules/home-manager/neovim.nix
+                ./modules/home-manager/tmux.nix
+                ./modules/home-manager/btop.nix
+                ./modules/home-manager/alacritty.nix
+                ./modules/home-manager/wezterm.nix
+              ];
+            };
+            home-manager.extraSpecialArgs = {inherit inputs;};
+          }
+        ];
+        specialArgs = {inherit inputs;};
+      };
+    };
+
     homeConfigurations = {
       nick = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${systemDarwin};
@@ -83,7 +117,6 @@
           ./modules/nix.nix
           ./modules/theme.nix
           ./hosts/toothless/home.nix
-          ./modules/home-manager/brew.nix
           ./modules/home-manager/shell.nix
           ./modules/home-manager/development.nix
           ./modules/home-manager/neovim.nix
