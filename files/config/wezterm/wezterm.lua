@@ -51,7 +51,7 @@ config.cursor_blink_ease_out = "Constant"
 
 local myTheme = wezterm.color.get_builtin_schemes()["tokyonight"]
 myTheme.background = "#1a1b26"
-myTheme.indexed = { [16] = "#ff966c", [17] = "#c53b53" }
+-- myTheme.indexed = { [16] = "#ff966c", [17] = "#c53b53" }
 
 config.color_schemes = {
 	["My Theme"] = myTheme,
