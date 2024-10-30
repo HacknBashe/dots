@@ -128,20 +128,26 @@ function Center() {
 }
 
 function SysTray() {
-  const items = systemtray.bind("items").as((items) =>
-    items.map((item) =>
-      Widget.Button({
-        child: Widget.Icon({ icon: item.bind("icon") }),
-        on_primary_click: (_, event) => item.activate(event),
-        on_secondary_click: (_, event) => item.openMenu(event),
-        tooltip_markup: item.bind("tooltip_markup"),
+  return Widget.Box({
+    children: Array.from({ length: 2 }, (_, colIndex) =>
+      Widget.Box({
+        children: systemtray.bind("items").as((items) =>
+          items
+            .filter((_, index) => index % 2 === colIndex)
+            .map((item) =>
+              Widget.Button({
+                child: Widget.Icon({ icon: item.bind("icon") }),
+                on_primary_click: (_, event) => item.activate(event),
+                on_secondary_click: (_, event) => item.openMenu(event),
+                tooltip_markup: item.bind("tooltip_markup"),
+              }),
+            ),
+        ),
+        vertical: true,
       }),
     ),
-  );
-
-  return Widget.Box({
-    children: items,
-    vertical: true,
+    halign: 3,
+    vertical: false,
   });
 }
 
