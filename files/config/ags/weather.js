@@ -75,24 +75,21 @@ const formatChances = (hour) => {
 };
 
 export function Weather() {
-  const output = {
-    label: "󰼯",
-    tooltip_markup: "Wttr.in fetch error.",
-  };
-
   const self = Widget.Label({
     className: "weather",
+    label: "󰼯",
+    tooltip_markup: "Wttr.in fetch error.",
   });
 
   Utils.interval(
     300000,
     () => {
-      self.label = "󰼯";
-      self.tooltip_markup = "Wttr.in fetch error.";
       Utils.fetch("https://wttr.in/Lancaster,NewYork?format=j1")
         .then((res) => res.text())
         .then((res) => {
+          const output = {};
           const weather = JSON.parse(res);
+
           output["text"] =
             WEATHER_CODES[weather["current_condition"][0]["weatherCode"]] +
             " " +
