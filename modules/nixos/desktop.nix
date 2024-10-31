@@ -37,7 +37,7 @@
     makemkv
     obs-studio
     obsidian
-    prismlauncher-unwrapped
+    prismlauncher
     qalculate-gtk
     qbittorrent
     qimgv
