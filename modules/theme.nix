@@ -69,8 +69,8 @@ in {
 
   config = {
     theme = {
-      wallLarge = /home/nick/Pictures/Walls/glowshroom-large.jpg;
-      wallSmall = /home/nick/Pictures/Walls/glowshroom-small.jpg;
+      wallLarge = /home/nick/Pictures/Walls/nebula-blue.png;
+      wallSmall = /home/nick/Pictures/Walls/nebula-red.png;
 
       fontSans = "";
       fontSerif = "";
