@@ -258,19 +258,19 @@ function Volume() {
 }
 
 const date = Variable("", {
-  poll: [1000, 'date "+%I:%M:%S %p %a %b %e"'],
+  poll: [1000, 'date "+%I:%M:%S~%p~%a~%b~%e"'],
 });
 
 function Clock() {
   return Widget.Box({
     className: "clock",
     vertical: true,
-    tooltipText: date.bind(),
+    tooltipText: date.bind().as((d) => d.replace(" ", "").replace(/~/g, " ")),
     children: date.bind().as((d) =>
-      d.split(/[:\s]/).map((s, i) =>
+      d.split(/[:~]/).map((s, i) =>
         Widget.Label({
           className: "clock-line clock-line-" + i,
-          label: s,
+          label: s.replace(" ", ""),
         }),
       ),
     ),
