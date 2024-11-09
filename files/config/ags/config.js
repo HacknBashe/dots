@@ -10,7 +10,7 @@ App.config({
     Bar(1),
     SystemPopup(1),
     NotificationPopups(1),
-    SoundNotificationWatcher(),
+    SoundNotificationWatcher(1),
     AppLauncherWindow,
   ],
 });
