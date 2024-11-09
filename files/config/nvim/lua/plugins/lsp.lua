@@ -29,6 +29,7 @@ lspconfig.gopls.setup({})
 lspconfig.ts_ls.setup({})
 lspconfig.pyright.setup({})
 lspconfig.nixd.setup({})
+lspconfig.templ.setup({})
 
 vim.diagnostic.config({
 	signs = false,
