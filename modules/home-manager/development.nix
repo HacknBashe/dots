@@ -10,6 +10,18 @@
         gcc
       ]
     else [];
+
+  linuxGitConfig =
+    if pkgs.stdenv.isLinux
+    then {
+      ".gitconfig.local".text = ''
+        [credential]
+          helper = "${
+          pkgs.git.override {withLibsecret = true;}
+        }/bin/git-credential-libsecret";
+      '';
+    }
+    else {};
 in {
   programs.direnv.enable = true;
 
@@ -52,16 +64,12 @@ in {
     ]
     ++ linuxPackages;
 
-  home.file = {
-    ".gitconfig" = {
-      source = ../../files/gitconfig;
-      target = ".gitconfig";
-    };
-    ".gitconfig.local".text = ''
-      [credential]
-        helper = "${
-        pkgs.git.override {withLibsecret = true;}
-      }/bin/git-credential-libsecret";
-    '';
-  };
+  home.file =
+    {
+      ".gitconfig" = {
+        source = ../../files/gitconfig;
+        target = ".gitconfig";
+      };
+    }
+    // linuxGitConfig;
 }

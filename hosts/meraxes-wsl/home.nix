@@ -41,12 +41,6 @@ in {
       source = ../../files/gitconfig;
       target = ".gitconfig";
     };
-    ".gitconfig.local".text = ''
-      [credential]
-        helper = "${
-        pkgs.git.override {withLibsecret = true;}
-      }/bin/git-credential-libsecret";
-    '';
 
     "nvm.plugin.zsh" = {
       source = ../../files/config/zsh/nvm.plugin.zsh;
