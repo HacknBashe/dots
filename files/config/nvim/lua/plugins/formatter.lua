@@ -19,6 +19,13 @@ return {
 					require("formatter.filetypes.nix").alejandra,
 				},
 
+				toml = {
+					require("formatter.filetypes.toml").prettierd,
+				},
+				yaml = {
+					require("formatter.filetypes.yaml").prettierd,
+				},
+
 				go = {
 					require("formatter.filetypes.go").gofmt,
 				},
