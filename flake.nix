@@ -108,6 +108,7 @@
                 ./modules/home-manager/neovim.nix
                 ./modules/home-manager/tmux.nix
                 ./modules/home-manager/btop.nix
+                ./modules/home-manager/ghostty.nix
                 ./modules/home-manager/alacritty.nix
                 ./modules/home-manager/wezterm.nix
               ];
