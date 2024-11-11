@@ -12,12 +12,11 @@ in {
   };
   nix.settings.experimental-features = "nix-command flakes";
 
-  programs.zsh.enable = true; # default shell on catalina
+  programs.zsh.enable = true;
 
   homebrew = {
     enable = true;
     casks = [
-      "displaylink"
       "todoist"
       "amethyst"
       "google-chrome"
@@ -28,9 +27,6 @@ in {
       "libreoffice"
     ];
   };
-
-  # environment.systemPackages = with pkgs; [
-  # ];
 
   users.users.${user} = {
     name = "${user}";
