@@ -5,22 +5,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgsold.url = "github:nixos/nixpkgs?ref=nixos-24.05";
 
-    hyprland = {
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    hyprlock = {
-      url = "git+https://github.com/hyprwm/hyprlock";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    extest.url = "github:chaorace/extest-nix";
-
-    wezterm = {
-      url = "github:wez/wezterm?dir=nix";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,6 +16,29 @@
     };
 
     nixos-wsl = {url = "github:nix-community/NixOS-WSL";};
+
+    ghostty = {
+      url = "git+ssh://git@github.com/ghostty-org/ghostty";
+      inputs.nixpkgs-stable.follows = "nixpkgs";
+      inputs.nixpkgs-unstable.follows = "nixpkgs";
+    };
+
+    wezterm = {
+      url = "github:wez/wezterm?dir=nix";
+    };
+
+    hyprland = {
+      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprlock = {
+      url = "git+https://github.com/hyprwm/hyprlock";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # For Steam
+    extest.url = "github:chaorace/extest-nix";
   };
 
   outputs = {
@@ -69,6 +76,7 @@
                 ./modules/home-manager/zellij.nix
                 ./modules/home-manager/btop.nix
                 ./modules/home-manager/hyprland.nix
+                ./modules/home-manager/ghostty.nix
                 ./modules/home-manager/alacritty.nix
                 ./modules/home-manager/wezterm.nix
                 ./modules/home-manager/gtk.nix
