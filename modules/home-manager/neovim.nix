@@ -60,6 +60,7 @@ in {
       kanagawa-nvim
       noice-nvim
       nvim-notify
+      nvim-web-devicons
 
       # nvim-dap
 
