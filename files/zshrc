@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-# zmodload zsh/zprof
-
-if command -v fnm &>/dev/null; then
-  eval "$(fnm env --use-on-cd)"
-fi
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
-
 # Source plugin submodules
 source ~/.config/zsh/plugins/vim/vim.plugin.zsh
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -60,26 +47,6 @@ export EDITOR="$VISUAL"
 export CLICOLOR=1
 export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
 
-alias pi="ssh 192.168.86.33"
-
-alias su="su -p"
-
-alias nr="sudo nixos-rebuild switch --flake ~/.config/dots"
-alias ng="sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d"
-
-alias vi="nvim"
-alias ls="exa"
-alias ll="exa -l"
-alias la="exa -la"
-alias cat="bat"
-alias gl="lazygit"
-cl() { cd "$@" && ls; }
-
-function enterContainer() {
-  docker exec -it "$1" bash
-}
-alias docker-enter=enterContainer
-
 bindkey -s '^ ' "^utmux_sessionizer.sh\n"
 bindkey -s ^f "^utmux_sessionizer.sh\n"
 bindkey -s ^b "^ubtop\n"
@@ -94,12 +61,9 @@ function y() {
 	fi
 	rm -f -- "$tmp"
 }
-eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
 
 if [ -f ~/.zshrc.local ]; then
   # Import local settings
   source ~/.zshrc.local
 fi
-
-# zprof

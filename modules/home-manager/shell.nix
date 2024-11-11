@@ -13,35 +13,60 @@
         playerctl
       ]
     else [];
+  zshAliases =
+    if pkgs.stdenv.isLinux
+    then {
+      nr = "sudo nixos-rebuild switch --flake ~/.config/dots";
+    }
+    else {
+      nr = "darwin-rebuild switch --flake ~/.config/dots";
+    };
 in {
   programs.zsh.enable = true;
+  programs.zsh.shellAliases =
+    {
+      ng = "sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d";
+
+      pi = "ssh 192.168.86.33";
+
+      vi = "nvim";
+      ls = "exa";
+      ll = "exa -l";
+      la = "exa -la";
+      cat = "bat";
+    }
+    // zshAliases;
+
+  programs.zsh.initExtra = ''
+    ${builtins.readFile ../../files/zshrc}
+  '';
 
   home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
-  home.packages = with pkgs; [
-    bat
-    chntpw
-    cmatrix
-    curl
-    delta
-    eza
-    fastfetch
-    fzf
-    jq
-    lf
-    libsecret
-    pipes
-    p7zip
-    pulsemixer
-    renameutils
-    ripgrep
-    tlrc
-    vim
-    vitetris
-    wget
-    xdg-utils
-    yazi
-    zoxide
-  ];
+  home.packages = with pkgs;
+    [
+      bat
+      chntpw
+      cmatrix
+      curl
+      delta
+      eza
+      fastfetch
+      fzf
+      jq
+      libsecret
+      pipes
+      p7zip
+      pulsemixer
+      ripgrep
+      tlrc
+      vim
+      wget
+      xdg-utils
+      yazi
+      zoxide
+      zellij
+    ]
+    ++ linuxPackages;
 
   home.file = {
     "bin" = {
@@ -63,10 +88,10 @@ in {
       source = ../../files/config/zsh/.p10k.zsh;
       target = ".config/zsh/.p10k.zsh";
     };
-    ".zshrc" = {
-      source = ../../files/zshrc;
-      target = ".zshrc";
-    };
+    # ".zshrc" = {
+    #   source = ../../files/zshrc;
+    #   target = ".zshrc";
+    # };
     "powerlevel10k" = {
       source = builtins.fetchGit {
         url = "https://github.com/romkatv/powerlevel10k.git";
