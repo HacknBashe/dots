@@ -16,7 +16,6 @@
     raleway
 
     discord
-    todoist
   ];
 
   programs = {
