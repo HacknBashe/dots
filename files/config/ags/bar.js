@@ -204,7 +204,7 @@ function Volume() {
     children: [
       Widget.Button({
         onClicked: () => {
-          Utils.execAsync(["wezterm", "-e", "pulsemixer"])
+          Utils.execAsync(["ghostty", "-e", "pulsemixer"])
             .then((out) => print(out))
             .catch((err) => print(err));
         },

@@ -45,7 +45,6 @@
     todoist-electron
     ungoogled-chromium
     webcord
-    inputs.wezterm.packages.${pkgs.system}.default
     vlc
   ];
 }
