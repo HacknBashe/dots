@@ -34,6 +34,7 @@ source $ITEM_DIR/spaces.sh
 
 ##### Adding Right Items #####
 source $ITEM_DIR/apple.sh
+source $ITEM_DIR/clock.sh
 source $ITEM_DIR/audio.sh
 source $ITEM_DIR/media.sh
 

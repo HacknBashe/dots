@@ -51,7 +51,7 @@ preset = 'qwerty'
 [gaps]
 inner.horizontal = 20
 inner.vertical =   20
-outer.left =       [{monitor.2 = 70 }, {monitor.3 = 70 }, 20]
+outer.left =       [{monitor."AW" = 70 }, {monitor."uilt" = 70 }, 20]
 outer.bottom =     20
 outer.top =        20
 outer.right =      20

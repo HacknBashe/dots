@@ -48,3 +48,8 @@ sudo sh get-docker.sh
 sudo apt install docker-compose
 sudo usermod -aG docker azureuser                                                                                                                                                                 azureuser@ae-camel 18:34:23
 ```
+
+## TODO
+
+- Make more inplace symlinks
+- Get config value to help make these symlinks

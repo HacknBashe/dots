@@ -34,7 +34,7 @@
       target = ".config/aerospace/aerospace.toml";
     };
     "sketchybarrc" = {
-      source = ../../files/config/sketchybar/sketchybarrc;
+      source = config.lib.file.mkOutOfStoreSymlink "/Users/nhackford/.config/dots/files/config/sketchybar/sketchybarrc";
       target = ".config/sketchybar/sketchybarrc";
     };
     "sketchybar/colors.sh" = {
@@ -51,12 +51,12 @@
       target = ".config/sketchybar/colors.sh";
     };
     "sketchybar/items" = {
-      source = ../../files/config/sketchybar/items;
+      source = config.lib.file.mkOutOfStoreSymlink "/Users/nhackford/.config/dots/files/config/sketchybar/items";
       target = ".config/sketchybar/items";
       recursive = true;
     };
     "sketchybar/plugins" = {
-      source = ../../files/config/sketchybar/plugins;
+      source = config.lib.file.mkOutOfStoreSymlink "/Users/nhackford/.config/dots/files/config/sketchybar/plugins";
       target = ".config/sketchybar/plugins";
       recursive = true;
     };
