@@ -12,6 +12,15 @@
   programs.home-manager.enable = true;
 
   home.file = {
+    ".gitconfig.local" = {
+      text = ''
+        [user]
+        name = Nick Hackford
+        email = nick.hackford@gmail.com
+      '';
+      target = ".gitconfig.local";
+    };
+
     "cava" = {
       text = ''
         [color]
