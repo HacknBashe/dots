@@ -6,6 +6,13 @@
 }: let
 in {
   options = {
+    isHubspot = lib.mkOption {
+      description = ''
+        Enable Hubspot specific configuration
+      '';
+      type = lib.types.bool;
+      default = false;
+    };
     theme = {
       wallLarge = lib.mkOption {
         description = ''

@@ -3,6 +3,8 @@ local luasnip = require("luasnip")
 local lspkind = require("lspkind")
 local cmp = require("cmp")
 local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+local asset_bender = require("asset-bender")
+require("asset-bender").setup({})
 
 require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets/" } })
 
@@ -26,7 +28,11 @@ lspconfig.lua_ls.setup({
 })
 lspconfig.jdtls.setup({})
 lspconfig.gopls.setup({})
-lspconfig.ts_ls.setup({})
+lspconfig.ts_ls.setup({
+	settings = {
+		tsserver_path = asset_bender.getTsServerPathForCurrentFile(),
+	},
+})
 lspconfig.pyright.setup({})
 lspconfig.nixd.setup({})
 lspconfig.templ.setup({})

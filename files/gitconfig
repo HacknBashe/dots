@@ -35,6 +35,3 @@
     default = current
 [include]
     path = ~/.gitconfig.local
-[user]
-    name = Nick Hackford
-    email = nick.hackford@gmail.com

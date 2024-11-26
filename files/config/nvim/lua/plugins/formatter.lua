@@ -70,16 +70,6 @@ return {
 
 				php = {
 					require("formatter.filetypes.php").phpcbf,
-					function()
-						return {
-							exe = "phpcbf",
-							args = {
-								"--standard=/Users/nh470c/codebase/php/non-web/standardscheck/CSNStores",
-							},
-							stdin = true,
-							ignore_exitcode = true,
-						}
-					end,
 				},
 
 				-- ["*"] = {

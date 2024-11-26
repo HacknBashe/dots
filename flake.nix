@@ -92,7 +92,6 @@
 
     darwinConfigurations = {
       toothless = inputs.darwin.lib.darwinSystem {
-        system = "x86_64-darwin";
         modules = [
           ./hosts/toothless/configuration.nix
           home-manager.darwinModules.home-manager
@@ -111,6 +110,31 @@
                 ./modules/home-manager/ghostty.nix
                 ./modules/home-manager/alacritty.nix
                 ./modules/home-manager/wezterm.nix
+              ];
+            };
+            home-manager.extraSpecialArgs = {inherit inputs;};
+          }
+        ];
+        specialArgs = {inherit inputs;};
+      };
+
+      JGR2T596J9 = inputs.darwin.lib.darwinSystem {
+        modules = [
+          ./hosts/hubspot/configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.nhackford = {
+              imports = [
+                ./modules/theme.nix
+                ./hosts/hubspot/home.nix
+                ./modules/home-manager/shell.nix
+                ./modules/home-manager/development.nix
+                ./modules/home-manager/neovim.nix
+                ./modules/home-manager/tmux.nix
+                ./modules/home-manager/btop.nix
+                ./modules/home-manager/ghostty.nix
               ];
             };
             home-manager.extraSpecialArgs = {inherit inputs;};

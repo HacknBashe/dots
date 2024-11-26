@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  inputs,
   ...
 }: let
   harpoon2 = pkgs.vimUtils.buildVimPlugin {
@@ -11,15 +10,6 @@
       repo = "harpoon";
       rev = "7d1aef462a880fcb68419cb63abc50dbdc22d922";
       hash = "sha256-AXWN7HqlnSsmtCK8jK5vqyzHwKJY3eJL6fnjeJhoNMU=";
-    };
-  };
-  copilot-chat = pkgs.vimUtils.buildVimPlugin {
-    name = "copilot-chat";
-    src = pkgs.fetchFromGitHub {
-      owner = "CopilotC-Nvim";
-      repo = "CopilotChat.nvim";
-      rev = "f694ccae14a6f45b783cb386f17431b05162e8d0";
-      hash = "sha256-jZb+dqGaZEs1h2CbvsxbINfHauwHka9t+jmSJQ/mMFM=";
     };
   };
   better-vim-tmux-resizer = pkgs.vimUtils.buildVimPlugin {
@@ -49,74 +39,100 @@
       hash = "sha256-dQ+KFbFtm3XflQl7optMfceR8F3dtF+11Ly6AGSUtkI=";
     };
   };
+  asset-bender-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "asset-bender-nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "NickHackford";
+      repo = "asset-bender.nvim";
+      rev = "1facdfe6fc07f64b7d18f285e16e7ef64d04ab9e";
+      hash = "sha256-JXTMKAbMHXsPR441r3ylvn5or/0YriWzowl5OVy239s=";
+    };
+  };
+  plugin-utils-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "plugin-utils-nvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "bobrown101";
+      repo = "plugin-utils.nvim";
+      rev = "c4a755f9df40f3e91205a87830d7eba1ac7f8c73";
+      hash = "sha256-oiGWlyt9+zN7ReQtdtVqFHVeaoypg6vFNOwSr9d3I2Y=";
+    };
+  };
+
+  hubspotPlugins =
+    if config.isHubspot
+    then [
+      plugin-utils-nvim
+      asset-bender-nvim
+    ]
+    else [];
 in {
   programs.neovim = {
     enable = true;
 
     extraLuaPackages = luaPkgs: with luaPkgs; [luasocket];
-    plugins = with pkgs.vimPlugins; [
-      tokyonight-nvim
-      nightfox-nvim
-      kanagawa-nvim
-      noice-nvim
-      nvim-notify
-      nvim-web-devicons
+    plugins = with pkgs.vimPlugins;
+      [
+        tokyonight-nvim
+        nightfox-nvim
+        kanagawa-nvim
+        nvim-notify
+        nvim-web-devicons
 
-      # nvim-dap
+        # nvim-dap
+        # nvim-dap-ui
 
-      # nvim-dap-ui
+        nvim-lspconfig
+        cmp-nvim-lsp
+        luasnip
+        cmp_luasnip
+        #codeium-nvim
+        copilot-lua
+        CopilotChat-nvim
+        copilot-cmp
+        nvim-cmp
 
-      nvim-lspconfig
-      cmp-nvim-lsp
-      luasnip
-      cmp_luasnip
-      #codeium-nvim
-      copilot-lua
-      copilot-chat
-      copilot-cmp
-      nvim-cmp
+        lspkind-nvim
 
-      lspkind-nvim
+        alpha-nvim
+        bufferline-nvim
+        formatter-nvim
+        gitsigns-nvim
 
-      alpha-nvim
-      bufferline-nvim
-      formatter-nvim
-      gitsigns-nvim
+        vim-hexokinase
+        harpoon2
 
-      vim-hexokinase
-      harpoon2
+        lazygit-nvim
+        lualine-nvim
+        markdown-preview-nvim
+        render-markdown-nvim
 
-      lazygit-nvim
-      lualine-nvim
-      markdown-preview-nvim
-      render-markdown-nvim
+        nvim-tree-lua
+        nvim-treesitter.withAllGrammars
 
-      nvim-tree-lua
-      nvim-treesitter.withAllGrammars
+        nvim-treesitter-context
 
-      nvim-treesitter-context
+        obsidian-nvim
+        oil-nvim
+        playground
+        sniprun
+        telescope-fzf-native-nvim
+        telescope-nvim
+        trouble-nvim
 
-      obsidian-nvim
-      oil-nvim
-      playground
-      sniprun
-      telescope-fzf-native-nvim
-      telescope-nvim
-      trouble-nvim
-
-      vim-closetag
-      vim-commentary
-      nvim-ts-context-commentstring
-      vim-fugitive
-      vim-markdown-toc
-      vim-sandwich
-      vim-table-mode
-      vim-tmux-navigator
-      better-vim-tmux-resizer
-      vim-visual-multi
-      which-key-nvim
-      yazi-nvim
-    ];
+        vim-closetag
+        vim-commentary
+        nvim-ts-context-commentstring
+        vim-fugitive
+        vim-markdown-toc
+        vim-sandwich
+        vim-table-mode
+        vim-tmux-navigator
+        better-vim-tmux-resizer
+        vim-visual-multi
+        which-key-nvim
+        yazi-nvim
+      ]
+      ++ hubspotPlugins;
     extraLuaConfig = ''
       require('core.nix-init')
     '';

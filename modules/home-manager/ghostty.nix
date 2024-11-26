@@ -23,7 +23,7 @@ in {
 
         #keybind = ctrl+z=close_surface
 
-        font-size = 20
+        font-size = 24
         font-family = ${config.theme.fontMono}
         font-style = light
 

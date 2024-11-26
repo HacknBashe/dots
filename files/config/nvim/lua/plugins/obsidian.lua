@@ -7,13 +7,6 @@ return {
 		"nvim-lua/plenary.nvim",
 	},
 	config = function()
-		vim.keymap.set(
-			"n",
-			"<leader>fn",
-			"<cmd> ObsidianSearch<CR>",
-			{ desc = "Find Notes", noremap = true, silent = true, nowait = true }
-		)
-
 		function MarkdownLevel()
 			local line = vim.fn.getline(vim.v.lnum)
 			if string.match(line, "^# .*$") then
