@@ -151,6 +151,47 @@ function SysTray() {
   });
 }
 
+function TV() {
+  let icon = Variable("󰠺");
+  return Widget.Button({
+    className: "tv",
+    on_primary_click: () => {
+      Utils.execAsync(["hyprctl", "monitors"])
+        .then((out) => {
+          if (out.includes("LG TV")) {
+            Utils.execAsync([
+              "hyprctl",
+              "keyword monitor HDMI-A-5,disabled",
+            ]).then((_) => {
+              icon.setValue("󰠺");
+              Utils.notify({
+                id: 888,
+                summary: "TV off",
+                iconName: "preferences-desktop-screensaver-symbolic",
+                timeout: 2000,
+              });
+            });
+          } else {
+            Utils.execAsync([
+              "hyprctl",
+              "keyword monitor HDMI-A-5,3840x2160,5360x0,1",
+            ]).then((_) => {
+              icon.setValue("󰟴");
+              Utils.notify({
+                id: 888,
+                summary: "TV on",
+                iconName: "preferences-desktop-remote-desktop-symbolic",
+                timeout: 2000,
+              });
+            });
+          }
+        })
+        .catch((err) => print(err));
+    },
+    child: Widget.Label({ label: icon.bind(), justify: 2 }),
+  });
+}
+
 const mediaIconMap = {
   spotify: " ",
   brave: "󰖟 ",
@@ -237,14 +278,20 @@ function Volume() {
               "alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo"
             ) {
               Utils.exec(`wpctl set-default ${map && map["Headset"]}`);
-              Utils.exec(
-                `hyprctl notify -1 3000 "rgb(ff1ea3)" "󰋋  Headset set as default output device."`,
-              );
+              Utils.notify({
+                id: 888,
+                summary: "Headset set as output",
+                iconName: "audio-headphones-symbolic",
+                timeout: 2000,
+              });
             } else {
               Utils.exec(`wpctl set-default ${map && map["Soundbar"]}`);
-              Utils.exec(
-                `hyprctl notify -1 3000 "rgb(ff1ea3)" "󰓃  Soundbar set as default output device."`,
-              );
+              Utils.notify({
+                id: 888,
+                summary: "Soundbar set as output",
+                iconName: "audio-speakers-symbolic",
+                timeout: 2000,
+              });
             }
           });
         },
@@ -368,7 +415,15 @@ function Bottom() {
     vertical: true,
     vpack: "end",
     spacing: 8,
-    children: [SysTray(), Media(), Volume(), Weather(), Clock(), System()],
+    children: [
+      SysTray(),
+      TV(),
+      Media(),
+      Volume(),
+      Weather(),
+      Clock(),
+      System(),
+    ],
   });
 }
 

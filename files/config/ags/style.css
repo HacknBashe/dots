@@ -39,6 +39,10 @@ label {
   color: @theme_selected_bg_color;
 }
 
+.tv {
+  font-size: 20px;
+}
+
 .volume {
   font-size: 20px;
   padding-bottom: 10px;
