@@ -11,6 +11,7 @@ sketchybar --add item media.label right \
 sketchybar --add item media.icon right \
   --set media.icon label.drawing=off \
   icon.padding_left=0 \
+  icon.padding_right=0 \
   icon=󰎇 \
   icon.color=$ACCENT_COLOR \
   background.drawing=off \

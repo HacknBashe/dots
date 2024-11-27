@@ -44,6 +44,7 @@ in {
   #     brew tap FelixKratz/formulae
   #     brew install sketchybar
   #     "switchaudio-osx"
+  #     "ical-buddy"
 
   #     "koekeishiya/formulae/yabai"
   #     "koekeishiya/formulae/shkd"
