@@ -39,15 +39,10 @@ in {
   #     "visual-studio-code"
   #   ];
   #   forumlae = [
-  #     brew tap FelixKratz/formulae
-  #     brew install borders
-  #     brew tap FelixKratz/formulae
-  #     brew install sketchybar
+  #     "FelixKratz/formulae/borders"
+  #     "FelixKratz/formulae/sketchybar"
   #     "switchaudio-osx"
   #     "ical-buddy"
-
-  #     "koekeishiya/formulae/yabai"
-  #     "koekeishiya/formulae/shkd"
   #   ];
   # };
 

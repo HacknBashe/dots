@@ -14,19 +14,27 @@ in {
 
   programs.zsh.enable = true;
 
-  homebrew = {
-    enable = true;
-    casks = [
-      "todoist"
-      "amethyst"
-      "google-chrome"
-      "affinity-designer"
-      "affinity-photo"
-      "affinity-publisher"
-      "brave-browser"
-      "libreoffice"
-    ];
-  };
+  # homebrew = {
+  #   enable = true;
+  #   brews = [
+  #     "FelixKratz/formulae/borders"
+  #     "FelixKratz/formulae/sketchybar"
+  #     "switchaudio-osx"
+  #     "ical-buddy"
+  #   ];
+  #   casks = [
+  #     "todoist"
+  #     "google-chrome"
+  #     "affinity-designer"
+  #     "affinity-photo"
+  #     "affinity-publisher"
+  #     "brave-browser"
+  #     "libreoffice"
+  #     "nikitabobko/tap/aerospace"
+  #     "karabiner-elements"
+  #     "visual-studio-code"
+  #   ];
+  # };
 
   users.users.${user} = {
     name = "${user}";

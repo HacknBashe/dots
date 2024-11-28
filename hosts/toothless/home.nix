@@ -16,17 +16,21 @@
     raleway
 
     discord
+    spotify
   ];
 
   programs = {
     home-manager.enable = true;
-    spotify-player.enable = true;
   };
 
   home.file = {
-    ".amethyst.yml" = {
-      source = ../../files/amethyst.yml;
-      target = ".amethyst.yml";
+    ".gitconfig.local" = {
+      text = ''
+        [user]
+        name = Nick Hackford
+        email = nick.hackford@gmail.com
+      '';
+      target = ".gitconfig.local";
     };
   };
 

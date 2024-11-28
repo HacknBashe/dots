@@ -108,8 +108,8 @@
                 ./modules/home-manager/tmux.nix
                 ./modules/home-manager/btop.nix
                 ./modules/home-manager/ghostty.nix
+                ./modules/home-manager/aerospace.nix
                 ./modules/home-manager/alacritty.nix
-                ./modules/home-manager/wezterm.nix
               ];
             };
             home-manager.extraSpecialArgs = {inherit inputs;};
@@ -135,6 +135,7 @@
                 ./modules/home-manager/tmux.nix
                 ./modules/home-manager/btop.nix
                 ./modules/home-manager/ghostty.nix
+                ./modules/home-manager/aerospace.nix
               ];
             };
             home-manager.extraSpecialArgs = {inherit inputs;};
