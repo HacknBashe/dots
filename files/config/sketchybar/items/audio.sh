@@ -1,6 +1,6 @@
 #!/bin/bash
 
-icon=$(if [ "$(SwitchAudioSource -c)" == "Razer Barracuda Pro 2.4" ]; then echo "󰋋"; else echo "󰓃"; fi)
+icon=$(if [ "$(SwitchAudioSource -c)" == "Jabra Link 390" ]; then echo "󰋋"; else echo "󰓃"; fi)
 sketchybar \
   --add item audio right \
   --set audio script="$PLUGIN_DIR/volume.sh" \
@@ -9,7 +9,7 @@ sketchybar \
   icon.padding_right=5 \
   label.padding_right=5 \
   popup.height=30 \
-  click_script="~/.local/bin/toggle_audio_output.sh" \
+  click_script="$PLUGIN_DIR/toggle_audio_output.sh" \
   --subscribe audio volume_change
 
 sketchybar --add slider audio.slider right \
