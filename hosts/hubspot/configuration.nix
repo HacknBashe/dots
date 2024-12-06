@@ -37,6 +37,7 @@ in {
   #     "intellij-idea-ce"
   #     "karabiner-elements"
   #     "visual-studio-code"
+  #     "hammerspoon"
   #   ];
   #   forumlae = [
   #     "FelixKratz/formulae/borders"
