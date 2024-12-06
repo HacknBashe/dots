@@ -161,7 +161,7 @@ function TV() {
           if (out.includes("LG TV")) {
             Utils.execAsync([
               "hyprctl",
-              "keyword monitor HDMI-A-5,disabled",
+              "keyword monitor HDMI-A-1,disabled",
             ]).then((_) => {
               icon.setValue("󰠺");
               Utils.notify({
@@ -174,7 +174,7 @@ function TV() {
           } else {
             Utils.execAsync([
               "hyprctl",
-              "keyword monitor HDMI-A-5,3840x2160,5360x0,1",
+              "keyword monitor HDMI-A-1,3840x2160,5360x0,1",
             ]).then((_) => {
               icon.setValue("󰟴");
               Utils.notify({

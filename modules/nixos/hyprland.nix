@@ -20,31 +20,6 @@
     xwayland.enable = true;
   };
 
-  services = {
-    displayManager.sddm = {
-      enable = true;
-      theme = "${import ./where-sddm-theme.nix {inherit pkgs config;}}";
-    };
-    xserver = {
-      enable = true;
-      videoDrivers = ["nvidia"];
-      xrandrHeads = [
-        {
-          output = "DP-2";
-          primary = true;
-        }
-        {
-          output = "DP-0";
-          monitorConfig = ''Option "Enable" "false"'';
-        }
-        {
-          output = "HDMI-0";
-          monitorConfig = ''Option "Enable" "false"'';
-        }
-      ];
-    };
-  };
-
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
@@ -95,11 +70,6 @@
     hypridle
     hyprlock
     wayland-logout
-
-    # sddm-theme dependencies
-    libsForQt5.qt5ct
-    libsForQt5.qt5.qtquickcontrols
-    libsForQt5.qt5.qtgraphicaleffects
 
     polkit_gnome
 

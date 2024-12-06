@@ -89,7 +89,7 @@
 
         exec = swaybg -o DP-4 -i ${config.theme.wallLarge}
         exec = swaybg -o DP-3 -i ${config.theme.wallSmall}
-        exec = swaybg -o HDMI-A-5 -i ${config.theme.wallSmall}
+        exec = swaybg -o HDMI-A-1 -i ${config.theme.wallSmall}
         ${builtins.readFile ../../files/config/hypr/hyprland.conf}
       '';
       target = ".config/hypr/hyprland.conf";

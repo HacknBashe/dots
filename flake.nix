@@ -59,6 +59,7 @@
           ./modules/theme.nix
           ./hosts/meraxes/configuration.nix
           ./modules/nixos/shell.nix
+          ./modules/nixos/sddm.nix
           ./modules/nixos/hyprland.nix
           ./modules/nixos/desktop.nix
           home-manager.nixosModules.home-manager
