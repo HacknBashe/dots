@@ -25,8 +25,17 @@ return {
 		},
 		config = function()
 			require("CopilotChat").setup({
-				debug = true,
+				mappings = {
+					close = {
+						normal = "q",
+					},
+					reset = {
+						normal = "<C-c>",
+						insert = "<C-c>",
+					},
+				},
 			})
+			vim.keymap.set("n", "<leader>vc", ":CopilotChat <CR>", { desc = "View CopilotChat" })
 		end,
 	},
 }

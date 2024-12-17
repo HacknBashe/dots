@@ -21,7 +21,7 @@ in {
         background = ${colors.background}
         foreground= ${colors.foreground}
 
-        keybind = ctrl+u=write_scrollback_file:open
+        # keybind = ctrl+u=write_scrollback_file:open
 
         font-size = 24
         font-family = ${config.theme.fontMono}

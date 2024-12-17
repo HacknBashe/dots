@@ -70,7 +70,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<leader>vw", function()
 			vim.lsp.buf.workspace_symbol()
 		end, opts("View Workspace Symbol"))
-		vim.keymap.set("n", "<leader>vc", function()
+		vim.keymap.set("n", "<leader>va", function()
 			vim.lsp.buf.code_action()
 		end, opts("View Code Actions"))
 		vim.keymap.set("n", "<leader>vr", function()
