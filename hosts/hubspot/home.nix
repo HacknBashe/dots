@@ -14,7 +14,7 @@
 
   fonts.fontconfig.enable = true;
   home.packages = with pkgs; [
-    (pkgs.nerdfonts.override {fonts = ["SourceCodePro"];})
+    nerd-fonts.sauce-code-pro
     font-awesome
     raleway
 
