@@ -11,5 +11,12 @@ return { -- Git
 				untracked = { text = "┆" },
 			},
 		})
+
+		vim.keymap.set(
+			"n",
+			"<leader>gt",
+			"<cmd>Gitsigns toggle_current_line_blame<CR>",
+			{ desc = "Git Blame Line", noremap = true, silent = true, nowait = true }
+		)
 	end,
 }
