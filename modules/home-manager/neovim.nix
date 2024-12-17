@@ -3,15 +3,7 @@
   pkgs,
   ...
 }: let
-  better-vim-tmux-resizer = pkgs.vimUtils.buildVimPlugin {
-    name = "better-vim-tmux-resizer";
-    src = pkgs.fetchFromGitHub {
-      owner = "RyanMillerC";
-      repo = "better-vim-tmux-resizer";
-      rev = "a791fe5b4433ac43a4dad921e94b7b5f88751048";
-      hash = "sha256-1uHcQQUnViktDBZt+aytlBF1ZG+/Ifv5VVoKSyM9ML0=";
-    };
-  };
+  # Hubspot plugins
   asset-bender-nvim = pkgs.vimUtils.buildVimPlugin {
     name = "asset-bender-nvim";
     src = pkgs.fetchFromGitHub {
@@ -30,6 +22,18 @@
       hash = "sha256-oiGWlyt9+zN7ReQtdtVqFHVeaoypg6vFNOwSr9d3I2Y=";
     };
   };
+  # Not packaged
+  better-vim-tmux-resizer = pkgs.vimUtils.buildVimPlugin {
+    name = "better-vim-tmux-resizer";
+    src = pkgs.fetchFromGitHub {
+      owner = "RyanMillerC";
+      repo = "better-vim-tmux-resizer";
+      rev = "a791fe5b4433ac43a4dad921e94b7b5f88751048";
+      hash = "sha256-1uHcQQUnViktDBZt+aytlBF1ZG+/Ifv5VVoKSyM9ML0=";
+    };
+  };
+
+  # Updated
   my-CopilotChat-nvim = pkgs.vimUtils.buildVimPlugin {
     name = "CopilotChat.nvim";
     src = pkgs.fetchFromGitHub {
@@ -37,6 +41,16 @@
       repo = "CopilotChat.nvim";
       rev = "2ebe591cff06018e265263e71e1dbc4c5aa8281e";
       hash = "sha256-IPP5jXIX+05Tb0MEXUu6EjcL/RHgV1qkoXPEdaEfhNM=";
+    };
+  };
+  my-snacks-nvim = pkgs.vimUtils.buildVimPlugin {
+    pname = "snacks.nvim";
+    version = "2024-12-17";
+    src = pkgs.fetchFromGitHub {
+      owner = "folke";
+      repo = "snacks.nvim";
+      rev = "972c61cc1cd254ef3b43ec1dfd51eefbdc441a7d";
+      hash = "sha256-OBig3B2S87Ip9pwp38X3gMH2SHACbNMpMQ3JeAGxqQY=";
     };
   };
 
@@ -78,7 +92,7 @@ in {
         bufferline-nvim
         gitsigns-nvim
         lualine-nvim
-        snacks-nvim
+        my-snacks-nvim
         trouble-nvim
         which-key-nvim
 

@@ -35,7 +35,7 @@ return {
 					},
 				},
 			})
-			vim.keymap.set("n", "<leader>vc", ":CopilotChat <CR>", { desc = "View CopilotChat" })
+			vim.keymap.set("n", "<leader>c", ":CopilotChat <CR>", { desc = "View CopilotChat" })
 		end,
 	},
 }

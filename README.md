@@ -51,5 +51,4 @@ sudo usermod -aG docker azureuser                                               
 
 ## TODO
 
-- Make more inplace symlinks
-- Get config value to help make these symlinks
+- Fix config value to help inplace symlinks

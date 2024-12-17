@@ -4,21 +4,28 @@ return {
 	config = function()
 		vim.keymap.set(
 			"n",
-			"<leader>tq",
+			"<leader>dq",
 			"<cmd>Trouble diagnostics toggle<cr>",
-			{ desc = "View Quickfix", silent = true, noremap = true }
+			{ desc = "Diagnostic Quickfix List", silent = true, noremap = true }
+		)
+
+		vim.keymap.set(
+			"n",
+			"<leader>dq",
+			"<cmd>Trouble diagnostics toggle<cr>",
+			{ desc = "Diagnostic Quickfix List", silent = true, noremap = true }
 		)
 		vim.keymap.set(
 			"n",
-			"<leader>tn",
+			"<leader>dn",
 			"<cmd>Trouble diagnostics next<cr><cmd>Trouble diagnostics focus<cr>",
-			{ desc = "Trouble next diagnostic", silent = true, noremap = true }
+			{ desc = "Diagnostic: Next", silent = true, noremap = true }
 		)
 		vim.keymap.set(
 			"n",
-			"<leader>tp",
+			"<leader>dp",
 			"<cmd>Trouble diagnostics prev<cr><cmd>Trouble diagnostics focus<cr>",
-			{ desc = "Trouble prev diagnostic", silent = true, noremap = true }
+			{ desc = "Diagnostic: Prev", silent = true, noremap = true }
 		)
 
 		require("trouble").setup()

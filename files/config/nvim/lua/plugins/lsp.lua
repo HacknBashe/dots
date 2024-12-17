@@ -44,15 +44,17 @@ vim.diagnostic.config({
 	signs = false,
 	virtual_text = true,
 })
-vim.keymap.set("n", "<leader>vd", function()
+vim.keymap.set("n", "<leader>dv", function()
 	vim.diagnostic.open_float()
-end, { desc = "View diagnostic", noremap = true })
+end, { desc = "Diagnostic: View", noremap = true })
+
 vim.keymap.set("n", "[d", function()
 	vim.diagnostic.goto_next()
-end, { desc = "Next diagnostic", noremap = true })
+end, { desc = "Diagnostic: Next", noremap = true })
+
 vim.keymap.set("n", "]d", function()
 	vim.diagnostic.goto_prev()
-end, { desc = "Prev diagnostic", noremap = true })
+end, { desc = "Diagnostic: Next", noremap = true })
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	desc = "LSP actions",
@@ -64,21 +66,27 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gd", function()
 			vim.lsp.buf.definition()
 		end, opts("Go to Definition"))
+
 		vim.keymap.set("n", "K", function()
 			vim.lsp.buf.hover()
 		end, opts("Hover"))
-		vim.keymap.set("n", "<leader>vw", function()
+
+		vim.keymap.set("n", "<leader>ls", function()
 			vim.lsp.buf.workspace_symbol()
 		end, opts("View Workspace Symbol"))
-		vim.keymap.set("n", "<leader>va", function()
+
+		vim.keymap.set("n", "<leader>la", function()
 			vim.lsp.buf.code_action()
-		end, opts("View Code Actions"))
-		vim.keymap.set("n", "<leader>vr", function()
+		end, opts("Actions"))
+
+		vim.keymap.set("n", "<leader>lf", function()
 			vim.lsp.buf.references()
-		end, opts("View References"))
-		vim.keymap.set("n", "<leader>vn", function()
+		end, opts("Find References"))
+
+		vim.keymap.set("n", "<leader>lr", function()
 			vim.lsp.buf.rename()
-		end, opts("Visual Rename"))
+		end, opts("Rename"))
+
 		vim.keymap.set("i", "<C-h>", function()
 			vim.lsp.buf.signature_help()
 		end, opts("Signature Help"))

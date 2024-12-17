@@ -40,18 +40,24 @@ return {
 			input = { enabled = true },
 			notifier = { enabled = true },
 			quickfile = { enabled = true },
-			scroll = { enabled = true },
+			scroll = {
+				enabled = true,
+				animate = {
+					duration = { step = 10, total = 100 },
+					easing = "inOutQuad",
+				},
+			},
 			statuscolumn = { enabled = true },
 			words = { enabled = true },
 		})
 
 		vim.keymap.set("n", "<leader>z", function()
 			Snacks.zen()
-		end, { desc = "Toggle Zen Mode", noremap = true, silent = true, nowait = true })
+		end, { desc = "Zen Mode", noremap = true, silent = true, nowait = true })
 
 		vim.keymap.set("n", "<leader>Z", function()
 			Snacks.zen.zoom()
-		end, { desc = "Toggle Zoom Mode", noremap = true, silent = true, nowait = true })
+		end, { desc = "Zoom Mode", noremap = true, silent = true, nowait = true })
 
 		vim.keymap.set("n", "<leader>nh", function()
 			Snacks.notifier.show_history()
@@ -64,7 +70,6 @@ return {
 		vim.keymap.set("n", "<leader>gg", function()
 			Snacks.lazygit()
 		end, { desc = "LazyGit", noremap = true, silent = true, nowait = true })
-
 
 		vim.keymap.set("n", "<leader>gB", function()
 			Snacks.gitbrowse()
