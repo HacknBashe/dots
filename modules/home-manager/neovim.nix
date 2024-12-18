@@ -7,9 +7,9 @@
   asset-bender-nvim = pkgs.vimUtils.buildVimPlugin {
     name = "asset-bender-nvim";
     src = pkgs.fetchFromGitHub {
-      owner = "NickHackford";
+      owner = "bobrown101";
       repo = "asset-bender.nvim";
-      rev = "1facdfe6fc07f64b7d18f285e16e7ef64d04ab9e";
+      rev = "1d715902478cc8f70483ee2f87a1a58a49ebc10f";
       hash = "sha256-JXTMKAbMHXsPR441r3ylvn5or/0YriWzowl5OVy239s=";
     };
   };
