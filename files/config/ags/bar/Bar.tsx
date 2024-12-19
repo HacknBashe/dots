@@ -1,4 +1,4 @@
-import { Astal, Gtk, Gdk } from "astal/gtk3";
+import { App, Astal, Gtk, Gdk } from "astal/gtk3";
 
 import { Workspaces, FocusedClient } from "./Workspaces";
 import { Media } from "./Media";
@@ -14,7 +14,8 @@ export function Bar(monitor: Gdk.Monitor) {
 
   return (
     <window
-      className="bar"
+      name={"Bar"}
+      application={App}
       gdkmonitor={monitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       anchor={TOP | LEFT | BOTTOM}
@@ -30,7 +31,7 @@ export function Bar(monitor: Gdk.Monitor) {
         <box vertical={true} valign={Gtk.Align.END}>
           <Tray />
           <Audio />
-          <Displays/>
+          <Displays />
           <Weather />
           <Clock />
           <System />

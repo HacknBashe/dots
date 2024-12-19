@@ -1,9 +1,9 @@
 import { execAsync } from "astal";
 import { App, Astal, Gdk } from "astal/gtk3";
 
+import {LOCK_COMMAND} from "/etc/nix/vars"
+
 const WINDOW_NAME = "SystemPopup";
-const LOCK_COMMAND =
-  "grim -o DP-4 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-3 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock";
 
 export function System() {
   return (
@@ -43,12 +43,17 @@ function poweroff() {
   execAsync(["systemctl", "poweroff"]);
 }
 
+function hide() {
+  App.get_window(WINDOW_NAME)!.hide();
+}
+
 export function SystemPopup(monitor: Gdk.Monitor) {
   const { BOTTOM, LEFT } = Astal.WindowAnchor;
 
   return (
     <window
       name={WINDOW_NAME}
+      application={App}
       className="system-popup"
       gdkmonitor={monitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
@@ -80,10 +85,11 @@ export function SystemPopup(monitor: Gdk.Monitor) {
             break;
         }
       }}
-      setup={(self: Astal.Window) => {
-        App.add_window(self);
-      }}
     >
+      {/* <box> */}
+      {/*   <eventbox widthRequest={4000} expand onClick={hide} /> */}
+      {/*   <box hexpand={false} vertical> */}
+      {/*     <eventbox heightRequest={100} onClick={hide} /> */}
       <box>
         <button onClick={lock}>󰌾</button>
         <button onClick={logout}>󰍃</button>
@@ -92,6 +98,10 @@ export function SystemPopup(monitor: Gdk.Monitor) {
         <button onClick={reboot}>󰜉</button>
         <button onClick={poweroff}>󰐥</button>
       </box>
+      {/* <eventbox expand onClick={hide} /> */}
+      {/* </box> */}
+      {/* <eventbox widthRequest={4000} expand onClick={hide} /> */}
+      {/* </box> */}
     </window>
   );
 }

@@ -1,4 +1,7 @@
-import { execAsync, Variable } from "astal";
+import { exec, execAsync, timeout, Variable } from "astal";
+import { App } from "astal/gtk3";
+
+import { remapWindows } from "../app";
 import {
   MONITOR_1_COMMAND,
   MONITOR_2_COMMAND,
@@ -32,17 +35,29 @@ async function toggleMonitor(monitor: string, enableCommand: string) {
   const initialMonitorStatus = await getMonitorStatus();
 
   if (initialMonitorStatus[monitor]) {
-    execAsync(["hyprctl", "keyword", "monitor", monitor + ",disabled"]).then(
-      async () => {
-        const finalMonitorStatus = await getMonitorStatus();
-        monitors.set(finalMonitorStatus);
-      },
-    );
+    if (
+      Object.values(initialMonitorStatus).filter((status) => status).length > 1
+    ) {
+      execAsync(["hyprctl", "keyword", "monitor", monitor + ",disabled"]).then(
+        async () => {
+          const finalMonitorStatus = await getMonitorStatus();
+          monitors.set(finalMonitorStatus);
+          // Need to allow the monitor to fully connect before we remap
+          timeout(1000, () => {
+            remapWindows();
+          });
+        },
+      );
+    }
   } else {
     execAsync(["hyprctl", "keyword", "monitor", enableCommand]).then(
       async () => {
         const finalMonitorStatus = await getMonitorStatus();
         monitors.set(finalMonitorStatus);
+        // Need to allow the monitor to fully connect before we remap
+        timeout(1000, () => {
+          remapWindows();
+        });
       },
     );
   }

@@ -3,7 +3,7 @@ $bg-color: #{"@theme_bg_color"};
 $warning-color: #{"@warning_color"};
 $selected-bg-color: #{"@theme_selected_bg_color"};
 
-window.bar {
+window#Bar {
   color: $fg-color;
   padding: 15px 0px;
   background-color: $bg-color;

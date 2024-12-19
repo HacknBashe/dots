@@ -74,5 +74,6 @@
     export const MONITOR_1_COMMAND = "${config.monitor1Command}";
     export const MONITOR_2_COMMAND = "${config.monitor2Command}";
     export const TV_COMMAND = "${config.tvCommand}";
+    export const LOCK_COMMAND = "${config.lockCommand}";
   '';
 }

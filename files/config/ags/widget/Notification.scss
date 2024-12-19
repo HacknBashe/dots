@@ -9,7 +9,7 @@ $fg-color: #{"@theme_fg_color"};
 $bg-color: #{"@theme_bg_color"};
 $error: red;
 
-window.NotificationPopups {
+window#NotificationPopups {
   all: unset;
 }
 

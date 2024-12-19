@@ -1,4 +1,4 @@
-import { Astal, Gtk, Gdk } from "astal/gtk3";
+import { App, Astal, Gtk, Gdk } from "astal/gtk3";
 import Notifd from "gi://AstalNotifd";
 import Notification from "./Notification";
 import { type Subscribable } from "astal/binding";
@@ -99,7 +99,8 @@ export function NotificationPopups(gdkmonitor: Gdk.Monitor) {
 
   return (
     <window
-      className="NotificationPopups"
+      name="NotificationPopups"
+      application={App}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       anchor={TOP | RIGHT}
