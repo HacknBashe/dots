@@ -40,13 +40,13 @@ return {
 			input = { enabled = true },
 			notifier = { enabled = true },
 			quickfile = { enabled = true },
-			scroll = {
-				enabled = true,
-				animate = {
-					duration = { step = 10, total = 100 },
-					easing = "inOutQuad",
-				},
-			},
+			-- scroll = {
+			-- 	enabled = true,
+			-- 	animate = {
+			-- 		duration = { step = 10, total = 100 },
+			-- 		easing = "inOutQuad",
+			-- 	},
+			-- },
 			statuscolumn = { enabled = true },
 			words = { enabled = true },
 		})
