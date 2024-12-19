@@ -14,7 +14,7 @@ pkgs.stdenv.mkDerivation {
         mkdir -p $out
         cp -R ./where_is_my_sddm_theme/* $out/
         cd $out/
-        cp -r ${config.theme.wallLarge} $out/Background.jpg
+        cp -r ${config.theme.wallXWide} $out/Background.jpg
         rm theme.conf
     cat <<EOL > theme.conf
     [General]

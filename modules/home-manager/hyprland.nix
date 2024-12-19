@@ -16,7 +16,7 @@
 
       background = [
         {
-          monitor = "DP-4";
+          monitor = "DP-3";
           path = "/tmp/hyprlock_screenshot1.png";
           blur_passes = 1;
           blur_size = 8;
@@ -27,8 +27,19 @@
           vibrancy_darkness = 0.0;
         }
         {
-          monitor = "DP-3";
+          monitor = "DP-4";
           path = "/tmp/hyprlock_screenshot2.png";
+          blur_passes = 1;
+          blur_size = 8;
+          noise = 0.0117;
+          contrast = 0.8916;
+          brightness = 0.8172;
+          vibrancy = 0.1696;
+          vibrancy_darkness = 0.0;
+        }
+        {
+          monitor = "HDMI-A-5";
+          path = "/tmp/hyprlock_screenshot3.png";
           blur_passes = 1;
           blur_size = 8;
           noise = 0.0117;
@@ -40,7 +51,7 @@
       ];
 
       input-field = {
-        monitor = "DP-4";
+        monitor = "";
         size = "250, 60";
         outline_thickness = 2;
         dots_size = 0.2; # Scale of input-field height, 0.2 - 0.8
@@ -80,38 +91,44 @@
   ];
 
   home.file = {
-    "hypr" = {
-      # source = ../../files/config/hypr/hyprland.conf;
+    "hypr/vars.conf" = {
       text = ''
         $activeColor = ${builtins.substring 1 6 config.theme.colors.default.blue + "cc"}
         $inactiveColor = ${builtins.substring 1 6 config.theme.colors.bright.black + "99"}
         $shadowColor = ${builtins.substring 1 6 config.theme.colors.text + "ee"}
 
-        exec = swaybg -o DP-4 -i ${config.theme.wallLarge}
-        exec = swaybg -o DP-3 -i ${config.theme.wallSmall}
-        exec = swaybg -o HDMI-A-1 -i ${config.theme.wallSmall}
-        ${builtins.readFile ../../files/config/hypr/hyprland.conf}
+        $wallWide = ${config.theme.wallWide}
+        $wallXWide = ${config.theme.wallXWide}
+
+        $monitor1Command = ${config.monitor1Command}
+        $monitor2Command = ${config.monitor2Command}
+
+        $lockCommand = ${config.lockCommand}
       '';
+      target = ".config/hypr/vars.conf";
+    };
+    "hypr/hyprland.conf" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/hypr/hyprland.conf";
       target = ".config/hypr/hyprland.conf";
     };
     "hypr/hypridle.conf" = {
-      source = ../../files/config/hypr/hypridle.conf;
+      # TODO: replace with config.lib.file.mkOutOfStoreSymlink once hypridle supports sourcing
+      # source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/hypr/hypridle.conf";
+      text = ''
+        $lockCommand = ${config.lockCommand}
+
+        ${builtins.readFile ../../files/config/hypr/hypridle.conf}
+      '';
       target = ".config/hypr/hypridle.conf";
     };
     "hypr/scripts" = {
-      source = ../../files/config/hypr/scripts;
+      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/hypr/scripts";
       target = ".config/hypr/scripts";
       recursive = true;
     };
     "hypr/shaders" = {
-      source = ../../files/config/hypr/shaders;
+      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/hypr/shaders";
       target = ".config/hypr/shaders";
-      recursive = true;
-    };
-
-    "ags" = {
-      source = ../../files/config/ags;
-      target = ".config/ags";
       recursive = true;
     };
   };

@@ -18,7 +18,9 @@ in {
   users.defaultUserShell = pkgs.zsh;
   environment.shells = with pkgs; [zsh];
 
-  fonts.packages = with pkgs; [(pkgs.nerdfonts.override {fonts = ["SourceCodePro"];})];
+  fonts.packages = with pkgs; [
+    nerd-fonts.sauce-code-pro
+  ];
 
   environment.systemPackages = with pkgs;
     [

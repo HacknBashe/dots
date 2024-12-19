@@ -6,6 +6,7 @@
 }: {
   home.username = "nick";
   home.homeDirectory = "/home/nick";
+  homeDirPath = "/home/nick/";
 
   home.stateVersion = "23.05";
 

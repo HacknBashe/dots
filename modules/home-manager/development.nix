@@ -28,6 +28,7 @@ in {
   home.packages = with pkgs;
     [
       git
+      entr
       lazygit
       docker-compose
 

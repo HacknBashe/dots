@@ -76,8 +76,17 @@ in {
   security.polkit.enable = true;
   services.openssh.enable = true;
 
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
+  hardware = {
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+      input = {
+        General = {
+          UserspaceHID = true;
+        };
+      };
+    };
+  };
   services.blueman.enable = true;
 
   # /mnt/windows/Windows/System32/config
@@ -156,7 +165,7 @@ in {
                 {
                    matches = [
                      {
-                       node.name = "alsa_output.usb-Generic_USB_Audio-00.iec958-stereo"
+                       node.nick = "USB Audio"
                      }
                    ]
                    actions = {
@@ -168,7 +177,7 @@ in {
                 {
                    matches = [
                      {
-                       node.name = "alsa_input.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.mono-fallback"
+                       node.nick = "HDA Intel PCH"
                      }
                    ]
                    actions = {

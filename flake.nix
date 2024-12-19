@@ -37,6 +37,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    ags = {
+      url = "git+https://github.com/Aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # For Steam
     extest.url = "github:chaorace/extest-nix";
   };
@@ -66,23 +71,31 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.nick = {
-              imports = [
-                ./hosts/meraxes/home.nix
-                ./modules/theme.nix
-                ./modules/home-manager/shell.nix
-                ./modules/home-manager/development.nix
-                ./modules/home-manager/neovim.nix
-                ./modules/home-manager/tmux.nix
-                ./modules/home-manager/zellij.nix
-                ./modules/home-manager/btop.nix
-                ./modules/home-manager/hyprland.nix
-                ./modules/home-manager/ghostty.nix
-                ./modules/home-manager/alacritty.nix
-                ./modules/home-manager/wezterm.nix
-                ./modules/home-manager/gtk.nix
-                ./modules/home-manager/qt.nix
-              ];
+            home-manager.users = {
+              nick = {
+                imports = [
+                  ./hosts/meraxes/home.nix
+                  ./modules/theme.nix
+                  ./modules/home-manager/shell.nix
+                  ./modules/home-manager/development.nix
+                  ./modules/home-manager/neovim.nix
+                  ./modules/home-manager/tmux.nix
+                  ./modules/home-manager/zellij.nix
+                  ./modules/home-manager/btop.nix
+                  ./modules/home-manager/hyprland.nix
+                  ./modules/home-manager/ags.nix
+                  ./modules/home-manager/ghostty.nix
+                  ./modules/home-manager/alacritty.nix
+                  ./modules/home-manager/wezterm.nix
+                  ./modules/home-manager/gtk.nix
+                  ./modules/home-manager/qt.nix
+                ];
+              };
+              kids = {
+                imports = [
+                  ./hosts/meraxes/kids.nix
+                ];
+              };
             };
             home-manager.extraSpecialArgs = {inherit inputs;};
           }

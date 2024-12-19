@@ -56,17 +56,8 @@
     };
   };
 
-  nixpkgs.overlays = [
-    (final: prev: {
-      ags = prev.ags.overrideAttrs (old: {
-        buildInputs = old.buildInputs ++ [pkgs.libdbusmenu-gtk3];
-      });
-    })
-  ];
-
   environment.systemPackages = with pkgs; [
     swaybg
-    ags
     hypridle
     hyprlock
     wayland-logout
@@ -78,4 +69,10 @@
     wl-clipboard
     xdg-utils
   ];
+
+  environment.etc."nix/vars.ts".text = ''
+    export const MONITOR_1_COMMAND = "${config.monitor1Command}";
+    export const MONITOR_2_COMMAND = "${config.monitor2Command}";
+    export const TV_COMMAND = "${config.tvCommand}";
+  '';
 }

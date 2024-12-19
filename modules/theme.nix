@@ -13,6 +13,7 @@ in {
       type = lib.types.str;
       default = "/Users/nick/";
     };
+
     isHubspot = lib.mkOption {
       description = ''
         Enable Hubspot specific configuration
@@ -20,20 +21,53 @@ in {
       type = lib.types.bool;
       default = false;
     };
+
+    monitor1Command = lib.mkOption {
+      description = ''
+        Hyprland command for monitor 1
+      '';
+      type = lib.types.str;
+      default = "";
+    };
+
+    monitor2Command = lib.mkOption {
+      description = ''
+        Hyprland command for monitor 2
+      '';
+      type = lib.types.str;
+      default = "";
+    };
+
+    tvCommand = lib.mkOption {
+      description = ''
+        Hyprland command for tv
+      '';
+      type = lib.types.str;
+      default = "";
+    };
+
+    lockCommand = lib.mkOption {
+      description = ''
+        Command to lock the screen
+      '';
+      type = lib.types.str;
+      default = "";
+    };
+
     theme = {
-      wallLarge = lib.mkOption {
+      wallWide = lib.mkOption {
         description = ''
-          Extra wide wallpaper
+          Wide wallpaper
         '';
-        type = lib.types.path;
+        type = lib.types.str;
         default = "";
       };
 
-      wallSmall = lib.mkOption {
+      wallXWide = lib.mkOption {
         description = ''
-          Standard wallpaper
+          Extra wide wallpaper
         '';
-        type = lib.types.path;
+        type = lib.types.str;
         default = "";
       };
 
@@ -82,9 +116,14 @@ in {
   };
 
   config = {
+    monitor1Command = "DP-3,3840x2160,0x180,2";
+    monitor2Command = "DP-4,3440x1440,1920x0,1";
+    tvCommand = "HDMI-A-5,3840x2160,5360x0,2";
+    lockCommand = "grim -o DP-3 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-4 -l 0 /tmp/hyprlock_screenshot2.png & grim -o HDMI-A-5 -l 0 /tmp/hyprlock_screenshot3.png & wait && hyprlock";
+
     theme = {
-      wallLarge = /home/nick/Pictures/Walls/nebula-blue.png;
-      wallSmall = /home/nick/Pictures/Walls/nebula-red.png;
+      wallWide = "/home/nick/Pictures/Walls/nebula-red.png";
+      wallXWide = "/home/nick/Pictures/Walls/nebula-blue.png";
 
       fontSans = "";
       fontSerif = "";

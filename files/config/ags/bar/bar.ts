@@ -1,3 +1,6 @@
+import Hyprland from "gi://AstalHyprland";
+const hyprland = Hyprland.get_default();
+
 import { Weather } from "./weather.js";
 
 const hyprland = await Service.import("hyprland");
@@ -14,7 +17,7 @@ const workspaceIconMap = {
   6: "󰖟",
   7: "󰽉",
   8: "󱁤",
-  9: "󰒱",
+  9: "",
   10: "󰙯",
   11: "󰟴",
   "special:notes": "󰠮",
@@ -151,44 +154,85 @@ function SysTray() {
   });
 }
 
-function TV() {
+function Displays() {
   let icon = Variable("󰠺");
-  return Widget.Button({
-    className: "tv",
-    on_primary_click: () => {
-      Utils.execAsync(["hyprctl", "monitors"])
-        .then((out) => {
-          if (out.includes("LG TV")) {
-            Utils.execAsync([
-              "hyprctl",
-              "keyword monitor HDMI-A-1,disabled",
-            ]).then((_) => {
-              icon.setValue("󰠺");
-              Utils.notify({
-                id: 888,
-                summary: "TV off",
-                iconName: "preferences-desktop-screensaver-symbolic",
-                timeout: 2000,
-              });
-            });
-          } else {
-            Utils.execAsync([
-              "hyprctl",
-              "keyword monitor HDMI-A-1,3840x2160,5360x0,1",
-            ]).then((_) => {
-              icon.setValue("󰟴");
-              Utils.notify({
-                id: 888,
-                summary: "TV on",
-                iconName: "preferences-desktop-remote-desktop-symbolic",
-                timeout: 2000,
-              });
-            });
-          }
-        })
-        .catch((err) => print(err));
-    },
-    child: Widget.Label({ label: icon.bind(), justify: 2 }),
+  return Widget.Box({
+    children: [
+      Widget.Button({
+        className: "tv",
+        on_primary_click: () => {
+          Utils.execAsync(["hyprctl", "monitors"])
+            .then((out) => {
+              if (out.includes("LG TV")) {
+                Utils.execAsync([
+                  "hyprctl",
+                  "keyword monitor HDMI-A-5,disabled",
+                ]).then((_) => {
+                  icon.setValue("󰠺");
+                  Utils.notify({
+                    id: 888,
+                    summary: "TV off",
+                    iconName: "preferences-desktop-screensaver-symbolic",
+                    timeout: 2000,
+                  });
+                });
+              } else {
+                Utils.execAsync([
+                  "hyprctl",
+                  "keyword monitor HDMI-A-5,3840x2160,5360x0,1",
+                ]).then((_) => {
+                  icon.setValue("󰟴");
+                  Utils.notify({
+                    id: 888,
+                    summary: "TV on",
+                    iconName: "preferences-desktop-remote-desktop-symbolic",
+                    timeout: 2000,
+                  });
+                });
+              }
+            })
+            .catch((err) => print(err));
+        },
+        child: Widget.Label({ label: icon.bind(), justify: 2 }),
+      }),
+      Widget.Button({
+        className: "tv",
+        on_primary_click: () => {
+          Utils.execAsync(["hyprctl", "monitors"])
+            .then((out) => {
+              if (out.includes("LG TV")) {
+                Utils.execAsync([
+                  "hyprctl",
+                  "keyword monitor HDMI-A-5,disabled",
+                ]).then((_) => {
+                  icon.setValue("󰠻");
+                  Utils.notify({
+                    id: 888,
+                    summary: "TV off",
+                    iconName: "preferences-desktop-screensaver-symbolic",
+                    timeout: 2000,
+                  });
+                });
+              } else {
+                Utils.execAsync([
+                  "hyprctl",
+                  "keyword monitor HDMI-A-5,3840x2160,5360x0,1",
+                ]).then((_) => {
+                  icon.setValue("󰍹");
+                  Utils.notify({
+                    id: 888,
+                    summary: "TV on",
+                    iconName: "preferences-desktop-remote-desktop-symbolic",
+                    timeout: 2000,
+                  });
+                });
+              }
+            })
+            .catch((err) => print(err));
+        },
+        child: Widget.Label({ label: icon.bind(), justify: 2 }),
+      }),
+    ],
   });
 }
 
@@ -417,7 +461,7 @@ function Bottom() {
     spacing: 8,
     children: [
       SysTray(),
-      TV(),
+      Displays(),
       Media(),
       Volume(),
       Weather(),
