@@ -14,8 +14,6 @@
     file-roller
   ];
 
-  services.gnome.gnome-keyring.enable = true;
-  programs.seahorse.enable = true;
   # For obsidian
   nixpkgs.config.permittedInsecurePackages = ["electron-25.9.0"];
 
@@ -46,5 +44,7 @@
     ungoogled-chromium
     webcord
     vlc
+    wine
+    winetricks
   ];
 }

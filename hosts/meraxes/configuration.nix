@@ -16,8 +16,15 @@ in {
     ];
   };
 
-  services.xserver.windowManager.i3 = {
-    enable = true;
+  services = {
+    desktopManager.plasma6 = {
+      enable = true;
+    };
+    xserver = {
+      windowManager.awesome = {
+        enable = true;
+      };
+    };
   };
 
   boot = {
@@ -192,11 +199,19 @@ in {
     };
   };
 
-  users.users.nick = {
-    isNormalUser = true;
-    description = "nick";
-    extraGroups = ["networkmanager" "wheel" "docker"];
-    packages = with pkgs; [];
+  users.users = {
+    nick = {
+      isNormalUser = true;
+      description = "nick";
+      extraGroups = ["networkmanager" "wheel" "docker"];
+      packages = with pkgs; [];
+    };
+    kids = {
+      isNormalUser = true;
+      description = "kids";
+      extraGroups = ["wheel"];
+      packages = with pkgs; [];
+    };
   };
 
   # This value determines the NixOS release from which the default
