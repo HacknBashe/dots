@@ -59,6 +59,10 @@ return {
 			Snacks.zen.zoom()
 		end, { desc = "Zoom Mode", noremap = true, silent = true, nowait = true })
 
+		vim.keymap.set("n", "<leader>.", function()
+			Snacks.scratch()
+		end, { desc = "Toggle Scratch Buffer", noremap = true, silent = true, nowait = true })
+
 		vim.keymap.set("n", "<leader>nh", function()
 			Snacks.notifier.show_history()
 		end, { desc = "Notification history", noremap = true, silent = true, nowait = true })
