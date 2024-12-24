@@ -55,4 +55,7 @@ vim.opt.colorcolumn = "120"
 
 vim.opt.signcolumn = "yes"
 
+vim.opt.foldmethod = "expr"
 vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"

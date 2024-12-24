@@ -41,6 +41,8 @@ return {
 		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles <CR>", opts("Find Recent"))
 		vim.keymap.set("n", "<leader>fh", "<cmd> Telescope help_tags <CR>", opts("Find Help"))
 
+		vim.keymap.set("n", "<leader>fR", "<cmd> Telescope resume <CR>", opts("Find: Resume Last Search"))
+
 		vim.keymap.set("n", "<leader>gc", "<cmd> Telescope git_commits <CR>", opts("Git Commits"))
 		vim.keymap.set("n", "<leader>gs", "<cmd> Telescope git_status <CR>", opts("Git Status"))
 

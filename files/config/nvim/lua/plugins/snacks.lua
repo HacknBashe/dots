@@ -79,7 +79,7 @@ return {
 			Snacks.gitbrowse()
 		end, { desc = "Git Browse", noremap = true, silent = true, nowait = true })
 
-		vim.keymap.set("n", "<leader>gl", function()
+		vim.keymap.set("n", "<leader>gL", function()
 			Snacks.git.lazygit.log()
 		end, { desc = "Git Log", noremap = true, silent = true, nowait = true })
 
@@ -87,7 +87,7 @@ return {
 			Snacks.git.lazygit.log_file()
 		end, { desc = "Git File History", noremap = true, silent = true, nowait = true })
 
-		vim.keymap.set("n", "<leader>gb", function()
+		vim.keymap.set("n", "<leader>gl", function()
 			Snacks.git.blame_line()
 		end, { desc = "Git Blame Line", noremap = true, silent = true, nowait = true })
 	end,

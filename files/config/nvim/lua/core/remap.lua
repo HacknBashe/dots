@@ -43,3 +43,11 @@ vim.keymap.set(
 	{ desc = "Substitute Selection", noremap = true, silent = false }
 )
 -- TODO: Add v(isual) s(ubstitute)
+
+-- Tabs
+vim.keymap.set("n", "<leader>tn", ":tabnew<CR>", { desc = "Open new tab" })
+vim.keymap.set("n", "<leader>td", ":tabclose<CR>", { desc = "Delete tab" })
+
+-- Spelling
+vim.keymap.set("n", "<leader>st", ":set spell!<CR>", { desc = "Spellcheck toggle" })
+vim.keymap.set("n", "<leader>ss", "z=", { desc = "Spellcheck suggestions" })

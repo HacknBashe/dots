@@ -89,7 +89,6 @@ in {
         # nvim-dap-ui
 
         # UI Enhancements
-        bufferline-nvim
         gitsigns-nvim
         lualine-nvim
         my-snacks-nvim

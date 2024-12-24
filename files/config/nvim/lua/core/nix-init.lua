@@ -1,7 +1,6 @@
 require("core.set")
 require("core.remap")
 
-require("plugins.bufferline").config()
 require("plugins.better-vim-tmux-resizer")
 -- require("plugins.codeium").config()
 require("plugins.copilot").copilot.config()

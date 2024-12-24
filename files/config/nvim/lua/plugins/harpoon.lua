@@ -9,34 +9,13 @@ return {
 			return { desc = "Harpoon: " .. desc, noremap = true, silent = true, nowait = true }
 		end
 
-		-- local conf = require("telescope.config").values
-		-- local function toggle_telescope(harpoon_files)
-		-- 	local file_paths = {}
-		-- 	for _, item in ipairs(harpoon_files.items) do
-		-- 		table.insert(file_paths, item.value)
-		-- 	end
-
-		-- 	require("telescope.pickers")
-		-- 		.new({}, {
-		-- 			prompt_title = "Harpoon",
-		-- 			finder = require("telescope.finders").new_table({
-		-- 				results = file_paths,
-		-- 			}),
-		-- 			previewer = conf.file_previewer({}),
-		-- 			sorter = conf.generic_sorter({}),
-		-- 		})
-		-- 		:find()
-		-- end
-		-- vim.keymap.set("n", "<leader>h", function()
-		-- 	toggle_telescope(harpoon:list())
-		-- end, { desc = "Open harpoon window" })
+		vim.keymap.set("n", "<leader>h", function()
+			harpoon.ui:toggle_quick_menu(harpoon:list())
+		end, opts("Quick Menu"))
 
 		vim.keymap.set("n", "<leader>a", function()
 			harpoon:list():add()
 		end, opts("Append"))
-		vim.keymap.set("n", "<leader>h", function()
-			harpoon.ui:toggle_quick_menu(harpoon:list())
-		end, opts("Quick Menu"))
 
 		vim.keymap.set("n", "<leader>1", function()
 			harpoon:list():select(1)
@@ -50,5 +29,23 @@ return {
 		vim.keymap.set("n", "<leader>4", function()
 			harpoon:list():select(4)
 		end, opts("Go to 4"))
+		vim.keymap.set("n", "<leader>5", function()
+			harpoon:list():select(4)
+		end, opts("Go to 5"))
+		vim.keymap.set("n", "<leader>6", function()
+			harpoon:list():select(4)
+		end, opts("Go to 6"))
+		vim.keymap.set("n", "<leader>7", function()
+			harpoon:list():select(4)
+		end, opts("Go to 7"))
+		vim.keymap.set("n", "<leader>8", function()
+			harpoon:list():select(4)
+		end, opts("Go to 8"))
+		vim.keymap.set("n", "<leader>9", function()
+			harpoon:list():select(4)
+		end, opts("Go to 9"))
+		vim.keymap.set("n", "<leader>0", function()
+			harpoon:list():select(4)
+		end, opts("Go to 0"))
 	end,
 }
