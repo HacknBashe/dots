@@ -5,7 +5,7 @@ import { remapWindows } from "../app";
 import {
   MONITOR_1_COMMAND,
   MONITOR_2_COMMAND,
-  TV_COMMAND,
+  MONITOR_3_COMMAND,
 } from "/etc/nix/vars";
 
 async function getMonitorStatus(): Promise<Record<string, boolean>> {
@@ -65,7 +65,7 @@ async function toggleMonitor(monitor: string, enableCommand: string) {
 
 const MONITOR_1 = MONITOR_1_COMMAND.split(",")[0];
 const MONITOR_2 = MONITOR_2_COMMAND.split(",")[0];
-const TV = TV_COMMAND.split(",")[0];
+const TV = MONITOR_3_COMMAND.split(",")[0];
 
 export function Displays() {
   return (
@@ -86,7 +86,7 @@ export function Displays() {
       </button>
       <button
         onClick={() => {
-          toggleMonitor(TV, TV_COMMAND);
+          toggleMonitor(TV, MONITOR_3_COMMAND);
         }}
       >
         {monitors((val) => (val[TV] ? "󰎪" : "󰎬"))}

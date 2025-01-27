@@ -9,14 +9,19 @@
       ly.enable = false;
       sddm = {
         enable = true;
-        package = lib.mkForce pkgs.kdePackages.sddm;
+        # package = lib.mkForce pkgs.kdePackages.sddm;
         theme = "where_is_my_sddm_theme";
         extraPackages = with pkgs.kdePackages; [
           qtvirtualkeyboard
           qtsvg
         ];
-        settings.General = {
-          InputMethod = "";
+        settings = {
+          General = {
+            InputMethod = "";
+          };
+          Wayland = {
+            Session = "plasmawayland.desktop";
+          };
         };
         # wayland.enable = true;
         # setupScript = ''
@@ -40,6 +45,10 @@
         }
         {
           output = "HDMI-A-5";
+          monitorConfig = ''Option "Enable" "false"'';
+        }
+        {
+          output = "Unknown-1";
           monitorConfig = ''Option "Enable" "false"'';
         }
       ];

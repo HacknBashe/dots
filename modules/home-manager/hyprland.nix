@@ -9,7 +9,7 @@
     package = inputs.hyprlock.packages.${pkgs.system}.hyprlock;
     settings = {
       general = {
-        grace = 3;
+        grace = 0;
         no_fade_in = false;
         hide_cursor = true;
       };
@@ -102,6 +102,7 @@
 
         $monitor1Command = ${config.monitor1Command}
         $monitor2Command = ${config.monitor2Command}
+        $monitor3Command = ${config.monitor3Command}
 
         $lockCommand = ${config.lockCommand}
       '';

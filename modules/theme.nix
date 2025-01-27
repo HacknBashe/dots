@@ -38,9 +38,9 @@ in {
       default = "";
     };
 
-    tvCommand = lib.mkOption {
+    monitor3Command = lib.mkOption {
       description = ''
-        Hyprland command for tv
+        Hyprland command for monitor 3
       '';
       type = lib.types.str;
       default = "";
@@ -118,7 +118,7 @@ in {
   config = {
     monitor1Command = "DP-3,3840x2160,0x180,2";
     monitor2Command = "DP-4,3440x1440,1920x0,1";
-    tvCommand = "HDMI-A-5,3840x2160,5360x0,2";
+    monitor3Command = "HDMI-A-5,3840x2160,5360x0,2";
     lockCommand = "grim -o DP-3 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-4 -l 0 /tmp/hyprlock_screenshot2.png & grim -o HDMI-A-5 -l 0 /tmp/hyprlock_screenshot3.png & wait && hyprlock";
 
     theme = {

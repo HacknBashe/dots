@@ -1,12 +1,11 @@
 import Wp from "gi://AstalWp";
 
 import { bind, execAsync } from "astal";
-import { Gtk } from "astal/gtk3";
 
 function setDefaultDevice(device: string) {
   execAsync(["wpctl", "status"]).then((out) => {
     const map = out
-      .match(/(\d+)\.\s+(Soundbar|Headset)/g)
+      .match(/(\d+)\.\s+(Soundbar|Headset|TV)/g)
       ?.reduce((acc: { [key: string]: string }, curr) => {
         const [id, name] = curr.split(/\.\s+/);
         acc[name] = id;
@@ -18,22 +17,6 @@ function setDefaultDevice(device: string) {
 
 export function Audio() {
   const speaker = Wp.get_default()?.audio.defaultSpeaker!;
-
-  function getVolume() {
-    return `${
-      speaker.name ===
-      "alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo"
-        ? speaker.mute
-          ? "󰓄"
-          : "󰓃"
-        : speaker.name ===
-            "alsa_output.usb-Macronix_Razer_Barracuda_Pro_2.4_1234-00.analog-stereo"
-          ? speaker.mute
-            ? "󰟎"
-            : "󰋋"
-          : "󰝟"
-    }\n${Math.floor(speaker.volume * 100)}%`;
-  }
 
   return (
     <box className="volume" vertical={true}>
