@@ -102,6 +102,34 @@
         ];
         specialArgs = {inherit inputs;};
       };
+      mushu = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        modules = [
+          ./modules/nix.nix
+          ./modules/theme.nix
+          ./hosts/mushu/configuration.nix
+          ./modules/nixos/shell.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users = {
+              nick = {
+                imports = [
+                  ./hosts/mushu/home.nix
+                  ./modules/theme.nix
+                  ./modules/home-manager/shell.nix
+                  ./modules/home-manager/neovim.nix
+                  ./modules/home-manager/tmux.nix
+                  ./modules/home-manager/btop.nix
+                ];
+              };
+            };
+            home-manager.extraSpecialArgs = {inherit inputs;};
+          }
+        ];
+        specialArgs = {inherit inputs;};
+      };
     };
 
     darwinConfigurations = {
