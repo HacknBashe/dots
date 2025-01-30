@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   linuxPackages =
     if pkgs.stdenv.isLinux
     then
@@ -123,6 +120,11 @@ in {
         rev = "46284178bcad362db40509e1db058fe78844d113";
       };
       target = ".config/zsh/plugins/vim";
+    };
+
+    ".ssh/config" = {
+      source = ../../files/config/ssh/config;
+      target = ".ssh/config";
     };
 
     "fastfetch" = {
