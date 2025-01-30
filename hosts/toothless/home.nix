@@ -24,6 +24,10 @@
   };
 
   home.file = {
+    ".ssh/config" = {
+      source = ../../files/config/ssh/config;
+      target = ".ssh/config";
+    };
     ".gitconfig.local" = {
       text = ''
         [user]

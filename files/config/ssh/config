@@ -1,0 +1,4 @@
+Host 192.168.86.33
+  SetEnv TERM=xterm
+Host 192.168.86.27
+  SetEnv TERM=xterm
