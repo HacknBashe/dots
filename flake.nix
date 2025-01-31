@@ -110,6 +110,7 @@
           ./hosts/sindragosa/configuration.nix
           ./modules/nixos/shell.nix
           ./modules/nixos/jellyfin.nix
+          ./modules/nixos/adguard.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
