@@ -50,4 +50,5 @@ in {
       zoxide
     ]
     ++ linuxPackages;
+  services.ollama.enable = true;
 }
