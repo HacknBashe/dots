@@ -2,6 +2,7 @@
   pkgs,
   config,
   inputs,
+  lib,
   ...
 }: let
   colors = config.theme.colors.base16;
@@ -97,7 +98,7 @@
   '';
 in {
   gtk = {
-    enable = true;
+    # enable = true;
     # font = {
     #   inherit (config.stylix.fonts.sansSerif) package name;
     #   size = config.stylix.fonts.sizes.applications;
