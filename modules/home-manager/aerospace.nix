@@ -1,13 +1,7 @@
 {config, ...}: {
   home.file = {
     "aerospace/aerospace.toml" = {
-      text = ''
-        after-startup-command = [
-          'exec-and-forget borders active_color=0xff${builtins.substring 1 6 config.theme.colors.default.cyan} inactive_color=0xff${builtins.substring 1 6 config.theme.colors.default.white} width=10.0',
-          'exec-and-forget sketchybar'
-        ]
-        ${builtins.readFile ../../files/config/aerospace/aerospace.toml}
-      '';
+      source = ../../files/config/aerospace/aerospace.toml;
       target = ".config/aerospace/aerospace.toml";
     };
 

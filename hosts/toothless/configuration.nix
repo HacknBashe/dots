@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  config,
   ...
 }: let
   user = "nick";
@@ -14,16 +15,9 @@ in {
 
   programs.zsh.enable = true;
 
-  # TODO: Enable these services, replace homebrew versions
-  # services.sketchybar.enable = true;
-  # services.aerospace.enable = true;
-  # services.jankyborders.enable = true;
-
   # homebrew = {
   #   enable = true;
   #   brews = [
-  #     "FelixKratz/formulae/borders"
-  #     "FelixKratz/formulae/sketchybar"
   #     "switchaudio-osx"
   #     "ical-buddy"
   #   ];
@@ -35,7 +29,6 @@ in {
   #     "affinity-publisher"
   #     "brave-browser"
   #     "libreoffice"
-  #     "nikitabobko/tap/aerospace"
   #     "karabiner-elements"
   #     "visual-studio-code"
   #   ];

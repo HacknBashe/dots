@@ -165,14 +165,16 @@
       toothless = inputs.darwin.lib.darwinSystem {
         modules = [
           ./hosts/toothless/configuration.nix
+          ./modules/theme.nix
+          ./modules/darwin/aerospace.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.nick = {
               imports = [
-                ./modules/theme.nix
                 ./hosts/toothless/home.nix
+                ./modules/theme.nix
                 ./modules/home-manager/shell.nix
                 ./modules/home-manager/development.nix
                 ./modules/home-manager/neovim.nix
