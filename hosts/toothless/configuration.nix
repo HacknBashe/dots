@@ -14,6 +14,11 @@ in {
 
   programs.zsh.enable = true;
 
+  # TODO: Enable these services, replace homebrew versions
+  # services.sketchybar.enable = true;
+  # services.aerospace.enable = true;
+  # services.jankyborders.enable = true;
+
   # homebrew = {
   #   enable = true;
   #   brews = [
