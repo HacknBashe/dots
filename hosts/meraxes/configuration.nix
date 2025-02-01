@@ -30,32 +30,11 @@ in {
   boot = {
     kernelParams = ["nvidia.NVreg_PreserveVideoMemoryAllocations=1"];
     kernelModules = ["kvm-intel sg"];
-    supportedFilesystems = ["ntfs"];
     loader = {
       efi = {
         canTouchEfiVariables = true;
-        efiSysMountPoint = "/boot/efi";
       };
-      grub = {
-        enable = true;
-        efiSupport = true;
-        useOSProber = true;
-        copyKernels = true;
-        device = "nodev";
-        default = "saved";
-        extraEntriesBeforeNixOS = true;
-        extraEntries = ''
-          menuentry "UEFI Firmware Settings" {
-            fwsetup
-          }
-          menuentry "Reboot" {
-            reboot
-          }
-          menuentry "Power" {
-            halt
-          }
-        '';
-      };
+      systemd-boot.enable = true;
     };
   };
 
