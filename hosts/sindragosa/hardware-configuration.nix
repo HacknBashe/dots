@@ -35,6 +35,9 @@
       options = [
         "nofail"
         "x-systemd.automount"
+        "uid=1000" # Replace with your user ID
+        "gid=100" # Replace with your group ID
+        "umask=007" # Sets permissions to drwxrwxr-x (if needed)
       ];
     };
   };
