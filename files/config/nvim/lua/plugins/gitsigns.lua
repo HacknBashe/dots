@@ -14,7 +14,7 @@ return { -- Git
 
 		vim.keymap.set(
 			"n",
-			"<leader>gt",
+			"<leader>gl",
 			"<cmd>Gitsigns toggle_current_line_blame<CR>",
 			{ desc = "Git Blame Line", noremap = true, silent = true, nowait = true }
 		)
