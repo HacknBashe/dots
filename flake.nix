@@ -195,6 +195,8 @@
       JGR2T596J9 = inputs.darwin.lib.darwinSystem {
         modules = [
           ./hosts/hubspot/configuration.nix
+          ./modules/theme.nix
+          ./modules/darwin/aerospace.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;

@@ -9,7 +9,7 @@
     #   enable = true;
     #   settings = lib.mkForce {};
     # };
-    sketchybar.enable = true;
+    # sketchybar.enable = true;
     jankyborders = {
       enable = true;
       active_color = "0xff${builtins.substring 1 6 config.theme.colors.default.cyan}";
