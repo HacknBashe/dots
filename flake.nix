@@ -67,6 +67,7 @@
           ./modules/nixos/sddm.nix
           ./modules/nixos/hyprland.nix
           ./modules/nixos/desktop.nix
+          ./modules/nixos/vms.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -78,6 +79,7 @@
                   ./modules/theme.nix
                   ./modules/home-manager/shell.nix
                   ./modules/home-manager/development.nix
+                  ./modules/home-manager/vms.nix
                   ./modules/home-manager/neovim.nix
                   ./modules/home-manager/tmux.nix
                   ./modules/home-manager/zellij.nix
