@@ -2,7 +2,7 @@
 
 current_device=$(SwitchAudioSource -c)
 
-device_1="Jabra Link 390"
+device_1="Razer Barracuda Pro 2.4"
 device_2="MacBook Pro Speakers"
 
 if [ "$current_device" == "$device_1" ]; then
