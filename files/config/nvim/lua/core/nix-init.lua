@@ -3,6 +3,7 @@ require("core.remap")
 
 require("plugins.better-vim-tmux-resizer")
 -- require("plugins.codeium").config()
+require("plugins.avante").config()
 require("plugins.copilot").copilot.config()
 require("plugins.copilot").copilotcmp.config()
 require("plugins.copilot").copilotchat.config()

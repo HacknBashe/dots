@@ -82,6 +82,7 @@ in {
         luasnip
         cmp_luasnip
         #codeium-nvim
+        avante-nvim
         copilot-lua
         my-CopilotChat-nvim
         copilot-cmp

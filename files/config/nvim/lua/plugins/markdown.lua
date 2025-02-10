@@ -28,8 +28,9 @@ return {
 		"MeanderingProgrammer/render-markdown.nvim",
 		config = function()
 			require("render-markdown").setup({
+				file_types = { "markdown", "Avante" },
 				checkbox = {
-                    position = 'overlay',
+					position = "overlay",
 					custom = {
 						todo = { raw = "[-]", rendered = "󰥔 ", highlight = "RenderMarkdownTodo" },
 						blocked = { raw = "[!]", rendered = "󰥕 ", highlight = "RenderMarkdownError" },
@@ -37,7 +38,7 @@ return {
 				},
 				win_options = {
 					conceallevel = {
-                        default = 0,
+						default = 0,
 						rendered = 0,
 					},
 				},
