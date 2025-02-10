@@ -7,6 +7,8 @@ ITEM_DIR="$CONFIG_DIR/items"
 
 if [ "$(aerospace list-monitors | wc -l)" -eq 1 ]; then
   sketchybar --bar position=left height=50 color=$BAR_COLOR topmost=window
+elif [ "$(aerospace list-monitors | wc -l)" -eq 2 ]; then
+  sketchybar --bar position=left height=50 color=$BAR_COLOR display=1 topmost=window
 else
   sketchybar --bar position=left height=50 color=$BAR_COLOR display=1,3 topmost=window
 fi
@@ -41,4 +43,3 @@ source $ITEM_DIR/calendar.sh
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
-
