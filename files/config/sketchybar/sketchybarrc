@@ -10,7 +10,7 @@ if [ "$(aerospace list-monitors | wc -l)" -eq 1 ]; then
 elif [ "$(aerospace list-monitors | wc -l)" -eq 2 ]; then
   sketchybar --bar position=left height=50 color=$BAR_COLOR display=1 topmost=window
 else
-  sketchybar --bar position=left height=50 color=$BAR_COLOR display=1,3 topmost=window
+  sketchybar --bar position=left height=50 color=$BAR_COLOR display=1,2 topmost=window
 fi
 
 default=(

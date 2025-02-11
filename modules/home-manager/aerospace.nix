@@ -1,7 +1,7 @@
 {config, ...}: {
   home.file = {
     "aerospace/aerospace.toml" = {
-      source = ../../files/config/aerospace/aerospace.toml;
+      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/aerospace/aerospace.toml";
       target = ".config/aerospace/aerospace.toml";
     };
 

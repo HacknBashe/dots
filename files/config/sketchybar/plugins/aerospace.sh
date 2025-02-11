@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
+if [ "$NAME" = "$FOCUSED_WORKSPACE" ]; then
   sketchybar --set "$NAME" \
     background.border_width=1 \
     background.border_color=0xffffffff

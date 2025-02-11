@@ -18,5 +18,5 @@ for SPACE in "${SPACES[@]}"; do
     --set "$WORKSPACE_NAME" \
     icon="$ICON" \
     click_script="aerospace workspace $WORKSPACE_NAME" \
-    script="$PLUGIN_DIR/aerospace.sh $WORKSPACE_NAME"
+    script="$PLUGIN_DIR/aerospace.sh"
 done
