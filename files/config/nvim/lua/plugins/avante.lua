@@ -17,7 +17,7 @@ return {
 				max_tokens = 4096,
 			},
 		})
-		vim.keymap.set("n", "<leader>va", ":AvanteToggle <CR>", { desc = "View Avante" })
+		vim.keymap.set("n", "<leader>av", ":AvanteToggle <CR>", { desc = "View Avante" })
 	end,
 	-- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
 	build = "make",

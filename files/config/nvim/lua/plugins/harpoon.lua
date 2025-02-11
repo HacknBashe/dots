@@ -9,13 +9,13 @@ return {
 			return { desc = "Harpoon: " .. desc, noremap = true, silent = true, nowait = true }
 		end
 
-		vim.keymap.set("n", "<leader>h", function()
+		vim.keymap.set("n", "<leader>H", function()
 			harpoon.ui:toggle_quick_menu(harpoon:list())
-		end, opts("Quick Menu"))
+		end, opts("View Harpoon List"))
 
-		vim.keymap.set("n", "<leader>a", function()
+		vim.keymap.set("n", "<leader>h", function()
 			harpoon:list():add()
-		end, opts("Append"))
+		end, opts("Harpoon File"))
 
 		vim.keymap.set("n", "<leader>1", function()
 			harpoon:list():select(1)
