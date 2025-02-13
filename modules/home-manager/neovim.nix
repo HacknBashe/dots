@@ -33,27 +33,6 @@
     };
   };
 
-  # Updated
-  my-CopilotChat-nvim = pkgs.vimUtils.buildVimPlugin {
-    name = "CopilotChat.nvim";
-    src = pkgs.fetchFromGitHub {
-      owner = "CopilotC-Nvim";
-      repo = "CopilotChat.nvim";
-      rev = "2ebe591cff06018e265263e71e1dbc4c5aa8281e";
-      hash = "sha256-IPP5jXIX+05Tb0MEXUu6EjcL/RHgV1qkoXPEdaEfhNM=";
-    };
-  };
-  my-snacks-nvim = pkgs.vimUtils.buildVimPlugin {
-    pname = "snacks.nvim";
-    version = "2024-12-17";
-    src = pkgs.fetchFromGitHub {
-      owner = "folke";
-      repo = "snacks.nvim";
-      rev = "972c61cc1cd254ef3b43ec1dfd51eefbdc441a7d";
-      hash = "sha256-OBig3B2S87Ip9pwp38X3gMH2SHACbNMpMQ3JeAGxqQY=";
-    };
-  };
-
   hubspotPlugins =
     if config.isHubspot
     then [
@@ -84,7 +63,7 @@ in {
         #codeium-nvim
         avante-nvim
         copilot-lua
-        my-CopilotChat-nvim
+        CopilotChat-nvim
         copilot-cmp
         # nvim-dap
         # nvim-dap-ui
@@ -92,7 +71,7 @@ in {
         # UI Enhancements
         gitsigns-nvim
         lualine-nvim
-        my-snacks-nvim
+        snacks-nvim
         trouble-nvim
         which-key-nvim
 

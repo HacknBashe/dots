@@ -99,8 +99,8 @@ in {
     };
   };
 
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
+  services.pulseaudio.enable = false;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -139,7 +139,7 @@ in {
                 {
                    matches = [
                      {
-                       node.name = "alsa_output.pci-0000_01_00.1.hdmi-stereo"
+                       node.name = "alsa_output.pci-0000_01_00.1.hdmi-stereo-extra1"
                      }
                    ]
                    actions = {
