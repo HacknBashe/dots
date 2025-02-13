@@ -1,15 +1,8 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: {
+{pkgs, ...}: {
   services = {
     displayManager = {
-      ly.enable = false;
       sddm = {
         enable = true;
-        # package = lib.mkForce pkgs.kdePackages.sddm;
         theme = "where_is_my_sddm_theme";
         extraPackages = with pkgs.kdePackages; [
           qtvirtualkeyboard
@@ -19,16 +12,8 @@
           General = {
             InputMethod = "";
           };
-          Wayland = {
-            Session = "plasmawayland.desktop";
-          };
         };
         # wayland.enable = true;
-        # setupScript = ''
-        #   wlr-randr >> /tmp/nick.txt
-        #   wlr-randr --output DP-3 --off
-        #   wlr-randr --output HDMI-A-5 --off
-        # '';
       };
     };
     xserver = {
@@ -41,24 +26,23 @@
         }
         {
           output = "DP-0";
-          monitorConfig = ''Option "Enable" "false"'';
+          monitorConfig = ''Option "LeftOf" "DP-4"'';
         }
         {
-          output = "HDMI-A-5";
-          monitorConfig = ''Option "Enable" "false"'';
-        }
-        {
-          output = "Unknown-1";
-          monitorConfig = ''Option "Enable" "false"'';
+          output = "HDMI-0";
+          monitorConfig = ''Option "RightOf" "DP-4"'';
         }
       ];
     };
   };
 
   environment.systemPackages = with pkgs; [
-    (pkgs.where-is-my-sddm-theme.override {
+    (where-is-my-sddm-theme.override {
       themeConfig.General = {
-        background = "${config.theme.wallXWide}";
+        background = "${pkgs.fetchurl {
+          url = "https://raw.githubusercontent.com/NickHackford/walls/master/nebula-blue.png";
+          sha256 = "ax1ooEDFT6Srk9EqzZ6Sa9DE1cVh59/MDMc1IngVCI0=";
+        }}";
         passwordCharacter = "•";
         passwordFontSize = 96;
         passwordCursorColor = "#ffffff";
