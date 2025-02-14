@@ -6,15 +6,19 @@ return {
 	config = function()
 		require("avante_lib").load()
 		require("avante").setup({
-			-- add any opts here
-			-- for example
 			provider = "copilot",
 			openai = {
 				endpoint = "https://api.openai.com/v1",
-				model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
-				timeout = 30000, -- timeout in milliseconds
-				temperature = 0, -- adjust if needed
+				model = "gpt-4o",
+				timeout = 30000,
+				temperature = 0,
 				max_tokens = 4096,
+			},
+			windows = {
+				width = 40,
+				sidebar_header = {
+					enabled = false,
+				},
 			},
 		})
 		vim.keymap.set("n", "<leader>av", ":AvanteToggle <CR>", { desc = "View Avante" })

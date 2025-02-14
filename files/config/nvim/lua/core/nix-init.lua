@@ -6,7 +6,7 @@ require("plugins.better-vim-tmux-resizer")
 require("plugins.avante").config()
 require("plugins.copilot").copilot.config()
 require("plugins.copilot").copilotcmp.config()
-require("plugins.copilot").copilotchat.config()
+-- require("plugins.copilot").copilotchat.config()
 require("plugins.commentary").config()
 --require('plugins.dap').config();
 require("plugins.formatter").config()
