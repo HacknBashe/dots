@@ -11,8 +11,8 @@
     sketchybar.enable = true;
     jankyborders = {
       enable = true;
-      active_color = "0xff${builtins.substring 1 6 config.theme.colors.default.cyan}";
-      inactive_color = "0xff${builtins.substring 1 6 config.theme.colors.default.white}";
+      active_color = "0xff${builtins.substring 1 6 config.theme.colors.base16.base07}";
+      inactive_color = "0xff${builtins.substring 1 6 config.theme.colors.base16.base02}";
       width = 10.0;
     };
   };
