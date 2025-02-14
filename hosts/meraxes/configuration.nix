@@ -20,11 +20,6 @@ in {
     desktopManager.plasma6 = {
       enable = true;
     };
-    xserver = {
-      windowManager.awesome = {
-        enable = true;
-      };
-    };
   };
 
   boot = {
