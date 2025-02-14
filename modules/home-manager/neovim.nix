@@ -12,6 +12,7 @@
       rev = "1d715902478cc8f70483ee2f87a1a58a49ebc10f";
       hash = "sha256-JXTMKAbMHXsPR441r3ylvn5or/0YriWzowl5OVy239s=";
     };
+    doCheck = false;
   };
   plugin-utils-nvim = pkgs.vimUtils.buildVimPlugin {
     name = "plugin-utils-nvim";
@@ -21,6 +22,7 @@
       rev = "c4a755f9df40f3e91205a87830d7eba1ac7f8c73";
       hash = "sha256-oiGWlyt9+zN7ReQtdtVqFHVeaoypg6vFNOwSr9d3I2Y=";
     };
+    doCheck = false;
   };
   # Not packaged
   better-vim-tmux-resizer = pkgs.vimUtils.buildVimPlugin {
@@ -63,7 +65,7 @@ in {
         #codeium-nvim
         avante-nvim
         copilot-lua
-        CopilotChat-nvim
+        # CopilotChat-nvim
         copilot-cmp
         # nvim-dap
         # nvim-dap-ui
