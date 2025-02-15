@@ -134,12 +134,24 @@ in {
                 {
                    matches = [
                      {
-                       node.name = "alsa_output.pci-0000_01_00.1.hdmi-stereo-extra1"
+                       node.name = "alsa_output.pci-0000_01_00.1.hdmi-stereo"
                      }
                    ]
                    actions = {
                      update-props = {
                        node.description = "TV"
+                     }
+                   }
+                }
+                {
+                   matches = [
+                     {
+                       node.name = "alsa_output.pci-0000_01_00.1.hdmi-stereo-extra1"
+                     }
+                   ]
+                   actions = {
+                     update-props = {
+                       node.disabled = true
                      }
                    }
                 }
