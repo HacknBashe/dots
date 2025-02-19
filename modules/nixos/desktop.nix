@@ -32,6 +32,7 @@
     gimp
     gparted
     helvum
+    lutris
     makemkv
     obs-studio
     obsidian
