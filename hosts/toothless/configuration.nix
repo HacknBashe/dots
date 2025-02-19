@@ -1,12 +1,6 @@
-{
-  pkgs,
-  inputs,
-  config,
-  ...
-}: let
+{...}: let
   user = "nick";
 in {
-  services.nix-daemon.enable = true;
   nixpkgs = {
     hostPlatform = "aarch64-darwin";
     config.allowUnfree = true;
