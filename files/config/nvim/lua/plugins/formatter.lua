@@ -26,6 +26,25 @@ return {
 					require("formatter.filetypes.yaml").prettierd,
 				},
 
+				c = {
+					function()
+						return {
+							exe = "clang-format",
+							args = { "--assume-filename", vim.api.nvim_buf_get_name(0) },
+							stdin = true,
+						}
+					end,
+				},
+				cpp = {
+					function()
+						return {
+							exe = "clang-format",
+							args = { "--assume-filename", vim.api.nvim_buf_get_name(0) },
+							stdin = true,
+						}
+					end,
+				},
+
 				go = {
 					require("formatter.filetypes.go").gofmt,
 				},

@@ -6,8 +6,6 @@
         distrobox
         vscode.fhs
         android-tools
-
-        gcc
       ]
     else [];
 
@@ -37,6 +35,9 @@ in {
       shfmt
 
       gnumake
+
+      clang
+      clang-tools
 
       go
       gopls

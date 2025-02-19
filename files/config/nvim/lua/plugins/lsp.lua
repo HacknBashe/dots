@@ -39,6 +39,7 @@ lspconfig.ts_ls.setup(isHubspot and {
 lspconfig.pyright.setup({})
 lspconfig.nixd.setup({})
 lspconfig.templ.setup({})
+lspconfig.clangd.setup({})
 
 vim.diagnostic.config({
 	signs = false,
