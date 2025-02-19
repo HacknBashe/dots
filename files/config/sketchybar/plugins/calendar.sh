@@ -2,7 +2,7 @@
 
 delimiter="date:"
 
-output=$(icalBuddy -n -nrd -nc -eed -df "date: %m-%d" -ic "Family,nhackford@hubspot.com,Hubspot US Holidays" eventsToday+10 | awk '
+output=$(/opt/homebrew/bin/icalBuddy -n -nrd -nc -eed -df "date: %m-%d" -ic "Family,nhackford@hubspot.com,Hubspot US Holidays" eventsToday+10 | awk '
     /^• / {eventName = $0}
     /\date:/ && eventName {print eventName, $0; eventName = ""}
     ' | head -n 1)
