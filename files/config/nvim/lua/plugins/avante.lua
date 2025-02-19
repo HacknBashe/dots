@@ -7,13 +7,6 @@ return {
 		require("avante_lib").load()
 		require("avante").setup({
 			provider = "copilot",
-			openai = {
-				endpoint = "https://api.openai.com/v1",
-				model = "gpt-4o",
-				timeout = 30000,
-				temperature = 0,
-				max_tokens = 4096,
-			},
 			windows = {
 				width = 40,
 				sidebar_header = {
