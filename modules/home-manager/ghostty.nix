@@ -17,11 +17,13 @@ in {
 
   home.file = {
     ".config/ghostty/config" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/ghostty/config";
+      target = ".config/ghostty/config";
+    };
+    ".config/ghostty/theme" = {
       text = ''
         background = ${colors.background}
         foreground= ${colors.foreground}
-
-        # keybind = ctrl+u=write_scrollback_file:open
 
         font-size = 24
         font-family = ${config.theme.fontMono}
@@ -62,7 +64,7 @@ in {
         palette = 7=${colors.default.white}
         palette = 15=${colors.default.white}
       '';
-      target = ".config/ghostty/config";
+      target = ".config/ghostty/theme";
     };
   };
 }
