@@ -23,10 +23,6 @@
       inputs.nixpkgs-unstable.follows = "nixpkgs";
     };
 
-    wezterm = {
-      url = "github:wez/wezterm?dir=nix";
-    };
-
     hyprland = {
       url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -88,7 +84,6 @@
                   ./modules/home-manager/ags.nix
                   ./modules/home-manager/ghostty.nix
                   ./modules/home-manager/alacritty.nix
-                  ./modules/home-manager/wezterm.nix
                   ./modules/home-manager/gtk.nix
                   ./modules/home-manager/qt.nix
                 ];
@@ -236,7 +231,6 @@
           ./modules/home-manager/tmux.nix
           ./modules/home-manager/btop.nix
           ./modules/home-manager/alacritty.nix
-          ./modules/home-manager/wezterm.nix
         ];
         extraSpecialArgs = {inherit inputs;};
       };
