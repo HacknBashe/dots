@@ -6,7 +6,7 @@ local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 local isHubspot, asset_bender = pcall(require, "asset-bender")
 
 if isHubspot then
-	require("asset-bender").setup({})
+	asset_bender.setup({})
 end
 
 require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets/" } })
