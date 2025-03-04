@@ -16,26 +16,4 @@ return {
 			require("copilot_cmp").setup()
 		end,
 	},
-	copilotchat = {
-		"CopilotC-Nvim/CopilotChat.nvim",
-		branch = "canary",
-		dependencies = {
-			{ "zbirenbaum/copilot.lua" },
-			{ "nvim-lua/plenary.nvim" },
-		},
-		config = function()
-			require("CopilotChat").setup({
-				mappings = {
-					close = {
-						normal = "q",
-					},
-					reset = {
-						normal = "<C-c>",
-						insert = "<C-c>",
-					},
-				},
-			})
-			vim.keymap.set("n", "<leader>c", ":CopilotChat <CR>", { desc = "View CopilotChat" })
-		end,
-	},
 }

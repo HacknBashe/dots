@@ -34,6 +34,16 @@
       hash = "sha256-1uHcQQUnViktDBZt+aytlBF1ZG+/Ifv5VVoKSyM9ML0=";
     };
   };
+  code-companion = pkgs.vimUtils.buildVimPlugin {
+    name = "code-companion";
+    src = pkgs.fetchFromGitHub {
+      owner = "olimorris";
+      repo = "codecompanion.nvim";
+      rev = "f1a5f7b6adee6762b8c174f5aabe3e139ad583d0";
+      hash = "sha256-ABD4yL/gFbYXe565i0j+H88FCeI4cArl0lIEKlRAGjc=";
+    };
+    doCheck = false;
+  };
 
   hubspotPlugins =
     if config.isHubspot
@@ -63,9 +73,8 @@ in {
         luasnip
         cmp_luasnip
         #codeium-nvim
-        avante-nvim
+        code-companion
         copilot-lua
-        # CopilotChat-nvim
         copilot-cmp
         # nvim-dap
         # nvim-dap-ui
