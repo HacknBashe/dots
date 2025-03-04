@@ -71,6 +71,7 @@ in {
         # nvim-dap-ui
 
         # UI Enhancements
+        vim-fugitive
         gitsigns-nvim
         lualine-nvim
         snacks-nvim

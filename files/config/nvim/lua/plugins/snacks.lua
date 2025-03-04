@@ -72,7 +72,7 @@ return {
 			Snacks.notifier.hide()
 		end, { desc = "Dismiss Notifications", noremap = true, silent = true, nowait = true })
 
-		vim.keymap.set("n", "<leader>gg", function()
+		vim.keymap.set("n", "<leader>gG", function()
 			Snacks.lazygit()
 		end, { desc = "LazyGit", noremap = true, silent = true, nowait = true })
 

@@ -10,6 +10,7 @@ require("plugins.copilot").copilotcmp.config()
 require("plugins.commentary").config()
 --require('plugins.dap').config();
 require("plugins.formatter").config()
+require("plugins.fugitive").config()
 require("plugins.gitsigns").config()
 require("plugins.harpoon").config()
 require("plugins.hexokinase").config()
