@@ -41,15 +41,9 @@ return {
 			input = { enabled = true },
 			notifier = { enabled = true },
 			quickfile = { enabled = true },
-			-- scroll = {
-			-- 	enabled = true,
-			-- 	animate = {
-			-- 		duration = { step = 10, total = 100 },
-			-- 		easing = "inOutQuad",
-			-- 	},
-			-- },
 			statuscolumn = { enabled = true },
-			words = { enabled = true },
+			-- Gives too many errors in vscode
+			-- words = { enabled = false },
 		})
 
 		vim.keymap.set("n", "<leader>z", function()
