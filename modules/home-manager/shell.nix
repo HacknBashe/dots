@@ -91,11 +91,6 @@ in {
         target = ".local/bin";
         recursive = true;
       };
-      "cht" = {
-        source = ../../files/local/share/cht;
-        target = ".local/share/cht";
-        recursive = true;
-      };
 
       "nvm.plugin.zsh" = {
         source = ../../files/config/zsh/nvm.plugin.zsh;
