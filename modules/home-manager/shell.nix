@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }: let
   linuxPackages =
@@ -20,6 +21,7 @@
     }
     else {
       nr = "darwin-rebuild switch --flake ~/.config/dots";
+      finder = "open .";
     };
   hubspotFiles =
     if config.isHubspot
@@ -50,6 +52,9 @@ in {
       ll = "exa -l";
       la = "exa -la";
       cat = "bat";
+
+      as = "gh copilot suggest";
+      ae = "gh copilot explain";
     }
     // zshAliases;
 
@@ -67,9 +72,12 @@ in {
       delta
       eza
       fastfetch
+      ffmpeg
       fzf
       jq
       libsecret
+      openai-whisper
+      openai-whisper-cpp
       pipes
       p7zip
       pulsemixer
@@ -149,4 +157,28 @@ in {
       };
     }
     // hubspotFiles;
+
+  home.activation = {
+    download-whisper-model = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      MODEL_PATH="${config.home.homeDirectory}/models"
+      MODEL_FILE="$MODEL_PATH/ggml-large-v3-turbo"
+
+      if [ ! -f "$MODEL_FILE" ]; then
+        echo "Whisper model not found, downloading..."
+        mkdir -p "$MODEL_PATH"
+
+        cd /tmp
+        # Download the script first, then execute it with the proper path to curl
+        ${pkgs.curl}/bin/curl -s https://raw.githubusercontent.com/ggerganov/whisper.cpp/master/models/download-ggml-model.sh > ./download-model.sh
+        PATH="${pkgs.curl}/bin:$PATH" ${pkgs.bash}/bin/bash ./download-model.sh large-v3-turbo
+
+        # Move the downloaded model to the correct location if it's not already there
+        echo $(pwd)
+        if [ -f "./ggml-large-v3-turbo.bin" ] && [ ! -f "$MODEL_FILE" ]; then
+          echo "Moving model to $MODEL_FILE"
+          mv "./ggml-large-v3-turbo.bin" "$MODEL_FILE"
+        fi
+      fi
+    '';
+  };
 }
