@@ -7,11 +7,11 @@ Swipe:start(3, function(direction, distance, id)
 
 			if direction == "left" then
 				hs.execute(
-					"/opt/homebrew/bin/aerospace list-workspaces --monitor focused --empty no | /opt/homebrew/bin/aerospace workspace next"
+					"/run/current-system/sw/bin/aerospace list-workspaces --monitor focused --empty no | /run/current-system/sw/bin/aerospace workspace next"
 				)
 			elseif direction == "right" then
 				hs.execute(
-					"/opt/homebrew/bin/aerospace list-workspaces --monitor focused --empty no | /opt/homebrew/bin/aerospace workspace prev"
+					"/run/current-system/sw/bin/aerospace list-workspaces --monitor focused --empty no | /run/current-system/sw/bin/aerospace workspace prev"
 				)
 			end
 		end
