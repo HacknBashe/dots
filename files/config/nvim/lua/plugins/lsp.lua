@@ -42,8 +42,8 @@ lspconfig.templ.setup({})
 lspconfig.clangd.setup({})
 
 vim.diagnostic.config({
-	signs = false,
-	virtual_text = true,
+	signs = true,
+	virtual_text = false,
 })
 vim.keymap.set("n", "<leader>dv", function()
 	vim.diagnostic.open_float()

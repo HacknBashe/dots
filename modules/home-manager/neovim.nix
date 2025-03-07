@@ -63,7 +63,6 @@ in {
         tokyonight-nvim
         nightfox-nvim
         kanagawa-nvim
-        nvim-web-devicons
 
         # LSP and Autocompletion
         nvim-cmp
@@ -81,15 +80,12 @@ in {
 
         # UI Enhancements
         vim-fugitive
-        gitsigns-nvim
         lualine-nvim
-        snacks-nvim
+        mini-nvim
         trouble-nvim
-        which-key-nvim
 
         # Navigation
         harpoon2
-        nvim-tree-lua
         telescope-fzf-native-nvim
         telescope-nvim
         yazi-nvim
@@ -105,7 +101,6 @@ in {
         nvim-treesitter-context
         playground
         vim-closetag
-        vim-commentary
         nvim-ts-context-commentstring
 
         # Utilities
@@ -113,7 +108,7 @@ in {
         vim-hexokinase
         oil-nvim
         sniprun
-        vim-sandwich
+        # vim-sandwich
         vim-table-mode
         vim-tmux-navigator
         better-vim-tmux-resizer
