@@ -142,6 +142,12 @@ in {
         target = ".config/zsh/plugins/vim";
       };
 
+      "yazi" = {
+        source = ../../files/config/yazi;
+        target = ".config/yazi";
+        recursive = true;
+      };
+
       "fastfetch" = {
         source = ../../files/config/fastfetch/config.jsonc;
         target = ".config/fastfetch/config.jsonc";
