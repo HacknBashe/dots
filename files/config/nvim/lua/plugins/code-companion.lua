@@ -10,14 +10,10 @@ return {
 				action_palette = {
 					provider = "mini_pick",
 				},
-				chat = {
-					show_settings = true,
-				},
 			},
 			adapters = {
 				opts = {
 					show_defaults = false,
-					log_level = "DEBUG",
 				},
 				-- ml_nlp = require("plugins.cc-ml-nlp"),
 				claude = function()

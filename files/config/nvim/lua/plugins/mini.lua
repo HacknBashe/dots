@@ -44,7 +44,9 @@ return {
 		vim.keymap.set("n", "<leader>ft", function()
 			files.open(vim.api.nvim_buf_get_name(0))
 		end, { desc = "File Tree", noremap = true })
+
 		require("mini.pick").setup()
+		require("mini.git").setup()
 		require("mini.diff").setup({
 			view = { style = "sign", signs = { add = "│", change = "┆", delete = "_" } },
 		})
@@ -64,11 +66,69 @@ return {
 			},
 		})
 
+		-- TODO: Replace lualine
 		local statusline = require("mini.statusline")
-		statusline.setup()
+		statusline.setup({
+			content = {
+				active = function()
+					local mode, mode_hl = statusline.section_mode({ trunc_width = 120 })
+					local git = statusline.section_git({ trunc_width = 40 })
+
+					local diff = statusline.section_diff({ trunc_width = 75 })
+					local added, changed, removed = "", "", ""
+					if diff ~= "" then
+						added = diff:match("(%+%d+)") or ""
+						changed = diff:match("(~%d+)") or ""
+						removed = diff:match("(-%d+)") or ""
+					end
+
+					local diagnostics = statusline.section_diagnostics({ trunc_width = 75 })
+					local errors, warnings, infos, hints = "", "", "", ""
+					if diagnostics ~= "" then
+						errors = diagnostics:match("(E%d+)") or ""
+						warnings = diagnostics:match("(W%d+)") or ""
+						infos = diagnostics:match("(I%d+)") or ""
+						hints = diagnostics:match("(H%d+)") or ""
+					end
+
+					local lsp = statusline.section_lsp({ trunc_width = 75 })
+					local filename = statusline.section_filename({ trunc_width = 140 })
+					local fileinfo = statusline.section_fileinfo({ trunc_width = 120 })
+					local search = statusline.section_searchcount({ trunc_width = 75 })
+
+					local mode_map = {
+						["N"] = "󰒘",
+						["I"] = "󰓥",
+						["V"] = "󱡁",
+						["C"] = "󱡄",
+					}
+
+					return statusline.combine_groups({
+						{ hl = mode_hl, strings = { mode_map[mode:sub(1,1)] } },
+						{ hl = "statuslineDevinfo", strings = { git } },
+
+						{ hl = "MiniDiffSignAdd", strings = { added } },
+						{ hl = "Changed", strings = { changed } },
+						{ hl = "MiniDiffSignDelete", strings = { removed } },
+
+						{ hl = "DiagnosticError", strings = { errors } },
+						{ hl = "DiagnosticWarn", strings = { warnings } },
+						{ hl = "DiagnosticInfo", strings = { infos } },
+						{ hl = "DiagnosticHint", strings = { hints } },
+
+						{ hl = "statuslineDevinfo", strings = { lsp } },
+
+						"%<", -- Mark general truncate point
+						{ hl = "statuslineFilename", strings = { filename } },
+						"%=", -- End left alignment
+						{ hl = "statuslineFileinfo", strings = { fileinfo } },
+						{ hl = mode_hl, strings = { search, "%l:%2v" } },
+					})
+				end,
+			},
+		})
 
 		local clue = require("mini.clue")
-		vim.o.timeout = true
 		vim.o.timeoutlen = 300
 		clue.setup({
 			window = {
