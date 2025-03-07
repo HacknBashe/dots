@@ -28,6 +28,7 @@ in {
       git
       entr
       lazygit
+      gh
       docker-compose
 
       alejandra
