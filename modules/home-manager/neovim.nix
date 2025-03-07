@@ -80,7 +80,6 @@ in {
 
         # UI Enhancements
         vim-fugitive
-        lualine-nvim
         mini-nvim
         trouble-nvim
 

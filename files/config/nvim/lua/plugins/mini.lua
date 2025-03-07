@@ -66,7 +66,6 @@ return {
 			},
 		})
 
-		-- TODO: Replace lualine
 		local statusline = require("mini.statusline")
 		statusline.setup({
 			content = {
