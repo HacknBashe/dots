@@ -41,8 +41,25 @@ return {
 
 		local files = require("mini.files")
 		files.setup()
+		vim.api.nvim_create_autocmd("User", {
+			pattern = "MiniFilesBufferCreate",
+			callback = function(args)
+				local buf_id = args.data.buf_id
+				vim.keymap.set("n", "<CR>", function()
+					files.go_in({ close_on_file = true })
+				end, { buffer = buf_id })
+			end,
+		})
 		vim.keymap.set("n", "<leader>ft", function()
-			files.open(vim.api.nvim_buf_get_name(0))
+			if not files.close() then
+				local current_buf_name = vim.api.nvim_buf_get_name(0)
+				if current_buf_name and current_buf_name ~= "" and vim.fn.filereadable(current_buf_name) == 1 then
+					files.open(current_buf_name)
+					files.reveal_cwd()
+				else
+					files.open(vim.fn.getcwd(), false)
+				end
+			end
 		end, { desc = "File Tree", noremap = true })
 
 		require("mini.pick").setup()
@@ -89,9 +106,11 @@ return {
 						infos = diagnostics:match("(I%d+)") or ""
 						hints = diagnostics:match("(H%d+)") or ""
 					end
+					local ai = require("plugins.mini-ai-status")()
+
+					local filename = statusline.section_filename({ trunc_width = 140 })
 
 					local lsp = statusline.section_lsp({ trunc_width = 75 })
-					local filename = statusline.section_filename({ trunc_width = 140 })
 					local fileinfo = statusline.section_fileinfo({ trunc_width = 120 })
 					local search = statusline.section_searchcount({ trunc_width = 75 })
 
@@ -103,7 +122,7 @@ return {
 					}
 
 					return statusline.combine_groups({
-						{ hl = mode_hl, strings = { mode_map[mode:sub(1,1)] } },
+						{ hl = mode_hl, strings = { mode_map[mode:sub(1, 1)] } },
 						{ hl = "statuslineDevinfo", strings = { git } },
 
 						{ hl = "MiniDiffSignAdd", strings = { added } },
@@ -115,11 +134,11 @@ return {
 						{ hl = "DiagnosticInfo", strings = { infos } },
 						{ hl = "DiagnosticHint", strings = { hints } },
 
-						{ hl = "statuslineDevinfo", strings = { lsp } },
-
 						"%<", -- Mark general truncate point
 						{ hl = "statuslineFilename", strings = { filename } },
 						"%=", -- End left alignment
+						{ hl = "statuslineDevinfo", strings = { ai } },
+						{ hl = "statuslineDevinfo", strings = { lsp } },
 						{ hl = "statuslineFileinfo", strings = { fileinfo } },
 						{ hl = mode_hl, strings = { search, "%l:%2v" } },
 					})
