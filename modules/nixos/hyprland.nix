@@ -31,6 +31,27 @@
     extraPortals = [pkgs.xdg-desktop-portal-gtk];
   };
 
+  security.pam.services = {
+    login = {
+      enableKwallet = true;
+    };
+    kwallet = {
+      enableKwallet = true;
+    };
+    ssdm = {
+      enableKwallet = true;
+      text = ''
+        auth include login
+      '';
+    };
+    hyprlock = {
+      enableKwallet = true;
+      text = ''
+        auth include login
+      '';
+    };
+  };
+
   systemd.user = {
     targets.hyprland = {
       unitConfig = {
@@ -41,16 +62,15 @@
       };
     };
 
-    services.gnome-policykit-agent = {
-      enable = true;
-      description = "GNOME PolicyKit Agent";
+    services.polkit-kde-authentication-agent-1 = {
+      description = "KDE PolicyKit Authentication Agent";
       wantedBy = ["graphical-session.target"];
+      partOf = ["graphical-session.target"];
       serviceConfig = {
         Type = "simple";
-
-        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        ExecStart = "${pkgs.libsForQt5.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1";
         Restart = "on-failure";
-        RestartSec = 1;
+        RestartSec = 5;
         TimeoutStopSec = 10;
       };
     };
@@ -62,7 +82,9 @@
     hyprlock
     wayland-logout
 
-    polkit_gnome
+    libsForQt5.kwallet
+    libsForQt5.kwallet-pam
+    libsForQt5.polkit-kde-agent
 
     grim
     slurp
