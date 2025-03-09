@@ -7,8 +7,8 @@
 
   home.file = {
     "tmux" = {
-      source = ../../files/config/tmux/tmux.conf;
       target = ".config/tmux/tmux.conf";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/tmux/tmux.conf";
     };
     "tmux.theme" = {
       target = ".config/tmux/theme.tmux";

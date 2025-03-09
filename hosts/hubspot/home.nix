@@ -4,7 +4,6 @@
   lib,
   ...
 }: {
-  homeDirPath = "/Users/nhackford/";
   isHubspot = true;
 
   home = {
@@ -31,7 +30,7 @@
 
   home.file = {
     ".hammerspoon" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/hammerspoon";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/hammerspoon";
       target = ".hammerspoon";
       recursive = true;
     };

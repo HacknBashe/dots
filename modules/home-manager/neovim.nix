@@ -118,7 +118,7 @@ in {
 
   home.file = {
     "nvim" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/nvim";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/nvim";
       target = ".config/nvim";
       recursive = true;
     };

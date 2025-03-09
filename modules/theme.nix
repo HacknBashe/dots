@@ -6,14 +6,6 @@
 }: let
 in {
   options = {
-    homeDirPath = lib.mkOption {
-      description = ''
-        Path to the home directory.
-      '';
-      type = lib.types.str;
-      default = "/Users/nick/";
-    };
-
     isHubspot = lib.mkOption {
       description = ''
         Enable Hubspot specific configuration

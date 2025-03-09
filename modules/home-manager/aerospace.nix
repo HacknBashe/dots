@@ -1,12 +1,12 @@
 {config, ...}: {
   home.file = {
     "aerospace/aerospace.toml" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/aerospace/aerospace.toml";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/aerospace/aerospace.toml";
       target = ".config/aerospace/aerospace.toml";
     };
 
     "sketchybarrc" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/sketchybar/sketchybarrc";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/sketchybar/sketchybarrc";
       target = ".config/sketchybar/sketchybarrc";
     };
     "sketchybar/colors.sh" = {
@@ -21,12 +21,12 @@
       target = ".config/sketchybar/colors.sh";
     };
     "sketchybar/items" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/sketchybar/items";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/sketchybar/items";
       target = ".config/sketchybar/items";
       recursive = true;
     };
     "sketchybar/plugins" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.homeDirPath}.config/dots/files/config/sketchybar/plugins";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/sketchybar/plugins";
       target = ".config/sketchybar/plugins";
       recursive = true;
     };
