@@ -8,7 +8,23 @@ return {
 		require("codecompanion").setup({
 			display = {
 				action_palette = {
-					provider = "mini_pick",
+					-- broken for now
+					-- provider = "mini_pick",
+				},
+				chat = {
+					intro_message = "󱙺 Press ? for options",
+					start_in_insert_mode = true,
+				},
+				diff = {
+					provider = "mini_diff",
+				},
+			},
+			strategies = {
+				chat = {
+					adapter = "claude",
+				},
+				inline = {
+					adapter = "claude",
 				},
 			},
 			adapters = {
@@ -53,27 +69,42 @@ return {
 					})
 				end,
 			},
-			strategies = {
-				chat = {
-					adapter = "claude",
-				},
-				inline = {
-					adapter = "claude",
-				},
-			},
 		})
+
+		vim.keymap.set(
+			{ "n", "v" },
+			"<leader>at",
+			"<cmd>CodeCompanionChat Toggle<cr>",
+			{ desc = "AI Chat Toggle", noremap = true, silent = true }
+		)
+
 		vim.keymap.set(
 			{ "n", "v" },
 			"<leader>ac",
-			"<cmd>CodeCompanionChat Toggle<cr>",
-			{ desc = "AI Chat", noremap = true, silent = true }
+			"<cmd>CodeCompanionChat claude<cr>",
+			{ desc = "New AI Chat", noremap = true, silent = true }
 		)
+
+		vim.keymap.set(
+			"n",
+			"<leader>ae",
+			"<cmd>CodeCompanionChat claude<cr>@editor #buffer<cr>",
+			{ desc = "New AI Editor", noremap = true, silent = true }
+		)
+		vim.keymap.set(
+			"v",
+			"<leader>ae",
+			"<cmd>CodeCompanionChat claude<cr><cr>@editor #buffer<cr>",
+			{ desc = "New AI Editor", noremap = true, silent = true }
+		)
+
 		vim.keymap.set(
 			{ "n", "v" },
 			"<leader>aA",
 			"<cmd>CodeCompanionActions<cr>",
 			{ desc = "AI Actions", noremap = true, silent = true }
 		)
+
 		vim.keymap.set(
 			"v",
 			"<leader>aa",
