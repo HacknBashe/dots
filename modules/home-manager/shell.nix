@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  inputs,
   ...
 }: let
   linuxPackages =
@@ -58,9 +59,35 @@ in {
     }
     // zshAliases;
 
+  imports = [
+    (inputs.nix-yazi-plugins.legacyPackages.x86_64-linux.homeManagerModules.default)
+  ];
+  programs.yazi = {
+    enable = true;
+    initLua = lib.mkOrder 500 ''
+      THEME.git = THEME.git or {}
+
   programs.zsh.initExtra = ''
     ${builtins.readFile ../../files/zshrc}
   '';
+      THEME.git.modified_sign = ""
+      THEME.git.added_sign = ""
+      THEME.git.untracked_sign = "󱀶"
+      THEME.git.ignored_sign = ""
+      THEME.git.deleted_sign = ""
+      THEME.git.updated_sign = ""
+    '';
+    yaziPlugins = {
+      enable = true;
+      plugins = {
+        chmod.enable = true;
+        full-border.enable = true;
+        git.enable = true;
+        smart-enter.enable = true;
+        smart-filter.enable = true;
+      };
+    };
+  };
 
   home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
   home.packages = with pkgs;
@@ -86,7 +113,6 @@ in {
       vim
       wget
       xdg-utils
-      yazi
       zoxide
       zellij
     ]

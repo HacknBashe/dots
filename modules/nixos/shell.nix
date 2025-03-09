@@ -1,6 +1,6 @@
 {
-  config,
   pkgs,
+  inputs,
   ...
 }: let
   linuxPackages =
@@ -21,17 +21,6 @@ in {
   fonts.packages = with pkgs; [
     nerd-fonts.sauce-code-pro
   ];
-   programs.yazi = {
-    enable = true;
-  };
-
-  programs.yazi.yaziPlugins = {
-    enable = true;
-    plugins = {
-      full-border.enable = true;
-      chmod.enable = true;
-    };
-  };
 
   environment.systemPackages = with pkgs;
     [

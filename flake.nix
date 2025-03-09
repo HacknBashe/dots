@@ -39,7 +39,7 @@
     };
 
     nix-yazi-plugins = {
-      url = "github:lordkekz/nix-yazi-plugins";
+      url = "github:nickhackford/nix-yazi-plugins";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
