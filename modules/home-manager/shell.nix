@@ -39,25 +39,30 @@
       };
     };
 in {
-  programs.zsh.enable = true;
-  programs.zsh.shellAliases =
-    {
-      ng = "sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d";
+  programs.zsh = {
+    enable = true;
+    shellAliases =
+      {
+        ng = "sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d";
 
-      meraxes = "ssh 192.168.86.13";
-      mushu = "ssh 192.168.86.31";
-      sindy = "ssh 192.168.86.51";
+        meraxes = "ssh 192.168.86.13";
+        mushu = "ssh 192.168.86.31";
+        sindy = "ssh 192.168.86.51";
 
-      vi = "nvim";
-      ls = "exa";
-      ll = "exa -l";
-      la = "exa -la";
-      cat = "bat";
+        vi = "nvim";
+        ls = "exa";
+        ll = "exa -l";
+        la = "exa -la";
+        cat = "bat";
 
-      as = "gh copilot suggest";
-      ae = "gh copilot explain";
-    }
-    // zshAliases;
+        as = "gh copilot suggest";
+        ae = "gh copilot explain";
+      }
+      // zshAliases;
+    initExtra = ''
+      ${builtins.readFile ../../files/zshrc}
+    '';
+  };
 
   imports = [
     (inputs.nix-yazi-plugins.legacyPackages.x86_64-linux.homeManagerModules.default)
@@ -67,9 +72,6 @@ in {
     initLua = lib.mkOrder 500 ''
       THEME.git = THEME.git or {}
 
-  programs.zsh.initExtra = ''
-    ${builtins.readFile ../../files/zshrc}
-  '';
       THEME.git.modified_sign = ""
       THEME.git.added_sign = ""
       THEME.git.untracked_sign = "󱀶"
@@ -134,10 +136,6 @@ in {
         source = ../../files/config/zsh/.p10k.zsh;
         target = ".config/zsh/.p10k.zsh";
       };
-      # ".zshrc" = {
-      #   source = ../../files/zshrc;
-      #   target = ".zshrc";
-      # };
       "powerlevel10k" = {
         source = builtins.fetchGit {
           url = "https://github.com/romkatv/powerlevel10k.git";
@@ -169,12 +167,6 @@ in {
           rev = "46284178bcad362db40509e1db058fe78844d113";
         };
         target = ".config/zsh/plugins/vim";
-      };
-
-      "yazi" = {
-        source = ../../files/config/yazi;
-        target = ".config/yazi";
-        recursive = true;
       };
 
       "fastfetch" = {
