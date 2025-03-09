@@ -737,14 +737,17 @@
         "systems": "systems_4"
       },
       "locked": {
-        "lastModified": 1741492808,
-        "narHash": "sha256-3sQIbCT9yad2+AiMzl8miALOBq8MUN+IHWsReuuWX0U=",
-        "path": "/Users/nhackford/src/nix-yazi-plugins",
-        "type": "path"
+        "lastModified": 1741497039,
+        "narHash": "sha256-8zbeExCb52BxgSSFKNzwG/yXITzfJwGSqngKH1Aeq9Y=",
+        "owner": "nickhackford",
+        "repo": "nix-yazi-plugins",
+        "rev": "9ac5127a642e48c275f6e4f7937aef360eddbe1f",
+        "type": "github"
       },
       "original": {
-        "path": "/Users/nhackford/src/nix-yazi-plugins",
-        "type": "path"
+        "owner": "nickhackford",
+        "repo": "nix-yazi-plugins",
+        "type": "github"
       }
     },
     "nixos-wsl": {

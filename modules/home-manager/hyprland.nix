@@ -109,12 +109,12 @@
       target = ".config/hypr/vars.conf";
     };
     "hypr/hyprland.conf" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/hypr/hyprland.conf";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/hypr/hyprland.conf";
       target = ".config/hypr/hyprland.conf";
     };
     "hypr/hypridle.conf" = {
       # TODO: replace with config.lib.file.mkOutOfStoreSymlink once hypridle supports sourcing
-      # source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/hypr/hypridle.conf";
+      # source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/hypr/hypridle.conf";
       text = ''
         $lockCommand = ${config.lockCommand}
 
@@ -123,12 +123,12 @@
       target = ".config/hypr/hypridle.conf";
     };
     "hypr/scripts" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/hypr/scripts";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/hypr/scripts";
       target = ".config/hypr/scripts";
       recursive = true;
     };
     "hypr/shaders" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/hypr/shaders";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/hypr/shaders";
       target = ".config/hypr/shaders";
       recursive = true;
     };

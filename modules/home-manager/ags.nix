@@ -10,7 +10,7 @@
 
   home.file = {
     "ags" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/ags";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/ags";
       target = ".config/ags";
       recursive = true;
     };

@@ -5,6 +5,7 @@
   ...
 }: {
   isHubspot = true;
+  home.homeDirectory = "/Users/nhackford";
 
   home = {
     stateVersion = "24.05"; # Please read the comment before changing.
@@ -30,7 +31,7 @@
 
   home.file = {
     ".hammerspoon" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/hammerspoon";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/hammerspoon";
       target = ".hammerspoon";
       recursive = true;
     };

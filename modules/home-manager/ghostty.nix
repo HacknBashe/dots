@@ -17,7 +17,7 @@ in {
 
   home.file = {
     ".config/ghostty/config" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}.config/dots/files/config/ghostty/config";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/ghostty/config";
       target = ".config/ghostty/config";
     };
     ".config/ghostty/theme" = {
