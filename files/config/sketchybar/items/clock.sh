@@ -39,5 +39,6 @@ sketchybar \
 sketchybar \
   --add item clock.hours right \
   --set clock.hours label="${date_parts[5]}" \
+  padding_left=20 \
   background.drawing=off \
   icon.drawing=off

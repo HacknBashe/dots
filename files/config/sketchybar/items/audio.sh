@@ -17,6 +17,7 @@ sketchybar --add slider audio.slider right \
   slider.percentage=50 \
   background.color=0x00000000 \
   background.height=16 \
+  padding_left=20 \
   icon.padding_left=0 \
   icon.padding_right=0 \
   slider.highlight_color=0xffffffff \
