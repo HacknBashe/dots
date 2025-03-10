@@ -18,5 +18,16 @@ return {
 			"<cmd>:vertical Git log<CR>",
 			{ desc = "Git log", noremap = true, silent = true, nowait = true }
 		)
+
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = { "fugitive", "fugitiveblame", "git" },
+			callback = function()
+				vim.api.nvim_buf_set_keymap(0, "n", "<C-c>", ":q<CR>", {
+					noremap = true,
+					silent = true,
+					desc = "Exit fugitive buffer",
+				})
+			end,
+		})
 	end,
 }
