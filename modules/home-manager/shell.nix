@@ -45,9 +45,9 @@ in {
       {
         ng = "sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d";
 
-        meraxes = "ssh 192.168.86.13";
-        mushu = "ssh 192.168.86.31";
-        sindy = "ssh 192.168.86.51";
+        meraxes = "ssh nick@192.168.86.13";
+        mushu = "ssh nick@192.168.86.31";
+        sindy = "ssh nick@192.168.86.51";
 
         vi = "nvim";
         ls = "exa";
