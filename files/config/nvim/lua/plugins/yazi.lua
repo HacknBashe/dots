@@ -1,4 +1,3 @@
--- Show diagnostics
 return {
 	"mikavilpas/yazi.nvim",
 	event = "VeryLazy",

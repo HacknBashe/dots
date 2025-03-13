@@ -6,10 +6,10 @@ return {
 		harpoon.setup()
 
 		local function opts(desc)
-			return { desc = "Harpoon: " .. desc, noremap = true, silent = true, nowait = true }
+			return { desc = desc, noremap = true, silent = true, nowait = true }
 		end
 
-		vim.keymap.set("n", "<leader>H", function()
+		vim.keymap.set("n", "<leader>vh", function()
 			harpoon.ui:toggle_quick_menu(harpoon:list())
 		end, opts("View Harpoon List"))
 
@@ -19,33 +19,18 @@ return {
 
 		vim.keymap.set("n", "<leader>1", function()
 			harpoon:list():select(1)
-		end, opts("Go to 1"))
+		end, opts("Open Harpoon File 1"))
 		vim.keymap.set("n", "<leader>2", function()
 			harpoon:list():select(2)
-		end, opts("Go to 2"))
+		end, opts("Open Harpoon File 2"))
 		vim.keymap.set("n", "<leader>3", function()
 			harpoon:list():select(3)
-		end, opts("Go to 3"))
+		end, opts("Open Harpoon File 3"))
 		vim.keymap.set("n", "<leader>4", function()
 			harpoon:list():select(4)
-		end, opts("Go to 4"))
+		end, opts("Open Harpoon File 4"))
 		vim.keymap.set("n", "<leader>5", function()
-			harpoon:list():select(4)
-		end, opts("Go to 5"))
-		vim.keymap.set("n", "<leader>6", function()
-			harpoon:list():select(4)
-		end, opts("Go to 6"))
-		vim.keymap.set("n", "<leader>7", function()
-			harpoon:list():select(4)
-		end, opts("Go to 7"))
-		vim.keymap.set("n", "<leader>8", function()
-			harpoon:list():select(4)
-		end, opts("Go to 8"))
-		vim.keymap.set("n", "<leader>9", function()
-			harpoon:list():select(4)
-		end, opts("Go to 9"))
-		vim.keymap.set("n", "<leader>0", function()
-			harpoon:list():select(4)
-		end, opts("Go to 0"))
+			harpoon:list():select(5)
+		end, opts("Open Harpoon File 5"))
 	end,
 }

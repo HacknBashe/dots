@@ -24,11 +24,6 @@ vim.keymap.set("n", "<leader>y", '"+y', { desc = "Yank to clipboard" })
 vim.keymap.set("n", "<leader>Y", '"+Y', { desc = "Yank Line to clipboard" })
 vim.keymap.set("v", "<leader>y", '"+y', { desc = "Yank to clipboard" })
 
---quickfix
-vim.keymap.set("n", "<leader>qf", ":copen<CR>", { desc = "Open quickfix" })
-vim.keymap.set("n", "<leader>qn", ":cnext<CR>", { desc = "Next quickfix" })
-vim.keymap.set("n", "<leader>qp", ":cprev<CR>", { desc = "Prev quickfix" })
-
 -- substitute
 vim.keymap.set(
 	"v",
@@ -44,10 +39,14 @@ vim.keymap.set(
 )
 -- TODO: Add v(isual) s(ubstitute)
 
+-- UI
 -- Tabs
 vim.keymap.set("n", "<leader>tn", ":tabnew<CR>", { desc = "Open new tab" })
 vim.keymap.set("n", "<leader>td", ":tabclose<CR>", { desc = "Delete tab" })
 
+--quickfix
+vim.keymap.set("n", "<leader>vq", ":copen<CR>", { desc = "View Quickfix" })
+
 -- Spelling
-vim.keymap.set("n", "<leader>St", ":set spell!<CR>", { desc = "Spellcheck toggle" })
-vim.keymap.set("n", "<leader>Ss", "z=", { desc = "Spellcheck suggestions" })
+vim.keymap.set("n", "<leader>vS", ":set spell!<CR>", { desc = "View Spellcheck" })
+vim.keymap.set("n", "<leader>vs", "z=", { desc = "View Spellcheck Suggestions" })

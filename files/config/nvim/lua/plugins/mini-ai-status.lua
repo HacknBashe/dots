@@ -1,5 +1,5 @@
 local spinner_active = false
-local spinner_frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+local spinner_frames = { "⠋", "⠙", "⠸", "⠸", "⢰", "⣠", "⣄", "⡆", "⠇" }
 local spinner_index = 1
 local timer = nil
 

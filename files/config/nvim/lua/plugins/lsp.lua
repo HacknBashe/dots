@@ -41,22 +41,6 @@ lspconfig.nixd.setup({})
 lspconfig.templ.setup({})
 lspconfig.clangd.setup({})
 
-vim.diagnostic.config({
-	signs = true,
-	virtual_text = false,
-})
-vim.keymap.set("n", "<leader>dv", function()
-	vim.diagnostic.open_float()
-end, { desc = "Diagnostic: View", noremap = true })
-
-vim.keymap.set("n", "[d", function()
-	vim.diagnostic.goto_next()
-end, { desc = "Diagnostic: Next", noremap = true })
-
-vim.keymap.set("n", "]d", function()
-	vim.diagnostic.goto_prev()
-end, { desc = "Diagnostic: Next", noremap = true })
-
 vim.api.nvim_create_autocmd("LspAttach", {
 	desc = "LSP actions",
 	callback = function(event)

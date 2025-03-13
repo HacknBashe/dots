@@ -3,7 +3,6 @@
   lib,
   ...
 }: {
-  # TODO: Enable these services, replace homebrew versions
   services = {
     aerospace = {
       enable = true;

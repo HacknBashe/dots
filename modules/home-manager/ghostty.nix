@@ -25,7 +25,6 @@ in {
         background = ${colors.background}
         foreground= ${colors.foreground}
 
-        font-size = 24
         font-family = ${config.theme.fontMono}
         font-style = light
 

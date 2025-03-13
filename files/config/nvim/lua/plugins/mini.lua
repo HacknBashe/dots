@@ -1,29 +1,35 @@
+local statusMap = require("plugins.git-status-map").statusMap
+
 return {
 	"chasnovski/mini.nvim",
 	lazy = false,
 	config = function()
-		local starter = require("mini.starter")
-		starter.setup({
-			evaluate_single = true,
-			items = {
-				starter.sections.builtin_actions(),
-				starter.sections.recent_files(9, true),
-			},
-			content_hooks = {
-				starter.gen_hook.adding_bullet(),
-				starter.gen_hook.indexing("all", { "Builtin actions" }),
-				starter.gen_hook.padding(3, 2),
-				starter.gen_hook.aligning("center", "center"),
-			},
-			header = [[
-███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗  
-████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║  
-██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║  
-██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║  
-██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║  
-╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
-			footer = " ",
+		require("mini.cursorword").setup()
+		require("mini.indentscope").setup()
+		require("mini.surround").setup()
+		require("ts_context_commentstring").setup({
+			enable_autocmd = false,
 		})
+		require("mini.comment").setup({
+			options = {
+				custom_commentstring = function()
+					return require("ts_context_commentstring").calculate_commentstring() or vim.bo.commentstring
+				end,
+			},
+		})
+		require("mini.bracketed").setup()
+
+		require("mini.icons").setup()
+		require("mini.git").setup()
+		require("mini.diff").setup({
+			view = { style = "sign", signs = { add = "│", change = "┆", delete = "_" } },
+		})
+
+		local misc = require("mini.misc")
+		misc.setup_restore_cursor()
+		vim.keymap.set("n", "<leader>vz", function()
+			misc.zoom()
+		end, { desc = "Zoom", noremap = true, silent = true, nowait = true })
 
 		local mininotify = require("mini.notify")
 		vim.notify = mininotify.make_notify()
@@ -32,9 +38,9 @@ return {
 				winblend = 0,
 			},
 		})
-		vim.keymap.set("n", "<leader>nh", function()
+		vim.keymap.set("n", "<leader>vn", function()
 			mininotify.show_history()
-		end, { desc = "Notification history", noremap = true, silent = true, nowait = true })
+		end, { desc = "View Notification History", noremap = true, silent = true, nowait = true })
 		vim.keymap.set("n", "<leader>nd", function()
 			mininotify.clear()
 		end, { desc = "Dismiss Notifications", noremap = true, silent = true, nowait = true })
@@ -63,32 +69,20 @@ return {
 		end, { desc = "File Tree", noremap = true })
 
 		require("mini.pick").setup()
-		require("mini.git").setup()
-		require("mini.diff").setup({
-			view = { style = "sign", signs = { add = "│", change = "┆", delete = "_" } },
-		})
-		require("mini.icons").setup()
-		require("mini.indentscope").setup()
-
-		require("mini.cursorword").setup()
-		require("mini.surround").setup()
-		require("ts_context_commentstring").setup({
-			enable_autocmd = false,
-		})
-		require("mini.comment").setup({
-			options = {
-				custom_commentstring = function()
-					return require("ts_context_commentstring").calculate_commentstring() or vim.bo.commentstring
-				end,
-			},
-		})
+		local extra = require("mini.extra")
+		extra.setup()
+		vim.keymap.set("n", "<leader>v:", extra.pickers.history, { desc = "View Command History", noremap = true })
+		vim.keymap.set("n", "<leader>vH", extra.pickers.hl_groups, { desc = "View Highlights", noremap = true })
 
 		local statusline = require("mini.statusline")
 		statusline.setup({
 			content = {
 				active = function()
 					local mode, mode_hl = statusline.section_mode({ trunc_width = 120 })
-					local git = statusline.section_git({ trunc_width = 40 })
+
+					local git_info = statusline.section_git({ trunc_width = 75 })
+					local branch, status = git_info:match("^(.-)%s*%((..)%s*%)$")
+					status = statusMap[status] or { symbol = "?", hlGroup = "NonText" }
 
 					local diff = statusline.section_diff({ trunc_width = 75 })
 					local added, changed, removed = "", "", ""
@@ -121,29 +115,111 @@ return {
 						["C"] = "󱡄",
 					}
 
+					local status_hl = vim.api.nvim_get_hl(0, { name = "StatusLine" })
+
+					local git_status_hl = vim.api.nvim_get_hl(0, { name = status.hlGroup })
+
+					local diff_add_hl = vim.api.nvim_get_hl(0, { name = "MiniDiffSignAdd" })
+					local changed_hl = vim.api.nvim_get_hl(0, { name = "Changed" })
+					local diff_delete_hl = vim.api.nvim_get_hl(0, { name = "MiniDiffSignDelete" })
+
+					local diag_error_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticError" })
+					local diag_warn_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn" })
+					local diag_info_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticInfo" })
+					local diag_hint_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticHint" })
+
+					vim.api.nvim_set_hl(0, "MiniStatuslineGitStatus", {
+						fg = git_status_hl.fg,
+						bg = status_hl.bg,
+					})
+
+					vim.api.nvim_set_hl(0, "MiniStatuslineDiffAdd", {
+						fg = diff_add_hl.fg,
+						bg = status_hl.bg,
+					})
+					vim.api.nvim_set_hl(0, "MiniStatuslineChanged", {
+						fg = changed_hl.fg,
+						bg = status_hl.bg,
+					})
+					vim.api.nvim_set_hl(0, "MiniStatuslineDiffDelete", {
+						fg = diff_delete_hl.fg,
+						bg = status_hl.bg,
+					})
+
+					vim.api.nvim_set_hl(0, "MiniStatuslineDiagError", {
+						fg = diag_error_hl.fg,
+						bg = status_hl.bg,
+					})
+					vim.api.nvim_set_hl(0, "MiniStatuslineDiagWarn", {
+						fg = diag_warn_hl.fg,
+						bg = status_hl.bg,
+					})
+					vim.api.nvim_set_hl(0, "MiniStatuslineDiagInfo", {
+						fg = diag_info_hl.fg,
+						bg = status_hl.bg,
+					})
+					vim.api.nvim_set_hl(0, "MiniStatuslineDiagHint", {
+						fg = diag_hint_hl.fg,
+						bg = status_hl.bg,
+					})
+
 					return statusline.combine_groups({
 						{ hl = mode_hl, strings = { mode_map[mode:sub(1, 1)] } },
-						{ hl = "statuslineDevinfo", strings = { git } },
+						{ hl = "MiniStatuslineGitStatus", strings = { branch, status.symbol } },
 
-						{ hl = "MiniDiffSignAdd", strings = { added } },
-						{ hl = "Changed", strings = { changed } },
-						{ hl = "MiniDiffSignDelete", strings = { removed } },
+						{ hl = "MiniStatuslineDiffAdd", strings = { added } },
+						{ hl = "MiniStatuslineChanged", strings = { changed } },
+						{ hl = "MiniStatuslineDiffDelete", strings = { removed } },
 
-						{ hl = "DiagnosticError", strings = { errors } },
-						{ hl = "DiagnosticWarn", strings = { warnings } },
-						{ hl = "DiagnosticInfo", strings = { infos } },
-						{ hl = "DiagnosticHint", strings = { hints } },
+						{ hl = "MiniStatuslineDiagError", strings = { errors } },
+						{ hl = "MiniStatuslineDiagWarn", strings = { warnings } },
+						{ hl = "MiniStatuslineDiagInfo", strings = { infos } },
+						{ hl = "MiniStatuslineDiagHint", strings = { hints } },
 
 						"%<", -- Mark general truncate point
-						{ hl = "statuslineFilename", strings = { filename } },
+						{ hl = "Statusline", strings = { filename } },
 						"%=", -- End left alignment
-						{ hl = "statuslineDevinfo", strings = { ai } },
-						{ hl = "statuslineDevinfo", strings = { lsp } },
-						{ hl = "statuslineFileinfo", strings = { fileinfo } },
+						{ hl = "Statusline", strings = { ai, lsp, fileinfo } },
 						{ hl = mode_hl, strings = { search, "%l:%2v" } },
 					})
 				end,
 			},
+		})
+
+		local map = require("mini.map")
+		map.setup({
+			window = { show_integration_count = false, winblend = 0 },
+			integrations = {
+				map.gen_integration.builtin_search(),
+				map.gen_integration.diagnostic(),
+				map.gen_integration.diff(),
+			},
+		})
+		vim.keymap.set("n", "<leader>vm", function()
+			map.toggle()
+		end, { desc = "View Map", noremap = true, silent = true, nowait = true })
+
+		local starter = require("mini.starter")
+		starter.setup({
+			evaluate_single = true,
+			items = {
+				starter.sections.builtin_actions(),
+				starter.sections.recent_files(9, true),
+			},
+			content_hooks = {
+				starter.gen_hook.adding_bullet(),
+				starter.gen_hook.indexing("all", { "Builtin actions" }),
+				starter.gen_hook.padding(3, 2),
+				starter.gen_hook.aligning("center", "center"),
+			},
+			header = [[
+███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗  
+████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║  
+██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║  
+██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║  
+██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║  
+╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
+			footer = " ",
 		})
 
 		local clue = require("mini.clue")
@@ -186,7 +262,6 @@ return {
 
 				{ mode = "n", keys = "<Leader>a", desc = "AI Agent" },
 				{ mode = "n", keys = "<Leader>b", desc = "Buffer" },
-				{ mode = "n", keys = "<Leader>d", desc = "Diagnostics" },
 				{ mode = "n", keys = "<Leader>f", desc = "Find/File" },
 				{ mode = "n", keys = "<Leader>fd", desc = "Find in Directory" },
 				{ mode = "n", keys = "<Leader>g", desc = "Git" },

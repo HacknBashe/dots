@@ -38,7 +38,7 @@ return {
 		vim.keymap.set("n", "<leader>fds", fdscmd, opts("Find string in directory"))
 
 		vim.keymap.set("n", "<leader>fb", "<cmd> Telescope buffers <CR>", opts("Find Buffers"))
-		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles <CR>", opts("Find Recent"))
+		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles cwd_only=true <CR>", opts("Find Recent in CWD"))
 		vim.keymap.set("n", "<leader>fh", "<cmd> Telescope help_tags <CR>", opts("Find Help"))
 
 		vim.keymap.set("n", "<leader>fR", "<cmd> Telescope resume <CR>", opts("Find: Resume Last Search"))
