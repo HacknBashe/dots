@@ -39,6 +39,7 @@
       };
     };
 in {
+
   programs.zsh = {
     enable = true;
     shellAliases =
@@ -54,9 +55,6 @@ in {
         ll = "exa -l";
         la = "exa -la";
         cat = "bat";
-
-        as = "gh copilot suggest";
-        ae = "gh copilot explain";
       }
       // zshAliases;
     initExtra = ''
@@ -195,6 +193,23 @@ in {
         if [ -f "./ggml-large-v3-turbo.bin" ] && [ ! -f "$MODEL_FILE" ]; then
           echo "Moving model to $MODEL_FILE"
           mv "./ggml-large-v3-turbo.bin" "$MODEL_FILE"
+        fi
+      fi
+    '';
+
+    clone-notes-repo = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      NOTES_PATH="${config.home.homeDirectory}/notes"
+
+      if [ ! -d "$NOTES_PATH" ]; then
+        echo "Notes repository not found, cloning..."
+        # Ensure SSH agent is available
+        if [ -S "$SSH_AUTH_SOCK" ]; then
+          # Use the full path to git and explicitly set GIT_SSH_COMMAND
+          GIT_SSH_COMMAND="${pkgs.openssh}/bin/ssh" \
+            ${pkgs.git}/bin/git clone git@github.com:NickHackford/notes.git "$NOTES_PATH"
+        else
+          echo "SSH agent not available, falling back to HTTPS"
+          ${pkgs.git}/bin/git clone https://github.com/NickHackford/notes.git "$NOTES_PATH"
         fi
       fi
     '';

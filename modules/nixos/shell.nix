@@ -1,6 +1,6 @@
 {
   pkgs,
-  inputs,
+  config,
   ...
 }: let
   linuxPackages =
@@ -50,4 +50,13 @@ in {
     ]
     ++ linuxPackages;
   services.ollama.enable = true;
+
+  services.cron = {
+    enable = true;
+    cronFiles = [
+      (pkgs.writeText "auto_commit_notes" ''
+        0 * * * * ${config.users.users.nick.home}/.local/bin/auto_commit_notes.sh >> ${config.users.users.nick.home}/.auto_commit_notes.log 2>&1
+      '')
+    ];
+  };
 }

@@ -26,9 +26,9 @@ in {
   home.packages = with pkgs;
     [
       git
+      aider-chat
       entr
       lazygit
-      gh
       docker-compose
 
       alejandra
