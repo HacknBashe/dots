@@ -28,6 +28,99 @@ return {
 								provider = "telescope",
 							},
 						},
+
+						["rules"] = {
+							description = "Search for rules files in .cursor/rules directory",
+							callback = function(chat)
+								require("telescope.builtin").find_files({
+									prompt_title = "Rules Files",
+									cwd = ".cursor/rules/",
+									file_ignore_patterns = { "^%.git/" },
+									attach_mappings = function(prompt_bufnr, map)
+										local actions = require("telescope.actions")
+										local action_state = require("telescope.actions.state")
+
+										actions.select_default:replace(function()
+											local selection = require("telescope.actions.state").get_selected_entry()
+											actions.close(prompt_bufnr)
+
+											if selection then
+												local path = ".cursor/rules/" .. selection.value
+												local handle = io.open(path, "r")
+												if handle then
+													local content = handle:read("*a")
+													handle:close()
+													chat:add_reference({ content = content }, "file", path)
+												else
+													vim.notify(
+														"Could not open file: " .. path,
+														vim.log.levels.ERROR,
+														{ title = "CodeCompanion" }
+													)
+												end
+											end
+										end)
+
+										-- Support multi-selection
+										map("i", "<Tab>", function()
+											actions.toggle_selection(prompt_bufnr)
+											actions.move_selection_next(prompt_bufnr)
+										end)
+
+										map("i", "<CR>", function()
+											local selections =
+												action_state.get_current_picker(prompt_bufnr):get_multi_selection()
+											if #selections > 0 then
+												-- Process all multi-selections at once
+												actions.close(prompt_bufnr)
+												for _, selection in ipairs(selections) do
+													local path = ".cursor/rules/" .. selection.value
+													local handle = io.open(path, "r")
+													if handle then
+														local content = handle:read("*a")
+														handle:close()
+														chat:add_reference({ content = content }, "rules", path)
+													else
+														vim.notify(
+															"Could not open file: " .. path,
+															vim.log.levels.ERROR,
+															{ title = "CodeCompanion" }
+														)
+													end
+												end
+											else
+												-- Handle single selection and move to next
+												local selection = action_state.get_selected_entry()
+												if selection then
+													local path = ".cursor/rules/" .. selection.value
+													local handle = io.open(path, "r")
+													if handle then
+														local content = handle:read("*a")
+														handle:close()
+														chat:add_reference({ content = content }, "rules", path)
+														-- Toggle selection and move to next
+														actions.toggle_selection(prompt_bufnr)
+														actions.move_selection_next(prompt_bufnr)
+													else
+														vim.notify(
+															"Could not open file: " .. path,
+															vim.log.levels.ERROR,
+															{ title = "CodeCompanion" }
+														)
+														actions.close(prompt_bufnr)
+													end
+												end
+											end
+										end)
+										return true
+									end,
+								})
+							end,
+							opts = {
+								provider = "telescope",
+								contains_code = true,
+							},
+						},
 					},
 				},
 				inline = {
