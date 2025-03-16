@@ -87,6 +87,7 @@ in {
         harpoon2
         telescope-fzf-native-nvim
         telescope-nvim
+        telescope-undo-nvim
         yazi-nvim
 
         # Markdown and Writing
