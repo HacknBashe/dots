@@ -39,7 +39,6 @@
       };
     };
 in {
-
   programs.zsh = {
     enable = true;
     shellAliases =
@@ -121,7 +120,7 @@ in {
   home.file =
     {
       "bin" = {
-        source = ../../files/local/bin;
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/local/bin";
         target = ".local/bin";
         recursive = true;
       };
