@@ -16,7 +16,7 @@
       Description = "Auto commit notes timer";
     };
     Timer = {
-      OnCalendar = "*:0/1";
+      OnCalendar = "*:0/10";
       Persistent = true;
     };
     Install = {

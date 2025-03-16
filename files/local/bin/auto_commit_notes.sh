@@ -32,7 +32,7 @@ fi
 
 # Pull latest changes
 echo "Pulling latest changes..."
-git pull || {
+git pull --rebase || {
   echo "Error: Failed to pull changes"
   if [ "$has_changes" = true ]; then
     echo "Restoring stashed changes..."
