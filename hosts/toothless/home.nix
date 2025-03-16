@@ -4,6 +4,8 @@
   lib,
   ...
 }: {
+  home.homeDirectory = "/Users/nick";
+
   home = {
     stateVersion = "23.11"; # Please read the comment before changing.
     sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
@@ -31,6 +33,16 @@
         email = nick.hackford@gmail.com
       '';
       target = ".gitconfig.local";
+    };
+  };
+
+  launchd.agents.autoCommitNotes = {
+    enable = true;
+    config = {
+      ProgramArguments = ["${config.home.homeDirectory}/.local/bin/auto_commit_notes.sh"];
+      StandardOutPath = "/tmp/.auto_commit_notes.log";
+      StandardErrorPath = "/tmp/.auto_commit_notes.log";
+      StartCalendarInterval = [{Minute = 0;}];
     };
   };
 
