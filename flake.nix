@@ -2,7 +2,9 @@
   description = "Nick's desktop flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
+    # nixpkgs.url = "path:/Users/nhackford/src/nixpkgs";
     nixpkgsold.url = "github:nixos/nixpkgs?ref=nixos-24.05";
 
     home-manager = {
@@ -15,7 +17,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-wsl = {url = "github:nix-community/NixOS-WSL";};
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     ghostty = {
       url = "git+ssh://git@github.com/ghostty-org/ghostty";
@@ -44,7 +49,10 @@
     };
 
     # For Steam
-    extest.url = "github:chaorace/extest-nix";
+    extest = {
+      url = "github:chaorace/extest-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -199,7 +207,7 @@
           ./hosts/hubspot/configuration.nix
           ./modules/theme.nix
           ./modules/darwin/aerospace.nix
-          ./modules/darwin/karabiner.nix
+          # ./modules/darwin/karabiner.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;

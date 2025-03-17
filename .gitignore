@@ -2,3 +2,4 @@ files/config/ags/@girs
 
 # Explicitly include bin directory even if ignored elsewhere
 !files/local/bin
+.aider*

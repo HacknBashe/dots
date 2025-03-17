@@ -1,4 +1,8 @@
-{pkgs, ...}: let
+{
+  pkgs,
+  config,
+  ...
+}: let
   linuxPackages =
     if pkgs.stdenv.isLinux
     then
@@ -26,7 +30,7 @@ in {
   home.packages = with pkgs;
     [
       git
-      aider-chat
+      # aider-chat
       entr
       lazygit
       docker-compose
@@ -44,8 +48,9 @@ in {
       gopls
 
       black
-      (python311.withPackages (ps: with ps; [numpy requests pyserial]))
+      (python312.withPackages (ps: with ps; [numpy requests pyserial]))
       pyright
+      uv
 
       rustc
       rustup
@@ -72,6 +77,12 @@ in {
       ".gitconfig" = {
         source = ../../files/gitconfig;
         target = ".gitconfig";
+      };
+
+      "aider" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/aider/aider.conf.yml";
+        target = ".aider.conf.yml";
+        recursive = true;
       };
     }
     // linuxGitConfig;
