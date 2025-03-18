@@ -30,7 +30,7 @@ in {
   home.packages = with pkgs;
     [
       git
-      # aider-chat
+      aider-chat
       entr
       lazygit
       docker-compose

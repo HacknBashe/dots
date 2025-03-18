@@ -87,7 +87,7 @@
   };
 
   home.packages = with pkgs; [
-    vimix-cursor-theme
+    vimix-cursors
   ];
 
   home.file = {
