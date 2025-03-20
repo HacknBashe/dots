@@ -41,7 +41,7 @@ return {
 										local action_state = require("telescope.actions.state")
 
 										actions.select_default:replace(function()
-											local selection = require("telescope.actions.state").get_selected_entry()
+											local selection = action_state.get_selected_entry()
 											actions.close(prompt_bufnr)
 
 											if selection then
@@ -61,7 +61,6 @@ return {
 											end
 										end)
 
-										-- Support multi-selection
 										map("i", "<Tab>", function()
 											actions.toggle_selection(prompt_bufnr)
 											actions.move_selection_next(prompt_bufnr)
@@ -89,27 +88,7 @@ return {
 													end
 												end
 											else
-												-- Handle single selection and move to next
-												local selection = action_state.get_selected_entry()
-												if selection then
-													local path = ".cursor/rules/" .. selection.value
-													local handle = io.open(path, "r")
-													if handle then
-														local content = handle:read("*a")
-														handle:close()
-														chat:add_reference({ content = content }, "rules", path)
-														-- Toggle selection and move to next
-														actions.toggle_selection(prompt_bufnr)
-														actions.move_selection_next(prompt_bufnr)
-													else
-														vim.notify(
-															"Could not open file: " .. path,
-															vim.log.levels.ERROR,
-															{ title = "CodeCompanion" }
-														)
-														actions.close(prompt_bufnr)
-													end
-												end
+												actions.select_default(prompt_bufnr)
 											end
 										end)
 										return true
