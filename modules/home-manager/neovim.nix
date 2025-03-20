@@ -6,21 +6,10 @@
   # Hubspot plugins
   asset-bender-nvim = pkgs.vimUtils.buildVimPlugin {
     name = "asset-bender-nvim";
-    src = pkgs.fetchFromGitHub {
-      owner = "bobrown101";
-      repo = "asset-bender.nvim";
-      rev = "1d715902478cc8f70483ee2f87a1a58a49ebc10f";
-      hash = "sha256-JXTMKAbMHXsPR441r3ylvn5or/0YriWzowl5OVy239s=";
-    };
-    doCheck = false;
-  };
-  plugin-utils-nvim = pkgs.vimUtils.buildVimPlugin {
-    name = "plugin-utils-nvim";
-    src = pkgs.fetchFromGitHub {
-      owner = "bobrown101";
-      repo = "plugin-utils.nvim";
-      rev = "c4a755f9df40f3e91205a87830d7eba1ac7f8c73";
-      hash = "sha256-oiGWlyt9+zN7ReQtdtVqFHVeaoypg6vFNOwSr9d3I2Y=";
+    src = builtins.fetchGit {
+      url = "git@git.hubteam.com:HubSpot/asset-bender.nvim.git";
+      ref = "master";
+      rev = "e1dbb2356f866006df1e5babf56dc64623b03998";
     };
     doCheck = false;
   };
@@ -48,7 +37,6 @@
   hubspotPlugins =
     if config.isHubspot
     then [
-      plugin-utils-nvim
       asset-bender-nvim
     ]
     else [];
