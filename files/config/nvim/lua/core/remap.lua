@@ -50,3 +50,49 @@ vim.keymap.set("n", "<leader>vq", ":copen<CR>", { desc = "View Quickfix" })
 -- Spelling
 vim.keymap.set("n", "<leader>vS", ":set spell!<CR>", { desc = "View Spellcheck" })
 vim.keymap.set("n", "<leader>vs", "z=", { desc = "View Spellcheck Suggestions" })
+
+local function ToggleScratch()
+	local scratch_win_id = nil
+	for _, win_id in ipairs(vim.api.nvim_list_wins()) do
+		local buf_id = vim.api.nvim_win_get_buf(win_id)
+		if vim.bo[buf_id].filetype == "scratch" then
+			scratch_win_id = win_id
+			break
+		end
+	end
+
+	if scratch_win_id ~= nil then
+		vim.api.nvim_win_close(scratch_win_id, true)
+		return
+	end
+
+	local buf_id
+	for _, id in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.bo[id].filetype == "scratch" then
+			buf_id = id
+		end
+	end
+	if buf_id == nil then
+		buf_id = vim.api.nvim_create_buf(true, true)
+		vim.bo[buf_id].filetype = "scratch"
+	end
+
+	local width = math.floor(vim.o.columns * 0.8)
+	local height = math.floor(vim.o.lines * 0.8)
+	local col = math.floor((vim.o.columns - width) / 2)
+	local row = math.floor((vim.o.lines - height) / 2)
+
+	local win_id = vim.api.nvim_open_win(buf_id, true, {
+		relative = "editor",
+		width = width,
+		height = height,
+		col = col,
+		row = row,
+		border = "rounded",
+		style = "minimal",
+	})
+
+	vim.wo[win_id].number = true
+	vim.wo[win_id].relativenumber = true
+end
+vim.keymap.set("n", "<leader>vp", ToggleScratch, { desc = "Toggle scratch buffer" })
