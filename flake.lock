@@ -739,15 +739,16 @@
         "systems": "systems_4"
       },
       "locked": {
-        "lastModified": 1741497039,
-        "narHash": "sha256-8zbeExCb52BxgSSFKNzwG/yXITzfJwGSqngKH1Aeq9Y=",
+        "lastModified": 1742479076,
+        "narHash": "sha256-9py8CI7e6eoz/1W9OL6W1lf/N7tG4k1W+U+9MHgEbBk=",
         "owner": "nickhackford",
         "repo": "nix-yazi-plugins",
-        "rev": "9ac5127a642e48c275f6e4f7937aef360eddbe1f",
+        "rev": "ab3f7d0871005ac165ebe399f41b05611a07abef",
         "type": "github"
       },
       "original": {
         "owner": "nickhackford",
+        "ref": "new-feat",
         "repo": "nix-yazi-plugins",
         "type": "github"
       }
