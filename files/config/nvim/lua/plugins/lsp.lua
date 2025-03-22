@@ -3,10 +3,10 @@ local luasnip = require("luasnip")
 local lspkind = require("lspkind")
 local cmp = require("cmp")
 local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-local isHubspot, asset_bender = pcall(require, "asset-bender")
+local isHubspot, bend = pcall(require, "bend")
 
 if isHubspot then
-	asset_bender.setup({})
+	bend.setup({})
 end
 
 require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets/" } })
@@ -33,7 +33,7 @@ lspconfig.jdtls.setup({})
 lspconfig.gopls.setup({})
 lspconfig.ts_ls.setup(isHubspot and {
 	settings = {
-		tsserver_path = asset_bender.getTsServerPathForCurrentFile(),
+		tsserver_path = bend.getTsServerPathForCurrentFile(),
 	},
 } or {})
 lspconfig.pyright.setup({})

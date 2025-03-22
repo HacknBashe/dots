@@ -4,12 +4,11 @@
   ...
 }: let
   # Hubspot plugins
-  asset-bender-nvim = pkgs.vimUtils.buildVimPlugin {
-    name = "asset-bender-nvim";
+  bend-nvim = pkgs.vimUtils.buildVimPlugin {
+    name = "bend-nvim";
     src = builtins.fetchGit {
-      url = "git@git.hubteam.com:HubSpot/asset-bender.nvim.git";
-      ref = "master";
-      rev = "e1dbb2356f866006df1e5babf56dc64623b03998";
+      url = "git@git.hubteam.com:HubSpot/bend.nvim.git";
+      rev = "c677616a38ed3a444861e8aebf1c27664a099acb";
     };
     doCheck = false;
   };
@@ -37,7 +36,7 @@
   hubspotPlugins =
     if config.isHubspot
     then [
-      asset-bender-nvim
+      bend-nvim
     ]
     else [];
 in {
