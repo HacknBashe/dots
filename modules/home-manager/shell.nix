@@ -41,6 +41,9 @@
 in {
   programs.zsh = {
     enable = true;
+    sessionVariables = {
+      XDG_CONFIG_HOME = "$HOME/.config";
+    };
     shellAliases =
       {
         ng = "sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d";
@@ -123,6 +126,12 @@ in {
         source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/local/bin";
         target = ".local/bin";
         recursive = true;
+      };
+
+
+      "lazygit" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/lazygit/config.yml";
+        target = ".config/lazygit/config.yml";
       };
 
       "nvm.plugin.zsh" = {

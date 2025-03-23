@@ -1,0 +1,4 @@
+gui:
+  expandFocusedSidePanel: true
+  expandedSidePanelWeight: 2
+  mainPanelSplitMode: horizontal
