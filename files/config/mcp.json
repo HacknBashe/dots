@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "brave-search": {
+      "disabled": false,
+      "command": "/opt/homebrew/bin/npx",
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "env": {
+      }
+    },
+    "git": {
+      "command": "uvx",
+      "args": ["mcp-server-git"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+      }
+    },
+    "devex-mcp-server": {
+      "command": "devex-mcp-server",
+      "args": []
+    }
+  }
+}

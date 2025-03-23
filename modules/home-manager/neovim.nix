@@ -27,8 +27,18 @@
     src = pkgs.fetchFromGitHub {
       owner = "olimorris";
       repo = "codecompanion.nvim";
-      rev = "f1a5f7b6adee6762b8c174f5aabe3e139ad583d0";
-      hash = "sha256-ABD4yL/gFbYXe565i0j+H88FCeI4cArl0lIEKlRAGjc=";
+      rev = "97636b902ac20c665b0b3d9d5b2c62c16676e136";
+      hash = "sha256-LRiC1daJ9gf/tVphdNOxxHuxAjcXsHZKuwRc4V0WOyM=";
+    };
+    doCheck = false;
+  };
+  mcp-hub = pkgs.vimUtils.buildVimPlugin {
+    name = "mcp-hub";
+    src = pkgs.fetchFromGitHub {
+      owner = "ravitemer";
+      repo = "mcphub.nvim";
+      rev = "0755da600727746f1a315d81f16f73f4203862b0";
+      hash = "sha256-jQMaACXXAXH9ocQdTjD46OooEZq/EJyBnyLDwvEX6Vo=";
     };
     doCheck = false;
   };
@@ -62,6 +72,8 @@ in {
         code-companion
         copilot-lua
         copilot-cmp
+        mcp-hub
+
         # nvim-dap
         # nvim-dap-ui
 

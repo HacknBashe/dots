@@ -39,6 +39,44 @@ When given a task:
 - Rules are extra documentation provided by the user to help the AI understand the codebase.
 - Use rules if they seem useful to the user's most recent query, but do not use them if they seem unrelated.
 
+# MCP Server Usage
 
+## Context
+
+When helping with coding tasks, use MCP server tools to:
+- Find HubSpot best practices and standards
+- Search for similar implementations
+- Read relevant source code
+- Find files matching patterns
+
+## Requirements
+1. For any coding task, first check relevant HubSpot documentation:
+   - Use devex-mcp-server `search_docs` for best practices and guidelines
+   - Search for the specific topic or pattern being implemented
+2. When implementing solutions:
+   - Use devex-mcp-server `search_all_source_code` to find similar implementations or resolve compiling issues (imports, method signatures, etc.)
+   - Use devex-mcp-server `read_source_file` to understand full context
+   - Use devex-mcp-server `glob_all_source_paths` to find related files
+3. When writing Java:
+   - Maven dependencies may need to be updated, use `get_maven_coordinates_for_class` to find the correct artifacts.
+4. When working with CHIRP:
+   - Use search_chirp_services to search for a chirp service by name
+   - Use get_chirp_service_description if you already have a name, to get the full service description.
+   - Use generate_chirp_python_client_sample, generate_chirp_typescript_client_sample, or generate_chirp_java_client_sample (depending on language) to get sample usage for a client, which you can use as example when generating more specific implementations.
+5. Prioritize HubSpot-specific patterns and conventions over generic solutions
+
+Refer to the tool descriptions for more details.
+
+## Examples
+
+### Valid example
+When implementing an acceptance test:  
+1. Search docs for "acceptance test best practices"  
+2. Search source code for similar test implementations  
+3. Read full source of good examples  
+4. Apply HubSpot-specific patterns to new code  
+
+### Invalid example
+Implementing code without checking HubSpot's internal documentation or existing implementations
 ]]
 end

@@ -1,5 +1,9 @@
 files/config/ags/@girs
 .aider*
 
-# Explicitly include bin directory even if ignored elsewhere
+# Explicitly include bin directory even though hubspot ignores globally
 !files/local/bin
+# Reignore files hubspot added to bin
+files/local/bin/chirp-gen-py
+files/local/bin/devex-agents
+files/local/bin/devex-mcp-server

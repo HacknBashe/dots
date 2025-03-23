@@ -88,6 +88,27 @@ return {
 							},
 						},
 					},
+					tools = {
+						["mcp"] = {
+							callback = require("mcphub.extensions.codecompanion"),
+							description = "Call tools and resources from the MCP Servers",
+							opts = {
+								requires_approval = true,
+							},
+						},
+						groups = {
+							["full_stack_dev"] = {
+								description = "Full Stack Developer - Can run code, edit code and modify files",
+								system_prompt = "**DO NOT** make any assumptions about the dependencies that a user has installed. If you need to install any dependencies to fulfil the user's request, do so via the Command Runner tool. If the user doesn't specify a path, use their current working directory.",
+								tools = {
+									"cmd_runner",
+									"editor",
+									"files",
+									"mcp",
+								},
+							},
+						},
+					},
 				},
 				inline = {
 					adapter = "claude",

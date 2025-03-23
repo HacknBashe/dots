@@ -128,6 +128,10 @@ in {
         recursive = true;
       };
 
+      "mcp.json" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/mcp.json";
+        target = ".config/mcp.json";
+      };
 
       "lazygit" = {
         source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/lazygit/config.yml";
