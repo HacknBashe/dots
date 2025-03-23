@@ -156,7 +156,7 @@ editor-model: github_copilot/claude-3.7-sonnet
 # Output settings:
 
 ## Use colors suitable for a dark terminal background (default: False)
-#dark-mode: false
+dark-mode: true
 
 ## Use colors suitable for a light terminal background (default: False)
 #light-mode: false
