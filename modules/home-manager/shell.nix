@@ -62,6 +62,11 @@ in {
     initExtra = ''
       ${builtins.readFile ../../files/zshrc}
     '';
+    envExtra = ''
+      if [ -f ~/.zshenv.local ]; then
+        source ~/.zshenv.local
+      fi
+    '';
   };
 
   imports = [

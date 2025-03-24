@@ -27,7 +27,7 @@ return {
 			return { desc = desc, noremap = true, silent = true, nowait = true }
 		end
 
-		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files follow=true <CR>", opts("Find Files"))
+		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files hidden=true follow=true <CR>", opts("Find Files"))
 		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>", opts("Find Strings"))
 
 		local fdfcmd =
@@ -92,6 +92,11 @@ return {
 				set_env = { ["COLORTERM"] = "truecolor" },
 				mappings = {
 					n = { ["q"] = require("telescope.actions").close },
+				},
+				file_ignore_patterns = {
+					"^.git/", -- Git directory
+					"^.cache/", -- Cache directory
+					"^node_modules/", -- Node modules
 				},
 			},
 		})
