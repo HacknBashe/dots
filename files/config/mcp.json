@@ -1,9 +1,20 @@
 {
   "mcpServers": {
-    "brave-search": {
-      "disabled": false,
-      "command": "/opt/homebrew/bin/npx",
-      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+    "devex-mcp-server": {
+      "command": "devex-mcp-server",
+      "args": []
+    },
+
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+      }
+    },
+
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
       "env": {
       }
     },
@@ -11,15 +22,13 @@
       "command": "uvx",
       "args": ["mcp-server-git"]
     },
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
+
+    "brave-search": {
+      "disabled": false,
+      "command": "/opt/homebrew/bin/npx",
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
       "env": {
       }
-    },
-    "devex-mcp-server": {
-      "command": "devex-mcp-server",
-      "args": []
     }
   }
 }
