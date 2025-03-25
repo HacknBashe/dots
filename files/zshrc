@@ -74,3 +74,8 @@ if [ -f ~/.zshrc.local ]; then
   # Import local settings
   source ~/.zshrc.local
 fi
+
+if [ -d ~/.venv ]; then
+  source /home/nick/.venv/bin/activate
+fi
+
