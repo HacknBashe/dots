@@ -99,6 +99,7 @@ in {
   home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
   home.packages = with pkgs;
     [
+      aichat
       bat
       chntpw
       cmatrix
@@ -131,6 +132,11 @@ in {
         source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/local/bin";
         target = ".local/bin";
         recursive = true;
+      };
+
+      "aichat" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/aichat/config.yaml";
+        target = ".config/aichat/config.yaml";
       };
 
       "mcp.json" = {
