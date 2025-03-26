@@ -1,6 +1,7 @@
 local current_id, threshold
 Swipe = hs.loadSpoon("Swipe")
-Swipe:start(3, function(direction, distance, id)
+local threeFingerSwipe = Swipe.new()
+threeFingerSwipe:start(3, function(direction, distance, id)
 	if id == current_id then
 		if distance > threshold then
 			threshold = math.huge
@@ -22,16 +23,17 @@ Swipe:start(3, function(direction, distance, id)
 end)
 
 local slack_current_id, slack_threshold
-Swipe:start(2, function(direction, distance, id)
+local twoFingerSwipe = Swipe.new()
+twoFingerSwipe:start(2, function(direction, distance, id)
 	if id == slack_current_id then
 		if distance > slack_threshold then
 			slack_threshold = math.huge
 
 			local app = hs.window.focusedWindow()
 			if app and app:application():name() == "Slack" then
-				if direction == "left" then
+				if direction == "right" then
 					hs.eventtap.keyStroke({ "cmd" }, "[")
-				elseif direction == "right" then
+				elseif direction == "left" then
 					hs.eventtap.keyStroke({ "cmd" }, "]")
 				end
 			end
