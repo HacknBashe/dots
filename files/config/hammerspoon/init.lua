@@ -3,7 +3,7 @@ Swipe = hs.loadSpoon("Swipe")
 Swipe:start(3, function(direction, distance, id)
 	if id == current_id then
 		if distance > threshold then
-			threshold = math.huge -- only trigger once per swipe
+			threshold = math.huge
 
 			if direction == "left" then
 				hs.execute(
@@ -17,7 +17,28 @@ Swipe:start(3, function(direction, distance, id)
 		end
 	else
 		current_id = id
-		threshold = 0.2 -- swipe distance > 20% of trackpad
+		threshold = 0.15
+	end
+end)
+
+local slack_current_id, slack_threshold
+Swipe:start(2, function(direction, distance, id)
+	if id == slack_current_id then
+		if distance > slack_threshold then
+			slack_threshold = math.huge
+
+			local app = hs.window.focusedWindow()
+			if app and app:application():name() == "Slack" then
+				if direction == "left" then
+					hs.eventtap.keyStroke({ "cmd" }, "[")
+				elseif direction == "right" then
+					hs.eventtap.keyStroke({ "cmd" }, "]")
+				end
+			end
+		end
+	else
+		slack_current_id = id
+		slack_threshold = 0.15
 	end
 end)
 
