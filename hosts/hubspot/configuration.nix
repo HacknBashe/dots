@@ -37,6 +37,7 @@ in {
   #     "karabiner-elements"
   #     "visual-studio-code"
   #     "hammerspoon"
+  #     "ollama"
   #   ];
   #   forumlae = [
   #     "FelixKratz/formulae/borders"
