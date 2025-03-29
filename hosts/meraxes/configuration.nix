@@ -94,6 +94,32 @@ in {
     };
   };
 
+  security.pam.loginLimits = [
+    {
+      domain = "@audio";
+      type = "soft";
+      item = "rtprio";
+      value = "95";
+    }
+    {
+      domain = "@audio";
+      type = "hard";
+      item = "rtprio";
+      value = "95";
+    }
+    {
+      domain = "@audio";
+      type = "soft";
+      item = "memlock";
+      value = "unlimited";
+    }
+    {
+      domain = "@audio";
+      type = "hard";
+      item = "memlock";
+      value = "unlimited";
+    }
+  ];
   security.rtkit.enable = true;
   services.pulseaudio.enable = false;
   services.pipewire = {
@@ -101,6 +127,17 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    extraConfig = {
+      pipewire = {
+        "10-clock-settings" = {
+          "context.properties" = {
+            "default.clock.min-quantum" = 16;
+            "default.clock.quantum" = 32;
+            "default.clock.rate" = 48000;
+          };
+        };
+      };
+    };
     wireplumber = {
       enable = true;
       configPackages = [
