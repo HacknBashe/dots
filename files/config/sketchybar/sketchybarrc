@@ -5,13 +5,7 @@ source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
-if [ "$(aerospace list-monitors | wc -l)" -eq 1 ]; then
-  sketchybar --bar position=left height=50 color=$BAR_COLOR topmost=window
-elif [ "$(aerospace list-monitors | wc -l)" -eq 2 ]; then
-  sketchybar --bar position=left height=50 color=$BAR_COLOR display=1 topmost=window
-else
-  sketchybar --bar position=left height=50 color=$BAR_COLOR display=1,2 topmost=window
-fi
+sketchybar --bar position=left height=50 color=$BAR_COLOR display=1,2 topmost=window
 
 default=(
   padding_left=5

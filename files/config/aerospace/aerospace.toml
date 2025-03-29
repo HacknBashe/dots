@@ -91,6 +91,7 @@ P = 'built-in'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
 alt-enter = 'exec-and-forget open -na /Applications/Ghostty.app'
+alt-w = 'exec-and-forget /bin/bash -c "if [ -d \"/Applications/Brave Browser.app\" ]; then open -na \"/Applications/Brave Browser.app\"; else open -na \"/Applications/Google Chrome.app\"; fi"'
 alt-e = 'exec-and-forget open /Library'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
