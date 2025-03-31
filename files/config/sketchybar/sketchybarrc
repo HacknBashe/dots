@@ -5,7 +5,7 @@ source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
-sketchybar --bar position=left height=50 color=$BAR_COLOR display=1,2 topmost=window
+sketchybar --bar position=left height=50 color=$BAR_COLOR display=1 topmost=window
 
 default=(
   padding_left=5
