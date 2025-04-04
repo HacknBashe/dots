@@ -46,6 +46,35 @@ vim.keymap.set("n", "<leader>td", ":tabclose<CR>", { desc = "Delete tab" })
 
 --quickfix
 vim.keymap.set("n", "<leader>vq", ":copen<CR>", { desc = "View Quickfix" })
+vim.keymap.set("n", "<leader>qa", function()
+	local current_line = vim.fn.line(".")
+	local current_file = vim.fn.expand("%:p")
+	local line_content = vim.fn.getline(".")
+
+	local qf_entry = {
+		filename = current_file,
+		lnum = current_line,
+		text = line_content,
+	}
+
+	vim.fn.setqflist({ qf_entry }, "a")
+	print("Added line to quickfix list")
+end, { desc = "Add current line to quickfix" })
+
+vim.keymap.set("n", "<leader>qd", function()
+	local qflist = vim.fn.getqflist()
+	if #qflist == 0 then
+		print("Quickfix list is empty")
+		return
+	end
+
+	local current_idx = vim.fn.getqflist({ idx = 0 }).idx
+	if current_idx > 0 then
+		table.remove(qflist, current_idx)
+		vim.fn.setqflist(qflist, "r")
+		print(string.format("Removed entry %d from quickfix list", current_idx))
+	end
+end, { desc = "Delete current quickfix entry" })
 
 -- Spelling
 vim.keymap.set("n", "<leader>vS", ":set spell!<CR>", { desc = "View Spellcheck" })
