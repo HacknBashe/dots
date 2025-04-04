@@ -28,7 +28,6 @@ autoload -U down-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey '\e[B' down-line-or-beginning-search
 
-# Path
 addToPathFront() {
   if [[ "$PATH" != *"$1"* ]]; then
     export PATH=$1:$PATH
@@ -71,11 +70,6 @@ function y() {
 eval "$(zoxide init zsh)"
 
 if [ -f ~/.zshrc.local ]; then
-  # Import local settings
   source ~/.zshrc.local
-fi
-
-if [ -d ~/.venv ]; then
-  source /home/nick/.venv/bin/activate
 fi
 

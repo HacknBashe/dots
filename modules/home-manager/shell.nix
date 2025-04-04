@@ -62,7 +62,17 @@ in {
     initExtra = ''
       ${builtins.readFile ../../files/zshrc}
     '';
-    envExtra = ''
+    envExtra = let
+      customExtra =
+        if pkgs.stdenv.isLinux
+        then ''
+          if [ -d ~/.venv ]; then
+            source /home/nick/.venv/bin/activate
+            fi
+        ''
+        else '''';
+    in ''
+      ${customExtra}
       if [ -f ~/.zshenv.local ]; then
         source ~/.zshenv.local
       fi

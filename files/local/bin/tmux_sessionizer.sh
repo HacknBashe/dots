@@ -16,12 +16,12 @@ tmux_running=$(pgrep tmux)
 zoxide add "$selected"
 
 if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-  tmux new-session -s $selected_name -c $selected "nvim; exec zsh -i"
+  tmux new-session -s $selected_name -c $selected "zsh -i -c nvim"
   exit 0
 fi
 
 if ! tmux has-session -t=$selected_name 2>/dev/null; then
-  tmux new-session -ds $selected_name -c $selected "nvim; exec zsh -i"
+  tmux new-session -ds $selected_name -c $selected "zsh -i -c nvim"
 fi
 
 if [[ -z $TMUX ]]; then
