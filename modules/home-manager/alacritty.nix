@@ -10,7 +10,7 @@
       settings = {
         font.size = 20.0;
         font.bold.style = lib.mkForce "Regular";
-        font.normal.family = config.theme.fontMono;
+        font.normal.family = config.theme.fonts.mono;
         font.normal.style = lib.mkForce "ExtraLight";
         window = {
           decorations = "none";

@@ -78,7 +78,7 @@
         '';
         color = "rgba(205, 214, 244, 1)";
         font_size = 120;
-        font_family = config.theme.fontMono;
+        font_family = config.theme.fonts.mono;
         position = "0, -300";
         halign = "center";
         valign = "top";

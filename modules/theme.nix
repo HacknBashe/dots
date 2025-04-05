@@ -63,28 +63,43 @@ in {
         default = "";
       };
 
-      fontSans = lib.mkOption {
-        description = ''
-          Sans-serif font
-        '';
-        type = lib.types.str;
-        default = "";
-      };
+      fonts = {
+        sans = lib.mkOption {
+          description = ''
+            Sans-serif font
+          '';
+          type = lib.types.str;
+          default = "";
+        };
 
-      fontSerif = lib.mkOption {
-        description = ''
-          Serif font
-        '';
-        type = lib.types.str;
-        default = "";
-      };
+        serif = lib.mkOption {
+          description = ''
+            Serif font
+          '';
+          type = lib.types.str;
+          default = "";
+        };
 
-      fontMono = lib.mkOption {
-        description = ''
-          Monospace font
-        '';
-        type = lib.types.str;
-        default = "";
+        mono = lib.mkOption {
+          description = ''
+            Monospace font
+          '';
+          type = lib.types.str;
+          default = "";
+        };
+
+        sizes = lib.mkOption {
+          description = ''
+            Font sizes for different contexts
+          '';
+          type = lib.types.attrsOf lib.types.int;
+          default = {};
+          example = ''
+            {
+              applications = 12;
+            }
+          '';
+        };
       };
 
       colors = lib.mkOption {
@@ -117,9 +132,14 @@ in {
       wallWide = "/home/nick/Pictures/Walls/nebula-red.png";
       wallXWide = "/home/nick/Pictures/Walls/nebula-blue.png";
 
-      fontSans = "";
-      fontSerif = "";
-      fontMono = "SauceCodePro Nerd Font Mono";
+      fonts = {
+        sans = "";
+        serif = "";
+        mono = "SauceCodePro Nerd Font Mono";
+        sizes = {
+          applications = 12;
+        };
+      };
 
       colors = {
         background = "#1a1b26";

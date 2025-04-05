@@ -25,16 +25,16 @@ in {
         background = ${colors.background}
         foreground= ${colors.foreground}
 
-        font-family = ${config.theme.fontMono}
+        font-family = ${config.theme.fonts.mono}
         font-style = light
 
-        font-family-bold = ${config.theme.fontMono}
+        font-family-bold = ${config.theme.fonts.mono}
         font-style-bold = semibold
 
-        font-family-italic = ${config.theme.fontMono}
+        font-family-italic = ${config.theme.fonts.mono}
         font-style-italic = light italic
 
-        font-family-bold-italic = ${config.theme.fontMono}
+        font-family-bold-italic = ${config.theme.fonts.mono}
         font-style-bold-italic = semibold italic
 
         background-opacity = .8

@@ -98,10 +98,10 @@
   '';
 in {
   gtk = {
-    # enable = true;
+    enable = true;
     # font = {
-    #   inherit (config.stylix.fonts.sansSerif) package name;
-    #   size = config.stylix.fonts.sizes.applications;
+    # inherit (config.theme.fonts.sans) package name;
+    # size = config.theme.fonts.sizes.applications;
     # };
     theme = {
       package = pkgs.adw-gtk3;
