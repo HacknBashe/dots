@@ -1,6 +1,6 @@
 import { App, Gdk, Gtk } from "astal/gtk3";
 import style from "./style.scss";
-import { execAsync, timeout } from "astal";
+import { execAsync } from "astal";
 
 import { Bar } from "./bar/Bar";
 import { SystemPopup } from "./bar/System";
@@ -25,10 +25,26 @@ App.start({
     });
 
     App.connect("monitor-added", (__, gdkmonitor: Gdk.Monitor) => {
+      execAsync([
+        "hyprctl",
+        "notify",
+        "-1",
+        "10000",
+        "rgb(ff1ea3)",
+        `${gdkmonitor.model}`,
+      ]);
       bars.set(gdkmonitor, Bar(gdkmonitor));
     });
 
     App.connect("monitor-removed", (_, gdkmonitor) => {
+      execAsync([
+        "hyprctl",
+        "notify",
+        "-1",
+        "10000",
+        "rgb(ff1ea3)",
+        `${gdkmonitor.model}`,
+      ]);
       bars.get(gdkmonitor)?.destroy();
       bars.delete(gdkmonitor);
     });
