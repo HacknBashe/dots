@@ -32,7 +32,7 @@ lspconfig.lua_ls.setup({
 lspconfig.jdtls.setup({})
 lspconfig.gopls.setup({})
 lspconfig.ts_ls.setup(isHubspot and {
-	settings = {
+	init_options = {
 		tsserver_path = bend.getTsServerPathForCurrentFile(),
 	},
 } or {})
