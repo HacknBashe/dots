@@ -30,6 +30,8 @@ return {
 		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files hidden=true follow=true <CR>", opts("Find Files"))
 		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>", opts("Find Strings"))
 
+		vim.keymap.set("n", "<leader>vs", "<cmd> Telescope lsp_document_symbols <CR>", opts("View Symbols"))
+
 		local fdfcmd =
 			[[:lua telescope_find_directory_file(vim.fn.input("Search subdirectory for file: ", vim.fn.getreg('"'))<CR>]]
 		vim.keymap.set("n", "<leader>fdf", fdfcmd, opts("Find file in directory"))
