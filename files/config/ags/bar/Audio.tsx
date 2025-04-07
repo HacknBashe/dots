@@ -37,49 +37,42 @@ export function Audio() {
             }
           }}
           onScroll={(_, e) => {
-            print("foo", e.delta_y);
             if (e.delta_y < 0) {
               execAsync(["pulsemixer", "--change-volume", "+5"]);
             } else {
               execAsync(["pulsemixer", "--change-volume", "-5"]);
             }
           }}
-        >
-          <label
-            label={bind(speaker, "volume").as(
-              (volume) => `${Math.floor(volume * 100)}%`,
-            )}
-          />
-        </button>
+          label={bind(speaker, "volume").as(
+            (volume) => `${Math.floor(volume * 100)}%`,
+          )}
+        />
       </eventbox>
       <box>
         <button
           onClick={() => {
             setDefaultDevice("Soundbar");
           }}
-        >
-          {bind(speaker, "description").as((desc) => {
+          label={bind(speaker, "description").as((desc) => {
             return desc === "Soundbar" ? "󰓃" : "󰓄";
           })}
-        </button>
+        />
         <button
           onClick={() => {
             setDefaultDevice("Headset");
           }}
-        >
-          {bind(speaker, "description").as((desc) => {
+          label={bind(speaker, "description").as((desc) => {
             return desc === "Headset" ? "󰋋" : "󰟎";
           })}
-        </button>
+        />
         <button
           onClick={() => {
             setDefaultDevice("TV");
           }}
-        >
-          {bind(speaker, "description").as((desc) => {
+          label={bind(speaker, "description").as((desc) => {
             return desc === "TV" ? "󰄘" : "󰞊";
           })}
-        </button>
+        />
       </box>
     </box>
   );

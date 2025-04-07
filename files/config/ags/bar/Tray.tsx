@@ -1,21 +1,17 @@
 import { bind } from "astal";
-import { Gdk } from "astal/gtk3";
 
 import AstalTray from "gi://AstalTray";
 
 function TrayButton({ item }: { item: AstalTray.TrayItem }) {
-  const menu = item.create_menu();
-
   return (
-    <button
+    <menubutton
       tooltipMarkup={bind(item, "tooltipMarkup")}
-      onDestroy={() => menu?.destroy()}
-      onClickRelease={(self) => {
-        menu?.popup_at_widget(self, Gdk.Gravity.SOUTH, Gdk.Gravity.NORTH, null);
-      }}
+      usePopover={false}
+      actionGroup={bind(item, "actionGroup").as((ag) => ["dbusmenu", ag])}
+      menuModel={bind(item, "menuModel")}
     >
-      <icon gIcon={bind(item, "gicon")} />
-    </button>
+      <icon gicon={bind(item, "gicon")} />
+    </menubutton>
   );
 }
 

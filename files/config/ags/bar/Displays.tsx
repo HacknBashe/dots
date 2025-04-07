@@ -1,7 +1,5 @@
-import { exec, execAsync, timeout, Variable } from "astal";
-import { App } from "astal/gtk3";
+import { execAsync, timeout, Variable } from "astal";
 
-import { remapWindows } from "../app";
 import {
   MONITOR_1_COMMAND,
   MONITOR_2_COMMAND,
@@ -42,10 +40,6 @@ async function toggleMonitor(monitor: string, enableCommand: string) {
         async () => {
           const finalMonitorStatus = await getMonitorStatus();
           monitors.set(finalMonitorStatus);
-          // Need to allow the monitor to fully connect before we remap
-          timeout(1000, () => {
-            remapWindows();
-          });
         },
       );
     }
@@ -54,10 +48,6 @@ async function toggleMonitor(monitor: string, enableCommand: string) {
       async () => {
         const finalMonitorStatus = await getMonitorStatus();
         monitors.set(finalMonitorStatus);
-        // Need to allow the monitor to fully connect before we remap
-        timeout(1000, () => {
-          remapWindows();
-        });
       },
     );
   }
@@ -71,26 +61,23 @@ export function Displays() {
   return (
     <box className="displays">
       <button
+        label={monitors((val) => (val[MONITOR_1] ? "󰎤" : "󰎦"))}
         onClick={() => {
           toggleMonitor(MONITOR_1, MONITOR_1_COMMAND);
         }}
-      >
-        {monitors((val) => (val[MONITOR_1] ? "󰎤" : "󰎦"))}
-      </button>
+      ></button>
       <button
+        label={monitors((val) => (val[MONITOR_2] ? "󰎧" : "󰎩"))}
         onClick={() => {
           toggleMonitor(MONITOR_2, MONITOR_2_COMMAND);
         }}
-      >
-        {monitors((val) => (val[MONITOR_2] ? "󰎧" : "󰎩"))}
-      </button>
+      />
       <button
+        label={monitors((val) => (val[TV] ? "󰎪" : "󰎬"))}
         onClick={() => {
           toggleMonitor(TV, MONITOR_3_COMMAND);
         }}
-      >
-        {monitors((val) => (val[TV] ? "󰎪" : "󰎬"))}
-      </button>
+      ></button>
     </box>
   );
 }
