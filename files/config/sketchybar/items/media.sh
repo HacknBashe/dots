@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sketchybar --add item media.label right \
-  --set media.label label.color=$ACCENT_COLOR \
+  --set media.label \
   label.max_chars=6 \
   scroll_texts=on \
   icon.drawing=off0 \
@@ -13,7 +13,6 @@ sketchybar --add item media.icon right \
   icon.padding_left=0 \
   icon.padding_right=0 \
   icon=󰎇 \
-  icon.color=$ACCENT_COLOR \
   background.drawing=off \
   click_script="open -a Spotify"
 

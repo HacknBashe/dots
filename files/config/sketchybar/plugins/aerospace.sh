@@ -2,12 +2,10 @@
 
 if [ "$NAME" = "$FOCUSED_WORKSPACE" ]; then
   sketchybar --set "$NAME" \
-    background.border_width=1 \
-    background.border_color=0xffffffff
+    icon.highlight=true
 else
   sketchybar --set "$NAME" \
-    background.border_width=0 \
-    background.border_color=0xff262626
+    icon.highlight=false
 
   if [ -z "$(aerospace list-windows --workspace $NAME)" ]; then
     sketchybar --set "$NAME" \

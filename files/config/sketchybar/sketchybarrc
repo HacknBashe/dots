@@ -8,19 +8,20 @@ ITEM_DIR="$CONFIG_DIR/items"
 sketchybar --bar position=left height=50 color=$BAR_COLOR display=1 topmost=window
 
 default=(
-  padding_left=5
-  padding_right=5
+  padding_left=7
+  padding_right=7
   icon.font="SauceCodePro Nerd Font:Bold:17.0"
+  icon.font.size=22
   icon.color=$FG_COLOR
+  icon.highlight_color=$ACCENT_COLOR
+  # icon.highlight_color=0xFFFF0000
   icon.padding_left=10
   icon.padding_right=10
   label.font="SauceCodePro Nerd Font:Bold:14.0"
+  label.font.size=16
   label.color=$FG_COLOR
   label.padding_left=0
   label.padding_right=0
-  background.color=$ITEM_BG_COLOR
-  background.corner_radius=5
-  background.height=26
 )
 sketchybar --default "${default[@]}"
 
