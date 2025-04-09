@@ -13,7 +13,7 @@
       text = ''
         #!/bin/bash
 
-        export BAR_COLOR=0xff${builtins.substring 1 7 config.theme.colors.background}
+        export BAR_COLOR=0x99${builtins.substring 1 7 config.theme.colors.background}
         export FG_COLOR=0xffffffff
         export ACCENT_COLOR=0xff${builtins.substring 1 7 config.theme.colors.bright.cyan}
       '';

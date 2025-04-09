@@ -188,7 +188,7 @@ export function Weather() {
   );
 
   interval(300000, () => {
-    execAsync("curl -s wttr.in/Lancaster,NewYork?format=j1")
+    execAsync("curl -s wttr.in/Lancaster,+New+York?format=j1")
       .then((res: string) => {
         const weatherData: WeatherData = JSON.parse(res);
         const output: { text: string; tooltip: string } = {
