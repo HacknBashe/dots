@@ -19,11 +19,13 @@ function Swipe.new()
 		distance = 0,
 		size = 0,
 		touches = {},
+		lastUpdateTime = nil,
 		clear = function(cache)
 			cache.touches = {}
 			cache.size = 0
 			cache.direction = nil
 			cache.distance = 0
+			cache.lastUpdateTime = nil
 		end,
 		none = function(cache, touches)
 			local absent = true
@@ -50,6 +52,7 @@ function Swipe.new()
 				}
 				cache.size = i
 			end
+			cache.lastUpdateTime = hs.timer.secondsSinceEpoch()
 			cache.id = cache.id + 1
 			return cache.id
 		end,
@@ -57,6 +60,10 @@ function Swipe.new()
 			local left, right, up, down = true, true, true, true
 			local distance = { dx = 0, dy = 0 }
 			local size = 0
+			local currentTime = hs.timer.secondsSinceEpoch()
+			local timeDelta = currentTime - (cache.lastUpdateTime or currentTime)
+			cache.lastUpdateTime = currentTime
+
 			for i, touch in ipairs(touches) do
 				local id = touch.identity
 				local x, y = touch.normalizedPosition.x, touch.normalizedPosition.y
@@ -77,26 +84,33 @@ function Swipe.new()
 			assert(cache.size == size)
 			distance = { dx = distance.dx / size, dy = distance.dy / size }
 
+			-- Calculate instantaneous speed (normalized units per second)
+			local speed = math.sqrt(distance.dx * distance.dx + distance.dy * distance.dy) / timeDelta
+			-- Minimum speed threshold (adjust this value as needed)
+			local MIN_SPEED = 0.5
+
 			local direction = nil
-			if left and not (right or up or down) then
-				direction = "left"
-				if cache.direction == direction then
-					cache.distance = cache.distance - distance.dx
-				end
-			elseif right and not (left or up or down) then
-				direction = "right"
-				if cache.direction == direction then
-					cache.distance = cache.distance + distance.dx
-				end
-			elseif up and not (left or right or down) then
-				direction = "up"
-				if cache.direction == direction then
-					cache.distance = cache.distance + distance.dy
-				end
-			elseif down and not (left or right or up) then
-				direction = "down"
-				if cache.direction == direction then
-					cache.distance = cache.distance - distance.dy
+			if speed >= MIN_SPEED then
+				if left and not (right or up or down) then
+					direction = "left"
+					if cache.direction == direction then
+						cache.distance = cache.distance - distance.dx
+					end
+				elseif right and not (left or up or down) then
+					direction = "right"
+					if cache.direction == direction then
+						cache.distance = cache.distance + distance.dx
+					end
+				elseif up and not (left or right or down) then
+					direction = "up"
+					if cache.direction == direction then
+						cache.distance = cache.distance + distance.dy
+					end
+				elseif down and not (left or right or up) then
+					direction = "down"
+					if cache.direction == direction then
+						cache.distance = cache.distance - distance.dy
+					end
 				end
 			end
 

@@ -1,12 +1,12 @@
 hs.loadSpoon("Voice")
 
-local current_id, threshold
+local three_finger_id, three_finger_threshold
 Swipe = hs.loadSpoon("Swipe")
 local threeFingerSwipe = Swipe.new()
 threeFingerSwipe:start(3, function(direction, distance, id)
-	if id == current_id then
-		if distance > threshold then
-			threshold = math.huge
+	if id == three_finger_id then
+		if distance > three_finger_threshold then
+			three_finger_threshold = math.huge
 
 			if direction == "left" then
 				hs.execute(
@@ -19,17 +19,17 @@ threeFingerSwipe:start(3, function(direction, distance, id)
 			end
 		end
 	else
-		current_id = id
-		threshold = 0.15
+		three_finger_id = id
+		three_finger_threshold = 0.15
 	end
 end)
 
-local slack_current_id, slack_threshold
+local two_finger_id, two_finger_threshold
 local twoFingerSwipe = Swipe.new()
 twoFingerSwipe:start(2, function(direction, distance, id)
-	if id == slack_current_id then
-		if distance > slack_threshold then
-			slack_threshold = math.huge
+	if id == two_finger_id then
+		if distance > two_finger_threshold then
+			two_finger_threshold = math.huge
 
 			local app = hs.window.focusedWindow()
 			if app and app:application():name() == "Slack" then
@@ -39,9 +39,19 @@ twoFingerSwipe:start(2, function(direction, distance, id)
 					hs.eventtap.keyStroke({ "cmd" }, "]")
 				end
 			end
+
+			if app and app:application():name() == "Cursor" then
+				if direction == "right" then
+					hs.eventtap.keyStroke({}, "escape")
+					hs.eventtap.keyStroke({ "ctrl" }, "o")
+				elseif direction == "left" then
+					hs.eventtap.keyStroke({}, "escape")
+					hs.eventtap.keyStroke({ "ctrl" }, "i")
+				end
+			end
 		end
 	else
-		slack_current_id = id
-		slack_threshold = 0.15
+		two_finger_id = id
+		two_finger_threshold = 0.15
 	end
 end)
