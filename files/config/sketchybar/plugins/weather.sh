@@ -74,7 +74,7 @@ format_chances() {
   echo "$conditions"
 }
 
-weather_data=$(curl -s "wttr.in/Lancaster,+New+York?format=j1")
+weather_data=$(curl -s "wttr.in?format=j1")
 
 if [ $? -ne 0 ]; then
   echo "󰼯"
