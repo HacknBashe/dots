@@ -90,6 +90,7 @@ in {
         # UI Enhancements
         vim-fugitive
         git-worktree-2
+        gitsigns-nvim
         mini-nvim
         trouble-nvim
 

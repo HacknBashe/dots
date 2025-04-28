@@ -15,6 +15,7 @@ else
 	require("plugins.copilot").copilot.config()
 	require("plugins.copilot").copilotcmp.config()
 	require("plugins.fugitive").config()
+	require("plugins.gitsigns").config()
 	require("plugins.harpoon").config()
 	require("plugins.lsp")
 	require("plugins.markdown").toc.config()

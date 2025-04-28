@@ -21,10 +21,10 @@ return {
 
 		require("mini.icons").setup()
 		if not vim.g.vscode then
-			require("mini.git").setup()
-			require("mini.diff").setup({
-				view = { style = "sign", signs = { add = "│", change = "┆", delete = "_" } },
-			})
+			-- require("mini.git").setup()
+			-- require("mini.diff").setup({
+			-- 	view = { style = "sign", signs = { add = "│", change = "┆", delete = "_" } },
+			-- })
 
 			local misc = require("mini.misc")
 			misc.setup_restore_cursor()
