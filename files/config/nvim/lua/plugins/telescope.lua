@@ -46,6 +46,7 @@ return {
 		vim.keymap.set("n", "<leader>fR", "<cmd> Telescope resume <CR>", opts("Find: Resume Last Search"))
 
 		vim.keymap.set("n", "<leader>gc", "<cmd> Telescope git_commits <CR>", opts("Git Commits"))
+		vim.keymap.set("n", "<leader>gb", "<cmd> Telescope git_bcommits <CR>", opts("Git Buffer Commits"))
 		vim.keymap.set("n", "<leader>gs", "<cmd> Telescope git_status <CR>", opts("Git Status"))
 
 		require("telescope").load_extension("fzf")
