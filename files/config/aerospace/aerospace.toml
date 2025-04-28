@@ -54,14 +54,14 @@ outer.top =        10
 outer.right =      10
 
 [workspace-to-monitor-force-assignment]
-1 = ['AW', 'built-in']
+# 1 = ['AW', 'built-in']
 # 2 = ['AW', 'built-in']
 # 3 = ['AW', 'built-in']
 # 4 = ['AW', 'built-in']
-5 = ['AW', 'built-in']
+# 5 = ['AW', 'built-in']
 # 6 = ['QE', 'built-in']
-7 = ['QE', 'built-in']
-8 = ['QE', 'built-in']
+# 7 = ['QE', 'built-in']
+# 8 = ['QE', 'built-in']
 9 = 'built-in'
 # 10 = ['QE', 'built-in']
 # M = 'built-in'
