@@ -59,7 +59,7 @@ in {
         cat = "bat";
       }
       // zshAliases;
-    initExtra = ''
+    initContent = ''
       ${builtins.readFile ../../files/zshrc}
     '';
     envExtra = let
@@ -79,30 +79,46 @@ in {
     '';
   };
 
-  imports = [
-    (inputs.nix-yazi-plugins.legacyPackages.x86_64-linux.homeManagerModules.default)
-  ];
   programs.yazi = {
     enable = true;
-    initLua = lib.mkOrder 500 ''
-      THEME.git = THEME.git or {}
+    initLua = ''
+      require("git"):setup()
+      require("full-border"):setup()
 
-      THEME.git.modified_sign = ""
-      THEME.git.added_sign = ""
-      THEME.git.untracked_sign = "󱀶"
-      THEME.git.ignored_sign = ""
-      THEME.git.deleted_sign = ""
-      THEME.git.updated_sign = ""
+      th.git = th.git or {}
+
+      th.git.modified_sign = ""
+      th.git.added_sign = ""
+      th.git.untracked_sign = "󱀶"
+      th.git.ignored_sign = ""
+      th.git.deleted_sign = ""
+      th.git.updated_sign = ""
     '';
-    yaziPlugins = {
-      enable = true;
-      plugins = {
-        chmod.enable = true;
-        full-border.enable = true;
-        git.enable = true;
-        smart-enter.enable = true;
-        smart-filter.enable = true;
-      };
+    keymap = {
+      manager.prepend_keymap = [
+        {
+          on = ["l"];
+          run = "plugin smart-enter";
+          desc = "Enter the child directory, or open the file";
+        }
+        {
+          on = ["F"];
+          run = "plugin smart-filter";
+          desc = "Smart filter";
+        }
+        {
+          on = ["c" "m"];
+          run = "plugin chmod";
+          desc = "Chmod on selected files";
+        }
+      ];
+    };
+    plugins = with pkgs.yaziPlugins; {
+      chmod = chmod;
+      full-border = full-border;
+      git = git;
+      smart-enter = smart-enter;
+      smart-filter = smart-filter;
     };
   };
 

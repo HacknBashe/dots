@@ -25,7 +25,7 @@
     home-manager.enable = true;
   };
 
-  programs.zsh.initExtra = ''
+  programs.zsh.initContent = ''
     . ~/.hubspot/shellrc
   '';
 
