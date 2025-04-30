@@ -14,7 +14,7 @@ else
 	require("plugins.code-companion").config()
 	require("plugins.copilot").copilot.config()
 	require("plugins.copilot").copilotcmp.config()
-	require("plugins.fugitive").config()
+	require("plugins.neogit").config()
 	require("plugins.gitsigns").config()
 	require("plugins.harpoon").config()
 	require("plugins.lsp")

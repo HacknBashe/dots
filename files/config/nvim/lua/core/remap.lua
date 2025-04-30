@@ -75,6 +75,9 @@ vim.keymap.set("n", "<leader>qd", function()
 		print(string.format("Removed entry %d from quickfix list", current_idx))
 	end
 end, { desc = "Delete current quickfix entry" })
+vim.keymap.set("n", "<leader>qn", ":cnewer<CR>", { desc = "Next quickfix history" })
+vim.keymap.set("n", "<leader>qo", ":colder<CR>", { desc = "Older quickfix history" })
+vim.keymap.set("n", "<leader>qh", ":chistory<CR>", { desc = "Show quickfix history" })
 
 -- Spelling
 vim.keymap.set("n", "<leader>vS", ":set spell!<CR>", { desc = "View Spellcheck" })

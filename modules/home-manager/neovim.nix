@@ -88,7 +88,8 @@ in {
         # nvim-dap-ui
 
         # UI Enhancements
-        vim-fugitive
+        # vim-fugitive
+        neogit
         git-worktree-2
         gitsigns-nvim
         mini-nvim

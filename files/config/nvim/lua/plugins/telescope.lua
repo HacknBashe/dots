@@ -31,6 +31,7 @@ return {
 		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>", opts("Find Strings"))
 
 		vim.keymap.set("n", "<leader>vs", "<cmd> Telescope lsp_document_symbols <CR>", opts("View Symbols"))
+		vim.keymap.set("n", "<leader>vm", "<cmd> Telescope marks<CR>", opts("View Marks"))
 
 		local fdfcmd =
 			[[:lua telescope_find_directory_file(vim.fn.input("Search subdirectory for file: ", vim.fn.getreg('"'))<CR>]]
@@ -46,7 +47,7 @@ return {
 		vim.keymap.set("n", "<leader>fR", "<cmd> Telescope resume <CR>", opts("Find: Resume Last Search"))
 
 		vim.keymap.set("n", "<leader>gc", "<cmd> Telescope git_commits <CR>", opts("Git Commits"))
-		vim.keymap.set("n", "<leader>gb", "<cmd> Telescope git_bcommits <CR>", opts("Git Buffer Commits"))
+		vim.keymap.set("n", "<leader>gf", "<cmd> Telescope git_bcommits <CR>", opts("Git File Commits"))
 		vim.keymap.set("n", "<leader>gs", "<cmd> Telescope git_status <CR>", opts("Git Status"))
 
 		require("telescope").load_extension("fzf")
