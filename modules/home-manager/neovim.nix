@@ -22,16 +22,6 @@
       hash = "sha256-1uHcQQUnViktDBZt+aytlBF1ZG+/Ifv5VVoKSyM9ML0=";
     };
   };
-  git-worktree-2 = pkgs.vimUtils.buildVimPlugin {
-    name = "git-worktree-nvim";
-    src = pkgs.fetchFromGitHub {
-      owner = "polarmutex";
-      repo = "git-worktree.nvim";
-      rev = "3ad8c17a3d178ac19be925284389c14114638ebb";
-      hash = "sha256-fnqJqQTNei+8Gk4vZ2hjRj8iHBXTZT15xp9FvhGB+BQ=";
-    };
-    doCheck = false;
-  };
   code-companion = pkgs.vimUtils.buildVimPlugin {
     name = "code-companion";
     src = pkgs.fetchFromGitHub {
@@ -90,7 +80,6 @@ in {
         # UI Enhancements
         # vim-fugitive
         neogit
-        git-worktree-2
         gitsigns-nvim
         mini-nvim
         trouble-nvim

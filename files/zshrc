@@ -60,16 +60,96 @@ bindkey -s ^g "^ulazygit\n"
 bindkey -s -M vicmd ^g "ddAlazygit\n"
 
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
 }
 eval "$(zoxide init zsh)"
+
+gwz() {
+  top=$(git rev-parse --show-toplevel 2>/dev/null)
+  git_dir=$(git rev-parse --git-dir 2>/dev/null) || {
+    echo "Not in a git repo"
+    return 1
+  }
+
+  is_bare=$(git config --get --bool core.bare || echo "false")
+
+  if [ "$is_bare" = "true" ]; then
+    top="$git_dir"
+  fi
+
+  if [ $# -eq 0 ]; then
+    dir=$(
+      git worktree list --porcelain |
+        awk '/^worktree /{print $2}' |
+        fzf --height 10 --reverse
+    ) || return 1
+    [ -n "$dir" ] && z "$dir"
+    return
+  fi
+
+  branch="$1"
+  remote="origin/$branch"
+
+  if [ "$is_bare" = "true" ]; then
+    workdir="$(dirname "$git_dir")/wt-$branch"
+  else
+    workdir="$top/wt-$branch"
+  fi
+
+  git fetch origin "$branch:$branch.new" || {
+    echo " fetch failed (branch $branch not found on origin?)"
+    return 1
+  }
+  git worktree add -b "$branch" "$workdir" "$remote" && cd "$workdir"
+  git update-ref -d refs/heads/"$branch.new" 2>/dev/null
+}
+
+gwc() {
+  echo "Remote branches:"
+  git fetch --prune
+  branch=$(git branch -r |
+    grep -v HEAD |
+    sed 's|origin/||' |
+    sort -u |
+    fzf --height 10 --reverse |
+    tr -d '[:space:]')
+  [ -n "$branch" ] && gtw "$branch"
+}
+
+gwn() {
+  top=$(git rev-parse --show-toplevel 2>/dev/null)
+  git_dir=$(git rev-parse --git-dir 2>/dev/null) || {
+    echo "Not in a git repo"
+    return 1
+  }
+
+  is_bare=$(git config --get --bool core.bare || echo "false")
+
+  if [ "$is_bare" = "true" ]; then
+    top="$git_dir"
+  fi
+
+  if [ $# -eq 0 ]; then
+    echo "Usage: gwn <new-branch-name>"
+    return 1
+  fi
+
+  branch="$1"
+
+  if [ "$is_bare" = "true" ]; then
+    workdir="$(dirname "$git_dir")/wt-$branch"
+  else
+    workdir="$top/wt-$branch"
+  fi
+
+  git worktree add -b "$branch" "$workdir" HEAD && cd "$workdir"
+}
 
 if [ -f ~/.zshrc.local ]; then
   source ~/.zshrc.local
 fi
-

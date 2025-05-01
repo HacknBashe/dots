@@ -26,7 +26,6 @@ else
 	require("plugins.telescope").config()
 	require("plugins.theme").tokyonight.config()
 	require("plugins.treesitter").config()
-	require("plugins.worktree").config()
 	require("plugins.trouble").config()
 	require("plugins.telescope-undo").config()
 	require("plugins.yazi").config()
