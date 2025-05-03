@@ -5,36 +5,36 @@ source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
-sketchybar --bar position=left height=50 color=$BAR_COLOR display=1 topmost=window
+sketchybar --bar position=top height=32 color=$BAR_COLOR display=1 topmost=window
 
 default=(
-  padding_left=7
-  padding_right=7
+  padding_left=5
+  padding_right=5
   icon.font="SauceCodePro Nerd Font:Bold:17.0"
-  icon.font.size=22
+  icon.font.size=18
   icon.color=$FG_COLOR
   icon.highlight_color=$ACCENT_COLOR
   # icon.highlight_color=0xFFFF0000
-  icon.padding_left=10
-  icon.padding_right=10
+  icon.padding_left=5
+  icon.padding_right=5
   label.font="SauceCodePro Nerd Font:Bold:14.0"
   label.font.size=16
   label.color=$FG_COLOR
   label.padding_left=0
   label.padding_right=0
+  label.scroll_duration=180
 )
 sketchybar --default "${default[@]}"
 
-##### Adding Top Items #####
-source $ITEM_DIR/spacer.sh
+##### Adding Left Items #####
+source $ITEM_DIR/calendar.sh
 source $ITEM_DIR/spaces.sh
 
-##### Adding Bottom Items #####
+##### Adding Right Items #####
 source $ITEM_DIR/clock.sh
 source $ITEM_DIR/audio.sh
-source $ITEM_DIR/media.sh
 source $ITEM_DIR/weather.sh
-source $ITEM_DIR/calendar.sh
+source $ITEM_DIR/media.sh
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update

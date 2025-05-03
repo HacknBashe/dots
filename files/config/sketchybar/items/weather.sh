@@ -3,7 +3,6 @@
 sketchybar \
   --add item weather.temp right \
   --set weather.temp label="N/A" \
-  label.font.size=20 \
   icon.drawing=off \
   updates=on \
   update_freq=10 \

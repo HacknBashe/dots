@@ -2,7 +2,7 @@
 
 sketchybar --add item media.label right \
   --set media.label \
-  label.max_chars=6 \
+  label.max_chars=25 \
   scroll_texts=on \
   icon.drawing=off0 \
   background.drawing=off \
