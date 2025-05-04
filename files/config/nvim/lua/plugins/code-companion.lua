@@ -189,20 +189,6 @@ return {
 
 		vim.keymap.set(
 			{ "n", "v" },
-			"<leader>ae",
-			"<cmd>CodeCompanionChat claude<cr><cr>@editor #buffer<cr>",
-			{ desc = "New AI Editor", noremap = true, silent = true }
-		)
-
-		vim.keymap.set(
-			{ "n", "v" },
-			"<leader>af",
-			"<cmd>CodeCompanionChat claude<cr><cr>@full_stack_dev #buffer<cr>",
-			{ desc = "New AI Full Stack Dev", noremap = true, silent = true }
-		)
-
-		vim.keymap.set(
-			{ "n", "v" },
 			"<leader>aA",
 			"<cmd>CodeCompanionActions<cr>",
 			{ desc = "AI Actions", noremap = true, silent = true }
@@ -218,5 +204,30 @@ return {
 		-- Expand 'cc' into 'CodeCompanion' in the command line
 		vim.cmd([[cab cc CodeCompanion]])
 		vim.cmd([[cab ccc CodeCompanionChat]])
+
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "codecompanion",
+			callback = function()
+				vim.keymap.set("i", "<C-b>", function()
+					vim.api.nvim_put({ "#buffer " }, "c", true, true)
+				end, { buffer = true, desc = "Insert #buffer command" })
+
+				vim.keymap.set("i", "<C-e>", function()
+					vim.api.nvim_put({ "@editor " }, "c", true, true)
+				end, { buffer = true, desc = "Insert @editor command" })
+
+				vim.keymap.set("i", "<C-t>", function()
+					vim.api.nvim_put({ "@mcp " }, "c", true, true)
+				end, { buffer = true, desc = "Insert @mcp command" })
+
+				vim.keymap.set("i", "<C-f>", function()
+					vim.api.nvim_put({ "/file" }, "c", true, true)
+				end, { buffer = true, desc = "Insert /file command" })
+
+				vim.keymap.set("i", "<C-r>", function()
+					vim.api.nvim_put({ "/rules" }, "c", true, true)
+				end, { buffer = true, desc = "Insert /rules command" })
+			end,
+		})
 	end,
 }
