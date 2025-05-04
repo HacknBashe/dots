@@ -24,8 +24,7 @@ autocmd("BufEnter", {
 	group = yank_group,
 	pattern = "",
 	callback = function()
-		-- local rightmost_win = winnr('r')
-		if vim.api.nvim_buf_get_option(0, "buftype") == "help" then
+		if vim.bo.buftype == "help" then
 			vim.defer_fn(PositionHelp, 1)
 		end
 	end,
@@ -59,3 +58,49 @@ vim.opt.foldmethod = "expr"
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
+local function setup_file_check_timer()
+	if _G.file_check_timer then
+		_G.file_check_timer:stop()
+		_G.file_check_timer:close()
+	end
+
+	_G.last_mtimes = _G.last_mtimes or {}
+	_G.file_check_timer = vim.loop.new_timer()
+
+	_G.file_check_timer:start(
+		1000,
+		1000,
+		vim.schedule_wrap(function()
+			for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+				if vim.api.nvim_buf_is_loaded(buf) then
+					local path = vim.api.nvim_buf_get_name(buf)
+					if path ~= "" then
+						local stat = vim.loop.fs_stat(path)
+						if stat then
+							if _G.last_mtimes[buf] and stat.mtime.sec > _G.last_mtimes[buf] then
+								vim.cmd("checktime " .. buf)
+								vim.notify("File updated: " .. vim.fn.fnamemodify(path, ":t"), vim.log.levels.INFO)
+							end
+
+							_G.last_mtimes[buf] = stat.mtime.sec
+						end
+					end
+				end
+			end
+		end)
+	)
+end
+
+setup_file_check_timer()
+
+autocmd("BufDelete", {
+	pattern = "*",
+	callback = function(args)
+		if _G.last_mtimes and _G.last_mtimes[args.buf] then
+			_G.last_mtimes[args.buf] = nil
+		end
+	end,
+})
+
+vim.api.nvim_create_user_command("RestartFileWatcher", setup_file_check_timer, {})

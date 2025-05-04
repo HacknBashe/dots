@@ -8,14 +8,14 @@ return {
 		require("codecompanion").setup({
 			display = {
 				action_palette = {
-					-- broken for now
-					-- provider = "mini_pick",
+					provider = "mini_pick",
 				},
 				chat = {
 					intro_message = "󱙺 Press ? for options",
 					start_in_insert_mode = true,
 				},
 				diff = {
+					enabled = true,
 					provider = "mini_diff",
 				},
 			},
@@ -222,10 +222,16 @@ return {
 
 				vim.keymap.set("i", "<C-f>", function()
 					vim.api.nvim_put({ "/file" }, "c", true, true)
-				end, { buffer = true, desc = "Insert /file command" })
+					vim.defer_fn(function()
+						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-y>", true, true, true), "i", true)
+					end, 100)
+				end, { buffer = true, desc = "Insert and execute /file command" })
 
 				vim.keymap.set("i", "<C-r>", function()
 					vim.api.nvim_put({ "/rules" }, "c", true, true)
+					vim.defer_fn(function()
+						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-y>", true, true, true), "i", true)
+					end, 100)
 				end, { buffer = true, desc = "Insert /rules command" })
 			end,
 		})
