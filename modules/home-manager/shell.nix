@@ -165,8 +165,73 @@ in {
         target = ".config/aichat/config.yaml";
       };
 
-      "mcp.json" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/mcp.json";
+      "mcp.json" = let
+        # Try to import secrets from a separate JSON file
+        secretsPath = "${config.home.homeDirectory}/.config/mcp-secrets.json";
+        secretsExist = builtins.pathExists secretsPath;
+
+        _ =
+          if (!secretsExist && !config.isHubspot)
+          then builtins.trace "WARNING: ~/.config/mcp-secrets.json not found. MCP servers requiring API keys will use empty credentials." null
+          else null;
+
+        secrets =
+          if secretsExist
+          then builtins.fromJSON (builtins.readFile secretsPath)
+          else {
+            GITHUB_PERSONAL_ACCESS_TOKEN = "";
+            BRAVE_API_KEY = "";
+          };
+
+        mcpServers =
+          if config.isHubspot
+          then {
+            "devex-mcp-server" = {
+              command = "devex-mcp-server";
+              args = [];
+            };
+            "mcp-bend" = {
+              command = "mcp-bend";
+              args = [
+                "--use-cwd"
+                "--filter"
+                "list-packages"
+                "--filter"
+                "package-get-tests-results"
+                "--filter"
+                "package-ts-get-errors"
+              ];
+              env = {
+                MCP_METRICS_ORIGIN = "claude_code";
+              };
+              type = "stdio";
+            };
+          }
+          else {
+            "github" = {
+              command = "npx";
+              args = ["-y" "@modelcontextprotocol/server-github"];
+              env = {
+                GITHUB_PERSONAL_ACCESS_TOKEN = secrets.GITHUB_PERSONAL_ACCESS_TOKEN;
+              };
+            };
+            "git" = {
+              command = "uv";
+              args = ["run" "mcp-server-git"];
+            };
+            "brave-search" = {
+              disabled = false;
+              command = "/opt/homebrew/bin/npx";
+              args = ["-y" "@modelcontextprotocol/server-brave-search"];
+              env = {
+                BRAVE_API_KEY = secrets.BRAVE_API_KEY;
+              };
+            };
+          };
+      in {
+        text = builtins.toJSON {
+          mcpServers = mcpServers;
+        };
         target = ".config/mcp.json";
       };
 
