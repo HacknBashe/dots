@@ -228,6 +228,21 @@ return {
 				footer = " ",
 			})
 
+			vim.api.nvim_create_autocmd("BufLeave", {
+				callback = function()
+					local buf = vim.api.nvim_get_current_buf()
+					local file_type = vim.bo[buf].filetype
+
+					if file_type == "ministarter" then
+						starter.close()
+					end
+				end,
+			})
+
+			vim.keymap.set("n", "<leader>vS", function()
+				starter.open()
+			end, { desc = "View Starter", noremap = true, silent = true, nowait = true })
+
 			local clue = require("mini.clue")
 			vim.o.timeoutlen = 300
 			clue.setup({
