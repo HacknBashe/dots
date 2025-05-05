@@ -166,24 +166,21 @@ in {
       };
 
       "mcp.json" = let
-        # Try to import secrets from a separate JSON file
-        secretsPath = "${config.home.homeDirectory}/.config/mcp-secrets.json";
-        secretsExist = builtins.pathExists secretsPath;
+        # Hardcoded secrets for now (will be gitignored)
+        secrets = {
+        };
 
-        _ =
-          if (!secretsExist && !config.isHubspot)
-          then builtins.trace "WARNING: ~/.config/mcp-secrets.json not found. MCP servers requiring API keys will use empty credentials." null
-          else null;
-
-        secrets =
-          if secretsExist
-          then builtins.fromJSON (builtins.readFile secretsPath)
-          else {
-            GITHUB_PERSONAL_ACCESS_TOKEN = "";
-            BRAVE_API_KEY = "";
+        commonMcpServers = {
+          "github" = {
+            command = "npx";
+            args = ["-y" "@modelcontextprotocol/server-github"];
+            env = {
+              GITHUB_PERSONAL_ACCESS_TOKEN = secrets.GITHUB_PERSONAL_ACCESS_TOKEN;
+            };
           };
+        };
 
-        mcpServers =
+        envSpecificMcpServers =
           if config.isHubspot
           then {
             "devex-mcp-server" = {
@@ -208,13 +205,6 @@ in {
             };
           }
           else {
-            "github" = {
-              command = "npx";
-              args = ["-y" "@modelcontextprotocol/server-github"];
-              env = {
-                GITHUB_PERSONAL_ACCESS_TOKEN = secrets.GITHUB_PERSONAL_ACCESS_TOKEN;
-              };
-            };
             "git" = {
               command = "uv";
               args = ["run" "mcp-server-git"];
@@ -228,6 +218,8 @@ in {
               };
             };
           };
+
+        mcpServers = commonMcpServers // envSpecificMcpServers;
       in {
         text = builtins.toJSON {
           mcpServers = mcpServers;
