@@ -53,7 +53,7 @@ in {
         mushu = "ssh nick@192.168.86.31";
         sindy = "ssh nick@192.168.86.51";
 
-        vi = "nvim";
+        vi = "nvim --listen /tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}-#{pane_id}'').pipe";
         ls = "exa";
         ll = "exa -l";
         la = "exa -la";

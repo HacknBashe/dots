@@ -2,3 +2,7 @@ gui:
   expandFocusedSidePanel: true
   expandedSidePanelWeight: 2
   mainPanelSplitMode: horizontal
+os:
+  edit: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}-#{pane_id}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}-#{pane_id}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux popup -C || nvim "{{filename}}"'
+  editAtLine: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}-#{pane_id}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}-#{pane_id}'').pipe" --remote-send "<cmd>e +{{line}} {{filename}}<cr><cmd>filetype detect<cr>" && tmux popup -C || nvim +{{line}} "{{filename}}"'
+  open: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}-#{pane_id}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}-#{pane_id}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux popup -C ||  nvim "{{filename}}"'
