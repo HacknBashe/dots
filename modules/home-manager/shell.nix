@@ -23,6 +23,7 @@
     else {
       nr = "darwin-rebuild switch --flake ~/.config/dots";
       finder = "open .";
+      ghe = "GH_HOST=git.hubteam.com gh";
     };
   hubspotFiles =
     if config.isHubspot
@@ -171,13 +172,6 @@ in {
         };
 
         commonMcpServers = {
-          "github" = {
-            command = "npx";
-            args = ["-y" "@modelcontextprotocol/server-github"];
-            env = {
-              GITHUB_PERSONAL_ACCESS_TOKEN = secrets.GITHUB_PERSONAL_ACCESS_TOKEN;
-            };
-          };
         };
 
         envSpecificMcpServers =
@@ -208,6 +202,13 @@ in {
             "git" = {
               command = "uv";
               args = ["run" "mcp-server-git"];
+            };
+            "github" = {
+              command = "npx";
+              args = ["-y" "@modelcontextprotocol/server-github"];
+              env = {
+                GITHUB_PERSONAL_ACCESS_TOKEN = secrets.GITHUB_PERSONAL_ACCESS_TOKEN;
+              };
             };
             "brave-search" = {
               disabled = false;
