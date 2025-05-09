@@ -71,7 +71,7 @@ eval "$(zoxide init zsh)"
 
 gwz() {
   top=$(git rev-parse --show-toplevel 2>/dev/null)
-  git_dir=$(git rev-parse --git-dir 2>/dev/null) || {
+  git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
     echo "Not in a git repo"
     return 1
   }
@@ -93,7 +93,7 @@ gwz() {
 
 gwc() {
   top=$(git rev-parse --show-toplevel 2>/dev/null)
-  git_dir=$(git rev-parse --git-dir 2>/dev/null) || {
+  git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
     echo "Not in a git repo"
     return 1
   }
@@ -101,44 +101,45 @@ gwc() {
   is_bare=$(git config --get --bool core.bare || echo "false")
 
   if [ "$is_bare" = "true" ]; then
-    top="$git_dir"
+    top="$(realpath "$(dirname "$git_dir")")"
   fi
-  
-  # If an argument is provided, create a new branch
+
   if [ $# -ne 0 ]; then
     branch="$1"
-    if [ "$is_bare" = "true" ]; then
-      workdir="$(dirname "$git_dir")/$branch"
-    else
-      workdir="$top/$branch"
-    fi
+    workdir="$top/$branch"
     git worktree add -b "$branch" "$workdir" HEAD && cd "$workdir"
-    return
-  fi
-  
-  # Otherwise, list remote branches and check one out
-  echo "Remote branches:"
-  git fetch --prune
-  branch=$(git branch -r |
-    grep -v HEAD |
-    sed 's|origin/||' |
-    sort -u |
-    fzf --height 10 --reverse |
-    tr -d '[:space:]')
-    
-  if [ -n "$branch" ]; then
-    remote="origin/$branch"
-    if [ "$is_bare" = "true" ]; then
-      workdir="$(dirname "$git_dir")/$branch"
-    else
+  else
+    echo "Remote branches:"
+    git fetch --prune
+    branch=$(git branch -r |
+      grep -v HEAD |
+      sed 's|origin/||' |
+      sort -u |
+      fzf --height 10 --reverse |
+      tr -d '[:space:]')
+
+    if [ -n "$branch" ]; then
+      remote="origin/$branch"
       workdir="$top/$branch"
+      git fetch origin "$branch:$branch.new" || {
+        echo " fetch failed (branch $branch not found on origin?)"
+        return 1
+      }
+      git worktree add -b "$branch" "$workdir" "$remote" && cd "$workdir"
+      git update-ref -d refs/heads/"$branch.new" 2>/dev/null
     fi
-    git fetch origin "$branch:$branch.new" || {
-      echo " fetch failed (branch $branch not found on origin?)"
-      return 1
-    }
-    git worktree add -b "$branch" "$workdir" "$remote" && cd "$workdir"
-    git update-ref -d refs/heads/"$branch.new" 2>/dev/null
+  fi
+
+  if [ "$is_bare" = "true" ]; then
+    if [ -d "$top/.claude" ]; then
+      ln -sf "$top/.claude" "$workdir/.claude"
+      echo "Created symlink for .claude directory"
+    fi
+
+    if [ -f "$top/CLAUDE.md" ]; then
+      ln -sf "$top/CLAUDE.md" "$workdir/CLAUDE.md"
+      echo "Created symlink for CLAUDE.md"
+    fi
   fi
 }
 
@@ -148,43 +149,43 @@ gwd() {
     echo "Not in a git repo"
     return 1
   }
-  
+
   # Get all worktrees with their branches
   worktree_info=$(git worktree list --porcelain)
-  
+
   # Extract and format worktree paths and branches for selection
-  formatted_worktrees=$(echo "$worktree_info" | 
+  formatted_worktrees=$(echo "$worktree_info" |
     awk 'BEGIN {path=""; branch=""} 
     /^worktree / {path=substr($0, 10)} 
     /^branch / {branch=substr($0, 8)} 
     branch != "" && path != "" {print path " [" branch "]"; path=""; branch=""}')
-  
+
   # Let user select a worktree to delete
   selected=$(echo "$formatted_worktrees" | fzf --height 10 --reverse) || return 1
-  
+
   # Extract path and branch from selection
   selected_path=$(echo "$selected" | awk '{print $1}')
   selected_branch=$(echo "$selected" | sed -E 's/.*\[(.*)\].*/\1/' | sed 's/refs\/heads\///')
-  
+
   # Confirm deletion
   echo "Going to remove worktree at $selected_path"
   echo "and delete branch $selected_branch"
   read -q "REPLY?Are you sure? (y/n) "
   echo
-  
+
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     current_dir=$PWD
-    
+
     # Make sure we're not in the worktree we're trying to delete
     if [[ "$current_dir" == "$selected_path"* ]]; then
       echo "Cannot delete the worktree you're currently in. Moving to the main worktree..."
       cd $(git worktree list | head -1 | awk '{print $1}')
     fi
-    
+
     # Remove the worktree and delete the branch
-    git worktree remove --force "$selected_path" && 
-    git branch -D "$selected_branch" &&
-    echo "Worktree and branch deleted successfully."
+    git worktree remove --force "$selected_path" &&
+      git branch -D "$selected_branch" &&
+      echo "Worktree and branch deleted successfully."
   else
     echo "Operation cancelled."
   fi
