@@ -1,4 +1,5 @@
 hs.loadSpoon("Voice")
+hs.loadSpoon("MiddleClick")
 
 local three_finger_id, three_finger_threshold
 Swipe = hs.loadSpoon("Swipe")
