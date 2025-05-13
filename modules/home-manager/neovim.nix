@@ -107,7 +107,6 @@ in {
         # Utilities
         formatter-nvim
         vim-hexokinase
-        oil-nvim
         sniprun
         # vim-sandwich
         vim-table-mode
