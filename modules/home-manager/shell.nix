@@ -53,7 +53,7 @@ in {
         mushu = "ssh nick@192.168.86.31";
         sindy = "ssh nick@192.168.86.51";
 
-        vi = "nvim --listen /tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}'').pipe";
+        vi = "nvim --listen /tmp/nvim-server-$(tmux display-message -p ''#{session_name}_#{window_id}_lazygit'').pipe";
         ls = "exa";
         ll = "exa -l";
         la = "exa -la";
@@ -229,8 +229,9 @@ in {
       };
 
       "lazygit" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/lazygit/config.yml";
-        target = ".config/lazygit/config.yml";
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/lazygit";
+        target = ".config/lazygit";
+        recursive = true;
       };
 
       "nvm.plugin.zsh" = {

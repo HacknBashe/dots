@@ -179,7 +179,7 @@ gwd() {
     # Make sure we're not in the worktree we're trying to delete
     if [[ "$current_dir" == "$selected_path"* ]]; then
       echo "Cannot delete the worktree you're currently in. Moving to the main worktree..."
-      cd $(git worktree list | head -1 | awk '{print $1}')
+      cd $(git worktree list | grep '\[master\]' | awk '{print $1}')
     fi
 
     # Remove the worktree and delete the branch

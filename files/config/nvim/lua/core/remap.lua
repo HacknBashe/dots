@@ -186,3 +186,5 @@ local function ToggleScratch()
 	vim.wo[win_id].relativenumber = true
 end
 vim.keymap.set("n", "<leader>vp", ToggleScratch, { desc = "Toggle scratch buffer" })
+ 
+vim.keymap.set("n", "<leader>gg", ":silent !tmux_popup.sh lazygit<CR>", { desc = "Open tmux popup" })

@@ -1,8 +1,14 @@
+promptToReturnFromSubprocess: false
 gui:
   expandFocusedSidePanel: true
   expandedSidePanelWeight: 2
   mainPanelSplitMode: horizontal
 os:
-  edit: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux popup -C || nvim "{{filename}}"'
-  editAtLine: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}'').pipe" --remote-send "<cmd>e +{{line}} {{filename}}<cr><cmd>filetype detect<cr>" && tmux popup -C || nvim +{{line}} "{{filename}}"'
-  open: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{session_id}-#{window_id}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux popup -C ||  nvim "{{filename}}"'
+  edit: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux_popup.sh || nvim "{{filename}}"'
+  editAtLine: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" --remote-send "<cmd>e +{{line}} {{filename}}<cr><cmd>filetype detect<cr>" && tmux_popup.sh || nvim +{{line}} "{{filename}}"'
+  open: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux_popup.sh ||  nvim "{{filename}}"'
+customCommands:
+  - key: "<c-r>"
+    command: "gh pr create --fill --web"
+    context: "global"
+    loadingText: "Creating pull request on GitHub"

@@ -14,6 +14,13 @@ return {
 
 		vim.keymap.set(
 			"n",
+			"<leader>gd",
+			"<cmd>Gitsigns diffthis vertical=true<CR>",
+			{ desc = "Git Diff", noremap = true, silent = true, nowait = true }
+		)
+
+		vim.keymap.set(
+			"n",
 			"<leader>gb",
 			"<cmd>Gitsigns blame<CR>",
 			{ desc = "Git Blame Line", noremap = true, silent = true, nowait = true }
