@@ -2,4 +2,4 @@ customCommands:
   - key: "q"
     command: "tmux_popup.sh"
     context: "global"
-    loadingText: "Creating pull request on GitHub"
+    loadingText: "Closing tmux popup"
