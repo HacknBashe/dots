@@ -9,6 +9,6 @@ os:
   open: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux_popup.sh ||  nvim "{{filename}}"'
 customCommands:
   - key: "<c-r>"
-    command: "gh pr create --fill --web"
+    command: "gh pr create --assignee nhackford --web"
     context: "global"
     loadingText: "Creating pull request on GitHub"
