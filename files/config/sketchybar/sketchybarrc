@@ -27,14 +27,14 @@ default=(
 sketchybar --default "${default[@]}"
 
 ##### Adding Left Items #####
-source $ITEM_DIR/calendar.sh
-source $ITEM_DIR/spaces.sh
+source $ITEM_DIR/aerospace.sh
+source $ITEM_DIR/audio.sh
+source $ITEM_DIR/spotify.sh
 
 ##### Adding Right Items #####
-source $ITEM_DIR/clock.sh
-source $ITEM_DIR/audio.sh
 source $ITEM_DIR/weather.sh
-source $ITEM_DIR/media.sh
+source $ITEM_DIR/clock.sh
+source $ITEM_DIR/calendar.sh
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update

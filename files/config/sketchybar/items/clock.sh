@@ -8,4 +8,3 @@ sketchybar \
   updates=on \
   update_freq=10 \
   script="$PLUGIN_DIR/clock.sh" \
-  icon.drawing=off

@@ -122,7 +122,5 @@ weather_icon="${WEATHER_CODES[$weather_code]}"
 # } | fold -s -w 80
 
 sketchybar \
-  --set weather.temp label="$feels_like°"
-
-sketchybar \
-  --set weather.icon icon=$weather_icon
+  --set weather.temp label="$feels_like°" \
+  icon=$weather_icon
