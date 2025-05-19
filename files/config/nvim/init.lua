@@ -21,6 +21,7 @@ else
 	require("plugins.markdown").toc.config()
 	require("plugins.mini-files")
 	require("plugins.obsidian").config()
+	require("plugins.octo").config()
 	require("plugins.sniprun").config()
 	require("plugins.telescope").config()
 	require("plugins.theme").tokyonight.config()
