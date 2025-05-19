@@ -61,7 +61,7 @@ in {
       }
       // zshAliases;
     initContent = ''
-      ${builtins.readFile ../../files/zshrc}
+      source ~/.zshrc.nix
     '';
     envExtra = let
       customExtra =
@@ -234,6 +234,10 @@ in {
         recursive = true;
       };
 
+      ".zshrc.nix" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/zshrc";
+        target = ".zshrc.nix";
+      };
       "nvm.plugin.zsh" = {
         source = ../../files/config/zsh/nvm.plugin.zsh;
         target = ".config/zsh/nvm.plugin.zsh";

@@ -77,7 +77,10 @@ in {
     {
       ".gitconfig" = {
         source = ../../files/gitconfig;
-        target = ".gitconfig";
+        target =
+          if config.isHubspot
+          then ".gitconfig.nix"
+          else ".gitconfig";
       };
 
       "aider" = {
