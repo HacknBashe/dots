@@ -50,6 +50,8 @@ bindkey -s '^ ' "^utmux_sessionizer.sh\n"
 bindkey -s -M vicmd '^ ' "ddAtmux_sessionizer.sh\n"
 bindkey -s ^f "^uvim_opener.sh\n"
 bindkey -s -M vicmd ^f "ddAvim_opener.sh\n"
+bindkey -s ^i "^uinit_project.sh\n"
+bindkey -s -M vicmd ^i "ddAinit_project.sh\n"
 bindkey -s ^b "^ubtop\n"
 bindkey -s -M vicmd ^b "ddAbtop\n"
 bindkey -s ^v "^uvi\n"
@@ -88,7 +90,42 @@ gwz() {
       awk '/^worktree /{print $2}' |
       fzf --height 10 --reverse
   ) || return 1
-  [ -n "$dir" ] && z "$dir"
+  
+  if [ -n "$dir" ]; then
+    # Save current directory
+    current_dir="$PWD"
+    
+    # Get repo name from directory
+    repo_name=$(basename "$(dirname "$dir")")
+    
+    # Get branch name from directory or git without changing our current directory
+    # by using a subshell
+    branch_name=$(
+      (cd "$dir" 2>/dev/null && git branch --show-current | tr '/' '-')
+    )
+    session_name="${repo_name}_${branch_name}"
+    
+    # Check if already in a tmux session
+    if [ -z "$TMUX" ]; then
+      # Not in a tmux session, create or attach to one
+      if tmux has-session -t "$session_name" 2>/dev/null; then
+        tmux attach-session -t "$session_name"
+      else
+        tmux new-session -s "$session_name" -c "$dir"
+      fi
+    else
+      # Already in a tmux session, switch to the session directly
+      if tmux has-session -t "$session_name" 2>/dev/null; then
+        tmux switch-client -t "$session_name"
+      else
+        tmux new-session -d -s "$session_name" -c "$dir"
+        tmux switch-client -t "$session_name"
+      fi
+    fi
+    
+    # Stay in the original directory in the current session
+    cd "$current_dir"
+  fi
 }
 
 gwc() {
@@ -107,7 +144,30 @@ gwc() {
   if [ $# -ne 0 ]; then
     branch="$1"
     workdir="$top/$branch"
-    git worktree add -b "$branch" "$workdir" HEAD && cd "$workdir"
+    if git worktree add -b "$branch" "$workdir" HEAD; then
+      # Get repo name from directory
+      repo_name=$(basename "$(dirname "$workdir")")
+      # Format branch name
+      session_name="${repo_name}_${branch}"
+      
+      # Check if already in a tmux session
+      if [ -z "$TMUX" ]; then
+        # Not in a tmux session, create or attach to one
+        if tmux has-session -t "$session_name" 2>/dev/null; then
+          tmux attach-session -t "$session_name"
+        else
+          tmux new-session -s "$session_name" -c "$workdir"
+        fi
+      else
+        # Already in a tmux session, switch to the session directly
+        if tmux has-session -t "$session_name" 2>/dev/null; then
+          tmux switch-client -t "$session_name"
+        else
+          tmux new-session -d -s "$session_name" -c "$workdir"
+          tmux switch-client -t "$session_name"
+        fi
+      fi
+    fi
   else
     echo "Remote branches:"
     git fetch --prune
@@ -125,8 +185,33 @@ gwc() {
         echo " fetch failed (branch $branch not found on origin?)"
         return 1
       }
-      git worktree add -b "$branch" "$workdir" "$remote" && cd "$workdir"
-      git update-ref -d refs/heads/"$branch.new" 2>/dev/null
+      if git worktree add -b "$branch" "$workdir" "$remote"; then
+        git update-ref -d refs/heads/"$branch.new" 2>/dev/null
+        
+        # Get repo name from directory
+        repo_name=$(basename "$(dirname "$workdir")")
+        # Format branch name for session
+        formatted_branch=$(echo "$branch" | tr '/' '-')
+        session_name="${repo_name}_${formatted_branch}"
+        
+        # Check if already in a tmux session
+        if [ -z "$TMUX" ]; then
+          # Not in a tmux session, create or attach to one
+          if tmux has-session -t "$session_name" 2>/dev/null; then
+            tmux attach-session -t "$session_name"
+          else
+            tmux new-session -s "$session_name" -c "$workdir"
+          fi
+        else
+          # Already in a tmux session, switch to the session directly
+          if tmux has-session -t "$session_name" 2>/dev/null; then
+            tmux switch-client -t "$session_name"
+          else
+            tmux new-session -d -s "$session_name" -c "$workdir"
+            tmux switch-client -t "$session_name"
+          fi
+        fi
+      fi
     fi
   fi
 
@@ -167,28 +252,22 @@ gwd() {
   selected_path=$(echo "$selected" | awk '{print $1}')
   selected_branch=$(echo "$selected" | sed -E 's/.*\[(.*)\].*/\1/' | sed 's/refs\/heads\///')
 
-  # Confirm deletion
-  echo "Going to remove worktree at $selected_path"
-  echo "and delete branch $selected_branch"
-  read -q "REPLY?Are you sure? (y/n) "
-  echo
+  # Display which worktree and branch will be deleted
+  echo "Removing worktree at $selected_path"
+  echo "and deleting branch $selected_branch"
 
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    current_dir=$PWD
+  current_dir=$PWD
 
-    # Make sure we're not in the worktree we're trying to delete
-    if [[ "$current_dir" == "$selected_path"* ]]; then
-      echo "Cannot delete the worktree you're currently in. Moving to the main worktree..."
-      cd $(git worktree list | grep '\[master\]' | awk '{print $1}')
-    fi
-
-    # Remove the worktree and delete the branch
-    git worktree remove --force "$selected_path" &&
-      git branch -D "$selected_branch" &&
-      echo "Worktree and branch deleted successfully."
-  else
-    echo "Operation cancelled."
+  # Make sure we're not in the worktree we're trying to delete
+  if [[ "$current_dir" == "$selected_path"* ]]; then
+    echo "Cannot delete the worktree you're currently in. Moving to the main worktree..."
+    cd $(git worktree list | grep '\[master\]' | awk '{print $1}')
   fi
+
+  # Remove the worktree and delete the branch
+  git worktree remove --force "$selected_path" &&
+    git branch -D "$selected_branch" &&
+    echo "Worktree and branch deleted successfully."
 }
 
 if [ -f ~/.zshrc.local ]; then
