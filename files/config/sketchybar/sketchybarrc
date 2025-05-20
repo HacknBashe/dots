@@ -5,11 +5,18 @@ source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
-sketchybar --bar position=top height=32 color=$BAR_COLOR display=1 topmost=window
+sketchybar --bar position=top height=32 color=0x00000000 display=1 topmost=window padding_left=5 padding_right=20
 
 default=(
   padding_left=5
   padding_right=5
+  background.drawing=on
+  background.color=$BAR_COLOR
+  background.corner_radius=8
+  background.height=26
+  background.padding_left=8
+  background.padding_right=8
+  margin=5
   icon.font="SauceCodePro Nerd Font:Bold:17.0"
   icon.font.size=18
   icon.color=$FG_COLOR
@@ -20,8 +27,8 @@ default=(
   label.font="SauceCodePro Nerd Font:Bold:14.0"
   label.font.size=16
   label.color=$FG_COLOR
-  label.padding_left=0
-  label.padding_right=0
+  label.padding_left=5
+  label.padding_right=5
   label.scroll_duration=180
 )
 sketchybar --default "${default[@]}"

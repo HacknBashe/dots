@@ -16,8 +16,12 @@ for SPACE in "${SPACES[@]}"; do
     --subscribe "$WORKSPACE_NAME" aerospace_workspace_change \
     --set "$WORKSPACE_NAME" \
     icon="$ICON" \
-    icon.padding_left=3 \
-    icon.padding_right=3 \
+    icon.padding_left=4 \
+    icon.padding_right=4 \
+    label.drawing=off \
+    background.padding_left=4 \
+    background.padding_right=4 \
+    margin=0 \
     click_script="aerospace workspace $WORKSPACE_NAME" \
     script="$PLUGIN_DIR/aerospace.sh"
 done
