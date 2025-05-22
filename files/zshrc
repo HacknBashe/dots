@@ -48,18 +48,18 @@ export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30
 
 bindkey -s '^ ' "^utmux_sessionizer.sh\n"
 bindkey -s -M vicmd '^ ' "ddAtmux_sessionizer.sh\n"
+bindkey -s ^t "^utmux a\n"
+bindkey -s -M vicmd ^t "ddAtmux a\n"
 bindkey -s ^f "^uvim_opener.sh\n"
 bindkey -s -M vicmd ^f "ddAvim_opener.sh\n"
-bindkey -s ^i "^uinit_project.sh\n"
-bindkey -s -M vicmd ^i "ddAinit_project.sh\n"
 bindkey -s ^b "^ubtop\n"
 bindkey -s -M vicmd ^b "ddAbtop\n"
 bindkey -s ^v "^uvi\n"
 bindkey -s -M vicmd ^v "ddAvi\n"
 bindkey -s ^y "^uy\n"
 bindkey -s -M vicmd ^y "ddAy\n"
-bindkey -s ^g "^ulazygit\n"
-bindkey -s -M vicmd ^g "ddAlazygit\n"
+bindkey -s ^g "^ulg\n"
+bindkey -s -M vicmd ^g "ddAlg\n"
 
 function y() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
@@ -144,7 +144,7 @@ gwc() {
   if [ $# -ne 0 ]; then
     branch="$1"
     workdir="$top/$branch"
-    if git worktree add -b "$branch" "$workdir" HEAD; then
+    if git worktree add -b "$branch" "$workdir" master; then
       # Get repo name from directory
       repo_name=$(basename "$(dirname "$workdir")")
       # Format branch name

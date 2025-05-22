@@ -45,8 +45,8 @@
         set -g status-right "#[bg=$thm_bg,fg=$thm_blue]%y-%m-%d $RIGHT %H:%M:%S "
         setw -g window-status-activity-style "underscore,fg=$thm_grey,bg=$thm_black"
         setw -g window-status-separator ""
-        setw -g window-status-format "#[fg=$thm_grey,bg=$thm_bg] #I $LEFT #{b:pane_current_path} #F #W $LEFT"
-        setw -g window-status-current-format "#[fg=$thm_white,bg=$thm_bg,bold] #I $LEFT #[underscore]./#{b:pane_current_path}#[nounderscore] #F #[underscore]#W#[fg=$thm_white,bg=$thm_bg,nobold,nounderscore,noitalics] $LEFT"
+        setw -g window-status-format "#[fg=$thm_grey,bg=$thm_bg] #I #F #W $LEFT"
+        setw -g window-status-current-format "#[fg=$thm_white,bg=$thm_bg,bold] #I #F #[underscore]#W#[fg=$thm_white,bg=$thm_bg,nobold,nounderscore,noitalics] $LEFT"
       '';
     };
     "tpm" = {

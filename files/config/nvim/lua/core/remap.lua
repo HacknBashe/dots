@@ -186,5 +186,71 @@ local function ToggleScratch()
 	vim.wo[win_id].relativenumber = true
 end
 vim.keymap.set("n", "<leader>vp", ToggleScratch, { desc = "Toggle scratch buffer" })
- 
-vim.keymap.set("n", "<leader>gg", ":silent !tmux_popup.sh lazygit<CR>", { desc = "Open tmux popup" })
+
+vim.keymap.set("n", "<leader>gg", function()
+	local in_tmux = vim.fn.system('[ -n "$TMUX" ] && echo 1 || echo 0'):gsub("%s+", "")
+
+	if in_tmux == "1" then
+		local has_lazygit = vim.fn.system("tmux list-windows | grep -q lazygit && echo 1 || echo 0"):gsub("%s+", "")
+
+		if has_lazygit == "1" then
+			vim.fn.system("tmux select-window -t lazygit")
+		else
+			vim.fn.system("tmux new-window -n lazygit 'lg'")
+		end
+	else
+		vim.notify("Not running in tmux session", vim.log.levels.WARN)
+	end
+end, { desc = "Open lazygit in tmux window" })
+
+-- Git GitHub integration
+local function open_in_github(commit_hash, use_branch)
+	commit_hash = commit_hash or ""
+	use_branch = use_branch or false
+
+	local file_dir = vim.fn.expand("%:h")
+	local git_root = vim.fn.system("cd " .. file_dir .. "; git rev-parse --show-toplevel"):gsub("%s+$", "")
+	local file_path = vim.fn.system("cd " .. file_dir .. "; git ls-files --full-name " .. vim.fn.shellescape(vim.fn.expand("%:t"))):gsub("%s+$", "")
+
+	local branch
+	if use_branch then
+		branch = vim.fn.system("git symbolic-ref --short -q HEAD"):gsub("%s+$", "")
+	else
+		branch = "master"
+	end
+
+	local git_remote = vim.fn.system("cd " .. file_dir .. "; git remote get-url origin"):gsub("%s+$", "")
+	local base_url, repo_path
+
+	if git_remote:match("^https://") then
+		base_url = git_remote:match("^(https://[^/]+)")
+		repo_path = git_remote:match("/([^/]+/[^/]+)/?$"):gsub("%.git$", "")
+	else
+		base_url = "https://" .. git_remote:match("@([^:]+)")
+		repo_path = git_remote:match(":(.*)"):gsub("%.git$", "")
+	end
+
+	local url = base_url .. "/" .. repo_path
+
+	if commit_hash ~= "" then
+		url = url .. "/commit/" .. commit_hash
+	else
+		url = url .. "/blob/" .. branch .. "/" .. file_path
+	end
+
+	vim.fn.system("open " .. url)
+end
+
+vim.keymap.set("n", "<leader>gof", function()
+	open_in_github()
+end, { desc = "Git open file in GitHub" })
+
+vim.keymap.set("n", "<leader>goc", function()
+	local word = vim.fn.expand("<cword>")
+	vim.cmd("q")
+	open_in_github(word)
+end, { desc = "Git open commit in GitHub" })
+
+vim.keymap.set("n", "<leader>gob", function()
+	open_in_github("", true)
+end, { desc = "Git open branch in GitHub" })

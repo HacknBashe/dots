@@ -2,7 +2,8 @@
 
 if [ "$NAME" = "$FOCUSED_WORKSPACE" ]; then
   sketchybar --set "$NAME" \
-    icon.highlight=true
+    icon.highlight=true \
+    drawing=on
 else
   sketchybar --set "$NAME" \
     icon.highlight=false

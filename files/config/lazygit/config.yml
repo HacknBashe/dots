@@ -4,9 +4,9 @@ gui:
   expandedSidePanelWeight: 2
   mainPanelSplitMode: horizontal
 os:
-  edit: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux_popup.sh || nvim "{{filename}}"'
-  editAtLine: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" --remote-send "<cmd>e +{{line}} {{filename}}<cr><cmd>filetype detect<cr>" && tmux_popup.sh || nvim +{{line}} "{{filename}}"'
-  open: '[ -e "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" ] && nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{window_name}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux_popup.sh ||  nvim "{{filename}}"'
+  edit: 'if [ -n "$TMUX" ] && tmux list-windows | grep -q nvim; then nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{session_name}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux select-window -t nvim; else nvim "{{filename}}"; fi'
+  editAtLine: 'if [ -n "$TMUX" ] && tmux list-windows | grep -q nvim; then nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{session_name}'').pipe" --remote-send "<cmd>e +{{line}} {{filename}}<cr><cmd>filetype detect<cr>" && tmux select-window -t nvim; else nvim +{{line}} "{{filename}}"; fi'
+  open: 'if [ -n "$TMUX" ] && tmux list-windows | grep -q nvim; then nvim --server "/tmp/nvim-server-$(tmux display-message -p ''#{session_name}'').pipe" --remote-send "<cmd>e {{filename}}<cr><cmd>filetype detect<cr>" && tmux select-window -t nvim; else nvim "{{filename}}"; fi'
 customCommands:
   - key: "<c-r>"
     command: "gh pr create --assignee nhackford --web"

@@ -5,7 +5,7 @@ return {
 			return { desc = desc, noremap = true, silent = true, nowait = true }
 		end
 
-		vim.keymap.set("n", "<leader>gg", ":vertical Git <CR>", opts("Git Fugitive"))
+		vim.keymap.set("n", "<leader>gG", ":vertical Git <CR>", opts("Git Fugitive"))
 		-- vim.keymap.set(
 		-- 	"n",
 		-- 	"<leader>gb",

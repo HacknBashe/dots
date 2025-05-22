@@ -53,7 +53,8 @@ in {
         mushu = "ssh nick@192.168.86.31";
         sindy = "ssh nick@192.168.86.51";
 
-        vi = "nvim --listen /tmp/nvim-server-$(tmux display-message -p ''#{session_name}_#{window_id}_lazygit'').pipe";
+        vi = "nvim --listen /tmp/nvim-server-$(tmux display-message -p ''#{session_name}'').pipe";
+        lg = "if [ -n \"$TMUX\" ]; then lazygit -ucf $HOME/.config/lazygit/tmuxconfig.yml,$HOME/.config/lazygit/config.yml; else lazygit; fi";
         ls = "exa";
         ll = "exa -l";
         la = "exa -la";

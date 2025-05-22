@@ -109,7 +109,7 @@ in {
         formatter-nvim
         vim-hexokinase
         sniprun
-        # vim-sandwich
+        vim-sleuth
         vim-table-mode
         vim-tmux-navigator
         better-vim-tmux-resizer
