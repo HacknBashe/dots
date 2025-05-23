@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+top=$(git rev-parse --show-toplevel 2>/dev/null)
+git_dir=$(git rev-parse --git-dir 2>/dev/null) || {
+  echo "Not in a git repo"
+  exit 1
+}
+
+# Get all worktrees with their branches
+worktree_info=$(git worktree list --porcelain)
+
+# Extract and format worktree paths and branches for selection
+formatted_worktrees=$(echo "$worktree_info" |
+  awk 'BEGIN {path=""; branch=""} 
+  /^worktree / {path=substr($0, 10)} 
+  /^branch / {branch=substr($0, 8)} 
+  branch != "" && path != "" {print path " [" branch "]"; path=""; branch=""}')
+
+# Let user select a worktree to delete
+selected=$(echo "$formatted_worktrees" | fzf --height 10 --reverse) || exit 1
+
+# Extract path and branch from selection
+selected_path=$(echo "$selected" | awk '{print $1}')
+selected_branch=$(echo "$selected" | sed -E 's/.*\[(.*)\].*/\1/' | sed 's/refs\/heads\///')
+
+# Display which worktree and branch will be deleted
+echo "Removing worktree at $selected_path"
+echo "and deleting branch $selected_branch"
+
+current_dir=$PWD
+
+# Make sure we're not in the worktree we're trying to delete
+if [[ "$current_dir" == "$selected_path"* ]]; then
+  echo "Cannot delete the worktree you're currently in. Moving to the main worktree..."
+  cd $(git worktree list | grep '\[master\]' | awk '{print $1}')
+fi
+
+# Remove the worktree and delete the branch
+git worktree remove --force "$selected_path" &&
+  git branch -D "$selected_branch" &&
+  echo "Worktree and branch deleted successfully."

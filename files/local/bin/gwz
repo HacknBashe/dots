@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+top=$(git rev-parse --show-toplevel 2>/dev/null)
+git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
+  echo "Not in a git repo"
+  exit 1
+}
+
+is_bare=$(git config --get --bool core.bare || echo "false")
+
+if [ "$is_bare" = "true" ]; then
+  top="$git_dir"
+fi
+
+# Just list and navigate to existing worktrees
+dir=$(
+  git worktree list --porcelain |
+    awk '/^worktree /{print $2}' |
+    fzf --height 10 --reverse
+) || exit 1
+
+if [ -n "$dir" ]; then
+  # Save current directory
+  current_dir="$PWD"
+  
+  # Get repo name from directory
+  repo_name=$(basename "$(dirname "$dir")")
+  
+  # Get branch name from git worktree list (no subshell needed)
+  branch_name=$(git worktree list --porcelain | awk -v target="$dir" '
+    /^worktree / { if ($2 == target) found=1 }
+    /^branch / && found { gsub(/^refs\/heads\//, "", $2); gsub(/\//, "-", $2); print $2; exit }
+  ')
+  session_name="${repo_name}_${branch_name}"
+  
+  # Check if already in a tmux session
+  if [ -z "$TMUX" ]; then
+    # Not in a tmux session, create or attach to one
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+      tmux attach-session -t "$session_name"
+      # Check for lazygit window and switch to it if it exists
+      if tmux list-windows -t "$session_name" 2>/dev/null | grep -q '\blazygit\b'; then
+        tmux select-window -t "$session_name:lazygit"
+      fi
+    else
+      tmux new-session -s "$session_name" -c "$dir"
+    fi
+  else
+    # Already in a tmux session, switch to the session directly
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+      tmux switch-client -t "$session_name"
+      # Check for lazygit window and switch to it if it exists
+      if tmux list-windows -t "$session_name" 2>/dev/null | grep -q '\blazygit\b'; then
+        tmux select-window -t "$session_name:lazygit"
+      fi
+    else
+      tmux new-session -d -s "$session_name" -c "$dir"
+      tmux switch-client -t "$session_name"
+    fi
+  fi
+  
+  # Stay in the original directory in the current session
+  cd "$current_dir"
+fi

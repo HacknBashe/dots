@@ -3,3 +3,7 @@ customCommands:
     command: "tmux last-window"
     context: "global"
     loadingText: "Closing tmux popup"
+  - key: "<c-g>"
+    command: "tmux neww 'zsh -i -c gwz'"
+    context: "global"
+    loadingText: "Switch branch+worktree"

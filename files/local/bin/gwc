@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+top=$(git rev-parse --show-toplevel 2>/dev/null)
+git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
+  echo "Not in a git repo"
+  exit 1
+}
+
+is_bare=$(git config --get --bool core.bare || echo "false")
+
+if [ "$is_bare" = "true" ]; then
+  top="$(realpath "$(dirname "$git_dir")")"
+fi
+
+if [ $# -ne 0 ]; then
+  branch="$1"
+  workdir="$top/$branch"
+  if git worktree add -b "$branch" "$workdir" master; then
+    # Get repo name from directory
+    repo_name=$(basename "$(dirname "$workdir")")
+    # Format branch name
+    session_name="${repo_name}_${branch}"
+    
+    # Check if already in a tmux session
+    if [ -z "$TMUX" ]; then
+      # Not in a tmux session, create or attach to one
+      if tmux has-session -t "$session_name" 2>/dev/null; then
+        tmux attach-session -t "$session_name"
+      else
+        tmux new-session -s "$session_name" -c "$workdir"
+      fi
+    else
+      # Already in a tmux session, switch to the session directly
+      if tmux has-session -t "$session_name" 2>/dev/null; then
+        tmux switch-client -t "$session_name"
+      else
+        tmux new-session -d -s "$session_name" -c "$workdir"
+        tmux switch-client -t "$session_name"
+      fi
+    fi
+  fi
+else
+  echo "Remote branches:"
+  git fetch --prune
+  branch=$(git branch -r |
+    grep -v HEAD |
+    sed 's|origin/||' |
+    sort -u |
+    fzf --height 10 --reverse |
+    tr -d '[:space:]')
+
+  if [ -n "$branch" ]; then
+    remote="origin/$branch"
+    workdir="$top/$branch"
+    git fetch origin "$branch:$branch.new" || {
+      echo " fetch failed (branch $branch not found on origin?)"
+      exit 1
+    }
+    if git worktree add -b "$branch" "$workdir" "$remote"; then
+      git update-ref -d refs/heads/"$branch.new" 2>/dev/null
+      
+      # Get repo name from directory
+      repo_name=$(basename "$(dirname "$workdir")")
+      # Format branch name for session
+      formatted_branch=$(echo "$branch" | tr '/' '-')
+      session_name="${repo_name}_${formatted_branch}"
+      
+      # Check if already in a tmux session
+      if [ -z "$TMUX" ]; then
+        # Not in a tmux session, create or attach to one
+        if tmux has-session -t "$session_name" 2>/dev/null; then
+          tmux attach-session -t "$session_name"
+        else
+          tmux new-session -s "$session_name" -c "$workdir"
+        fi
+      else
+        # Already in a tmux session, switch to the session directly
+        if tmux has-session -t "$session_name" 2>/dev/null; then
+          tmux switch-client -t "$session_name"
+        else
+          tmux new-session -d -s "$session_name" -c "$workdir"
+          tmux switch-client -t "$session_name"
+        fi
+      fi
+    fi
+  fi
+fi
+
+if [ "$is_bare" = "true" ]; then
+  if [ -d "$top/.claude" ]; then
+    ln -sf "$top/.claude" "$workdir/.claude"
+    echo "Created symlink for .claude directory"
+  fi
+
+  if [ -f "$top/CLAUDE.md" ]; then
+    ln -sf "$top/CLAUDE.md" "$workdir/CLAUDE.md"
+    echo "Created symlink for CLAUDE.md"
+  fi
+fi
