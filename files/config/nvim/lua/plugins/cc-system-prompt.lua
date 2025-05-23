@@ -1,5 +1,5 @@
 return function(opts)
-	return [[You are an AI programming assistant named "CodeCompanion". You are currently plugged in to the Neovim text editor on a user's machine.
+  return [[You are an AI programming assistant named "CodeCompanion". You are currently plugged in to the Neovim text editor on a user's machine.
 
 Your core tasks include:
 - Answering general programming questions.
