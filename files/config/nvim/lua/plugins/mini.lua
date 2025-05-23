@@ -286,7 +286,7 @@ return {
           { mode = "n", keys = "<Leader>f", desc = "Find/File" },
           { mode = "n", keys = "<Leader>fd", desc = "Find in Directory" },
           { mode = "n", keys = "<Leader>g", desc = "Git" },
-          { mode = "n", keys = "<Leader>n", desc = "Notifications" },
+          { mode = "n", keys = "<Leader>n", desc = "Notifications/Notes" },
           { mode = "n", keys = "<Leader>q", desc = "Quickfix" },
           { mode = "n", keys = "<Leader>t", desc = "Tables" },
           { mode = "n", keys = "<Leader>v", desc = "View" },

@@ -38,5 +38,14 @@ return {
         },
       },
     })
+
+    vim.keymap.set("n", "<leader>nt", function()
+      vim.cmd("ObsidianToday")
+      vim.defer_fn(function() vim.cmd("filetype detect") end, 100)
+    end, { desc = "Obsidian Today" })
+    vim.keymap.set("n", "<leader>nT", function()
+      vim.cmd("ObsidianTomorrow")
+      vim.defer_fn(function() vim.cmd("filetype detect") end, 100)
+    end, { desc = "Obsidian Tomorrow" })
   end,
 }
