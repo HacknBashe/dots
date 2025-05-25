@@ -15,16 +15,6 @@
         playerctl
       ]
     else [];
-  zshAliases =
-    if pkgs.stdenv.isLinux
-    then {
-      nr = "sudo nixos-rebuild switch --flake ~/.config/dots";
-    }
-    else {
-      nr = "darwin-rebuild switch --flake ~/.config/dots";
-      finder = "open .";
-      ghe = "GH_HOST=git.hubteam.com gh";
-    };
   hubspotFiles =
     if config.isHubspot
     then {
@@ -45,40 +35,6 @@ in {
     sessionVariables = {
       XDG_CONFIG_HOME = "$HOME/.config";
     };
-    shellAliases =
-      {
-        ng = "sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d";
-
-        meraxes = "ssh nick@192.168.86.13";
-        mushu = "ssh nick@192.168.86.31";
-        sindy = "ssh nick@192.168.86.51";
-
-        vi = "nvim --listen /tmp/nvim-server-$(tmux display-message -p ''#{session_name}'').pipe";
-        lg = "if [ -n \"$TMUX\" ]; then lazygit -ucf $HOME/.config/lazygit/tmuxconfig.yml,$HOME/.config/lazygit/config.yml; else lazygit; fi";
-        ls = "exa";
-        ll = "exa -l";
-        la = "exa -la";
-        cat = "bat";
-      }
-      // zshAliases;
-    initContent = ''
-      source ~/.zshrc.nix
-    '';
-    envExtra = let
-      customExtra =
-        if pkgs.stdenv.isLinux
-        then ''
-          if [ -d ~/.venv ]; then
-            source /home/nick/.venv/bin/activate
-            fi
-        ''
-        else '''';
-    in ''
-      ${customExtra}
-      if [ -f ~/.zshenv.local ]; then
-        source ~/.zshenv.local
-      fi
-    '';
   };
 
   programs.yazi = {
@@ -238,8 +194,31 @@ in {
         target = ".config/lazygit/tmuxconfig.yml";
       };
 
-      ".zshrc.nix" = {
+      ".zshrc" = {
         source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/zshrc";
+        target = ".zshrc";
+      };
+      ".zshrc.nix" = {
+        text =
+          "#!/usr/bin/env bash\n\n"
+          + (
+            if pkgs.stdenv.isLinux
+            then ''
+              if [ -d ~/.venv ]; then
+                source /home/nick/.venv/bin/activate
+              fi
+
+              alias -- nr=sudo nixos-rebuild switch --flake ~/.config/dots
+            ''
+            else ''
+              alias -- nr=darwin-rebuild switch --flake ~/.config/dots
+              alias -- finder=open .
+              alias -- ghe=GH_HOST=git.hubteam.com gh
+
+              alias -- cat=bat
+            ''
+          )
+          + lib.optionalString config.isHubspot "\n\n. ~/.hubspot/shellrc";
         target = ".zshrc.nix";
       };
       "nvm.plugin.zsh" = {
