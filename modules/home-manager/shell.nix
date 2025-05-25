@@ -229,10 +229,13 @@ in {
         target = ".config/mcp.json";
       };
 
-      "lazygit" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/lazygit";
-        target = ".config/lazygit";
-        recursive = true;
+      "lazygit/config.yml" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/lazygit/config.yml";
+        target = ".config/lazygit/config.yml";
+      };
+      "lazygit/tmuxconfig.yml" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/lazygit/tmuxconfig.yml";
+        target = ".config/lazygit/tmuxconfig.yml";
       };
 
       ".zshrc.nix" = {
