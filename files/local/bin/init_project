@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check if this is a bend project by looking for package.json with "bpm" section
 is_bend_project() {
