@@ -2,7 +2,6 @@
   pkgs,
   config,
   lib,
-  inputs,
   ...
 }: let
   linuxPackages =
@@ -126,6 +125,8 @@ in {
       "mcp.json" = let
         # Hardcoded secrets for now (will be gitignored)
         secrets = {
+          GITHUB_PERSONAL_ACCESS_TOKEN = "";
+          BRAVE_API_KEY = "";
         };
 
         commonMcpServers = {
