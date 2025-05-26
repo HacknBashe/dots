@@ -31,7 +31,7 @@
     };
 in {
   programs.zsh = {
-    enable = true;
+    enable = !config.isHubspot;
     sessionVariables = {
       XDG_CONFIG_HOME = "$HOME/.config";
     };
@@ -196,9 +196,12 @@ in {
 
       ".zshrc" = {
         source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/zshrc";
-        target = ".zshrc";
+        target =
+          if config.isHubspot
+          then ".zshrc.nix"
+          else ".zshrc";
       };
-      ".zshrc.nix" = {
+      ".zshrc.generated" = {
         text =
           "#!/usr/bin/env bash\n\n"
           + (
@@ -219,7 +222,7 @@ in {
             ''
           )
           + lib.optionalString config.isHubspot "\n\n. ~/.hubspot/shellrc";
-        target = ".zshrc.nix";
+        target = ".zshrc.generated";
       };
       "nvm.plugin.zsh" = {
         source = ../../files/config/zsh/nvm.plugin.zsh;

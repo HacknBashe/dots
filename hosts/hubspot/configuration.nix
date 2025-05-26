@@ -22,7 +22,6 @@ in {
     Defaults env_keep += "REQUEST_CA_BUNDLE"
   '';
 
-  programs.zsh.enable = true;
 
   users.users.${user} = {
     name = "${user}";

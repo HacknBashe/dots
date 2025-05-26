@@ -91,6 +91,6 @@ if [ -f ~/.zshrc.local ]; then
   source ~/.zshrc.local
 fi
 
-if [ -f ~/.zshrc.nix ]; then
-  source ~/.zshrc.nix
+if [ -f ~/.zshrc.generated ]; then
+  source ~/.zshrc.generated
 fi

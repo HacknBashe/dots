@@ -25,9 +25,6 @@
     home-manager.enable = true;
   };
 
-  programs.zsh.initContent = ''
-    . ~/.hubspot/shellrc
-  '';
 
   home.file = {
     ".hammerspoon" = {
