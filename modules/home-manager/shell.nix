@@ -212,17 +212,18 @@ in {
                 source /home/nick/.venv/bin/activate
               fi
 
-              alias -- nr=sudo nixos-rebuild switch --flake ~/.config/dots
+              alias -- nr='sudo nixos-rebuild switch --flake ~/.config/dots'
             ''
             else ''
-              alias -- nr=darwin-rebuild switch --flake ~/.config/dots
-              alias -- finder=open .
-              alias -- ghe=GH_HOST=git.hubteam.com gh
-
-              alias -- cat=bat
+              alias -- nr='darwin-rebuild switch --flake ~/.config/dots'
+              alias -- finder='open .'
             ''
           )
-          + lib.optionalString config.isHubspot "\n\n. ~/.hubspot/shellrc";
+          + lib.optionalString config.isHubspot ''
+              alias -- ghe='GH_HOST=git.hubteam.com gh'
+
+            ~/.hubspot/shellrc
+          '';
         target = ".zshrc.generated";
       };
       "nvm.plugin.zsh" = {

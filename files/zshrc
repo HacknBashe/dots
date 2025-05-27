@@ -64,18 +64,18 @@ bindkey -s ^g "^ulg\n"
 bindkey -s -M vicmd ^g "ddAlg\n"
 
 alias -- cat=bat
-alias -- finder='open .'
-alias -- ghe='GH_HOST=git.hubteam.com gh'
-alias -- la='exa -la'
-alias -- lg='if [ -n "$TMUX" ]; then lazygit -ucf $HOME/.config/lazygit/tmuxconfig.yml,$HOME/.config/lazygit/config.yml; else lazygit; fi'
-alias -- ll='exa -l'
 alias -- ls=exa
+alias -- la='exa -la'
+alias -- ll='exa -l'
+
+alias -- vi='nvim --listen /tmp/nvim-server-$(tmux display-message -p '\'''\''#{session_name}'\'''\'').pipe'
+alias -- lg='if [ -n "$TMUX" ]; then lazygit -ucf $HOME/.config/lazygit/tmuxconfig.yml,$HOME/.config/lazygit/config.yml; else lazygit; fi'
+
+alias -- ng='sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d'
+
 alias -- meraxes='ssh nick@192.168.86.13'
 alias -- mushu='ssh nick@192.168.86.31'
-alias -- ng='sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d'
-alias -- nr='darwin-rebuild switch --flake ~/.config/dots'
 alias -- sindy='ssh nick@192.168.86.51'
-alias -- vi='nvim --listen /tmp/nvim-server-$(tmux display-message -p '\'''\''#{session_name}'\'''\'').pipe'
 
 function y() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
