@@ -219,14 +219,14 @@ vim.keymap.set("n", "<leader>gg", function()
 	end
 end, { desc = "Open lazygit in tmux window" })
 
--- Git GitHub integration
-local function open_in_github(commit_hash, use_branch)
+function OpenInGithub(commit_hash, use_branch)
 	commit_hash = commit_hash or ""
 	use_branch = use_branch or false
 
 	local file_dir = vim.fn.expand("%:h")
-	local git_root = vim.fn.system("cd " .. file_dir .. "; git rev-parse --show-toplevel"):gsub("%s+$", "")
-	local file_path = vim.fn.system("cd " .. file_dir .. "; git ls-files --full-name " .. vim.fn.shellescape(vim.fn.expand("%:t"))):gsub("%s+$", "")
+	local file_path = vim.fn
+		.system("cd " .. file_dir .. "; git ls-files --full-name " .. vim.fn.shellescape(vim.fn.expand("%:t")))
+		:gsub("%s+$", "")
 
 	local branch
 	if use_branch then
@@ -254,19 +254,20 @@ local function open_in_github(commit_hash, use_branch)
 		url = url .. "/blob/" .. branch .. "/" .. file_path
 	end
 
-	vim.fn.system("open " .. url)
+	local open_cmd = vim.fn.has("mac") == 1 and "open" or "xdg-open"
+	vim.fn.system(open_cmd .. " " .. vim.fn.shellescape(url))
 end
 
 vim.keymap.set("n", "<leader>gof", function()
-	open_in_github()
+	OpenInGithub()
 end, { desc = "Git open file in GitHub" })
 
 vim.keymap.set("n", "<leader>goc", function()
 	local word = vim.fn.expand("<cword>")
 	vim.cmd("q")
-	open_in_github(word)
+	OpenInGithub(word)
 end, { desc = "Git open commit in GitHub" })
 
 vim.keymap.set("n", "<leader>gob", function()
-	open_in_github("", true)
+	OpenInGithub("", true)
 end, { desc = "Git open branch in GitHub" })
