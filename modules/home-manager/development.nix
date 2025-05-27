@@ -10,6 +10,7 @@
         distrobox
         vscode.fhs
         android-tools
+        claude-code
       ]
     else [];
 
@@ -31,7 +32,6 @@ in {
     [
       git
       gh
-      aider-chat
       entr
       lazygit
       docker-compose
