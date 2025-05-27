@@ -43,7 +43,7 @@
     spotify
     todoist-electron
     ungoogled-chromium
-    webcord
+    vesktop
     vlc
     wine
     winetricks
