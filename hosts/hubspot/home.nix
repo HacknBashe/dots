@@ -25,7 +25,6 @@
     home-manager.enable = true;
   };
 
-
   home.file = {
     ".hammerspoon" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/hammerspoon";

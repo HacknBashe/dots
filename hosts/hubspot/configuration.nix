@@ -22,7 +22,7 @@ in {
     Defaults env_keep += "REQUEST_CA_BUNDLE"
   '';
 
-
+  system.primaryUser = "nhackford";
   users.users.${user} = {
     name = "${user}";
     home = "/Users/${user}";
