@@ -80,6 +80,22 @@ vim.keymap.set({ "n", "v" }, "<leader>ay", function()
 	local context = get_buffer_context()
 	vim.fn.setreg("+", context)
 	print("Nvim AI Context copied to clipboard")
+
+	-- Switch to claude window in tmux if in tmux session
+	if vim.env.TMUX then
+		vim.fn.system("tmux select-window -t claude")
+		-- Load clipboard into tmux buffer and paste
+		vim.fn.system("wl-paste | tmux load-buffer -")
+		vim.fn.system("tmux send-keys -t claude i")
+		os.execute("sleep 0.1")
+		vim.fn.system("tmux send-keys -t claude C-c")
+		vim.fn.system("tmux paste-buffer -t claude") -- Paste from tmux buffer
+		os.execute("sleep 0.1")
+		vim.fn.system("tmux send-keys -t claude Escape")
+		os.execute("sleep 0.1")
+		vim.fn.system("tmux send-keys -t claude G")
+		vim.fn.system("tmux send-keys -t claude o")
+	end
 end, { desc = "Copy AI info to clipboard" })
 
 -- substitute
