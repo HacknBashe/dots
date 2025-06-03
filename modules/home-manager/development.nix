@@ -76,7 +76,7 @@ in {
   home.file =
     {
       ".gitconfig" = {
-        source = ../../files/gitconfig;
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/gitconfig";
         target =
           if config.isHubspot
           then ".gitconfig.nix"

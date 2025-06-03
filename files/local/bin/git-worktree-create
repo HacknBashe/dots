@@ -16,8 +16,8 @@ if [ $# -ne 0 ]; then
   branch="$1"
   workdir="$top/$branch"
   if git worktree add -b "$branch" "$workdir" master; then
-    # Get repo name from directory
-    repo_name=$(basename "$(dirname "$workdir")")
+    # Get repo name - use top directory for all repos
+    repo_name=$(basename "$top")
     # Format branch name
     session_name="${repo_name}_${branch}"
     
@@ -51,11 +51,30 @@ else
       echo " fetch failed (branch $branch not found on origin?)"
       exit 1
     }
-    if git worktree add -b "$branch" "$workdir" "$remote"; then
-      git update-ref -d refs/heads/"$branch.new" 2>/dev/null
-      
-      # Get repo name from directory
-      repo_name=$(basename "$(dirname "$workdir")")
+    worktree_created=false
+    if git show-ref --verify --quiet refs/heads/"$branch"; then
+      # Branch exists locally, use it
+      if git worktree add "$workdir" "$branch"; then
+        git update-ref -d refs/heads/"$branch.new" 2>/dev/null
+        worktree_created=true
+      else
+        echo "Failed to create worktree for existing branch '$branch'"
+        exit 1
+      fi
+    else
+      # Branch doesn't exist locally, create it from remote
+      if git worktree add -b "$branch" "$workdir" "$remote"; then
+        git update-ref -d refs/heads/"$branch.new" 2>/dev/null
+        worktree_created=true
+      else
+        echo "Failed to create worktree for new branch '$branch'"
+        exit 1
+      fi
+    fi
+    
+    if [ "$worktree_created" = true ]; then
+      # Get repo name - use top directory for all repos
+      repo_name=$(basename "$top")
       # Format branch name for session
       formatted_branch=$(echo "$branch" | tr '/' '-')
       session_name="${repo_name}_${formatted_branch}"
