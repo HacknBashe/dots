@@ -22,7 +22,7 @@ tmux new-window -n "shell"
 if is_bend_project; then
     tmux split-window -h -t "shell"
     tmux send-keys -t "shell" "bend yarn" C-m
-    tmux send-keys -t "shell" "bend reactor serve SocialUI social-composer-lib --mode --update --enable-tools --ts-watch" C-m
+    tmux send-keys -t "shell" "bend reactor serve SocialUI social-composer-lib --mode --update --enable-tools --ts-watch"
 fi
 
 # Create a fourth tmux tab for lg

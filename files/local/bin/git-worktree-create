@@ -42,12 +42,7 @@ if [ $# -ne 0 ]; then
 else
   echo "Remote branches:"
   git fetch --prune
-  branch=$(git branch -r |
-    grep -v HEAD |
-    sed 's|origin/||' |
-    sort -u |
-    fzf --height 10 --reverse |
-    tr -d '[:space:]')
+  branch=$(git branch -r | grep -v HEAD | sed 's|.*origin/||' | sed 's/^[[:space:]]*//' | sort -u | fzf | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
 
   if [ -n "$branch" ]; then
     remote="origin/$branch"
@@ -87,13 +82,9 @@ else
 fi
 
 if [ "$is_bare" = "true" ]; then
-  if [ -d "$top/.claude" ]; then
-    ln -sf "$top/.claude" "$workdir/.claude"
-    echo "Created symlink for .claude directory"
-  fi
-
-  if [ -f "$top/CLAUDE.md" ]; then
-    ln -sf "$top/CLAUDE.md" "$workdir/CLAUDE.md"
-    echo "Created symlink for CLAUDE.md"
+  if [ -f "$top/.claude/settings.local.json" ]; then
+    mkdir -p "$workdir/.claude"
+    ln -sf "$top/.claude/settings.local.json" "$workdir/.claude/settings.local.json"
+    echo "Created symlink for .claude/settings.local.json"
   fi
 fi

@@ -85,7 +85,8 @@ vim.keymap.set({ "n", "v" }, "<leader>ay", function()
 	if vim.env.TMUX then
 		vim.fn.system("tmux select-window -t claude")
 		-- Load clipboard into tmux buffer and paste
-		vim.fn.system("wl-paste | tmux load-buffer -")
+		local paste_cmd = vim.fn.has("mac") == 1 and "pbpaste" or "wl-paste"
+		vim.fn.system(paste_cmd .. " | tmux load-buffer -")
 		vim.fn.system("tmux send-keys -t claude i")
 		os.execute("sleep 0.1")
 		vim.fn.system("tmux send-keys -t claude C-c")
