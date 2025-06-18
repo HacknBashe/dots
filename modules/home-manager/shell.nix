@@ -215,7 +215,7 @@ in {
               alias -- nr='sudo nixos-rebuild switch --flake ~/.config/dots'
             ''
             else ''
-              alias -- nr='darwin-rebuild switch --flake ~/.config/dots'
+              alias -- nr='sudo darwin-rebuild switch --flake ~/.config/dots'
               alias -- finder='open .'
             ''
           )
