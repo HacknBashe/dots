@@ -1,17 +1,3 @@
-function telescope_find_directory_file(subdirectory)
-	require("telescope.builtin").find_files({
-		prompt_title = "Search directory for file",
-		cwd = subdirectory,
-	})
-end
-
-function telescope_find_directory_string(subdirectory)
-	require("telescope.builtin").live_grep({
-		prompt_title = "Search directory for string",
-		cwd = subdirectory,
-	})
-end
-
 return {
 	"nvim-telescope/telescope.nvim",
 	tag = "0.1.1",
@@ -26,19 +12,60 @@ return {
 		local function opts(desc)
 			return { desc = desc, noremap = true, silent = true, nowait = true }
 		end
+		local builtin = require("telescope.builtin")
 
 		vim.keymap.set("n", "<leader>ff", "<cmd> Telescope find_files hidden=true follow=true <CR>", opts("Find Files"))
 		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>", opts("Find Strings"))
+		vim.keymap.set("v", "<leader>fs", builtin.grep_string, opts("Find Selected Text"))
 
 		vim.keymap.set("n", "<leader>fS", "<cmd> Telescope lsp_document_symbols <CR>", opts("Find Symbols"))
 		vim.keymap.set("n", "<leader>fm", "<cmd> Telescope marks<CR>", opts("View Marks"))
 
-		local fdfcmd =
-			[[:lua telescope_find_directory_file(vim.fn.input("Search subdirectory for file: ", vim.fn.getreg('"'))<CR>]]
-		vim.keymap.set("n", "<leader>fdf", fdfcmd, opts("Find file in directory"))
-		local fdscmd =
-			[[:lua telescope_find_directory_string(vim.fn.input("Search subdirectory for string: ", vim.fn.getreg('"')))<CR>]]
-		vim.keymap.set("n", "<leader>fds", fdscmd, opts("Find string in directory"))
+		vim.keymap.set("n", "<leader>fdf", function()
+			builtin.find_files({
+				prompt_title = "Select Directory",
+				find_command = { "find", ".", "-type", "d", "-not", "-path", "*/.*" },
+				attach_mappings = function(prompt_bufnr, map)
+					local actions = require("telescope.actions")
+					local action_state = require("telescope.actions.state")
+
+					actions.select_default:replace(function()
+						local selection = action_state.get_selected_entry()
+						actions.close(prompt_bufnr)
+
+						builtin.find_files({
+							prompt_title = "Search directory for file",
+							cwd = selection.value,
+						})
+					end)
+
+					return true
+				end,
+			})
+		end, opts("Find file in directory"))
+
+		vim.keymap.set("n", "<leader>fds", function()
+			builtin.find_files({
+				prompt_title = "Select Directory",
+				find_command = { "find", ".", "-type", "d", "-not", "-path", "*/.*" },
+				attach_mappings = function(prompt_bufnr, map)
+					local actions = require("telescope.actions")
+					local action_state = require("telescope.actions.state")
+
+					actions.select_default:replace(function()
+						local selection = action_state.get_selected_entry()
+						actions.close(prompt_bufnr)
+
+						builtin.live_grep({
+							prompt_title = "Search directory for string",
+							cwd = selection.value,
+						})
+					end)
+
+					return true
+				end,
+			})
+		end, opts("Find string in directory"))
 
 		vim.keymap.set("n", "<leader>fb", "<cmd> Telescope buffers <CR>", opts("Find Buffers"))
 		vim.keymap.set("n", "<leader>fr", "<cmd> Telescope oldfiles cwd_only=true <CR>", opts("Find Recent in CWD"))

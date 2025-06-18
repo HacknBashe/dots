@@ -26,7 +26,7 @@ return {
 			neogit.open({ "log", kind = "vsplit" })
 		end, { desc = "Git log", noremap = true, silent = true, nowait = true })
 		vim.keymap.set("n", "<leader>gf", function()
-			neogit.open({ "log", "--", vim.fn.expand("%") }, { kind = "vsplit" })
+			neogit.action("log", "log_current", { "--", vim.fn.expand("%") })()
 		end, { desc = "Git log for current file", noremap = true, silent = true, nowait = true })
 	end,
 }
