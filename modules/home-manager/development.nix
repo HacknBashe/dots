@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  inputs,
   ...
 }: let
   linuxPackages =
@@ -35,6 +36,7 @@ in {
       entr
       lazygit
       docker-compose
+      inputs.opencode.legacyPackages.${pkgs.system}.opencode
 
       alejandra
       nixd
