@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 
-top=$(git rev-parse --show-toplevel 2>/dev/null)
-git_dir=$(git rev-parse --git-dir 2>/dev/null) || {
+git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
   echo "Not in a git repo"
   exit 1
 }
+
+# For worktree structure: my_project/master/, my_project/feature/
+# git-common-dir points to my_project/master/.git
+# We need to go up two levels: .git -> master -> my_project
+# Use realpath to ensure we get absolute paths
+git_dir_abs="$(realpath "$git_dir")"
+worktree_dir="$(dirname "$git_dir_abs")"
+top="$(dirname "$worktree_dir")"
 
 # Get all worktrees with their branches
 worktree_info=$(git worktree list --porcelain)
@@ -32,7 +39,7 @@ current_dir=$PWD
 # Make sure we're not in the worktree we're trying to delete
 if [[ "$current_dir" == "$selected_path"* ]]; then
   echo "Cannot delete the worktree you're currently in. Moving to the main worktree..."
-  cd $(git worktree list | grep '\[master\]' | awk '{print $1}')
+  cd "$top/master"
 fi
 
 # Remove the worktree and delete the branch

@@ -14,17 +14,11 @@ fi
 work_dir=$selected
 session_name=$(basename "$selected" | tr . _)
 
-# First check if it's a git directory at all
-if (cd "$selected" && git rev-parse --git-dir &>/dev/null); then
-  # Use git's own command to check if it's a bare repo
-  if (cd "$selected" && is_bare=$(git config --get --bool core.bare) && [ "$is_bare" = "true" ]); then
-    # It's a bare repo, check if it has a master worktree
-    if [ -d "$selected/master" ]; then
-      work_dir="$selected/master"
-      repo_name=$(basename "$selected")
-      session_name="${repo_name}_master"
-    fi
-  fi
+# Check if this looks like a worktree project structure
+if [ -d "$selected/master" ]; then
+  work_dir="$selected/master"
+  repo_name=$(basename "$selected")
+  session_name="${repo_name}_master"
 fi
 
 tmux_running=$(pgrep tmux)

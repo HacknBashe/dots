@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
-top=$(git rev-parse --show-toplevel 2>/dev/null)
 git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
   echo "Not in a git repo"
   exit 1
 }
 
-is_bare=$(git config --get --bool core.bare || echo "false")
-
-if [ "$is_bare" = "true" ]; then
-  top="$git_dir"
-fi
+# For worktree structure: my_project/master/, my_project/feature/
+# git-common-dir points to my_project/master/.git
+# We need to go up two levels: .git -> master -> my_project
+# Use realpath to ensure we get absolute paths
+git_dir_abs="$(realpath "$git_dir")"
+worktree_dir="$(dirname "$git_dir_abs")"
+top="$(dirname "$worktree_dir")"
 
 # Just list and navigate to existing worktrees
 dir=$(
@@ -23,8 +24,8 @@ if [ -n "$dir" ]; then
   # Save current directory
   current_dir="$PWD"
   
-  # Get repo name from directory
-  repo_name=$(basename "$(dirname "$dir")")
+  # Get repo name from directory  
+  repo_name=$(basename "$top")
   
   # Get branch name from git worktree list (no subshell needed)
   branch_name=$(git worktree list --porcelain | awk -v target="$dir" '

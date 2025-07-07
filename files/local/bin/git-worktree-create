@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
-top=$(git rev-parse --show-toplevel 2>/dev/null)
 git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
   echo "Not in a git repo"
   exit 1
 }
 
-is_bare=$(git config --get --bool core.bare || echo "false")
-
-if [ "$is_bare" = "true" ]; then
-  top="$(realpath "$(dirname "$git_dir")")"
-fi
+# For worktree structure: my_project/master/, my_project/feature/
+# git-common-dir points to my_project/master/.git
+# We need to go up two levels: .git -> master -> my_project
+# Use realpath to ensure we get absolute paths
+git_dir_abs="$(realpath "$git_dir")"
+worktree_dir="$(dirname "$git_dir_abs")"
+top="$(dirname "$worktree_dir")"
 
 if [ $# -ne 0 ]; then
   branch="$1"
@@ -20,6 +21,9 @@ if [ $# -ne 0 ]; then
     repo_name=$(basename "$top")
     # Format branch name
     session_name="${repo_name}_${branch}"
+    
+    # Debug output
+    echo "DEBUG: Creating session - repo_name='$repo_name', branch='$branch', session_name='$session_name'"
     
     # Check if already in a tmux session
     if [ -z "$TMUX" ]; then
@@ -79,6 +83,9 @@ else
       formatted_branch=$(echo "$branch" | tr '/' '-')
       session_name="${repo_name}_${formatted_branch}"
       
+      # Debug output
+      echo "DEBUG: Creating session (remote) - repo_name='$repo_name', formatted_branch='$formatted_branch', session_name='$session_name'"
+      
       # Check if already in a tmux session
       if [ -z "$TMUX" ]; then
         # Not in a tmux session, create or attach to one
@@ -100,10 +107,9 @@ else
   fi
 fi
 
-if [ "$is_bare" = "true" ]; then
-  if [ -f "$top/.claude/settings.local.json" ]; then
-    mkdir -p "$workdir/.claude"
-    ln -sf "$top/.claude/settings.local.json" "$workdir/.claude/settings.local.json"
-    echo "Created symlink for .claude/settings.local.json"
-  fi
+# Create Claude settings symlink if it exists in the project root
+if [ -f "$top/.claude/settings.local.json" ]; then
+  mkdir -p "$workdir/.claude"
+  ln -sf "$top/.claude/settings.local.json" "$workdir/.claude/settings.local.json"
+  echo "Created symlink for .claude/settings.local.json"
 fi

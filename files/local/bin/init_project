@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# Check if this is a bend project by looking for package.json with "bpm" section
 is_bend_project() {
     if [ -f "package.json" ]; then
         grep -q '"bpm"' package.json
@@ -9,25 +8,22 @@ is_bend_project() {
     return 1
 }
 
-# Create a new tmux tab for vi
-tmux new-window -n "nvim"
+tmux new-window -n "nvim" ": nvim; zsh -i"
 tmux send-keys -t "nvim" "vi" C-m
 
-# Create a second tmux tab for claude
-tmux new-window -n "claude"
+tmux new-window -n "claude" ": claude; zsh -i"
 tmux send-keys -t "claude" "claude" C-m
 
-# Create a third tmux tab for shell commands (only if bend project)
 tmux new-window -n "shell"
 if is_bend_project; then
     tmux split-window -h -t "shell"
-    tmux send-keys -t "shell" "bend yarn" C-m
-    tmux send-keys -t "shell" "bend reactor serve SocialUI social-composer-lib --mode --update --enable-tools --ts-watch"
+    tmux send-keys -t "shell".1 "bend yarn" C-m
+    tmux send-keys -t "shell".1 "br"
 fi
 
-# Create a fourth tmux tab for lg
-tmux new-window -n "lazygit"
+tmux new-window -n "lazygit" ": lazygit; zsh -i"
 tmux send-keys -t "lazygit" "lg" C-m
 
-# Close the original window (use its index or name if known)
 tmux kill-window -t 1
+
+tmux display-message "Project windows initialized!"
