@@ -8,10 +8,13 @@ obj.license = "MIT"
 obj.homepage = "https://github.com/nhackford"
 
 -- Internal variables
-local gestureWatcher = nil
-local clickWatcher = nil
-local threeFingerDown = false
-local clickLocation = nil
+local tapWatcher = nil
+local lastTapTime = 0
+local doubleTapThreshold = 0.3
+local minTapInterval = 0.1 -- Minimum time between taps to avoid noise
+local debounceTimer = nil
+local tapTimer = nil
+local lastTouchCount = 0
 
 function obj:init()
 	-- Start the spoon right after initialization
@@ -21,80 +24,75 @@ function obj:init()
 end
 
 function obj:start()
-	if gestureWatcher then
-		gestureWatcher:stop()
+	if tapWatcher then
+		tapWatcher:stop()
 	end
 
-	if clickWatcher then
-		clickWatcher:stop()
-	end
-
-	-- Watch for three-finger touches
-	gestureWatcher = hs.eventtap.new({ hs.eventtap.event.types.gesture }, function(e)
+	-- Watch for gesture events and detect tap patterns
+	tapWatcher = hs.eventtap.new({ hs.eventtap.event.types.gesture }, function(e)
 		local touches = e:getTouches()
-		if touches and #touches == 3 then
-			-- Only check phase if event properties is available
-			local phase = nil
-			local success = pcall(function()
-				phase = e:getProperty(hs.eventtap.event.properties.gesturePhase)
+		local touchCount = touches and #touches or 0
+
+		-- Detect a "tap" as: finger lifted after being down
+		if lastTouchCount == 1 and touchCount == 0 then
+			-- Use debounce timer to prevent rapid firing
+			if debounceTimer then
+				debounceTimer:stop()
+			end
+
+			debounceTimer = hs.timer.doAfter(minTapInterval, function()
+				local currentTime = hs.timer.secondsSinceEpoch()
+				local timeDiff = lastTapTime > 0 and (currentTime - lastTapTime) or 999
+
+				-- Check if this is a double tap
+				if lastTapTime > 0 and timeDiff <= doubleTapThreshold then
+					-- Double tap detected - fire middle click
+					hs.eventtap.middleClick(hs.mouse.absolutePosition())
+					lastTapTime = 0
+
+					if tapTimer then
+						tapTimer:stop()
+						tapTimer = nil
+					end
+				else
+					-- First tap - record the time
+					lastTapTime = currentTime
+
+					if tapTimer then
+						tapTimer:stop()
+					end
+					tapTimer = hs.timer.doAfter(doubleTapThreshold + 0.1, function()
+						lastTapTime = 0
+						tapTimer = nil
+					end)
+				end
+
+				debounceTimer = nil
 			end)
-
-			if success and phase then
-				if phase == hs.eventtap.event.phases.began then
-					threeFingerDown = true
-					clickLocation = hs.mouse.absolutePosition()
-				elseif phase == hs.eventtap.event.phases.ended then
-					threeFingerDown = false
-				end
-			else
-				-- If we can't detect phases, just use touch count as indicator
-				threeFingerDown = true
-				clickLocation = hs.mouse.absolutePosition()
-
-				-- Reset after a short delay
-				hs.timer.doAfter(0.3, function()
-					threeFingerDown = false
-				end)
-			end
 		end
+
+		lastTouchCount = touchCount
 		return false
 	end)
 
-	-- Watch for click events that might happen while three fingers are down
-	clickWatcher = hs.eventtap.new({
-		hs.eventtap.event.types.leftMouseDown,
-		hs.eventtap.event.types.leftMouseUp,
-	}, function(e)
-		if threeFingerDown then
-			local eventType = e:getType()
-			if eventType == hs.eventtap.event.types.leftMouseDown then
-				return true -- Cancel the regular click
-			elseif eventType == hs.eventtap.event.types.leftMouseUp then
-				if clickLocation then
-					hs.eventtap.middleClick(clickLocation)
-				end
-				return true
-			end
-		end
-		return false
-	end)
-
-	-- Start the watchers
-	gestureWatcher:start()
-	clickWatcher:start()
-
+	tapWatcher:start()
 	return self
 end
 
 function obj:stop()
-	if gestureWatcher then
-		gestureWatcher:stop()
-		gestureWatcher = nil
+	if tapWatcher then
+		tapWatcher:stop()
+		tapWatcher = nil
 	end
 
-	if clickWatcher then
-		clickWatcher:stop()
-		clickWatcher = nil
+	if tapTimer then
+		tapTimer:stop()
+		tapTimer = nil
+	end
+
+	if debounceTimer then
+		debounceTimer:stop()
+		debounceTimer = nil
 	end
 
 	return self

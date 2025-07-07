@@ -1,5 +1,5 @@
 hs.loadSpoon("Voice")
-hs.loadSpoon("MiddleClick")
+-- hs.loadSpoon("MiddleClick") -- DISABLED - too unreliable with gesture events
 
 local three_finger_id, three_finger_threshold
 Swipe = hs.loadSpoon("Swipe")
