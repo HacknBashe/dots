@@ -2,13 +2,12 @@
 
 current_device=$(/opt/homebrew/bin/SwitchAudioSource -c)
 
-device_1="MacBook Pro Speakers"
-device_2="Razer Barracuda Pro 2.4"
-
-if [ "$current_device" == "$device_1" ]; then
-  /opt/homebrew/bin/SwitchAudioSource -t output -s "$device_2"
+if [ "$current_device" == "MacBook Pro Speakers" ] && /opt/homebrew/bin/SwitchAudioSource -a | grep -q "Nick's AirPods Pro"; then
+  /opt/homebrew/bin/SwitchAudioSource -t output -s "Nick's AirPods Pro"
+  /opt/homebrew/bin/SwitchAudioSource -t input -s "Nick's AirPods Pro"
   sketchybar --set $NAME icon="󰋋"
 else
-  /opt/homebrew/bin/SwitchAudioSource -t output -s "$device_1"
+  /opt/homebrew/bin/SwitchAudioSource -t output -s "MacBook Pro Speakers"
+  /opt/homebrew/bin/SwitchAudioSource -t output -s "MacBook Pro Microphone"
   sketchybar --set $NAME icon="󰓃"
 fi
