@@ -27,8 +27,6 @@
       inputs.nixpkgs-unstable.follows = "nixpkgs";
     };
 
-    opencode.url = "github:nixos/nixpkgs/pull/419604/head";
-
     hyprland = {
       url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
       inputs.nixpkgs.follows = "nixpkgs";
