@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  inputs,
-  ...
-}: {
+{pkgs, ...}: {
   programs.thunar.enable = true;
   programs.xfconf.enable = true;
   services.gvfs.enable = true;
@@ -32,6 +27,8 @@
     gimp
     gparted
     helvum
+    heroic
+    protonup-qt
     lutris
     makemkv
     obs-studio

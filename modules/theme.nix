@@ -1,9 +1,4 @@
-{
-  pkgs,
-  config,
-  lib,
-  ...
-}: let
+{lib, ...}: let
 in {
   options = {
     isHubspot = lib.mkOption {
@@ -125,7 +120,7 @@ in {
   config = {
     monitor1Command = "DP-3,3840x2160,0x180,2";
     monitor2Command = "DP-4,3440x1440,1920x0,1";
-    monitor3Command = "HDMI-A-5,3840x2160,5360x0,2";
+    monitor3Command = "HDMI-A-5,3840x2160,5360x0,2.5";
     lockCommand = "grim -o DP-3 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-4 -l 0 /tmp/hyprlock_screenshot2.png & grim -o HDMI-A-5 -l 0 /tmp/hyprlock_screenshot3.png & wait && hyprlock";
 
     theme = {
