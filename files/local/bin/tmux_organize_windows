@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+# Check if project windows exist, if not create them
+if ! tmux list-windows | grep -q "nvim\|claude\|shell\|lazygit"; then
+    tmux_nvim
+    tmux_claude
+    tmux_shell
+    tmux_lazygit
+    
+    tmux kill-window -t 1
+    
+    tmux display-message "Project windows initialized!"
+fi
+
+# First, break any joined panes back into separate windows
+tmux list-windows -F "#{window_index}" | while read window_index; do
+    if [ "$(tmux list-panes -t "$window_index" | wc -l)" -gt 1 ]; then
+        tmux list-panes -t "$window_index" -F "#{pane_id} #{pane_start_command}" | tail -n +2 | while read pane_id pane_cmd; do
+            if echo "$pane_cmd" | grep -qE "(^|[^a-zA-Z])(lg|lazygit)([^a-zA-Z]|$)"; then
+                tmux break-pane -s "$pane_id" -n "lazygit"
+            elif echo "$pane_cmd" | grep -q "claude"; then
+                tmux break-pane -s "$pane_id" -n "claude"
+            elif echo "$pane_cmd" | grep -q "vi"; then
+                tmux break-pane -s "$pane_id" -n "nvim"
+            else
+                tmux break-pane -s "$pane_id" -n "shell"
+            fi
+        done
+    fi
+done
+
+# Get current pane info
+current_pane=$(tmux display-message -p "#{pane_id}")
+start_cmd=$(tmux display-message -p -t $current_pane "#{pane_start_command}")
+
+# Move pane to appropriate window based on current command
+if echo "$start_cmd" | grep -q ": claude"; then
+    if ! tmux list-windows | grep -q "claude"; then
+        tmux break-pane -n "claude"
+    else
+        tmux move-pane -h -t :claude
+    fi
+elif echo "$start_cmd" | grep -q ": vi"; then
+    if ! tmux list-windows | grep -q "nvim"; then
+        tmux break-pane -n "nvim"
+    else
+        tmux move-pane -h -t :nvim
+    fi
+elif echo "$start_cmd" | grep -qE "(^|[^a-zA-Z])(lg|lazygit)([^a-zA-Z]|$)"; then
+    if ! tmux list-windows | grep -q "lazygit"; then
+        tmux break-pane -n "lazygit"
+    else
+        tmux move-pane -h -t :lazygit
+    fi
+else
+    if ! tmux list-windows | grep -q "shell"; then
+        tmux break-pane -n "shell"
+    else
+        tmux move-pane -h -t :shell
+    fi
+fi
+
+# Organize windows by moving them to specific positions
+# nvim -> position 1
+current_at_1=$(tmux list-windows -F "#{window_index}:#{window_name}" | grep "^1:" | cut -d: -f2 2>/dev/null || echo "")
+if tmux list-windows | grep -q "nvim" && [ "$current_at_1" != "nvim" ]; then
+    tmux swap-window -s :nvim -t 1 2>/dev/null || true
+fi
+
+# claude -> position 2
+current_at_2=$(tmux list-windows -F "#{window_index}:#{window_name}" | grep "^2:" | cut -d: -f2 2>/dev/null || echo "")
+if tmux list-windows | grep -q "claude" && [ "$current_at_2" != "claude" ]; then
+    tmux swap-window -s :claude -t 2 2>/dev/null || true
+fi
+
+# shell -> position 3
+current_at_3=$(tmux list-windows -F "#{window_index}:#{window_name}" | grep "^3:" | cut -d: -f2 2>/dev/null || echo "")
+if tmux list-windows | grep -q "shell" && [ "$current_at_3" != "shell" ]; then
+    tmux swap-window -s :shell -t 3 2>/dev/null || true
+fi
+
+# lazygit -> position 4
+current_at_4=$(tmux list-windows -F "#{window_index}:#{window_name}" | grep "^4:" | cut -d: -f2 2>/dev/null || echo "")
+if tmux list-windows | grep -q "lazygit" && [ "$current_at_4" != "lazygit" ]; then
+    tmux swap-window -s :lazygit -t 4 2>/dev/null || true
+fi

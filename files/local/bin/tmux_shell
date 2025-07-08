@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if tmux list-windows | grep -q shell; then
+    tmux select-window -t shell
+else
+    tmux new-window -n shell
+fi

@@ -50,7 +50,7 @@ vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
 
-vim.opt.colorcolumn = "120"
+vim.opt.colorcolumn = "20,40,60,80,100,120,140,160,180,200"
 
 vim.opt.signcolumn = "yes"
 

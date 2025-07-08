@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if tmux list-windows | grep -q claude; then
+    tmux select-window -t claude
+else
+    tmux new-window -n claude ': claude; zsh -ic claude'
+fi

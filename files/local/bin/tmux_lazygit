@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if tmux list-windows | grep -q lazygit; then
+    tmux select-window -t lazygit
+else
+    tmux new-window -n lazygit 'zsh -ic lg; exec zsh'
+fi

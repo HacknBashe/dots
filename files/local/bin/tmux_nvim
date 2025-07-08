@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if tmux list-windows | grep -q nvim; then
+    tmux select-window -t nvim
+else
+    tmux new-window -n nvim ': nvim; zsh -ic vi'
+fi
