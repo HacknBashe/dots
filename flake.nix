@@ -23,7 +23,8 @@
 
     ghostty = {
       url = "git+ssh://git@github.com/ghostty-org/ghostty";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-stable.follows = "nixpkgs";
+      inputs.nixpkgs-unstable.follows = "nixpkgs";
     };
 
     hyprland = {
