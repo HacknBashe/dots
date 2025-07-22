@@ -6,6 +6,7 @@ files/config/ags/@girs
 # Reignore files hubspot added to bin
 files/local/bin/chirp-gen-py
 files/local/bin/devex-agents
+files/local/bin/devex-hooks
 files/local/bin/devex-mcp-server
 files/local/bin/hs-git-migration-tools
 files/config/aichat/config.yaml
