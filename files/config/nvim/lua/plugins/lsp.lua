@@ -57,8 +57,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end, opts("Hover"))
 
 		vim.keymap.set("n", "<leader>ls", function()
-			vim.lsp.buf.workspace_symbol()
-		end, opts("View Workspace Symbol"))
+			vim.lsp.buf.document_symbol()
+		end, opts("View Document Symbols"))
+
+		vim.keymap.set("n", "<leader>lF", function()
+			local loc_list = vim.fn.getloclist(0)
+			local pattern = vim.fn.input("Filter pattern: ")
+			local new_list = vim.tbl_filter(function(item)
+				return item.text:match(pattern)
+			end, loc_list)
+			vim.fn.setloclist(0, new_list, "r")
+			print("Filtered location list with pattern: " .. pattern)
+		end, { noremap = true, silent = true, desc = "Filter Location List" })
 
 		vim.keymap.set("n", "<leader>la", function()
 			vim.lsp.buf.code_action()

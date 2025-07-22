@@ -18,7 +18,6 @@ return {
 		vim.keymap.set("n", "<leader>fs", "<cmd> Telescope live_grep <CR>", opts("Find Strings"))
 		vim.keymap.set("v", "<leader>fs", builtin.grep_string, opts("Find Selected Text"))
 
-		vim.keymap.set("n", "<leader>fS", "<cmd> Telescope lsp_document_symbols <CR>", opts("Find Symbols"))
 		vim.keymap.set("n", "<leader>fm", "<cmd> Telescope marks<CR>", opts("View Marks"))
 
 		vim.keymap.set("n", "<leader>fdf", function()
