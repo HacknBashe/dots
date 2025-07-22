@@ -104,3 +104,9 @@ autocmd("BufDelete", {
 })
 
 vim.api.nvim_create_user_command("RestartFileWatcher", setup_file_check_timer, {})
+
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.swapfile = false
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.expand("~/.vim/undodir")
