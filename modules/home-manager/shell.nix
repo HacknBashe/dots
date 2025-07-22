@@ -239,9 +239,7 @@ in {
             ''
           )
           + lib.optionalString config.isHubspot ''
-              alias -- br='NODE_ARGS="--max_old_space_size=8192" bend reactor serve --UNSUPPORTED_LOCAL_DEV_SETTING bend-webpack.enableFastRefresh --UNSUPPORTED_LOCAL_DEV_SETTING bend-webpack.useWebpack5 --UNSUPPORTED_LOCAL_DEV_SETTING bend-webpack.devtool=eval-source-map $@ --ts-watch --update --enable-tools --run-tests'
-
-            ~/.hubspot/shellrc
+            alias -- br='NODE_ARGS="--max_old_space_size=8192" bend reactor serve --UNSUPPORTED_LOCAL_DEV_SETTING bend-webpack.enableFastRefresh --UNSUPPORTED_LOCAL_DEV_SETTING bend-webpack.useWebpack5 --UNSUPPORTED_LOCAL_DEV_SETTING bend-webpack.devtool=eval-source-map $@ --ts-watch --update --enable-tools --run-tests'
           '';
         target = ".zshrc.generated";
       };
