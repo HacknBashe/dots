@@ -68,8 +68,8 @@ alias -- ls=exa
 alias -- la='exa -la'
 alias -- ll='exa -l'
 
-alias -- vi='nvim --listen /tmp/nvim-server-$(tmux display-message -p '\'''\''#{session_name}'\'''\'').pipe'
-alias -- lg='if [ -n "$TMUX" ]; then lazygit -ucf $HOME/.config/lazygit/tmuxconfig.yml,$HOME/.config/lazygit/config.yml; else lazygit; fi'
+alias -- vi='nvim'
+alias -- lg='lg'
 
 alias -- ng='sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d'
 

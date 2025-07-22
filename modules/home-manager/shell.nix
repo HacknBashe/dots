@@ -66,7 +66,7 @@ in {
       ];
     };
     keymap = {
-      manager.prepend_keymap = [
+      mgr.prepend_keymap = [
         {
           on = ["l"];
           run = "plugin smart-enter";
@@ -84,7 +84,7 @@ in {
         }
         {
           on = ["e"];
-          run = ''shell -- if [ -n "$TMUX" ] && tmux list-windows | grep -q nvim; then nvim --server "/tmp/nvim-server-$(tmux display-message -p '#{session_name}').pipe" --remote-send "<cmd>e $0<cr><cmd>filetype detect<cr>" && tmux select-window -t nvim; else nvim "$0"; fi'';
+          run = ''shell -- tmux_nvim "$0"'';
           desc = "Edit file in nvim";
         }
       ];

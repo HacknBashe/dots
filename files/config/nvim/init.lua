@@ -1,5 +1,7 @@
 require("core.set")
 require("core.remap")
+require("core.github")
+require("core.tmux")
 
 require("plugins.formatter").config()
 require("plugins.hexokinase").config()

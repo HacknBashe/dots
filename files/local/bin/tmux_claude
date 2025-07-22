@@ -1,7 +1,26 @@
 #!/usr/bin/env bash
 
-if tmux list-windows | grep -q claude; then
-    tmux select-window -t claude
+# Get text to paste if provided
+text_to_paste="$1"
+
+# Check if claude is already running in any pane
+claude_pane=$(tmux list-panes -s -F "#{pane_id} #{pane_start_command}" | grep ": claude_pane;" | head -1 | cut -d' ' -f1)
+
+if [[ -n "$claude_pane" ]]; then
+    # Get the window containing this pane and switch to it
+    claude_window=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$claude_pane" | cut -d' ' -f2)
+    tmux select-window -t "$claude_window"
+    tmux select-pane -t "$claude_pane"
+    # Paste text into claude if provided
+    if [[ -n "$text_to_paste" ]]; then
+        tmux send-keys -t "$claude_pane" "$text_to_paste"
+    fi
 else
-    tmux new-window -n claude ': claude; zsh -ic claude; exec zsh'
+    # Create new claude window
+    tmux new-window -n claude ": claude_pane; zsh -ic 'claude'; exec zsh"
+    # Wait a moment for claude to start, then paste text if provided
+    if [[ -n "$text_to_paste" ]]; then
+        sleep 1
+        tmux send-keys -t claude "$text_to_paste"
+    fi
 fi

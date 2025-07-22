@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
-if tmux list-windows | grep -q shell; then
-    tmux select-window -t shell
+# Check if shell is already running in any pane
+shell_pane=$(tmux list-panes -s -F "#{pane_id} #{pane_start_command}" | grep ": shell_pane;" | head -1 | cut -d' ' -f1)
+
+if [[ -n "$shell_pane" ]]; then
+    # Get the window containing this pane and switch to it
+    shell_window=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$shell_pane" | cut -d' ' -f2)
+    tmux select-window -t "$shell_window"
+    tmux select-pane -t "$shell_pane"
 else
-    tmux new-window -n shell
+    tmux new-window -n shell ": shell_pane; exec zsh"
 fi
