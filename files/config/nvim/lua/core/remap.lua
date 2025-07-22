@@ -220,6 +220,29 @@ vim.keymap.set("n", "<leader>gg", function()
 	end
 end, { desc = "Open lazygit in tmux window" })
 
+vim.keymap.set("n", "<leader>fy", function()
+	local in_tmux = vim.fn.system('[ -n "$TMUX" ] && echo 1 || echo 0'):gsub("%s+", "")
+
+	if in_tmux == "1" then
+		local has_yazi = vim.fn.system("tmux list-windows | grep -q yazi && echo 1 || echo 0"):gsub("%s+", "")
+		local current_file = vim.fn.expand("%:p")
+		local target_path = current_file ~= "" and current_file or vim.fn.getcwd()
+
+		if has_yazi == "1" then
+			-- Switch to existing Yazi window and navigate to current file
+			vim.fn.system("tmux select-window -t yazi")
+			vim.fn.system("tmux send-keys -t yazi 'g '")
+			vim.fn.system("tmux send-keys -t yazi '" .. target_path .. "' C-m")
+		else
+			-- Create new Yazi window at current file location
+			vim.fn.system("tmux new-window -n yazi 'yazi \"" .. target_path .. "\"'")
+		end
+	else
+		-- Fall back to regular Yazi command if not in tmux
+		vim.cmd("Yazi")
+	end
+end, { desc = "Smart Yazi navigation", silent = true, noremap = true })
+
 function OpenInGithub(commit_hash, use_branch, line_number)
 	commit_hash = commit_hash or ""
 	use_branch = use_branch or false

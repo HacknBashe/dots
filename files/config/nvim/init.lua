@@ -28,5 +28,4 @@ else
 	require("plugins.treesitter").config()
 	require("plugins.trouble").config()
 	require("plugins.telescope-undo").config()
-	require("plugins.yazi").config()
 end
