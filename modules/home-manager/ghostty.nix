@@ -37,7 +37,7 @@ in {
         font-family-bold-italic = ${config.theme.fonts.mono}
         font-style-bold-italic = semibold italic
 
-        background-opacity = .8
+        background-opacity = .9
         # black
         palette = 0=${colors.default.black}
         palette = 8=${colors.bright.black}
