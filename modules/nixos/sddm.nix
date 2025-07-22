@@ -6,6 +6,7 @@
   services = {
     displayManager = {
       sddm = {
+        package = pkgs.kdePackages.sddm;
         enable = true;
         enableHidpi = true;
         theme = "where_is_my_sddm_theme";
