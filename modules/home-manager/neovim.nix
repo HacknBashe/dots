@@ -22,16 +22,6 @@
       hash = "sha256-1uHcQQUnViktDBZt+aytlBF1ZG+/Ifv5VVoKSyM9ML0=";
     };
   };
-  code-companion = pkgs.vimUtils.buildVimPlugin {
-    name = "code-companion";
-    src = pkgs.fetchFromGitHub {
-      owner = "olimorris";
-      repo = "codecompanion.nvim";
-      rev = "97636b902ac20c665b0b3d9d5b2c62c16676e136";
-      hash = "sha256-LRiC1daJ9gf/tVphdNOxxHuxAjcXsHZKuwRc4V0WOyM=";
-    };
-    doCheck = false;
-  };
   mcp-hub = pkgs.vimUtils.buildVimPlugin {
     name = "mcp-hub";
     src = pkgs.fetchFromGitHub {
@@ -69,7 +59,6 @@ in {
         luasnip
         cmp_luasnip
         #codeium-nvim
-        code-companion
         copilot-lua
         copilot-cmp
         mcp-hub
