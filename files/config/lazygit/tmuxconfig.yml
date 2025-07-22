@@ -1,8 +1,4 @@
 customCommands:
-  - key: "q"
-    command: "tmux last-window"
-    context: "global"
-    loadingText: "Closing tmux popup"
   - key: "<c-s>"
     command: "tmux neww 'zsh -i -c git-worktree-switch'"
     context: "files"
