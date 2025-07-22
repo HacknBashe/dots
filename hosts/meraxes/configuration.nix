@@ -153,7 +153,7 @@ in {
                 {
                    matches = [
                      {
-                       node.name = "alsa_output.usb-Macronix_Razer_Barracuda_Pro_2.4_1234-00.analog-stereo"
+                       node.name = "alsa_output.usb-Macronix_Razer_Barracuda_Pro_2.4_1234-00.iec958-stereo"
                      }
                    ]
                    actions = {
