@@ -39,8 +39,8 @@ in {
   programs.yazi = {
     enable = true;
     initLua = ''
-      require("git"):setup()
       require("full-border"):setup()
+      require("git"):setup()
 
       th.git = th.git or {}
 
@@ -51,6 +51,20 @@ in {
       th.git.deleted_sign = ""
       th.git.updated_sign = ""
     '';
+    settings = {
+      plugin.prepend_fetchers = [
+        {
+          id = "git";
+          name = "*";
+          run = "git";
+        }
+        {
+          id = "git";
+          name = "*/";
+          run = "git";
+        }
+      ];
+    };
     keymap = {
       manager.prepend_keymap = [
         {
@@ -67,6 +81,11 @@ in {
           on = ["c" "m"];
           run = "plugin chmod";
           desc = "Chmod on selected files";
+        }
+        {
+          on = ["e"];
+          run = ''shell -- if [ -n "$TMUX" ] && tmux list-windows | grep -q nvim; then nvim --server "/tmp/nvim-server-$(tmux display-message -p '#{session_name}').pipe" --remote-send "<cmd>e $0<cr><cmd>filetype detect<cr>" && tmux select-window -t nvim; else nvim "$0"; fi'';
+          desc = "Edit file in nvim";
         }
       ];
     };
