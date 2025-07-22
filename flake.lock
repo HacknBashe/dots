@@ -805,22 +805,6 @@
         "type": "github"
       }
     },
-    "opencode": {
-      "locked": {
-        "lastModified": 1751351490,
-        "narHash": "sha256-ctx8/MHA43rXv7R7aLIi2K/yQDusChswqTm1ngHis0A=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "7aeaddc3ad9186427b3ffea49dd36b5893993e2d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "pull/419604/head",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -856,8 +840,7 @@
         "nix-yazi-plugins": "nix-yazi-plugins",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
-        "nixpkgsold": "nixpkgsold",
-        "opencode": "opencode"
+        "nixpkgsold": "nixpkgsold"
       }
     },
     "systems": {
