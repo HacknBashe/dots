@@ -162,7 +162,8 @@ autocmd("User", {
 	pattern = "MiniFilesBufferUpdate",
 	callback = function(sii)
 		local bufnr = sii.data.buf_id
-		local cwd = vim.fn.expand("%:p:h")
+		local cwd = vim.fs.root(bufnr, ".git")
+		vim.notify("mini-files cwd: " .. cwd)
 		if gitStatusCache[cwd] then
 			updateMiniWithGit(bufnr, gitStatusCache[cwd].statusMap)
 		end
