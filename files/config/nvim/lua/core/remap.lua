@@ -81,21 +81,35 @@ vim.keymap.set({ "n", "v" }, "<leader>ay", function()
 	vim.fn.setreg("+", context)
 	print("Nvim AI Context copied to clipboard")
 
-	-- Switch to claude window in tmux if in tmux session
+	-- Switch to claude pane in tmux if in tmux session
 	if vim.env.TMUX then
-		vim.fn.system("tmux select-window -t claude")
-		-- Load clipboard into tmux buffer and paste
-		local paste_cmd = vim.fn.has("mac") == 1 and "pbpaste" or "wl-paste"
-		vim.fn.system(paste_cmd .. " | tmux load-buffer -")
-		vim.fn.system("tmux send-keys -t claude i")
-		os.execute("sleep 0.1")
-		vim.fn.system("tmux send-keys -t claude C-c")
-		vim.fn.system("tmux paste-buffer -t claude") -- Paste from tmux buffer
-		os.execute("sleep 0.1")
-		vim.fn.system("tmux send-keys -t claude Escape")
-		os.execute("sleep 0.1")
-		vim.fn.system("tmux send-keys -t claude G")
-		vim.fn.system("tmux send-keys -t claude o")
+		-- Find pane running claude command
+		local claude_info = vim.fn
+			.system("tmux list-panes -a -F '#{window_id} #{pane_id} #{pane_current_command}' | grep claude | head -1")
+			:gsub("%s+", " ")
+
+		if claude_info ~= "" then
+			local window_id = claude_info:match("(@%d+)")
+			local pane_id = claude_info:match("(%%%d+)")
+
+			-- Switch to window first, then select the pane
+			vim.fn.system("tmux select-window -t " .. window_id)
+			vim.fn.system("tmux select-pane -t " .. pane_id)
+			-- Load clipboard into tmux buffer and paste
+			local paste_cmd = vim.fn.has("mac") == 1 and "pbpaste" or "wl-paste"
+			vim.fn.system(paste_cmd .. " | tmux load-buffer -")
+			vim.fn.system("tmux send-keys -t " .. pane_id .. " i")
+			os.execute("sleep 0.1")
+			vim.fn.system("tmux send-keys -t " .. pane_id .. " C-c")
+			vim.fn.system("tmux paste-buffer -t " .. pane_id) -- Paste from tmux buffer
+			os.execute("sleep 0.1")
+			vim.fn.system("tmux send-keys -t " .. pane_id .. " Escape")
+			os.execute("sleep 0.1")
+			vim.fn.system("tmux send-keys -t " .. pane_id .. " G")
+			vim.fn.system("tmux send-keys -t " .. pane_id .. " o")
+		else
+			vim.notify("No Claude pane found", vim.log.levels.WARN)
+		end
 	end
 end, { desc = "Copy AI info to clipboard" })
 
@@ -224,15 +238,24 @@ vim.keymap.set("n", "<leader>fy", function()
 	local in_tmux = vim.fn.system('[ -n "$TMUX" ] && echo 1 || echo 0'):gsub("%s+", "")
 
 	if in_tmux == "1" then
-		local has_yazi = vim.fn.system("tmux list-windows | grep -q yazi && echo 1 || echo 0"):gsub("%s+", "")
 		local current_file = vim.fn.expand("%:p")
 		local target_path = current_file ~= "" and current_file or vim.fn.getcwd()
 
-		if has_yazi == "1" then
-			-- Switch to existing Yazi window and navigate to current file
-			vim.fn.system("tmux select-window -t yazi")
-			vim.fn.system("tmux send-keys -t yazi 'g '")
-			vim.fn.system("tmux send-keys -t yazi '" .. target_path .. "' C-m")
+		-- Find pane running yazi command (same as Claude integration)
+		local yazi_info = vim.fn
+			.system("tmux list-panes -a -F '#{window_id} #{pane_id} #{pane_current_command}' | grep yazi | head -1")
+			:gsub("%s+", " ")
+		
+		if yazi_info ~= "" then
+			local window_id = yazi_info:match("(@%d+)")
+			local pane_id = yazi_info:match("(%%%d+)")
+			
+			-- Switch to window first, then select the pane
+			vim.fn.system("tmux select-window -t " .. window_id)
+			vim.fn.system("tmux select-pane -t " .. pane_id)
+			-- Navigate to current file
+			vim.fn.system("tmux send-keys -t " .. pane_id .. " 'g '")
+			vim.fn.system("tmux send-keys -t " .. pane_id .. " '" .. target_path .. "' C-m")
 		else
 			-- Create new Yazi window at current file location
 			vim.fn.system("tmux new-window -n yazi 'yazi \"" .. target_path .. "\"'")
