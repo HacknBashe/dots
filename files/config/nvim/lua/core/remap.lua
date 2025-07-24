@@ -1,5 +1,3 @@
-vim.g.mapleader = " "
-
 -- keep screen in place
 vim.keymap.set("n", "J", "mzJ`z")
 -- keep screen centered while paging
@@ -37,7 +35,6 @@ vim.keymap.set(
 	[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
 	{ desc = "Substitute Selection", noremap = true, silent = false }
 )
--- TODO: Add v(isual) s(ubstitute)
 
 -- UI
 -- Tabs
@@ -128,4 +125,3 @@ local function ToggleScratch()
 	vim.wo[win_id].relativenumber = true
 end
 vim.keymap.set("n", "<leader>vp", ToggleScratch, { desc = "Toggle scratch buffer" })
-

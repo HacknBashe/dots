@@ -10,8 +10,6 @@
   home.stateVersion = "23.05";
 
   programs.home-manager.enable = true;
-  # TODO: organize shell/dev modules. Probably combine them and add options
-  # config.development.guitools
   home.packages = with pkgs; [
     git
     entr

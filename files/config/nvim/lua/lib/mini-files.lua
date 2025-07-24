@@ -7,7 +7,7 @@ local _, MiniFiles = pcall(require, "mini.files")
 local gitStatusCache = {}
 local cacheTimeout = 2000 -- Cache timeout in milliseconds
 
-local statusMap = require("plugins.git-status-map").statusMap
+local statusMap = require("lib.git-status-map").statusMap
 ---@type table<string, {symbol: string, hlGroup: string}>
 ---@param status string
 ---@return string symbol, string hlGroup

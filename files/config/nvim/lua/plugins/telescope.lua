@@ -1,6 +1,5 @@
 return {
 	"nvim-telescope/telescope.nvim",
-	tag = "0.1.1",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		{
@@ -8,6 +7,7 @@ return {
 			build = "make",
 		},
 	},
+	event = "VeryLazy",
 	config = function()
 		local function opts(desc)
 			return { desc = desc, noremap = true, silent = true, nowait = true }

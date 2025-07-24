@@ -215,7 +215,7 @@
                 ./hosts/hubspot/home.nix
                 ./modules/home-manager/shell.nix
                 ./modules/home-manager/development.nix
-                ./modules/home-manager/neovim.nix
+                ./modules/home-manager/neovim-lazy.nix
                 ./modules/home-manager/tmux.nix
                 ./modules/home-manager/btop.nix
                 ./modules/home-manager/ghostty.nix

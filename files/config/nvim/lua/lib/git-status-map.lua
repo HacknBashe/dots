@@ -1,5 +1,5 @@
 return {
-  statusMap = {
+	statusMap = {
     -- stylua: ignore start 
     [" M"] = { symbol = "", hlGroup  = "GitSignsChange"}, -- Modified in the working directory
     ["M "] = { symbol = "", hlGroup  = "GitSignsChange"}, -- modified in index
@@ -15,6 +15,6 @@ return {
     ["UA"] = { symbol = "", hlGroup  = "GitSignsAdd"   }, -- file is unmerged and added in working tree
     ["??"] = { symbol = "󱀶", hlGroup  = "GitSignsDelete"}, -- Untracked files
     ["!!"] = { symbol = "", hlGroup  = "GitSignsChange"}, -- Ignored files
-    -- stylua: ignore end
-  },
+		-- stylua: ignore end
+	},
 }
