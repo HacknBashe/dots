@@ -1,12 +1,27 @@
 return {
 	-- "nvim-treesitter/nvim-treesitter",
 	dir = "/Users/nhackford/.local/share/nvim/nix/nvim-treesitter",
-	build = ":TSUpdate",
+	-- build = ":TSUpdate",
 	dependencies = {
 		"nvim-treesitter/playground",
 		"nvim-treesitter/nvim-treesitter-context",
 	},
 	config = function()
+		-- Get the path from the Nix-generated Lua file
+		local nix_treesitter_path_file = vim.fn.expand("~/.local/share/nvim/nix/treesitter-path.lua")
+
+		if vim.fn.filereadable(nix_treesitter_path_file) == 1 then
+			local nix_treesitter = dofile(nix_treesitter_path_file)
+			vim.opt.runtimepath:append(nix_treesitter)
+		else
+			vim.schedule(function()
+				vim.notify(
+					"ERROR: Nix treesitter path file not found: " .. nix_treesitter_path_file,
+					vim.log.levels.ERROR
+				)
+			end)
+		end
+
 		local autocmd = vim.api.nvim_create_autocmd
 
 		-- autocmd("BufRead", {
@@ -33,18 +48,8 @@ return {
 		vim.api.nvim_set_hl(0, "TreesitterContextBottom", {})
 
 		require("nvim-treesitter.configs").setup({
-			-- A list of parser names, or "all" (the five listed parsers should always be installed)
-			-- ensure_installed = { "php", "javascript", "typescript", "c", "lua", "vimdoc", "query" },
-
-			-- Install parsers synchronously (only applied to `ensure_installed`)
-			sync_install = false,
-
-			-- Automatically install missing parsers when entering buffer
-			-- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-			-- TODO: NVIM-NIX Install with nix
-			auto_install = true,
-			-- auto_install = false,
-
+			-- Parsers installed with nix
+			auto_install = false,
 			highlight = {
 				enable = true,
 
