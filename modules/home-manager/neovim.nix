@@ -69,7 +69,6 @@ in {
         # UI Enhancements
         # vim-fugitive
         neogit
-        octo-nvim
         gitsigns-nvim
         mini-nvim
         trouble-nvim
