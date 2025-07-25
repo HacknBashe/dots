@@ -80,6 +80,6 @@ vim.keymap.set({ "n", "v" }, "<leader>ay", function()
 
 	-- Switch to claude pane in tmux if in tmux session
 	if vim.env.TMUX then
-		vim.fn.system("tmux_claude '" .. context:gsub("'", "'\\''") .. "'")
+		vim.fn.system("tmux_agent '" .. context:gsub("'", "'\\''") .. "'")
 	end
 end, { desc = "Copy AI info to clipboard" })

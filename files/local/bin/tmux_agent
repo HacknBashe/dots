@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Get text to paste if provided
+text_to_paste="$1"
+
+# Check if agent is already running in any pane
+agent_pane=$(tmux list-panes -s -F "#{pane_id} #{pane_start_command}" | grep ": agent_pane;" | head -1 | cut -d' ' -f1)
+
+if [[ -n "$agent_pane" ]]; then
+    # Get the window containing this pane and switch to it
+    agent_window=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$agent_pane" | cut -d' ' -f2)
+    tmux select-window -t "$agent_window"
+    tmux select-pane -t "$agent_pane"
+    # Paste text into agent if provided
+    if [[ -n "$text_to_paste" ]]; then
+        tmux send-keys -t "$agent_pane" "$text_to_paste"
+    fi
+else
+    # Create new agent window
+    tmux new-window -n agent ": agent_pane; zsh -ic 'claude'; exec zsh"
+    # Wait a moment for agent to start, then paste text if provided
+    if [[ -n "$text_to_paste" ]]; then
+        sleep 1
+        tmux send-keys -t agent "$text_to_paste"
+    fi
+fi

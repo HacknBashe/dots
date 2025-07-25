@@ -6,7 +6,7 @@ current_start_cmd=$(tmux display-message -p "#{pane_start_command}")
 current_window_name=$(tmux display-message -p "#{window_name}")
 
 tmux_nvim
-tmux_claude
+tmux_agent
 tmux_lazygit
 tmux_shell
 tmux_yazi
@@ -17,8 +17,8 @@ tmux list-windows -F "#{window_index}" | while read window_index; do
         tmux list-panes -t "$window_index" -F "#{pane_id} #{pane_start_command}" | tail -n +2 | while read pane_id pane_cmd; do
             if echo "$pane_cmd" | grep -q ": lazygit_pane;"; then
                 tmux break-pane -s "$pane_id" -n "lazygit"
-            elif echo "$pane_cmd" | grep -q ": claude_pane;"; then
-                tmux break-pane -s "$pane_id" -n "claude"
+            elif echo "$pane_cmd" | grep -q ": agent_pane;"; then
+                tmux break-pane -s "$pane_id" -n "agent"
             elif echo "$pane_cmd" | grep -q ": nvim_pane;"; then
                 tmux break-pane -s "$pane_id" -n "nvim"
             elif echo "$pane_cmd" | grep -q ": yazi_pane;"; then
@@ -42,11 +42,11 @@ if [ -n "$nvim_window" ] && [ "$current_at_1" != "nvim" ]; then
     tmux swap-window -s "$nvim_window" -t 1 2>/dev/null || true
 fi
 
-# claude -> position 2
-claude_window=$(tmux list-windows -F "#{window_index} #{pane_start_command}" | grep ": claude_pane;" | head -1 | cut -d' ' -f1 || echo "")
+# agent -> position 2
+agent_window=$(tmux list-windows -F "#{window_index} #{pane_start_command}" | grep ": agent_pane;" | head -1 | cut -d' ' -f1 || echo "")
 current_at_2=$(tmux list-windows -F "#{window_index}:#{window_name}" | grep "^2:" | cut -d: -f2 2>/dev/null || echo "")
-if [ -n "$claude_window" ] && [ "$current_at_2" != "claude" ]; then
-    tmux swap-window -s "$claude_window" -t 2 2>/dev/null || true
+if [ -n "$agent_window" ] && [ "$current_at_2" != "agent" ]; then
+    tmux swap-window -s "$agent_window" -t 2 2>/dev/null || true
 fi
 
 # shell -> position 3
@@ -72,7 +72,7 @@ fi
 
 # Kill the current pane (the one this script was run from) after organizing,
 # but only if it's not one of the named project panes
-if echo "$current_start_cmd" | grep -q ": nvim_pane;\|: claude_pane;\|: lazygit_pane;\|: yazi_pane;\|: shell_pane;"; then
+if echo "$current_start_cmd" | grep -q ": nvim_pane;\|: agent_pane;\|: lazygit_pane;\|: yazi_pane;\|: shell_pane;"; then
     tmux select-window -t "$current_window_id"
 else
     tmux kill-pane -t "$current_pane"
