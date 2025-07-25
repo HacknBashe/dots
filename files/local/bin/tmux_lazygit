@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
 
-# Build lazygit command with tmux-specific config if in tmux
-if [ -n "$TMUX" ]; then
-    lazygit_cmd="lazygit -ucf $HOME/.config/lazygit/tmuxconfig.yml,$HOME/.config/lazygit/config.yml"
-else
-    lazygit_cmd="lazygit"
-fi
+lazygit_cmd="lazygit -ucf $HOME/.config/lazygit/tmuxconfig.yml,$HOME/.config/lazygit/config.yml"
 
 # Check if lazygit is already running in any pane
 lazygit_pane=$(tmux list-panes -s -F "#{pane_id} #{pane_start_command}" | grep ": lazygit_pane;" | head -1 | cut -d' ' -f1)
 
 if [[ -n "$lazygit_pane" ]]; then
-    # Get the window containing this pane and switch to it
-    lazygit_window=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$lazygit_pane" | cut -d' ' -f2)
-    tmux select-window -t "$lazygit_window"
-    tmux select-pane -t "$lazygit_pane"
+    # Lazygit pane exists
+    current_pane=$(tmux display-message -p '#{pane_id}')
+    
+    if [ "$current_pane" = "$lazygit_pane" ]; then
+        # We're in the lazygit pane, relaunch lazygit
+        exec $lazygit_cmd
+    else
+        # Not in lazygit pane, just switch to it
+        lazygit_window=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$lazygit_pane" | cut -d' ' -f2)
+        tmux select-window -t "$lazygit_window"
+        tmux select-pane -t "$lazygit_pane"
+    fi
 else
     tmux new-window -n lazygit ": lazygit_pane; $lazygit_cmd; exec zsh"
 fi

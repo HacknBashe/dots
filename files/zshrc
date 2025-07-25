@@ -80,8 +80,13 @@ alias -- ls=exa
 alias -- la='exa -la'
 alias -- ll='exa -l'
 
-alias -- vi='nvim'
-alias -- lg='lg'
+if [ -n "$TMUX" ]; then
+    alias -- vi='tmux_nvim'
+    alias -- lg='tmux_lazygit'
+elif [ -z "$TMUX" ]; then
+    alias -- vi='nvim'
+    alias -- lg='lg'
+fi
 
 alias -- ng='sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d'
 
