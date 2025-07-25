@@ -83,12 +83,6 @@ in {
           then ".gitconfig.nix"
           else ".gitconfig";
       };
-
-      "aider" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/aider/aider.conf.yml";
-        target = ".aider.conf.yml";
-        recursive = true;
-      };
     }
     // linuxGitConfig;
 }

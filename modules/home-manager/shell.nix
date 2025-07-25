@@ -101,7 +101,6 @@ in {
   home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
   home.packages = with pkgs;
     [
-      aichat
       bat
       chntpw
       cmatrix
