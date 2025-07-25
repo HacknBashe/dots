@@ -88,6 +88,8 @@ elif [ -z "$TMUX" ]; then
     alias -- lg='lg'
 fi
 
+alias -- ai='opencode run'
+
 alias -- ng='sudo nix-env -p /nix/var/nix/profiles/system --delete-generations old && nix-collect-garbage -d'
 
 alias -- meraxes='ssh nick@192.168.86.13'
