@@ -13,6 +13,7 @@
         extraPackages = with pkgs.kdePackages; [
           qtvirtualkeyboard
           qtsvg
+          qt5compat
         ];
         settings = {
           General = {
