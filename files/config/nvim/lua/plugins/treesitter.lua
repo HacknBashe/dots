@@ -1,6 +1,6 @@
 return {
 	-- "nvim-treesitter/nvim-treesitter",
-	dir = "/Users/nhackford/.local/share/nvim/nix/nvim-treesitter",
+	dir = vim.fn.expand('~') .. "/.local/share/nvim/nix/nvim-treesitter",
 	-- build = ":TSUpdate",
 	dependencies = {
 		"nvim-treesitter/playground",
