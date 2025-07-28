@@ -1,3 +1,6 @@
 config-file = theme
 
 font-size = 20
+
+custom-shader = my-shaders/bettercrt.glsl
+custom-shader = my-shaders/cursor_smear.glsl
