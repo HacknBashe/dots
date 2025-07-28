@@ -1,6 +1,6 @@
 return {
 	-- "nvim-treesitter/nvim-treesitter",
-	dir = vim.fn.expand('~') .. "/.local/share/nvim/nix/nvim-treesitter",
+	dir = vim.fn.expand("~") .. "/.local/share/nvim/nix/nvim-treesitter",
 	-- build = ":TSUpdate",
 	dependencies = {
 		"nvim-treesitter/playground",
@@ -46,6 +46,7 @@ return {
 
 		vim.api.nvim_set_hl(0, "TreesitterContext", {})
 		vim.api.nvim_set_hl(0, "TreesitterContextBottom", {})
+		vim.keymap.set("n", "<leader>tc", "<cmd> TSContext toggle<CR>", { desc = "Toggle TSContext" })
 
 		require("nvim-treesitter.configs").setup({
 			-- Parsers installed with nix
