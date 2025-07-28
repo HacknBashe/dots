@@ -7,8 +7,8 @@ current_window_name=$(tmux display-message -p "#{window_name}")
 
 tmux_nvim
 tmux_agent
-tmux_lazygit
 tmux_shell
+tmux_lazygit
 tmux_yazi
 
 # First, break any joined panes back into separate windows

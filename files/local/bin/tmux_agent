@@ -16,8 +16,12 @@ if [[ -n "$agent_pane" ]]; then
         tmux send-keys -t "$agent_pane" "$text_to_paste"
     fi
 else
-    # Create new agent window
-    tmux new-window -n agent ": agent_pane; zsh -ic 'claude'; exec zsh"
+    # Create new window with normal shell
+    tmux new-window -n agent ": agent_pane; exec zsh"
+    
+    # Send the claude command to the new window
+    tmux send-keys "claude" C-m
+    
     # Wait a moment for agent to start, then paste text if provided
     if [[ -n "$text_to_paste" ]]; then
         sleep 1

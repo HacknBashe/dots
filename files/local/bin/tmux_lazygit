@@ -19,5 +19,9 @@ if [[ -n "$lazygit_pane" ]]; then
         tmux select-pane -t "$lazygit_pane"
     fi
 else
-    tmux new-window -n lazygit ": lazygit_pane; $lazygit_cmd; exec zsh"
+    # Create new window with normal shell
+    tmux new-window -n lazygit ": lazygit_pane; exec zsh"
+    
+    # Send the lazygit command to the new window
+    tmux send-keys "$lazygit_cmd" C-m
 fi

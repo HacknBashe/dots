@@ -17,9 +17,13 @@ if [[ -n "$yazi_pane" ]]; then
         tmux send-keys -t "$yazi_pane" "$target_path" C-m
     fi
 else
+    # Create new window with normal shell
+    tmux new-window -n yazi ": yazi_pane; exec zsh"
+    
+    # Send the yazi command to the new window
     if [[ -n "$target_path" ]]; then
-        tmux new-window -n yazi ": yazi_pane; zsh -ic 'yazi \"$target_path\"'; exec zsh"
+        tmux send-keys "y \"$target_path\"" C-m
     else
-        tmux new-window -n yazi ": yazi_pane; zsh -ic 'yazi'; exec zsh"
+        tmux send-keys "y" C-m
     fi
 fi

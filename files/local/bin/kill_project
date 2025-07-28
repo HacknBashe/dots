@@ -2,6 +2,6 @@
 
 # Kill project-related windows
 tmux neww
-for win in nvim agent shell lazygit yazi; do 
+for win in nvim agent shell lazygit yazi; do
     tmux kill-window -t "$win" 2>/dev/null || true
 done

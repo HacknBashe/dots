@@ -44,5 +44,9 @@ else
         fi
         nvim_cmd="$nvim_cmd \"$file_to_open\""
     fi
-    tmux new-window -n nvim ": nvim_pane; $nvim_cmd; exec zsh"
+    # Create new window with normal shell
+    tmux new-window -n nvim ": nvim_pane; exec zsh"
+    
+    # Send the nvim command to the new window
+    tmux send-keys "$nvim_cmd" C-m
 fi
