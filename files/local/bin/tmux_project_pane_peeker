@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+# FZF-based project pane picker with live preview
+# Usage: tmux_project_pane_peeker <pane_type>
+# Example: tmux_project_pane_peeker agent  # looks for agent_pane
+#          tmux_project_pane_peeker nvim   # looks for nvim_pane
+
+# Check if argument is provided
+if [[ $# -eq 0 ]]; then
+    echo "Usage: $0 <pane_type>"
+    echo "Example: $0 agent"
+    echo "         $0 nvim"
+    echo "         $0 yazi"
+    exit 1
+fi
+
+pane_type="$1"
+
+# Get all project panes of the specified type and format them nicely
+get_project_panes() {
+    tmux list-panes -a -F "#{session_name} #{pane_id} #{pane_start_command}" |
+        grep ": ${pane_type}_pane;" |
+        while read session_name pane_id start_command; do
+            echo "$session_name $pane_id"
+        done
+}
+
+# Use fzf to select and preview
+selected=$(get_project_panes | fzf \
+    --with-nth=1 \
+    --layout=reverse \
+    --border \
+    --preview="
+        session_name=\$(echo {} | cut -d' ' -f1)
+        pane_id=\$(echo {} | cut -d' ' -f2)
+        preview_height=\$(($(tput lines) - 6))
+        preview_width=\$(($(tput cols) * 60 / 100 - 7))
+        echo \"=== \$session_name (${pane_type} pane) ===\"
+        echo
+        tmux capture-pane -t \"\$pane_id\" -p | grep -v '^[[:space:]]*$' | tail -\$preview_height | cut -c1-\$preview_width
+    " \
+    --preview-window=right:60% \
+    --header="Select a ${pane_type} pane to switch to")
+
+if [[ -n "$selected" ]]; then
+    session_name=$(echo "$selected" | cut -d' ' -f1)
+    pane_id=$(echo "$selected" | cut -d' ' -f2)
+
+    # Get the window containing this pane
+    target_window=$(tmux list-panes -a -F "#{pane_id} #{session_name}:#{window_id}" | grep "$pane_id" | cut -d' ' -f2)
+
+    # Switch to the session and window, then select the pane
+    tmux switch-client -t "$target_window"
+    tmux select-pane -t "$pane_id"
+fi
