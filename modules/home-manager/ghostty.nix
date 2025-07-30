@@ -17,7 +17,7 @@
       owner = "hackr-sh";
       repo = "ghostty-shaders";
       rev = "3d7e56a3c46b2b6ba552ee338e35dc52b33042fa";
-      sha256 = "dfk2Ti+T1jEC5M8ijaO1KnfzW6MP5yswovZgoptqO3A=";
+      sha256 = "UNwO9kmaF0l2Wm026t5PGDalxkmI6L6S4+LfgTEF2dA=";
     };
     ghostty-shader-playground = pkgs.fetchFromGitHub {
       owner = "KroneCorylus";
