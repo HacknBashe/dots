@@ -1,7 +1,8 @@
-function OpenInGithub(commit_hash, use_branch, line_number)
+function OpenInGithub(commit_hash, use_branch, line_number, end_line_number)
 	commit_hash = commit_hash or ""
 	use_branch = use_branch or false
 	line_number = line_number or nil
+	end_line_number = end_line_number or nil
 
 	local repo_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("%s+$", "")
 
@@ -52,7 +53,11 @@ function OpenInGithub(commit_hash, use_branch, line_number)
 		if file_path ~= "" then
 			url = url .. "/blob/" .. branch .. "/" .. file_path
 			if line_number then
-				url = url .. "#L" .. line_number
+				if end_line_number and end_line_number ~= line_number then
+					url = url .. "#L" .. line_number .. "-L" .. end_line_number
+				else
+					url = url .. "#L" .. line_number
+				end
 			end
 		else
 			url = url .. "/tree/" .. branch
@@ -80,3 +85,9 @@ vim.keymap.set("n", "<leader>gol", function()
 	local current_line = vim.fn.line(".")
 	OpenInGithub("", false, current_line)
 end, { desc = "Git open line in GitHub" })
+
+vim.keymap.set("v", "<leader>gol", function()
+	local start_line = vim.fn.line("'<")
+	local end_line = vim.fn.line("'>")
+	OpenInGithub("", false, start_line, end_line)
+end, { desc = "Git open line range in GitHub" })
