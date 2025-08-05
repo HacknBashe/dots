@@ -18,33 +18,38 @@ pane_type="$1"
 
 # Get all project panes of the specified type and format them nicely
 get_project_panes() {
-    tmux list-panes -a -F "#{session_name} #{pane_id} #{pane_start_command}" |
-        grep ": ${pane_type}_pane;" |
-        while read session_name pane_id start_command; do
-            echo "$session_name $pane_id"
-        done
+    local panes_data
+    panes_data=$(tmux list-panes -a -F "#{?pane_bell,*,#{?window_bell_flag,*,#{?window_activity_flag,~,-}}} #{session_name} #{pane_id} #{pane_start_command}" |
+        grep ": ${pane_type}_pane;")
+
+    local max_session_width
+    max_session_width=$(($(tput cols) * 40 / 100 - 11))
+
+    # Format with calculated width
+    echo "$panes_data" | while read symbol session_name pane_id start_command; do
+        printf "%-1s %-${max_session_width-6}s %s\n" "$symbol" "$session_name" "$pane_id"
+    done
 }
 
 # Use fzf to select and preview
-selected=$(get_project_panes | fzf \
-    --with-nth=1 \
+selected=$(get_project_panes | sort -k1,1r | fzf \
+    --ansi \
     --layout=reverse \
     --border \
     --preview="
-        session_name=\$(echo {} | cut -d' ' -f1)
-        pane_id=\$(echo {} | cut -d' ' -f2)
-        preview_height=\$(($(tput lines) - 6))
-        preview_width=\$(($(tput cols) * 60 / 100 - 7))
+        session_name=\$(echo {} | awk '{print \$2}')
+        pane_id=\$(echo {} | awk '{print \$3}')
+        preview_height=\$(($(tput lines) - 7))
         echo \"=== \$session_name (${pane_type} pane) ===\"
         echo
-        tmux capture-pane -t \"\$pane_id\" -p | grep -v '^[[:space:]]*$' | tail -\$preview_height | cut -c1-\$preview_width
+        tmux capture-pane -t \"\$pane_id\" -e -p | grep -v '^[[:space:]]*$' | tail -\$preview_height
     " \
     --preview-window=right:60% \
-    --header="Select a ${pane_type} pane to switch to")
+    --header="Select the ${pane_type} pane to switch to")
 
 if [[ -n "$selected" ]]; then
-    session_name=$(echo "$selected" | cut -d' ' -f1)
-    pane_id=$(echo "$selected" | cut -d' ' -f2)
+    session_name=$(echo "$selected" | awk '{print $2}')
+    pane_id=$(echo "$selected" | awk '{print $3}')
 
     # Get the window containing this pane
     target_window=$(tmux list-panes -a -F "#{pane_id} #{session_name}:#{window_id}" | grep "$pane_id" | cut -d' ' -f2)
