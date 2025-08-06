@@ -15,7 +15,8 @@
 
         export BAR_COLOR=0x99${builtins.substring 1 7 config.theme.colors.background}
         export FG_COLOR=0xffffffff
-        export ACCENT_COLOR=0xff${builtins.substring 1 7 config.theme.colors.bright.cyan}
+        export SELECTED_COLOR=0xff${builtins.substring 1 7 config.theme.colors.bright.cyan}
+        export WARNING_COLOR=0xff${builtins.substring 1 7 config.theme.colors.bright.yellow}
       '';
       target = ".config/sketchybar/colors.sh";
     };
