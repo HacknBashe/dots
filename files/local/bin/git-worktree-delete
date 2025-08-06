@@ -34,6 +34,16 @@ selected_branch=$(echo "$selected" | sed -E 's/.*\[(.*)\].*/\1/' | sed 's/refs\/
 echo "Removing worktree at $selected_path"
 echo "and deleting branch $selected_branch"
 
+# Kill associated tmux session early in the process
+repo_name=$(basename "$top")
+formatted_branch=$(echo "$selected_branch" | tr '/' '-')
+session_name="${repo_name}_${formatted_branch}"
+
+if tmux has-session -t "$session_name" 2>/dev/null; then
+  echo "Killing tmux session: $session_name"
+  tmux kill-session -t "$session_name"
+fi
+
 current_dir=$PWD
 
 # Make sure we're not in the worktree we're trying to delete
@@ -46,3 +56,9 @@ fi
 git worktree remove --force "$selected_path" &&
   git branch -D "$selected_branch" &&
   echo "Worktree and branch deleted successfully."
+
+# Clean up the directory if it still exists
+if [ -d "$selected_path" ]; then
+  echo "Removing remaining directory: $selected_path"
+  rm -rf "$selected_path"
+fi

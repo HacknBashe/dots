@@ -75,6 +75,6 @@ fi
 if echo "$current_start_cmd" | grep -q ": nvim_pane;\|: agent_pane;\|: lazygit_pane;\|: yazi_pane;\|: shell_pane;"; then
     tmux select-window -t "$current_window_id"
 else
-    tmux kill-pane -t "$current_pane"
     tmux select-window -t :^
+    tmux kill-pane -t "$current_pane"
 fi
