@@ -36,9 +36,12 @@ return {
 				file_types = { "markdown", "codecompanion" },
 				checkbox = {
 					position = "overlay",
+					unchecked = { icon = "󰄱 " },
+					checked = { icon = "󰸞 " },
 					custom = {
-						todo = { raw = "[-]", rendered = "󰥔 ", highlight = "RenderMarkdownTodo" },
-						blocked = { raw = "[!]", rendered = "󰥕 ", highlight = "RenderMarkdownError" },
+						todo = { raw = "[~]", rendered = " ", highlight = "RenderMarkdownH5Fg" },
+						inprogress = { raw = "[>]", rendered = " ", highlight = "RenderMarkdownH7Fg" },
+						blocked = { raw = "[!]", rendered = "󱈸 ", highlight = "RenderMarkdownError" },
 					},
 				},
 				win_options = {
