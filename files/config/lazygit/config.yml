@@ -7,7 +7,7 @@ os:
   edit: 'tmux_nvim "{{filename}}"'
   editAtLine: 'tmux_nvim "{{filename}}" "{{line}}"'
 customCommands:
-  - key: "<c-r>"
-    command: "gh pr create --assignee nhackford --web"
-    context: "global"
-    loadingText: "Creating pull request on GitHub"
+  - key: "<c-O>"
+    command: "smart-pr-create.sh"
+    context: "localBranches"
+    loadingText: "Creating AI-powered pull request"
