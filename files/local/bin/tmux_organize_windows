@@ -70,9 +70,20 @@ if [ -n "$yazi_window" ] && [ "$current_at_5" != "yazi" ]; then
     tmux swap-window -s "$yazi_window" -t 5 2>/dev/null || true
 fi
 
+# After all window positioning, rejoin bender-proxy with shell
+shell_window=$(tmux list-windows -F "#{window_index} #{pane_start_command}" | grep ": shell_pane;" | head -1 | cut -d' ' -f1 || echo "")
+bender_window=$(tmux list-windows -F "#{window_index} #{pane_start_command}" | grep ": bender_proxy_pane;" | head -1 | cut -d' ' -f1 || echo "")
+if [ -n "$bender_window" ] && [ -n "$shell_window" ] && [ "$bender_window" != "$shell_window" ]; then
+    # Join the bender-proxy pane to the shell window
+    bender_pane=$(tmux list-panes -t "$bender_window" -F "#{pane_id} #{pane_start_command}" | grep ": bender_proxy_pane;" | head -1 | cut -d' ' -f1)
+    if [ -n "$bender_pane" ]; then
+        tmux join-pane -s "$bender_pane" -t "$shell_window" -h 2>/dev/null || true
+    fi
+fi
+
 # Kill the current pane (the one this script was run from) after organizing,
 # but only if it's not one of the named project panes
-if echo "$current_start_cmd" | grep -q ": nvim_pane;\|: agent_pane;\|: lazygit_pane;\|: yazi_pane;\|: shell_pane;"; then
+if echo "$current_start_cmd" | grep -q ": nvim_pane;\|: agent_pane;\|: lazygit_pane;\|: yazi_pane;\|: shell_pane;\|: bender_proxy_pane;"; then
     tmux select-window -t "$current_window_id"
 else
     tmux select-window -t :^

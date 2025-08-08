@@ -1,5 +1,38 @@
 #!/usr/bin/env bash
 
+# Function to check if a port is available
+is_port_available() {
+    local port=$1
+    ! lsof -i :$port >/dev/null 2>&1
+}
+
+# Function to find available port pair
+find_available_ports() {
+    local base_port=5000
+    while true; do
+        local http_port=$base_port
+        local https_port=$((base_port + 1))
+
+        if is_port_available $http_port && is_port_available $https_port; then
+            echo "$http_port $https_port"
+            return 0
+        fi
+
+        base_port=$((base_port + 10))
+
+        # Safety check to avoid infinite loop
+        if [ $base_port -gt 9000 ]; then
+            echo "ERROR: Could not find available port pair" >&2
+            return 1
+        fi
+    done
+}
+
+# Check for package.json with bpm section
+has_bpm_section() {
+    [ -f "package.json" ] && grep -q '"bpm"' package.json
+}
+
 # Check if shell is already running in any pane
 shell_pane=$(tmux list-panes -s -F "#{pane_id} #{pane_start_command}" | grep ": shell_pane;" | head -1 | cut -d' ' -f1)
 
@@ -9,5 +42,38 @@ if [[ -n "$shell_pane" ]]; then
     tmux select-window -t "$shell_window"
     tmux select-pane -t "$shell_pane"
 else
+    # Create new shell window
     tmux new-window -n shell ": shell_pane; exec zsh"
+    shell_pane=$(tmux list-panes -F "#{pane_id}")
+
+    # Check if this is a bpm project and set up development environment
+    if has_bpm_section; then
+        # Get tmux session name
+        session_name=$(tmux display-message -p '#S')
+
+        # Create directory structure
+        bender_dir="/tmp/$session_name/bender-proxy"
+        mkdir -p "$bender_dir/route-configs"
+
+        # Find available ports
+        ports=$(find_available_ports)
+        if [ $? -eq 0 ]; then
+            read http_port https_port <<<"$ports"
+
+            # Split the pane and start bender-proxy in the new pane with identifier
+            tmux split-window -h ": bender_proxy_pane; exec zsh"
+            bender_pane=$(tmux list-panes -F "#{pane_id}" | tail -1)
+
+            # Send bender-proxy command to the new pane
+            tmux send-keys -t "$bender_pane" "BENDER_PROXY_CONFIG_DIR=$bender_dir HTTP_PORT=$http_port HTTPS_PORT=$https_port bender-proxy server-hack" C-m
+            # Select back to the original shell pane
+            tmux select-pane -t "$shell_pane"
+
+            # Start bend reactor in the shell pane
+            tmux send-keys "bend reactor serve --enable-tools --ts-watch ./ --webpack-args=\"--env bender-proxy-config-dir=$bender_dir --env local-static-domain=local.hsappstatic.net:$https_port\"" C-m
+
+            # Open browser with custom HTTPS port
+            open "https://local.hubspot.com:$https_port/social/893882954/compose?create=true&from=manage"
+        fi
+    fi
 fi
