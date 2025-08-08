@@ -34,11 +34,10 @@ function OpenInGithub(commit_hash, use_branch, line_number, end_line_number)
 			return
 		end
 	else
-		local host_match = git_remote:match("@([^:]+)")
-		local path_match = git_remote:match(":(.*)")
-		if host_match and path_match then
-			base_url = "https://" .. host_match
-			repo_path = path_match:gsub("%.git$", "")
+		local host, path = git_remote:match("git@([^:]+):(.*)")
+		if host and path then
+			base_url = "https://" .. host
+			repo_path = path:gsub("%.git$", "")
 		else
 			vim.notify("Failed to parse SSH repository URL", vim.log.levels.ERROR)
 			return
@@ -87,6 +86,7 @@ vim.keymap.set("n", "<leader>gol", function()
 end, { desc = "Git open line in GitHub" })
 
 vim.keymap.set("v", "<leader>gol", function()
+	vim.cmd('normal! \27')
 	local start_line = vim.fn.line("'<")
 	local end_line = vim.fn.line("'>")
 	OpenInGithub("", false, start_line, end_line)
