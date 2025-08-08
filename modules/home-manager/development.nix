@@ -83,6 +83,17 @@ in {
           then ".gitconfig.nix"
           else ".gitconfig";
       };
+
+      "claude/commands" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/claude/commands";
+        target = ".claude/commands/nix";
+        recursive = true;
+      };
+      "claude/agents" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/claude/agents";
+        target = ".claude/agents/nix";
+        recursive = true;
+      };
     }
     // linuxGitConfig;
 }
