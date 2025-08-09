@@ -14,7 +14,45 @@ worktree_dir="$(dirname "$git_dir_abs")"
 top="$(dirname "$worktree_dir")"
 
 if [ $# -ne 0 ]; then
-  branch="$1"
+  # Check if argument is a GitHub URL
+  if [[ "$1" =~ ^https://git\.hubteam\.com/.*/(issues|pull)/[0-9]+$ ]]; then
+    # Extract repo and issue/PR ID from URL
+    GITHUB_URL="$1"
+    ISSUE_REPO=$(echo "$GITHUB_URL" | sed -n 's|https://git\.hubteam\.com/\([^/]*/[^/]*\)/.*|\1|p')
+    ISSUE_ID=$(echo "$GITHUB_URL" | sed -n 's|.*/\([0-9][0-9]*\)$|\1|p')
+    
+    echo "Detected GitHub URL - Repo: $ISSUE_REPO, Issue/PR: $ISSUE_ID"
+    
+    # Fetch issue title first
+    TITLE=$(gh issue view "$ISSUE_ID" --repo "$ISSUE_REPO" --json title --jq .title 2>/dev/null || gh pr view "$ISSUE_ID" --repo "$ISSUE_REPO" --json title --jq .title)
+    
+    if [ $? -ne 0 ] || [ -z "$TITLE" ]; then
+      echo "Failed to fetch title from GitHub. Using repo and issue/PR ID."
+      REPO_NAME=$(basename "$ISSUE_REPO")
+      branch="nh-${ISSUE_ID}-${REPO_NAME}"
+    else
+      echo "Fetched title: $TITLE"
+      
+      # Sanitize the title for the branch name
+      # Handle special characters safely, replace non-alphanumeric with '-', collapse '-', trim '-', lowercase, truncate
+      SANITIZED_TITLE=$(echo "$TITLE" |
+        sed -e 's/[^a-zA-Z0-9 ]/-/g' |
+        sed -e 's/ /-/g' |
+        tr -s '-' |
+        sed -e 's/^-//' -e 's/-$//' |
+        tr '[:upper:]' '[:lower:]' |
+        cut -c 1-60 |
+        sed 's/-$//') # Ensure truncation didn't leave a trailing hyphen
+      
+      # Include issue ID to ensure branch name uniqueness
+      branch="nh-${ISSUE_ID}-${SANITIZED_TITLE}"
+    fi
+    
+    echo "Generated branch name: $branch"
+  else
+    branch="$1"
+  fi
+  
   workdir="$top/$branch"
   if git worktree add -b "$branch" "$workdir" master; then
     # Get repo name - use top directory for all repos
@@ -105,11 +143,4 @@ else
       fi
     fi
   fi
-fi
-
-# Create Claude settings symlink if it exists in the project root
-if [ -f "$top/.claude/settings.local.json" ]; then
-  mkdir -p "$workdir/.claude"
-  ln -sf "$top/.claude/settings.local.json" "$workdir/.claude/settings.local.json"
-  echo "Created symlink for .claude/settings.local.json"
 fi

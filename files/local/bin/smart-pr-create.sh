@@ -14,7 +14,7 @@ CONTEXT_DATA=$(extract-branch-info.sh)
 # Find pr-create.md command file in common locations
 PR_COMMAND_FILE=""
 for location in \
-    "$HOME/.claude/commands/pr-create.md" \
+    "$HOME/.config/dots/files/config/claude/commands/pr-create.md" \
     "$(dirname "$0")/pr-create.md" \
     "./pr-create.md"; do
     if [[ -f "$location" ]]; then

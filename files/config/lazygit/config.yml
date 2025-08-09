@@ -3,10 +3,18 @@ gui:
   expandFocusedSidePanel: true
   expandedSidePanelWeight: 2
   mainPanelSplitMode: horizontal
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never --color-only
 os:
   edit: 'tmux_nvim "{{filename}}"'
   editAtLine: 'tmux_nvim "{{filename}}" "{{line}}"'
 customCommands:
+  - key: "<c-c>"
+    command: "git-ai-commit"
+    context: "files"
+    loadingText: "Creating AI-powered commit"
   - key: "<c-O>"
     command: "smart-pr-create.sh"
     context: "localBranches"
