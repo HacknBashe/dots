@@ -18,6 +18,17 @@
     if pkgs.stdenv.isLinux
     then {
       ".gitconfig.local".text = ''
+        [user]
+        name = Nick Hackford
+        email = nick.hackford@gmail.com
+        signingkey = ~/.ssh/git_signing_key.pub
+
+        [gpg]
+        format = ssh
+
+        [commit]
+        gpgsign = true
+
         [credential]
           helper = "${
           pkgs.git.override {withLibsecret = true;}

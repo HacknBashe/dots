@@ -35,8 +35,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ags = {
-      url = "git+https://github.com/Aylur/ags";
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -70,6 +70,7 @@
           ./modules/theme.nix
           ./hosts/meraxes/configuration.nix
           ./modules/nixos/shell.nix
+          ./modules/nixos/fish.nix
           ./modules/nixos/sddm.nix
           ./modules/nixos/hyprland.nix
           ./modules/nixos/desktop.nix
@@ -91,7 +92,7 @@
                   ./modules/home-manager/zellij.nix
                   ./modules/home-manager/btop.nix
                   ./modules/home-manager/hyprland.nix
-                  ./modules/home-manager/ags.nix
+                  ./modules/home-manager/quickshell.nix
                   ./modules/home-manager/ghostty.nix
                   ./modules/home-manager/alacritty.nix
                   ./modules/home-manager/gtk.nix
