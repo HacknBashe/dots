@@ -19,7 +19,7 @@ hs.hotkey.bind({ "cmd", "alt" }, "v", function()
 		hs.task
 			.new(
 				-- "/etc/profiles/per-user/nhackford/bin/whisper",
-				"/etc/profiles/per-user/nhackford/bin/whisper-cpp",
+				"/etc/profiles/per-user/nhackford/bin/whisper-cli",
 				function(exitCode, stdOut, stdErr)
 					if exitCode == 0 then
 						hs.alert.show("Transcription complete. Processing text...")
@@ -39,8 +39,9 @@ hs.hotkey.bind({ "cmd", "alt" }, "v", function()
 							hs.alert.show("Failed to read transcription file")
 						end
 					else
-						hs.alert.show("Transcription failed")
-						hs.console.printStyledtext(stdErr)
+						hs.alert.show("Transcription failed (exit code: " .. exitCode .. ")")
+						hs.console.printStyledtext("STDOUT: " .. (stdOut or ""))
+						hs.console.printStyledtext("STDERR: " .. (stdErr or ""))
 					end
 				end,
 				-- { "/tmp/voice.mp3", "--language", "English", "--model", "tiny.en", "--output_dir", "/tmp", "-f", "txt" }
