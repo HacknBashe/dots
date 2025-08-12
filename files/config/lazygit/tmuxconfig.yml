@@ -1,11 +1,11 @@
 customCommands:
   - key: "<c-s>"
     command: "tmux neww 'zsh -i -c git-worktree-switch'"
-    context: "files"
+    context: "localBranches"
     loadingText: "Switch worktree"
   # - key: "<c-c>"
   #   command: "tmux neww 'zsh -i -c git-worktree-create'"
-  #   context: "files"
+  #   context: "localBranches"
   #   loadingText: "Create worktree from existing branch"
   - key: "<c-n>"
     prompts:
@@ -14,9 +14,9 @@ customCommands:
         initialValue: ""
         key: "WorktreeToCreate"
     command: 'tmux neww ''zsh -i -c "git-worktree-create {{.Form.WorktreeToCreate}}"'''
-    context: "files"
+    context: "localBranches"
     loadingText: "Create new branch+worktree"
   - key: "<c-d>"
-    command: "tmux neww 'zsh -i -c \"git-worktree-delete {{.SelectedLocalBranch.Name}}\"'"
+    command: 'tmux neww ''zsh -i -c "git-worktree-delete {{.SelectedLocalBranch.Name}}"'''
     context: "localBranches"
     loadingText: "Delete selected branch+worktree"
