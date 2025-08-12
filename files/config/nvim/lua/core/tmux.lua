@@ -82,4 +82,9 @@ vim.keymap.set({ "n", "v" }, "<leader>ay", function()
 	if vim.env.TMUX then
 		vim.fn.system("tmux_agent '" .. context:gsub("'", "'\\''") .. "'")
 	end
+end, { desc = "Paste AI info to agent" })
+vim.keymap.set({ "n", "v" }, "<leader>aY", function()
+	local context = get_buffer_context()
+	vim.fn.setreg("+", context)
+	print("Nvim AI Context copied to clipboard")
 end, { desc = "Copy AI info to clipboard" })

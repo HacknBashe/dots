@@ -18,6 +18,12 @@ return {
 			"<cmd>:vertical Git log<CR>",
 			{ desc = "Git log", noremap = true, silent = true, nowait = true }
 		)
+		vim.keymap.set(
+			"n",
+			"<leader>gf",
+			"<cmd>:vertical Git log --follow -- %<CR>",
+			{ desc = "Git file history", noremap = true, silent = true, nowait = true }
+		)
 
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = { "fugitive", "fugitiveblame", "git" },
