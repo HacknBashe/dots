@@ -11,29 +11,67 @@ git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
 # Use realpath to ensure we get absolute paths
 git_dir_abs="$(realpath "$git_dir")"
 worktree_dir="$(dirname "$git_dir_abs")"
+
 top="$(dirname "$worktree_dir")"
 
-# Just list and navigate to existing worktrees
-dir=$(
-  git worktree list --porcelain |
-    awk '/^worktree /{print $2}' |
-    fzf --height 10 --reverse
-) || exit 1
+# If a branch arg is provided, resolve its worktree directory; otherwise fallback to fzf selection
+if [ $# -ge 1 ] && [ -n "$1" ]; then
+  target_branch="$1"
+
+  worktree_info=$(git worktree list --porcelain)
+  dir=""
+  while IFS= read -r line; do
+    if [[ $line == worktree* ]]; then
+      current_path="${line#worktree }"
+    elif [[ $line == branch* ]]; then
+      current_branch="${line#branch }"
+      current_branch="${current_branch#refs/heads/}"
+      if [[ "$current_branch" == "$target_branch" ]]; then
+        dir="$current_path"
+        break
+      fi
+    fi
+  done <<< "$worktree_info"
+
+  if [ -z "$dir" ]; then
+    # No existing worktree: create one following our convention top/<branch>
+    workdir="$top/$target_branch"
+    echo "No worktree found for '$target_branch'. Creating at: $workdir"
+
+    # If local branch exists, create worktree from it. Otherwise try origin, then master as a fallback.
+    if git show-ref --verify --quiet "refs/heads/$target_branch"; then
+      git worktree add "$workdir" "$target_branch" || { echo "Failed to create worktree for existing branch '$target_branch'"; exit 1; }
+    elif git show-ref --verify --quiet "refs/remotes/origin/$target_branch"; then
+      git worktree add -b "$target_branch" "$workdir" "origin/$target_branch" || { echo "Failed to create worktree for remote branch '$target_branch'"; exit 1; }
+    else
+      git worktree add -b "$target_branch" "$workdir" master || { echo "Failed to create worktree for new branch '$target_branch' from master"; exit 1; }
+    fi
+
+    dir="$workdir"
+  fi
+else
+  # Just list and navigate to existing worktrees
+  dir=$(
+    git worktree list --porcelain |
+      awk '/^worktree /{print $2}' |
+      fzf --height 10 --reverse
+  ) || exit 1
+fi
 
 if [ -n "$dir" ]; then
   # Save current directory
   current_dir="$PWD"
-  
-  # Get repo name from directory  
+
+  # Get repo name from directory
   repo_name=$(basename "$top")
-  
+
   # Get branch name from git worktree list (no subshell needed)
   branch_name=$(git worktree list --porcelain | awk -v target="$dir" '
     /^worktree / { if ($2 == target) found=1 }
     /^branch / && found { gsub(/^refs\/heads\//, "", $2); gsub(/\//, "-", $2); print $2; exit }
   ')
   session_name="${repo_name}_${branch_name}"
-  
+
   # Check if already in a tmux session
   if [ -z "$TMUX" ]; then
     # Not in a tmux session, create or attach to one
@@ -59,7 +97,7 @@ if [ -n "$dir" ]; then
       tmux switch-client -t "$session_name"
     fi
   fi
-  
+
   # Stay in the original directory in the current session
   cd "$current_dir"
 fi

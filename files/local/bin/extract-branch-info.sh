@@ -7,6 +7,10 @@ set -e
 
 PROJECT_ID="1532"
 
+# Issues repository (where issues actually live)
+ISSUES_OWNER="${ISSUES_OWNER:-HubSpot}"
+ISSUES_REPO="${ISSUES_REPO:-SocialCoreTeam}"
+
 # Check if we're in a git repository
 if ! git rev-parse --git-dir >/dev/null 2>&1; then
     echo '{"error": "Not in a git repository"}' >&2
@@ -63,11 +67,22 @@ fi
 
 # Extract issue information from branch name (simplified)
 ISSUE_JSON='null'
-if [[ $CURRENT_BRANCH =~ ([a-zA-Z0-9_-]+)-([0-9]{4})-(.+) ]] && [ -n "$OWNER" ] && [ -n "$REPO" ]; then
+if [[ $CURRENT_BRANCH =~ ([a-zA-Z0-9_-]+)-([0-9]{4})-(.+) ]]; then
     ISSUE_NUMBER="${BASH_REMATCH[2]}"
-    if ISSUE_INFO=$(gh issue view "$ISSUE_NUMBER" --repo "$OWNER/$REPO" --json title,body,state,url 2>/dev/null); then
-        ISSUE_JSON=$(jq -n --argjson issue "$ISSUE_INFO" --arg number "$ISSUE_NUMBER" --arg owner "$OWNER" --arg repo "$REPO" '{
+    # Always look up issues in the canonical issues repo, not the current code repo
+    if ISSUE_INFO=$(gh issue view "$ISSUE_NUMBER" --repo "$ISSUES_OWNER/$ISSUES_REPO" --json title,body,state,url 2>/dev/null); then
+        ISSUE_JSON=$(jq -n --argjson issue "$ISSUE_INFO" --arg number "$ISSUE_NUMBER" --arg owner "$ISSUES_OWNER" --arg repo "$ISSUES_REPO" '{
             issue: $issue,
+            issueNumber: $number,
+            owner: $owner,
+            repo: $repo,
+            epic: {},
+            projectId: "'$PROJECT_ID'"
+        }')
+    else
+        ISSUE_URL="https://git.hubteam.com/$ISSUES_OWNER/$ISSUES_REPO/issues/$ISSUE_NUMBER"
+        ISSUE_JSON=$(jq -n --arg number "$ISSUE_NUMBER" --arg owner "$ISSUES_OWNER" --arg repo "$ISSUES_REPO" --arg url "$ISSUE_URL" '{
+            issue: { title: null, body: null, state: null, url: $url },
             issueNumber: $number,
             owner: $owner,
             repo: $repo,
