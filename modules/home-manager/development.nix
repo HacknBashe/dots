@@ -46,7 +46,6 @@ in {
       entr
       lazygit
       docker-compose
-      opencode
 
       alejandra
       nixd

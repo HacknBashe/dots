@@ -95,6 +95,7 @@
                   ./modules/home-manager/quickshell.nix
                   ./modules/home-manager/ghostty.nix
                   ./modules/home-manager/alacritty.nix
+                  ./modules/home-manager/opencode.nix
                   ./modules/home-manager/gtk.nix
                   ./modules/home-manager/qt.nix
                 ];
@@ -192,6 +193,7 @@
                 ./modules/home-manager/ghostty.nix
                 ./modules/home-manager/aerospace.nix
                 ./modules/home-manager/alacritty.nix
+                ./modules/home-manager/opencode.nix
               ];
             };
             home-manager.extraSpecialArgs = {inherit inputs;};
@@ -221,6 +223,7 @@
                 ./modules/home-manager/btop.nix
                 ./modules/home-manager/ghostty.nix
                 ./modules/home-manager/aerospace.nix
+                ./modules/home-manager/opencode.nix
               ];
             };
             home-manager.extraSpecialArgs = {inherit inputs;};
