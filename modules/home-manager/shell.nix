@@ -30,7 +30,7 @@
     };
 in {
   programs.zsh = {
-    enable = !config.isHubspot;
+    enable = pkgs.stdenv.isLinux;
     sessionVariables = {
       XDG_CONFIG_HOME = "$HOME/.config";
     };

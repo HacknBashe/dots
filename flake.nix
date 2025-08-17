@@ -183,16 +183,15 @@
             home-manager.useUserPackages = true;
             home-manager.users.nick = {
               imports = [
-                ./hosts/toothless/home.nix
                 ./modules/theme.nix
+                ./hosts/toothless/home.nix
                 ./modules/home-manager/shell.nix
                 ./modules/home-manager/development.nix
-                ./modules/home-manager/neovim.nix
+                ./modules/home-manager/neovim-lazy.nix
                 ./modules/home-manager/tmux.nix
                 ./modules/home-manager/btop.nix
                 ./modules/home-manager/ghostty.nix
                 ./modules/home-manager/aerospace.nix
-                ./modules/home-manager/alacritty.nix
                 ./modules/home-manager/opencode.nix
               ];
             };
