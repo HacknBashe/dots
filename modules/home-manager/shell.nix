@@ -30,7 +30,7 @@
     };
 in {
   programs.zsh = {
-    enable = pkgs.stdenv.isLinux;
+    enable = false;
     sessionVariables = {
       XDG_CONFIG_HOME = "$HOME/.config";
     };
