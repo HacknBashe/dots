@@ -4,49 +4,52 @@
 file_to_open="$1"
 line_number="$2"
 
-# In tmux - build the nvim command with server socket based on session
+# Setup session-specific server socket
 session_name=$(tmux display-message -p '#{session_name}')
 server_socket="/tmp/nvim-server-${session_name}.pipe"
 
-# Check if nvim is already running in any pane
+# Helper functions
+switch_to_nvim_pane() {
+    local pane_id="$1"
+    local window_id=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$pane_id" | cut -d' ' -f2)
+    tmux select-window -t "$window_id"
+    tmux select-pane -t "$pane_id"
+}
+
+build_nvim_command() {
+    local cmd="nvim --listen $server_socket"
+    if [ -n "$file_to_open" ]; then
+        [ -n "$line_number" ] && cmd="$cmd +$line_number"
+        cmd="$cmd \"$file_to_open\""
+    fi
+    echo "$cmd"
+}
+
+send_remote_command() {
+    local cmd="<cmd>e"
+    [ -n "$line_number" ] && cmd="$cmd +$line_number"
+    cmd="$cmd $file_to_open<cr><cmd>filetype detect<cr>"
+    nvim --server "$server_socket" --remote-send "$cmd"
+}
+
+# Check if nvim pane exists
 nvim_pane=$(tmux list-panes -s -F "#{pane_id} #{pane_start_command}" | grep ": nvim_pane;" | head -1 | cut -d' ' -f1)
 
 if [[ -n "$nvim_pane" ]]; then
     # Nvim pane exists
-    current_pane=$(tmux display-message -p '#{pane_id}')
-    
     if [ -n "$file_to_open" ]; then
-        # Open file in existing nvim instance
-        if [ -n "$line_number" ]; then
-            nvim --server "$server_socket" --remote-send "<cmd>e +$line_number $file_to_open<cr><cmd>filetype detect<cr>"
-        else
-            nvim --server "$server_socket" --remote-send "<cmd>e $file_to_open<cr><cmd>filetype detect<cr>"
-        fi
-        # Switch to nvim window
-        nvim_window=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$nvim_pane" | cut -d' ' -f2)
-        tmux select-window -t "$nvim_window"
-        tmux select-pane -t "$nvim_pane"
-    elif [ "$current_pane" = "$nvim_pane" ]; then
-        # No file specified and we're in the nvim pane, relaunch nvim
-        nvim --listen "$server_socket"
+        # Open file in existing instance and switch to it
+        send_remote_command
+        switch_to_nvim_pane "$nvim_pane"
+    elif [ "$(tmux display-message -p '#{pane_id}')" = "$nvim_pane" ]; then
+        # In nvim pane with no file - relaunch
+        eval "$(build_nvim_command)"
     else
-        # No file specified but not in nvim pane, just switch to it
-        nvim_window=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$nvim_pane" | cut -d' ' -f2)
-        tmux select-window -t "$nvim_window"
-        tmux select-pane -t "$nvim_pane"
+        # Just switch to existing nvim pane
+        switch_to_nvim_pane "$nvim_pane"
     fi
 else
-    # Create new nvim window
-    nvim_cmd="nvim --listen $server_socket"
-    if [ -n "$file_to_open" ]; then
-        if [ -n "$line_number" ]; then
-            nvim_cmd="$nvim_cmd +$line_number"
-        fi
-        nvim_cmd="$nvim_cmd \"$file_to_open\""
-    fi
-    # Create new window with normal shell
+    # Create new nvim window and launch
     tmux new-window -n nvim ": nvim_pane; exec zsh"
-    
-    # Send the nvim command to the new window
-    tmux send-keys "$nvim_cmd" C-m
+    tmux send-keys "$(build_nvim_command)" C-m
 fi
