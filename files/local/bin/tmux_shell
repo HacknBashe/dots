@@ -70,7 +70,7 @@ else
             tmux select-pane -t "$shell_pane"
 
             # Start bend reactor in the shell pane
-            tmux send-keys "bend reactor serve --enable-tools --ts-watch ./ --webpack-args=\"--env bender-proxy-config-dir=$bender_dir --env local-static-domain=local.hsappstatic.net:$https_port\"" C-m
+            tmux send-keys "bend reactor serve --enable-tools --update --ts-watch ./ --webpack-args=\"--env bender-proxy-config-dir=$bender_dir --env local-static-domain=local.hsappstatic.net:$https_port\"" C-m
 
             # Open browser with custom HTTPS port
             open "https://local.hubspotqa.com:$https_port/social/893882954/manage"

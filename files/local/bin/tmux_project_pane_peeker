@@ -61,7 +61,7 @@ if [[ -n "$selected" ]]; then
     pane_id=$(echo "$selected" | awk '{print $NF}')
 
     # Get the window containing this pane
-    target_window=$(tmux list-panes -a -F "#{pane_id} #{session_name}:#{window_id}" | grep "$pane_id" | cut -d' ' -f2)
+    target_window=$(tmux list-panes -a -F "#{pane_id} #{session_name}:#{window_id}" | grep "^$pane_id " | cut -d' ' -f2)
 
     # Switch to the session and window, then select the pane
     tmux switch-client -t "$target_window"
