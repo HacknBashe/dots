@@ -1,29 +1,41 @@
 #!/usr/bin/env bash
 
+# Source helper functions
+source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
+
 # Get target path if provided
 target_path="$1"
 
-# Check if yazi is already running in any pane
-yazi_pane=$(tmux list-panes -s -F "#{pane_id} #{pane_start_command}" | grep ": yazi_pane;" | head -1 | cut -d' ' -f1)
-
-if [[ -n "$yazi_pane" ]]; then
-    # Get the window containing this pane and switch to it
-    yazi_window=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$yazi_pane" | cut -d' ' -f2)
-    tmux select-window -t "$yazi_window"
-    tmux select-pane -t "$yazi_pane"
+# Check if yazi pane exists and switch to it
+if pane_exists "Yazi"; then
+    switch_to_titled_pane "Yazi"
     # Navigate to the target path in the existing yazi instance if path provided
     if [[ -n "$target_path" ]]; then
+        yazi_pane=$(find_pane_by_title "Yazi")
         tmux send-keys -t "$yazi_pane" "g "
         tmux send-keys -t "$yazi_pane" "$target_path" C-m
     fi
 else
-    # Create new window with normal shell
-    tmux new-window -n yazi ": yazi_pane; exec zsh"
-    
-    # Send the yazi command to the new window
-    if [[ -n "$target_path" ]]; then
-        tmux send-keys "y \"$target_path\"" C-m
+    # Check if current pane has default title - use it instead of creating new window
+    if is_current_pane_default; then
+        # Convert current pane to yazi pane
+        convert_current_pane "Yazi" "yazi"
+        
+        # Send the yazi command
+        if [[ -n "$target_path" ]]; then
+            tmux send-keys "y \"$target_path\"" C-m
+        else
+            tmux send-keys "y" C-m
+        fi
     else
-        tmux send-keys "y" C-m
+        # Create new yazi window
+        create_titled_window "Yazi" "yazi"
+        
+        # Send the yazi command to the new window
+        if [[ -n "$target_path" ]]; then
+            tmux send-keys "y \"$target_path\"" C-m
+        else
+            tmux send-keys "y" C-m
+        fi
     fi
 fi

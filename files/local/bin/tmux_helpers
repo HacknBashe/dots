@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+# Tmux helper functions for pane title management
+# Source this file in other tmux scripts with:
+# source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
+
+# Find pane by title (always partial match on title prefix)
+find_pane_by_title() {
+    local title="$1"
+    # Match panes whose title starts with "$title" optionally followed by a suffix (e.g., ": working")
+    tmux list-panes -s -F "#{pane_id} #{pane_title}" | awk -v t="$title" '$2 ~ ("^" t "(:|$)") { print $1; exit }'
+}
+
+# Find window containing pane with title
+find_window_by_pane_title() {
+    local title="$1"
+    local pane_id=$(find_pane_by_title "$title")
+    if [[ -n "$pane_id" ]]; then
+        tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$pane_id" | cut -d' ' -f2
+    fi
+}
+
+# Switch to pane with given title
+switch_to_titled_pane() {
+    local title="$1"
+    local pane_id=$(find_pane_by_title "$title")
+    if [[ -n "$pane_id" ]]; then
+        local window_id=$(find_window_by_pane_title "$title")
+        tmux select-window -t "$window_id"
+        tmux select-pane -t "$pane_id"
+        return 0
+    fi
+    return 1
+}
+
+# Create new window with titled pane
+create_titled_window() {
+    local title="$1"
+    local window_name="$2"
+    tmux new-window -n "$window_name"
+    tmux select-pane -T "$title"
+}
+
+# Create titled pane in current window (split)
+create_titled_split() {
+    local title="$1"
+    local split_direction="$2"  # -h for horizontal, -v for vertical
+    tmux split-window $split_direction
+    tmux select-pane -T "$title"
+}
+
+# Check if pane with title exists
+pane_exists() {
+    local title="$1"
+    local pane_id=$(find_pane_by_title "$title")
+    [[ -n "$pane_id" ]]
+}
+
+# Get current pane title
+get_current_pane_title() {
+    tmux display-message -p '#{pane_title}'
+}
+
+# Check if current pane has specific title
+is_current_pane_titled() {
+    local title="$1"
+    local current_title=$(get_current_pane_title)
+    [[ "$current_title" == "$title" ]]
+}
+
+# Check if current pane has default title (hostname)
+is_current_pane_default() {
+    local current_title=$(get_current_pane_title)
+    local hostname=$(hostname)
+    [[ "$current_title" == "$hostname" ]]
+}
+
+# Convert current pane to titled pane and rename window
+convert_current_pane() {
+    local title="$1"
+    local window_name="$2"
+    tmux select-pane -T "$title"
+    tmux rename-window "$window_name"
+}

@@ -19,29 +19,40 @@ pane_type="$1"
 # Get all project panes of the specified type and format them nicely
 get_project_panes() {
     local panes_data
-    panes_data=$(tmux list-panes -a -F "#{?pane_bell,*,#{?window_bell_flag,*,#{?window_activity_flag,~,-}}}|#{session_name}|#{pane_id}|#{pane_current_command}|#{pane_start_command}" |
-        grep ": ${pane_type}_pane;")
+    panes_data=$(tmux list-panes -a -F "#{?window_bell_flag,,󰇘}|#{session_name}|#{pane_id}|#{pane_current_command}|#{pane_title}" |
+        grep "${pane_type}_pane")
 
     # Calculate the width of the longest session name
     local max_session_width
     max_session_width=$(echo "$panes_data" | cut -d'|' -f2 | wc -L)
-    
+
     # Calculate total available width for session + command (original session width)
     local total_left_width
     total_left_width=$(($(tput cols) * 40 / 100 - 11))
-    
+
     # Calculate command column width (remaining space after session + " - ")
     local command_width
     command_width=$((total_left_width - max_session_width - 3))
-    
-    # Format with calculated widths
-    echo "$panes_data" | while IFS='|' read symbol session_name pane_id current_command start_command; do
+
+    # Format with calculated widths and sort by symbol priority
+    echo "$panes_data" | while IFS='|' read symbol session_name pane_id current_command pane_title; do
+        # If pane title indicates working, mark with ~ regardless of bell/activity
+        if echo "$pane_title" | grep -qi "agent_pane: *working"; then
+            symbol='󰜎'
+        fi
         printf "%-1s %-*s - %-*s %s\n" "$symbol" "$max_session_width" "$session_name" "$command_width" "$current_command" "$pane_id"
-    done
+    done | sort -k1,1 -t' ' --key=1.1,1.1 -s | {
+        # Custom sort: notification (󰇘), then working (󰜎), then default ()
+        awk '{
+            if ($1 == "") print "1", $0
+            else if ($1 == "󰜎") print "2", $0  
+            else print "3", $0
+        }' | sort -k1,1n | cut -d" " -f2-
+    }
 }
 
 # Use fzf to select and preview
-selected=$(get_project_panes | sort -k1,1r | fzf \
+selected=$(get_project_panes | fzf \
     --ansi \
     --layout=reverse \
     --border \

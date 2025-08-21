@@ -1,30 +1,42 @@
 #!/usr/bin/env bash
 
+# Source helper functions
+source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
+
 # Get text to paste if provided
 text_to_paste="$1"
 
-# Check if agent is already running in any pane
-agent_pane=$(tmux list-panes -s -F "#{pane_id} #{pane_start_command}" | grep ": agent_pane;" | head -1 | cut -d' ' -f1)
-
-if [[ -n "$agent_pane" ]]; then
-    # Get the window containing this pane and switch to it
-    agent_window=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$agent_pane" | cut -d' ' -f2)
-    tmux select-window -t "$agent_window"
-    tmux select-pane -t "$agent_pane"
+# Check if agent pane exists and switch to it
+if pane_exists "agent_pane"; then
+    switch_to_titled_pane "agent_pane"
     # Paste text into agent if provided
     if [[ -n "$text_to_paste" ]]; then
+        agent_pane=$(find_pane_by_title "agent_pane")
         tmux send-keys -t "$agent_pane" "$text_to_paste"
     fi
 else
-    # Create new window with normal shell
-    tmux new-window -n agent ": agent_pane; exec zsh"
-    
-    # Send the opencode command to the new window
-    tmux send-keys "opencode" C-m
-    
-    # Wait a moment for agent to start, then paste text if provided
-    if [[ -n "$text_to_paste" ]]; then
-        sleep 1
-        tmux send-keys -t agent "$text_to_paste"
+    # Check if current pane has default title - use it instead of creating new window
+    if is_current_pane_default; then
+        # Convert current pane to agent pane
+        convert_current_pane "agent_pane" "agent"
+        tmux send-keys "opencode -c" C-m
+        
+        # Wait a moment for agent to start, then paste text if provided
+        if [[ -n "$text_to_paste" ]]; then
+            sleep 1
+            tmux send-keys "$text_to_paste"
+        fi
+    else
+        # Create new agent window
+        create_titled_window "agent_pane" "agent"
+        
+        # Send the opencode command to the new window
+        tmux send-keys "opencode -c" C-m
+        
+        # Wait a moment for agent to start, then paste text if provided
+        if [[ -n "$text_to_paste" ]]; then
+            sleep 1
+            tmux send-keys -t agent "$text_to_paste"
+        fi
     fi
 fi

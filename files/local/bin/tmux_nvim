@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Source helper functions
+source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
+
 # Handle different modes of operation
 file_to_open="$1"
 line_number="$2"
@@ -9,13 +12,6 @@ session_name=$(tmux display-message -p '#{session_name}')
 server_socket="/tmp/nvim-server-${session_name}.pipe"
 
 # Helper functions
-switch_to_nvim_pane() {
-    local pane_id="$1"
-    local window_id=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$pane_id" | cut -d' ' -f2)
-    tmux select-window -t "$window_id"
-    tmux select-pane -t "$pane_id"
-}
-
 build_nvim_command() {
     local cmd="nvim --listen $server_socket"
     if [ -n "$file_to_open" ]; then
@@ -33,23 +29,28 @@ send_remote_command() {
 }
 
 # Check if nvim pane exists
-nvim_pane=$(tmux list-panes -s -F "#{pane_id} #{pane_start_command}" | grep ": nvim_pane;" | head -1 | cut -d' ' -f1)
-
-if [[ -n "$nvim_pane" ]]; then
+if pane_exists "nvim_pane"; then
     # Nvim pane exists
     if [ -n "$file_to_open" ]; then
         # Open file in existing instance and switch to it
         send_remote_command
-        switch_to_nvim_pane "$nvim_pane"
-    elif [ "$(tmux display-message -p '#{pane_id}')" = "$nvim_pane" ]; then
+        switch_to_titled_pane "nvim_pane"
+    elif is_current_pane_titled "nvim_pane"; then
         # In nvim pane with no file - relaunch
         eval "$(build_nvim_command)"
     else
         # Just switch to existing nvim pane
-        switch_to_nvim_pane "$nvim_pane"
+        switch_to_titled_pane "nvim_pane"
     fi
 else
-    # Create new nvim window and launch
-    tmux new-window -n nvim ": nvim_pane; exec zsh"
-    tmux send-keys "$(build_nvim_command)" C-m
+    # Check if current pane has default title - use it instead of creating new window
+    if is_current_pane_default; then
+        # Convert current pane to nvim pane
+        convert_current_pane "nvim_pane" "nvim"
+        tmux send-keys "$(build_nvim_command)" C-m
+    else
+        # Create new nvim window and launch
+        create_titled_window "nvim_pane" "nvim"
+        tmux send-keys "$(build_nvim_command)" C-m
+    fi
 fi

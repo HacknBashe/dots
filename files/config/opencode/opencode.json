@@ -11,13 +11,4 @@
       "type": "local"
     }
   },
-  "experimental": {
-    "hook": {
-      "session_completed": [
-        {
-          "command": ["sh", "-c", "printf '\\a' >/dev/tty"]
-        }
-      ]
-    }
-  }
 }

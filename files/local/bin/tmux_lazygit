@@ -1,27 +1,30 @@
 #!/usr/bin/env bash
 
+# Source helper functions
+source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
+
 lazygit_cmd="lazygit -ucf $HOME/.config/lazygit/tmuxconfig.yml,$HOME/.config/lazygit/config.yml"
 
-# Check if lazygit is already running in any pane
-lazygit_pane=$(tmux list-panes -s -F "#{pane_id} #{pane_start_command}" | grep ": lazygit_pane;" | head -1 | cut -d' ' -f1)
-
-if [[ -n "$lazygit_pane" ]]; then
-    # Lazygit pane exists
-    current_pane=$(tmux display-message -p '#{pane_id}')
-    
-    if [ "$current_pane" = "$lazygit_pane" ]; then
+# Check if lazygit pane exists
+if pane_exists "lazygit_pane"; then
+    if is_current_pane_titled "lazygit_pane"; then
         # We're in the lazygit pane, relaunch lazygit
         exec $lazygit_cmd
     else
         # Not in lazygit pane, just switch to it
-        lazygit_window=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$lazygit_pane" | cut -d' ' -f2)
-        tmux select-window -t "$lazygit_window"
-        tmux select-pane -t "$lazygit_pane"
+        switch_to_titled_pane "lazygit_pane"
     fi
 else
-    # Create new window with normal shell
-    tmux new-window -n lazygit ": lazygit_pane; exec zsh"
-    
-    # Send the lazygit command to the new window
-    tmux send-keys "$lazygit_cmd" C-m
+    # Check if current pane has default title - use it instead of creating new window
+    if is_current_pane_default; then
+        # Convert current pane to lazygit pane
+        convert_current_pane "lazygit_pane" "lazygit"
+        tmux send-keys "$lazygit_cmd" C-m
+    else
+        # Create new lazygit window
+        create_titled_window "lazygit_pane" "lazygit"
+        
+        # Send the lazygit command to the new window
+        tmux send-keys "$lazygit_cmd" C-m
+    fi
 fi
