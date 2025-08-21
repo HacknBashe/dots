@@ -69,25 +69,51 @@ end
 
 vim.keymap.set("n", "<leader>gof", function()
 	OpenInGithub()
-end, { desc = "Git open file in GitHub" })
+end, { desc = "Git open file in GitHub (default branch)" })
+
+-- Open file on current branch
+vim.keymap.set("n", "<leader>gOf", function()
+	OpenInGithub("", true)
+end, { desc = "Git open file in GitHub (current branch)" })
 
 vim.keymap.set("n", "<leader>goc", function()
 	local word = vim.fn.expand("<cword>")
 	OpenInGithub(word)
 end, { desc = "Git open commit in GitHub" })
 
-vim.keymap.set("n", "<leader>gob", function()
-	OpenInGithub("", true)
-end, { desc = "Git open branch in GitHub" })
+-- Open commit or file on current branch when commit not under cursor
+vim.keymap.set("n", "<leader>gOc", function()
+	local word = vim.fn.expand("<cword>")
+	if word ~= nil and word ~= "" then
+		OpenInGithub(word)
+	else
+		OpenInGithub("", true)
+	end
+end, { desc = "Git open commit/file in GitHub (current branch)" })
+
 
 vim.keymap.set("n", "<leader>gol", function()
 	local current_line = vim.fn.line(".")
 	OpenInGithub("", false, current_line)
-end, { desc = "Git open line in GitHub" })
+end, { desc = "Git open line in GitHub (default branch)" })
+
+-- Open current line on current branch
+vim.keymap.set("n", "<leader>gOl", function()
+	local current_line = vim.fn.line(".")
+	OpenInGithub("", true, current_line)
+end, { desc = "Git open line in GitHub (current branch)" })
 
 vim.keymap.set("v", "<leader>gol", function()
 	vim.cmd('normal! \27')
 	local start_line = vim.fn.line("'<")
 	local end_line = vim.fn.line("'>")
 	OpenInGithub("", false, start_line, end_line)
-end, { desc = "Git open line range in GitHub" })
+end, { desc = "Git open line range in GitHub (default branch)" })
+
+-- Open selected line range on current branch
+vim.keymap.set("v", "<leader>gOl", function()
+	vim.cmd('normal! \27')
+	local start_line = vim.fn.line("'<")
+	local end_line = vim.fn.line("'>")
+	OpenInGithub("", true, start_line, end_line)
+end, { desc = "Git open line range in GitHub (current branch)" })
