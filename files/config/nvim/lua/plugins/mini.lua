@@ -223,10 +223,10 @@ return {
 					starter.gen_hook.aligning("center", "center"),
 				},
 				header = string.format([[
-				█▀▀▄ █▀▀ █▀▀█ █  █ ▀█▀ █▀▄▀█
-				█░░█ █▀▀ █░░█ ▜▖▗▛ ░█░ █░▀░█
-				▀  ▀ ▀▀▀ ▀▀▀▀  ▝▘  ▀▀▀ ▀   ▀
-				                     v%d.%d.%d]], vim.version().major, vim.version().minor, vim.version().patch),
+█▀▀▄ █▀▀ █▀▀█ █  █ ▀█▀ █▀▄▀█
+█░░█ █▀▀ █░░█ ▜▖▗▛ ░█░ █░▀░█
+▀  ▀ ▀▀▀ ▀▀▀▀  ▝▘  ▀▀▀ ▀   ▀
+                     v%d.%d.%d]], vim.version().major, vim.version().minor, vim.version().patch),
 				footer = " ",
 			})
 
