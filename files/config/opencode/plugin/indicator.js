@@ -1,4 +1,11 @@
 export const IndicatorPlugin = async ({ app, client, $ }) => {
+  // Only run in TUI mode, not CLI mode
+  if (!app.screen) {
+    return {
+      event: async () => {}
+    };
+  }
+
   let paneId;
 
   try {
