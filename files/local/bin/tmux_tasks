@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Open tasks.md in current git repo root via popup
+
+# Find git root or use current directory
+git_root=$(git rev-parse --show-toplevel 2>/dev/null) || git_root=$(pwd)
+tasks_file="$git_root/tasks.md"
+
+# Create empty tasks.md if it doesn't exist
+if [[ ! -f "$tasks_file" ]]; then
+    echo "" > "$tasks_file"
+fi
+
+# Open in nvim with custom keybinding to close popup
+exec nvim -c "nnoremap <C-Space>t <Cmd>wq<CR>" "$tasks_file"

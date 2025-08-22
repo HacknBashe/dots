@@ -55,5 +55,21 @@ return {
 				vim.cmd("filetype detect")
 			end, 100)
 		end, { desc = "Obsidian Yesterday" })
+
+		-- Add task toggle for markdown files outside Obsidian workspace
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "markdown",
+			callback = function()
+				local obsidian_workspace = vim.fn.expand("~/notes")
+				local current_file = vim.fn.expand("%:p")
+				
+				-- Only add keymap if we're NOT in the Obsidian workspace
+				if not vim.startswith(current_file, obsidian_workspace) then
+					vim.keymap.set("n", "<CR>", function()
+						return require("obsidian").util.smart_action()
+					end, { buffer = true, expr = true, desc = "Toggle task checkbox" })
+				end
+			end,
+		})
 	end,
 }

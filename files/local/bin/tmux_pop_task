@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Pop first incomplete task, mark previous working task as done, and send to agent
+
+# Find git root or use current directory
+git_root=$(git rev-parse --show-toplevel 2>/dev/null) || git_root=$(pwd)
+tasks_file="$git_root/tasks.md"
+
+# Exit silently if no tasks file exists
+[[ ! -f "$tasks_file" ]] && exit 0
+
+# Create empty file if it exists but is empty
+[[ ! -s "$tasks_file" ]] && exit 0
+
+# First, mark any currently working task (>) as completed ([x])
+if grep -q "^- \[>\]" "$tasks_file"; then
+    sed -i '' 's/^- \[>\]/- [x]/' "$tasks_file"
+fi
+
+# Check if there are any incomplete tasks
+if ! grep -q "^- \[ \]" "$tasks_file"; then
+    # No incomplete tasks found - exit silently
+    exit 0
+fi
+
+# Find first incomplete task and extract the text
+task=$(grep -m1 "^- \[ \]" "$tasks_file" | sed 's/^- \[ \] //')
+
+# Extra safety check - exit if task is empty
+[[ -z "$task" ]] && exit 0
+
+# Mark the first incomplete task as working (>)
+awk '!found && /^- \[ \]/ {gsub(/\[ \]/, "[>]"); found=1} {print}' "$tasks_file" > "$tasks_file.tmp" && mv "$tasks_file.tmp" "$tasks_file"
+
+# Get the path to tmux_agent (same directory as this script)
+script_dir="$(dirname "${BASH_SOURCE[0]}")"
+tmux_agent="$script_dir/tmux_agent"
+
+# Pass the task to tmux_agent if it exists
+if [[ -x "$tmux_agent" ]]; then
+    "$tmux_agent" "$task"
+fi
