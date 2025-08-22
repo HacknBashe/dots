@@ -222,13 +222,11 @@ return {
 					starter.gen_hook.padding(3, 2),
 					starter.gen_hook.aligning("center", "center"),
 				},
-				header = [[
-			 ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
-			 ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
-			 ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
-			 ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
-			 ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
-			 ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
+				header = string.format([[
+				█▀▀▄ █▀▀ █▀▀█ █  █ ▀█▀ █▀▄▀█
+				█░░█ █▀▀ █░░█ ▜▖▗▛ ░█░ █░▀░█
+				▀  ▀ ▀▀▀ ▀▀▀▀  ▝▘  ▀▀▀ ▀   ▀
+				                     v%d.%d.%d]], vim.version().major, vim.version().minor, vim.version().patch),
 				footer = " ",
 			})
 
@@ -244,21 +242,9 @@ return {
 			-- 	end,
 			-- })
 
-			vim.keymap.set("n", "<leader>vL", function()
+			vim.keymap.set("n", "<leader>vw", function()
 				starter.open()
-			end, { desc = "View Launcher", noremap = true, silent = true, nowait = true })
-
-			local animate = require("mini.animate")
-			animate.setup({
-				cursor = {
-					enable = false,
-					timing = animate.gen_timing.exponential({ duration = 50, unit = "total" }),
-				},
-				scroll = {
-					enable = true,
-					timing = animate.gen_timing.exponential({ duration = 50, unit = "total" }),
-				},
-			})
+			end, { desc = "View Welcome", noremap = true, silent = true, nowait = true })
 
 			local clue = require("mini.clue")
 			vim.o.timeoutlen = 300
