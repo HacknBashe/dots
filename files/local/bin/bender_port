@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+# Source helper functions
+source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
+
+# Function to check if a port is available
+is_port_available() {
+    local port=$1
+    # Use bash built-in TCP redirection (fastest method)
+    ! timeout 0.1 bash -c "</dev/tcp/localhost/$port" 2>/dev/null
+}
+
+# Function to find available port pair
+find_available_ports() {
+    local base_port=5000
+    while true; do
+        local http_port=$base_port
+        local https_port=$((base_port + 1))
+
+        if is_port_available $http_port && is_port_available $https_port; then
+            echo "$http_port $https_port"
+            return 0
+        fi
+
+        base_port=$((base_port + 10))
+
+        # Safety check to avoid infinite loop
+        if [ $base_port -gt 9000 ]; then
+            echo "ERROR: Could not find available port pair" >&2
+            return 1
+        fi
+    done
+}
+
+# Get tmux session name
+session_name=$(tmux display-message -p '#S')
+
+# Create directory structure
+bender_dir="/tmp/$session_name/bender-proxy"
+mkdir -p "$bender_dir/route-configs"
+
+# Find available ports
+ports=$(find_available_ports)
+if [ $? -eq 0 ]; then
+    read http_port https_port <<<"$ports"
+
+    # Create first horizontal split for bender proxy (creates right pane)
+    create_titled_split "bender_proxy_pane" "-h"
+    bender_pane=$(find_pane_by_title "bender_proxy_pane")
+
+    # Send bender-proxy command to the new pane
+    tmux send-keys -t "$bender_pane" "BENDER_PROXY_CONFIG_DIR=$bender_dir HTTP_PORT=$http_port HTTPS_PORT=$https_port bender-proxy server-hack" C-m
+    
+    # Switch to bender proxy pane and create vertical split from it for bend reactor
+    switch_to_titled_pane "bender_proxy_pane"
+    create_titled_split "bend_reactor_pane" "-v"
+    bend_reactor_pane=$(find_pane_by_title "bend_reactor_pane")
+    
+    # Send bend reactor command to the new pane
+    tmux send-keys -t "$bend_reactor_pane" "bend reactor serve --enable-tools --update --ts-watch ./ --webpack-args=\"--env bender-proxy-config-dir=$bender_dir --env local-static-domain=local.hsappstatic.net:$https_port\"" C-m
+    
+    # Switch back to shell pane
+    switch_to_titled_pane "shell"
+    
+    # Open browser with custom HTTPS port
+    open "https://local.hubspotqa.com:$https_port/social/893882954/manage"
+else
+    echo "Failed to find available ports"
+    exit 1
+fi
