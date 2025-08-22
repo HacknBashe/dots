@@ -87,6 +87,14 @@ in {
           run = ''shell -- tmux_nvim "$0"'';
           desc = "Edit file in nvim";
         }
+        {
+          on = ["c" "b"];
+          run =
+            if pkgs.stdenv.isLinux
+            then ''shell "wl-copy < \"$0\""''
+            else ''shell "osascript -e \"set the clipboard to POSIX file \\\"$0\\\"\" --" "$@"'';
+          desc = "Copy to clipboard";
+        }
       ];
     };
     plugins = with pkgs.yaziPlugins; {
