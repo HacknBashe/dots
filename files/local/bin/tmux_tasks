@@ -12,4 +12,4 @@ if [[ ! -f "$tasks_file" ]]; then
 fi
 
 # Open in nvim with custom keybinding to close popup
-exec nvim -c "nnoremap <C-Space>t <Cmd>wq<CR>" "$tasks_file"
+exec nvim -c "nnoremap <C-Space>t <Cmd>wq<CR>" -c "set wrap" "$tasks_file"

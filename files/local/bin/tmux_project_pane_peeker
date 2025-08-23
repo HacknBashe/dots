@@ -43,15 +43,19 @@ get_project_panes() {
         # Check if pane title contains bender and has a running process
         if echo "$pane_title" | grep -qi "bender" && [[ "$current_command" != "bash" && "$current_command" != "zsh" && "$current_command" != "sh" ]]; then
             symbol='󰚩'
+        # Generic process icon for any non-shell process
+        elif [[ "$current_command" != "bash" && "$current_command" != "zsh" && "$current_command" != "sh" ]]; then
+            symbol=''
         fi
         printf "%-1s %-*s - %-*s %s\n" "$symbol" "$max_session_width" "$session_name" "$command_width" "$current_command" "$pane_id"
     done | sort -k1,1 -t' ' --key=1.1,1.1 -s | {
         # Custom sort
         awk '{
-            if ($1 == "󰚩") print "1", $0
+            if ($1 == "") print "1", $0
             else if ($1 == "󰜎") print "2", $0
-            else if ($1 == "") print "3", $0  
-            else print "4", $0
+            else if ($1 == "󰚩") print "3", $0  
+            else if ($1 == "") print "4", $0  
+            else print "5", $0
         }' | sort -k1,1n | cut -d" " -f2-
     }
 }
