@@ -103,6 +103,12 @@ in {
     # inherit (config.theme.fonts.sans) package name;
     # size = config.theme.fonts.sizes.applications;
     # };
+    cursorTheme = {
+      package = pkgs.vimix-cursors;
+      name = "Vimix-Cursors";
+      size = 48;
+    };
+
     theme = {
       package = pkgs.adw-gtk3;
       name = "adw-gtk3-dark";
