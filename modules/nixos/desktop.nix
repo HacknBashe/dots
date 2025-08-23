@@ -39,7 +39,6 @@
     qimgv
     spotify
     todoist-electron
-    ungoogled-chromium
     vesktop
     vlc
     wine
