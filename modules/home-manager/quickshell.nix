@@ -13,8 +13,8 @@
       source = pkgs.fetchFromGitHub {
         owner = "caelestia-dots";
         repo = "shell";
-        rev = "3a8b9c61be5ab4babfbd5b54db5069defc6e5ad3";
-        sha256 = "F7wyDgofFaDAuaZjuUjSWVagT6x0iO48M3XvlAhEoWQ=";
+        rev = "3a5f615f509fbff895846ecd3a606eb2c7192cf8";
+        sha256 = "EE9clP2JXbImNr6wjDVk1JumBr8RaMecvi7G07Sbuyg=";
       };
       target = ".config/quickshell/caelestia";
       recursive = true;
