@@ -11,4 +11,11 @@
       "type": "local"
     }
   },
+  "permission": {
+    "bash": {
+      "git *": "ask",
+      "nix *": "ask",
+      "*": "allow"
+    }
+  }
 }
