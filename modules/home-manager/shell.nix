@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  linuxPackages =
+  platformPackages =
     if pkgs.stdenv.isLinux
     then
       with pkgs; [
@@ -12,8 +12,12 @@
         ctpv
         efibootmgr
         playerctl
+        (whisper-cpp.override {cudaSupport = true;})
       ]
-    else [];
+    else
+      with pkgs; [
+        whisper-cpp
+      ];
   hubspotFiles =
     if config.isHubspot
     then {
@@ -120,8 +124,6 @@ in {
       fzf
       jq
       libsecret
-      openai-whisper
-      openai-whisper-cpp
       pipes
       p7zip
       pulsemixer
@@ -133,7 +135,7 @@ in {
       zoxide
       zellij
     ]
-    ++ linuxPackages;
+    ++ platformPackages;
 
   home.file =
     {
