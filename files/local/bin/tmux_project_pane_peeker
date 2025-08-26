@@ -37,11 +37,12 @@ get_project_panes() {
     # Format with calculated widths and sort by symbol priority
     echo "$panes_data" | while IFS='|' read symbol session_name pane_id current_command pane_title; do
         # If pane title indicates working, mark with ~ regardless of bell/activity
-        if echo "$pane_title" | grep -qi "agent_pane: *working"; then
+        if [[ "$symbol" == "" ]]; then
+            symbol=''
+        elif echo "$pane_title" | grep -qi "agent_pane: *working"; then
             symbol='󰜎'
-        fi
         # Check if pane title contains bender and has a running process
-        if echo "$pane_title" | grep -qi "bender" && [[ "$current_command" != "bash" && "$current_command" != "zsh" && "$current_command" != "sh" ]]; then
+        elif echo "$pane_title" | grep -qi "bender" && [[ "$current_command" != "bash" && "$current_command" != "zsh" && "$current_command" != "sh" ]]; then
             symbol='󰚩'
         # Generic process icon for any non-shell process
         elif [[ "$current_command" != "bash" && "$current_command" != "zsh" && "$current_command" != "sh" ]]; then
