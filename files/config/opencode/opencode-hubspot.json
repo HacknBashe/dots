@@ -1,0 +1,26 @@
+{
+  "theme": "system",
+  "$schema": "https://opencode.ai/config.json",
+  "lsp": {
+    "typescript": {
+      "disabled": true
+    }
+  },
+  "mcp": {
+    "devex-mcp-server": {
+      "command": ["devex-mcp-server"],
+      "environment": {
+        "FASTMCP_TOOL_ATTEMPT_PARSE_JSON_ARGS": "1",
+        "MCP_METRICS_ORIGIN": "claude_code"
+      },
+      "type": "local"
+    }
+  },
+  "permission": {
+    "bash": {
+      "git *": "ask",
+      "nix *": "ask",
+      "*": "allow"
+    }
+  }
+}

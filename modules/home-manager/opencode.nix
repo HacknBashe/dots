@@ -7,7 +7,7 @@
 
   home.file = {
     "opencode/opencode.json" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/opencode/opencode.json";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/opencode/${if config.isHubspot then "opencode-hubspot.json" else "opencode.json"}";
       target = ".config/opencode/opencode.json";
     };
 
