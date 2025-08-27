@@ -46,10 +46,10 @@ export const IndicatorPlugin = async ({ app, client, $ }) => {
   return {
     event: async ({ event }) => {
       if (event.type === "session.updated") {
-        await setTitle("agent_pane: working");
+        await setTitle("Agent: working");
       }
       if (event.type === "session.idle") {
-        await setTitle("agent_pane: idle");
+        await setTitle("Agent: idle");
         await $`/bin/sh -lc 'printf "\\a" > /dev/tty'`;
       }
     },

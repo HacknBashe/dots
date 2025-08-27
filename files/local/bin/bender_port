@@ -45,22 +45,22 @@ if [ $? -eq 0 ]; then
     read http_port https_port <<<"$ports"
 
     # Create first horizontal split for bender proxy (creates right pane)
-    create_titled_split "bender_proxy_pane" "-h"
-    bender_pane=$(find_pane_by_title "bender_proxy_pane")
+    create_titled_split "Bender Proxy:" "-h"
+    bender_pane=$(find_pane_by_title "Bender Proxy:")
 
     # Send bender-proxy command to the new pane
     tmux send-keys -t "$bender_pane" "BENDER_PROXY_CONFIG_DIR=$bender_dir HTTP_PORT=$http_port HTTPS_PORT=$https_port bender-proxy server-hack" C-m
     
     # Switch to bender proxy pane and create vertical split from it for bend reactor
-    switch_to_titled_pane "bender_proxy_pane"
-    create_titled_split "bend_reactor_pane" "-v"
-    bend_reactor_pane=$(find_pane_by_title "bend_reactor_pane")
+    switch_to_titled_pane "Bender Proxy:"
+    create_titled_split "Bend Reactor:" "-v"
+    bend_reactor_pane=$(find_pane_by_title "Bend Reactor:")
     
     # Send bend reactor command to the new pane
     tmux send-keys -t "$bend_reactor_pane" "bend reactor serve --enable-tools --update --ts-watch ./ --webpack-args=\"--env bender-proxy-config-dir=$bender_dir --env local-static-domain=local.hsappstatic.net:$https_port\"" C-m
     
     # Switch back to shell pane
-    switch_to_titled_pane "shell"
+    switch_to_titled_pane "Shell:"
     
     # Open browser with custom HTTPS port
     open "https://local.hubspotqa.com:$https_port/social/893882954/manage"

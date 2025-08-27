@@ -4,11 +4,11 @@
 # Source this file in other tmux scripts with:
 # source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 
-# Find pane by title (always partial match on title prefix)
+# Find pane by title (partial match on title prefix)
 find_pane_by_title() {
     local title="$1"
-    # Match panes whose title starts with "$title" optionally followed by a suffix (e.g., ": working")
-    tmux list-panes -s -F "#{pane_id} #{pane_title}" | awk -v t="$title" '$2 ~ ("^" t "(:|$)") { print $1; exit }'
+    # Match panes whose title starts with "$title"
+    tmux list-panes -s -F "#{pane_id} #{pane_title}" | grep "$title" | head -1 | awk '{print $1}'
 }
 
 # Find window containing pane with title
@@ -65,7 +65,7 @@ get_current_pane_title() {
 is_current_pane_titled() {
     local title="$1"
     local current_title=$(get_current_pane_title)
-    [[ "$current_title" == "$title" ]]
+    [[ "$current_title" == "$title"* ]]
 }
 
 # Check if current pane has default title (hostname)

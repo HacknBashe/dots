@@ -14,7 +14,7 @@ CONTEXT_DATA=$(extract-branch-info.sh)
 # Find pr-create.md command file in common locations
 PR_COMMAND_FILE=""
 for location in \
-    "$HOME/.config/dots/files/config/claude/commands/pr-create.md" \
+    "$HOME/.config/opencode/commands/pr-create.md" \
     "$(dirname "$0")/pr-create.md" \
     "./pr-create.md"; do
     if [[ -f "$location" ]]; then
@@ -26,7 +26,7 @@ done
 if [[ -z "$PR_COMMAND_FILE" ]]; then
     echo "❌ Error: Could not find pr-create.md command file"
     echo "   Looked in:"
-    echo "   - $HOME/.claude/commands/pr-create.md"
+    echo "   - $HOME/.config/opencode/commands/pr-create.md"
     echo "   - $(dirname "$0")/pr-create.md"
     echo "   - ./pr-create.md"
     exit 1

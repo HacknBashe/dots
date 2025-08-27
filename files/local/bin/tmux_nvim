@@ -29,28 +29,28 @@ send_remote_command() {
 }
 
 # Check if nvim pane exists
-if pane_exists "nvim_pane"; then
+if pane_exists "Nvim:"; then
     # Nvim pane exists
     if [ -n "$file_to_open" ]; then
         # Open file in existing instance and switch to it
         send_remote_command
-        switch_to_titled_pane "nvim_pane"
-    elif is_current_pane_titled "nvim_pane"; then
+        switch_to_titled_pane "Nvim:"
+    elif is_current_pane_titled "Nvim:"; then
         # In nvim pane with no file - relaunch
         eval "$(build_nvim_command)"
     else
         # Just switch to existing nvim pane
-        switch_to_titled_pane "nvim_pane"
+        switch_to_titled_pane "Nvim:"
     fi
 else
     # Check if current pane has default title - use it instead of creating new window
     if is_current_pane_default; then
         # Convert current pane to nvim pane
-        convert_current_pane "nvim_pane" "nvim"
+        convert_current_pane "Nvim:" "nvim"
         tmux send-keys "$(build_nvim_command)" C-m
     else
         # Create new nvim window and launch
-        create_titled_window "nvim_pane" "nvim"
+        create_titled_window "Nvim:" "nvim"
         tmux send-keys "$(build_nvim_command)" C-m
     fi
 fi
