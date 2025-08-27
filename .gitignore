@@ -12,4 +12,4 @@ files/local/bin/devex-mcp-server
 files/local/bin/devex-mcp-server-direct
 files/local/bin/hs-git-migration-tools
 files/local/bin/hs-local
-files/config/aichat/config.yaml
+files/local/bin/python3.12
