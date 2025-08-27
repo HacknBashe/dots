@@ -95,7 +95,7 @@ in {
       };
 
       "claude/commands" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/claude/commands";
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/opencode/commands";
         target = ".claude/commands/nix";
         recursive = true;
       };

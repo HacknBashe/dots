@@ -34,7 +34,7 @@ fi
 
 # Call Claude CLI with command file and context data
 echo "🧠 Using AI to generate PR command..."
-PR_COMMAND=$(echo -e "$(cat "$PR_COMMAND_FILE")\n\n## Context Data\n\nThe following JSON data contains all relevant information extracted from the current repository state:\n\n\`\`\`json\n$CONTEXT_DATA\n\`\`\`" | claude --print)
+PR_COMMAND=$(echo -e "$(cat "$PR_COMMAND_FILE")\n\n## Context Data\n\nThe following JSON data contains all relevant information extracted from the current repository state:\n\n\`\`\`json\n$CONTEXT_DATA\n\`\`\`" | opencode "run")
 
 # Extract and run command from code block
 # Save the command block to a temp file to preserve formatting
