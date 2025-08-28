@@ -46,9 +46,12 @@ in {
   networking.wireless.iwd.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
   networking.networkmanager.enable = true;
-  services.avahi.enable = true;
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [22];
+  };
 
-  security.polkit.enable = true;
+  services.avahi.enable = true;
   services.openssh.enable = true;
 
   hardware = {
@@ -88,6 +91,7 @@ in {
     };
   };
 
+  security.polkit.enable = true;
   security.pam.loginLimits = [
     {
       domain = "@audio";
@@ -115,6 +119,7 @@ in {
     }
   ];
   security.rtkit.enable = true;
+
   services.pulseaudio.enable = false;
   services.pipewire = {
     enable = true;
