@@ -119,6 +119,7 @@
           ./hosts/sindragosa/configuration.nix
           ./modules/nixos/shell.nix
           ./modules/nixos/jellyfin.nix
+          ./modules/nixos/caddy.nix
           ./modules/nixos/adguard.nix
           home-manager.nixosModules.home-manager
           {
