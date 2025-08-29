@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Kids Games
+Exec=waydroid app launch com.rvappstudios.baby.toddler.kids.games.learning.activity
+Icon=/home/kids/.local/share/waydroid/data/icons/com.rvappstudios.baby.toddler.kids.games.learning.activity.png
+Categories=X-WayDroid-App;
+X-Purism-FormFactor=Workstation;Mobile;
+Actions=app_settings;
+
+[Desktop Action app_settings]
+Name=App Settings
+Exec=waydroid app intent android.settings.APPLICATION_DETAILS_SETTINGS package:com.rvappstudios.baby.toddler.kids.games.learning.activity
+Icon=/home/kids/.local/share/waydroid/data/icons/com.android.settings.png

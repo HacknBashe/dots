@@ -45,6 +45,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
+
     # For Steam
     extest = {
       url = "github:chaorace/extest-nix";
@@ -98,11 +100,6 @@
                   ./modules/home-manager/opencode.nix
                   ./modules/home-manager/gtk.nix
                   ./modules/home-manager/qt.nix
-                ];
-              };
-              kids = {
-                imports = [
-                  ./hosts/meraxes/kids.nix
                 ];
               };
             };
@@ -162,6 +159,45 @@
                   ./modules/home-manager/neovim.nix
                   ./modules/home-manager/tmux.nix
                   ./modules/home-manager/btop.nix
+                ];
+              };
+            };
+            home-manager.extraSpecialArgs = {inherit inputs;};
+          }
+        ];
+        specialArgs = {inherit inputs;};
+      };
+      nightmare = nixpkgs.lib.nixosSystem {
+        system = systemLinux;
+        modules = [
+          ./modules/nix.nix
+          ./hosts/nightmare/configuration.nix
+          inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
+          {
+            services.iptsd.enable = true;
+          }
+          ./modules/nixos/shell.nix
+          ./modules/nixos/phosh.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users = {
+              nick = {
+                imports = [
+                  ./hosts/nightmare/home.nix
+                  ./modules/theme.nix
+                  ./modules/home-manager/shell.nix
+                  ./modules/home-manager/development.nix
+                  ./modules/home-manager/neovim-lazy.nix
+                  ./modules/home-manager/tmux.nix
+                  ./modules/home-manager/btop.nix
+                  ./modules/home-manager/opencode.nix
+                ];
+              };
+              kids = {
+                imports = [
+                  ./hosts/nightmare/kids.nix
                 ];
               };
             };

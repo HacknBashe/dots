@@ -33,7 +33,6 @@ in {
       fastfetch
       fzf
       jq
-      lf
       libsecret
       pipes
       p7zip
@@ -41,8 +40,6 @@ in {
       renameutils
       ripgrep
       tlrc
-      vim
-      vitetris
       wget
       xdg-utils
       zellij

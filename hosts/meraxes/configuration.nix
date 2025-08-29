@@ -228,12 +228,6 @@ in {
       extraGroups = ["networkmanager" "wheel" "docker"];
       packages = with pkgs; [];
     };
-    kids = {
-      isNormalUser = true;
-      description = "kids";
-      extraGroups = ["wheel"];
-      packages = with pkgs; [];
-    };
   };
 
   # This value determines the NixOS release from which the default
