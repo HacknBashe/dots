@@ -12,11 +12,9 @@
         ctpv
         efibootmgr
         playerctl
-        # (whisper-cpp.override {cudaSupport = true;})
       ]
     else
       with pkgs; [
-        whisper-cpp
       ];
   hubspotFiles =
     if config.isHubspot

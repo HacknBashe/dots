@@ -88,6 +88,7 @@
 
   home.packages = with pkgs; [
     vimix-cursors
+    (whisper-cpp.override {cudaSupport = true;})
   ];
 
   home.file = {

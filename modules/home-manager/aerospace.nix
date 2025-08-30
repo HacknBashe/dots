@@ -1,4 +1,12 @@
-{config, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
+  home.packages = with pkgs; [
+    whisper-cpp
+  ];
+
   home.file = {
     "aerospace/aerospace.toml" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/aerospace/aerospace.toml";
