@@ -6,9 +6,7 @@
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
     gcompris
-    ghostty
     kdePackages.ktuberling
-    firefox
   ];
 
   # Disable lock screen and force fullscreen for kids user
@@ -28,11 +26,6 @@
 
   # Hide unwanted apps from the application drawer and add web app
   home.file = {
-    # Parental apps toggle script
-    ".local/bin/toggle_parental_apps.sh" = {
-      source = ./toggle_parental_apps.sh;
-      executable = true;
-    };
     # Sesame Street Games
     ".local/share/applications/sesame-street-games.desktop".text = ''
       [Desktop Entry]
