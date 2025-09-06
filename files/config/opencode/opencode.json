@@ -7,7 +7,8 @@
     "bash": {
       "nix *": "ask",
       "git *": "ask",
-      "git diff": "allow",
+      "git show *": "allow",
+      "git log *": "allow",
       "*": "allow"
     }
   }

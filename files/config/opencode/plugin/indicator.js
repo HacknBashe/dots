@@ -1,4 +1,4 @@
-export const IndicatorPlugin = async ({ app, client, $ }) => {
+export const IndicatorPlugin = async ({ directory, worktree, client, $ }) => {
   // Only run in TUI mode, not CLI mode
   if (process.argv.includes('run')) {
     return {
