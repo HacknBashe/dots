@@ -2,8 +2,8 @@
   description = "Nick's desktop flake";
 
   inputs = {
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
     nixpkgsold.url = "github:nixos/nixpkgs?ref=nixos-24.05";
 
     home-manager = {
