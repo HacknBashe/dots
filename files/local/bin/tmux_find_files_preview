@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# Preview script for tmux_find_files
+file_line="$1"
+# Format: error_msg|file|line
+error_msg=$(echo "$file_line" | cut -d"|" -f1)
+file=$(echo "$file_line" | cut -d"|" -f2)
+raw_line=$(echo "$file_line" | cut -d"|" -f3)
+line=$(echo "$raw_line" | sed 's/[^0-9]//g')
+
+echo "Error: $error_msg"
+echo "File: $file"
+echo "Line: $line"
+echo ""
+
+if [[ -f "$file" && -n "$line" && "$line" =~ ^[0-9]+$ ]]; then
+    # Calculate safe line ranges
+    start_line=$((line-5))
+    [[ $start_line -lt 1 ]] && start_line=1
+    end_line=$((line+15))
+    
+    # Try bat first, then fallback to cat/head
+    if command -v bat >/dev/null 2>&1; then
+        bat --color=always --highlight-line="$line" --line-range="$start_line:$end_line" "$file"
+    else
+        # Fallback: show lines around the target  
+        sed -n "${start_line},${end_line}p" "$file" | nl -v "$start_line" | sed "${line}s/^/→ /"
+    fi
+elif [[ -f "$file" ]]; then
+    echo "Showing file without line highlight:"
+    if command -v bat >/dev/null 2>&1; then
+        bat --color=always "$file" | head -20
+    else
+        head -20 "$file"
+    fi
+else
+    echo "File not found: $file"
+    echo "Looking for similar files:"
+    find "$(pwd)" -maxdepth 3 -name "$(basename "$file")" 2>/dev/null | head -3
+fi
