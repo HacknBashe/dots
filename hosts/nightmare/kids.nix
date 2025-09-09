@@ -6,7 +6,6 @@
   programs.home-manager.enable = true;
   home.packages = with pkgs; [
     gcompris
-    kdePackages.ktuberling
   ];
 
   # Disable lock screen and force fullscreen for kids user
@@ -99,6 +98,12 @@
       [Desktop Entry]
       Type=Application
       Name=Archive Manager
+      NoDisplay=true
+    '';
+    ".local/share/applications/org.gnome.NeovimWrapper.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Neovim Wrapper
       NoDisplay=true
     '';
   };
