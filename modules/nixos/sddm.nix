@@ -28,12 +28,9 @@
       videoDrivers = ["nvidia"];
       displayManager = {
         setupCommands = ''
-          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --output DP-0 --off --output DP-2 --off --output HDMI-0 --off
-          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --output DP-2 --auto --primary --output HDMI-0 --noprimary --mode 1920x1080 --right-of DP-2 --output DP-0 --noprimary --mode 1920x1080 --left-of DP-2
+          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --output DP-0 --off --output HDMI-0 --off
+          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --output HDMI-0 --auto --primary --output DP-0 --noprimary --mode 1920x1080 --left-of HDMI-0
         '';
-        # ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --output HDMI-0 --noprimary --mode 1920x1080 --pos 5360x180
-        # ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --output DP-0 --noprimary --mode 1920x1080 --pos 0x180
-        # ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --output DP-2 --auto --primary --pos 1920x0
       };
     };
   };
