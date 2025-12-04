@@ -7,7 +7,12 @@ return {
 			"hrsh7th/nvim-cmp",
 			"hrsh7th/cmp-nvim-lsp",
 			"saadparwaiz1/cmp_luasnip",
-			"git@git.hubteam.com:HubSpot/bend.nvim.git",
+			{
+				"git@git.hubteam.com:HubSpot/bend.nvim.git",
+				enabled = function()
+					return vim.fn.hostname() == "JGR2T59639"
+				end,
+			},
 		},
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
