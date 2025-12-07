@@ -9,16 +9,16 @@
       qemu = {
         runAsRoot = true;
         package = pkgs.qemu_kvm;
-        ovmf = {
-          enable = true;
-          # packages = [
-          #   (pkgs.OVMF.override {
-          #     secureBoot = true;
-          #     tpmSupport = true;
-          #   })
-          #   .fd
-          # ];
-        };
+        # ovmf = {
+        #   enable = true;
+        #   # packages = [
+        #   #   (pkgs.OVMF.override {
+        #   #     secureBoot = true;
+        #   #     tpmSupport = true;
+        #   #   })
+        #   #   .fd
+        #   # ];
+        # };
         # swtpm.enable = true;
       };
     };

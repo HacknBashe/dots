@@ -3,8 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
-    nixpkgsold.url = "github:nixos/nixpkgs?ref=nixos-24.05";
+    nixpkgsold.url = "github:nixos/nixpkgs?ref=nixos-25.11";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -13,11 +12,6 @@
 
     darwin = {
       url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -63,7 +57,6 @@
     nixpkgs,
     nixpkgsold,
     home-manager,
-    nixos-wsl,
     ...
   } @ inputs: let
     systemLinux = "x86_64-linux";

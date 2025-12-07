@@ -4,9 +4,9 @@ gui:
   expandedSidePanelWeight: 2
   mainPanelSplitMode: horizontal
 git:
-  paging:
-    colorArg: always
-    pager: delta --dark --paging=never --color-only
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never --color-only
 os:
   edit: 'tmux_nvim "{{filename}}"'
   editAtLine: 'tmux_nvim "{{filename}}" "{{line}}"'
