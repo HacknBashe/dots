@@ -74,6 +74,7 @@
           ./modules/nixos/sddm.nix
           ./modules/nixos/hyprland.nix
           ./modules/nixos/desktop.nix
+          ./modules/nixos/steam.nix
           ./modules/nixos/vms.nix
           home-manager.nixosModules.home-manager
           {
@@ -98,6 +99,7 @@
                   ./modules/home-manager/opencode.nix
                   ./modules/home-manager/gtk.nix
                   ./modules/home-manager/qt.nix
+                  ./modules/home-manager/steam.nix
                 ];
               };
             };
