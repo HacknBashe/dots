@@ -12,6 +12,10 @@
   # For obsidian
   nixpkgs.config.permittedInsecurePackages = ["electron-25.9.0"];
 
+  programs.obs-studio = {
+    enable = true;
+  };
+
   environment.systemPackages = with pkgs; [
     alacritty
     brave
@@ -24,7 +28,6 @@
     protonup-qt
     lutris
     makemkv
-    obs-studio
     obsidian
     prismlauncher
     qalculate-gtk
