@@ -146,7 +146,7 @@ in {
                 {
                    matches = [
                      {
-                       node.name = "alsa_output.usb-C-Media_Electronics_Inc._USB_Audio_Device-00.analog-stereo"
+                       node.name = "alsa_output.usb-GHW_Micro_GHW_USB_AUDIO_2020-02-20-0000-0000-0000--00.pro-output-0"
                      }
                    ]
                    actions = {
@@ -175,7 +175,7 @@ in {
                    ]
                    actions = {
                      update-props = {
-                       node.description = "TV"
+                       node.description = "Steam Link"
                      }
                    }
                 }
