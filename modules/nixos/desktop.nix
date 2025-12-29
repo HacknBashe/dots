@@ -17,19 +17,16 @@
   };
 
   environment.systemPackages = with pkgs; [
-    alacritty
+    kdePackages.dolphin
+    kdePackages.gwenview
+
     brave
     drawio
     firefox
     gimp
     gparted
     helvum
-    heroic
-    protonup-qt
-    lutris
     makemkv
-    obsidian
-    prismlauncher
     qalculate-gtk
     qbittorrent
     qimgv

@@ -51,6 +51,11 @@
       url = "github:chaorace/extest-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    wivrn = {
+      url = "github:WiVRn/WiVRn/v25.12";  # Pin to v25.12 release to match headset version
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

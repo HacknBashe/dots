@@ -81,6 +81,8 @@ in {
       prettierd
       yarn
       yarn2nix
+
+      unityhub
     ]
     ++ linuxPackages;
 

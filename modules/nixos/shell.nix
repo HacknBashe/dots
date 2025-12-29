@@ -46,6 +46,10 @@ in {
       zoxide
     ]
     ++ linuxPackages;
+
+  programs.adb.enable = true;
+  users.users.nick.extraGroups = ["adbusers"];
+
   services.ollama.enable = true;
 
   services.cron = {
