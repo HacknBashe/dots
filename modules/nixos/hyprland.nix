@@ -23,12 +23,23 @@
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
+    QT_QPA_PLATFORMTHEME = "kde"; # Use KDE's own theming (reads kdeglobals)
   };
 
   services.dbus.enable = true;
   xdg.portal = {
     enable = true;
-    extraPortals = [pkgs.xdg-desktop-portal-gtk];
+    extraPortals = [
+      pkgs.kdePackages.xdg-desktop-portal-kde
+    ];
+    config = {
+      # Portal configuration for Hyprland session
+      hyprland = {
+        default = ["hyprland" "gtk"]; # Hyprland for screenshot/screencast, GTK fallback
+        "org.freedesktop.impl.portal.FileChooser" = ["kde"]; # KDE file picker
+        "org.freedesktop.impl.portal.Settings" = ["kde"]; # KDE settings
+      };
+    };
   };
 
   security.pam.services = {
@@ -85,6 +96,8 @@
     libsForQt5.kwallet
     kdePackages.kwallet-pam
     kdePackages.polkit-kde-agent-1
+    kdePackages.dolphin
+    kdePackages.gwenview
 
     grim
     slurp
@@ -99,4 +112,9 @@
     export const MONITOR_3_COMMAND = "${config.monitor3Command}";
     export const LOCK_COMMAND = "${config.lockCommand}";
   '';
+
+  # Provide applications.menu for KDE apps (Dolphin) running outside Plasma
+  # This enables proper MIME type associations and "Open With" functionality
+  environment.etc."xdg/menus/applications.menu".text =
+    builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
 }

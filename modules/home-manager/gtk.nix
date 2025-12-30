@@ -28,7 +28,7 @@
     @define-color view_fg_color ${colors.base05};
     @define-color headerbar_bg_color ${colors.base01};
     @define-color headerbar_fg_color ${colors.base05};
-    @define-color headerbar_border_color rgba({{base01-dec-r}}, {{base01-dec-g}}, {{base01-dec-b}}, 0.7);
+    @define-color headerbar_border_color alpha(${colors.base01}, 0.7);
     @define-color headerbar_backdrop_color @window_bg_color;
     @define-color headerbar_shade_color rgba(0, 0, 0, 0.07);
     @define-color headerbar_darker_shade_color rgba(0, 0, 0, 0.07);
@@ -110,12 +110,20 @@ in {
     };
 
     theme = {
+      # adw-gtk3 respects libadwaita color variables, so our CSS overrides work
       package = pkgs.adw-gtk3;
       name = "adw-gtk3-dark";
     };
     iconTheme = {
-      name = "Colloid-dark";
-      package = inputs.nixpkgsold.legacyPackages.${pkgs.system}.colloid-icon-theme;
+      package = pkgs.kdePackages.breeze-icons;
+      name = "breeze-dark";
+    };
+  };
+
+  # For GTK4/libadwaita apps, set the color scheme preference
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
     };
   };
 

@@ -86,6 +86,33 @@
     };
   };
 
+  xdg = {
+    dataFile."applications/ghostty-nvim.desktop".text = ''
+      [Desktop Entry]
+      Comment=Open text files in Neovim inside Ghostty
+      Exec=ghostty -e nvim %F
+      Icon=ghostty
+      MimeType=text/plain;text/x-log
+      Name=Ghostty with Neovim
+      Terminal=false
+      Type=Application
+      Version=1.5
+    '';
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "text/plain" = "ghostty-nvim.desktop";
+        "inode/directory" = "org.kde.dolphin.desktop";
+      };
+    };
+    # Ensure no user portal config overrides system config
+    configFile."xdg-desktop-portal/portals.conf".text = ''
+      # This file is managed by NixOS
+      # Portal configuration is set in modules/nixos/hyprland.nix
+      # User-level overrides are not used to maintain declarative configuration
+    '';
+  };
+
   home.packages = with pkgs; [
     vimix-cursors
     (whisper-cpp.override {cudaSupport = true;})
