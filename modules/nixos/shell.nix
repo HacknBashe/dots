@@ -44,11 +44,14 @@ in {
       xdg-utils
       zellij
       zoxide
+
+      monado
     ]
     ++ linuxPackages;
 
   programs.adb.enable = true;
   users.users.nick.extraGroups = ["adbusers"];
+  services.udev.packages = [pkgs.monado];
 
   services.ollama.enable = true;
 

@@ -79,6 +79,7 @@
           ./modules/nixos/sddm.nix
           ./modules/nixos/hyprland.nix
           ./modules/nixos/desktop.nix
+          ./modules/nixos/gamedev.nix
           ./modules/nixos/steam.nix
           ./modules/nixos/vms.nix
           home-manager.nixosModules.home-manager
