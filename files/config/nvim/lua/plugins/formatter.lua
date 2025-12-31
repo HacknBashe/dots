@@ -92,6 +92,16 @@ return {
 					require("formatter.filetypes.php").phpcbf,
 				},
 
+				cs = {
+					function()
+						return {
+							exe = "csharpier",
+							args = { "format", "--write-stdout" },
+							stdin = true,
+						}
+					end,
+				},
+
 				-- ["*"] = {
 				--   require("formatter.filetypes.any").remove_trailing_whitespace,
 				-- },

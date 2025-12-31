@@ -76,6 +76,8 @@ in {
       lua-language-server
       stylua
 
+      csharpier
+
       nodejs_22
       nodePackages.typescript-language-server
       prettierd
