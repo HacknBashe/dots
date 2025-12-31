@@ -75,7 +75,18 @@ stop_recording() {
             if [[ -n "$text" ]]; then
                 echo "$text" | wl-copy
                 sleep 0.1
-                wtype "$text"
+                # Escape spaces for wtype (fixes Chromium/Electron apps)
+                # Ghostty doesn't need escaping
+                local window_class=$(hyprctl activewindow -j | jq -r '.class')
+                case "$window_class" in
+                    com.mitchellh.ghostty)
+                        wtype "$text"
+                        ;;
+                    *)
+                        local escaped_text="${text// /\\ }"
+                        wtype "$escaped_text"
+                        ;;
+                esac
                 notify "Text typed successfully"
             else
                 notify "No text transcribed"
