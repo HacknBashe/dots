@@ -51,7 +51,10 @@ in {
     allowedTCPPorts = [22];
   };
 
-  services.avahi.enable = true;
+  services.avahi = {
+    enable = true;
+    allowInterfaces = ["enp4s0" "wlan0"];
+  };
   services.openssh.enable = true;
 
   hardware = {
