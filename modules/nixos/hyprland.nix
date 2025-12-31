@@ -102,6 +102,7 @@
     grim
     slurp
     wl-clipboard
+    wl-clip-persist
     wtype
     xdg-utils
   ];
