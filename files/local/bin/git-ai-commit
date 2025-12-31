@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Get staged changes
 staged_diff=$(git diff --cached)
