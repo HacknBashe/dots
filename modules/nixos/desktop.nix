@@ -14,7 +14,7 @@
     gparted
     helvum
     makemkv
-    qalculate-gtk
+    qalculate-qt
     qbittorrent
     qimgv
     spotify

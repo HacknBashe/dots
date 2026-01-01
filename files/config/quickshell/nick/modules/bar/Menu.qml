@@ -1,0 +1,409 @@
+pragma ComponentBehavior: Bound
+
+import "../../config"
+import "../../services"
+import "../../components"
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Io
+
+// Slide-out menu content
+Rectangle {
+    id: root
+
+    property bool open: false
+    signal closeRequested()
+
+    // Get lock command from environment variable set by Nix
+    readonly property string lockCommand: Quickshell.env("LOCK_COMMAND") || "grim -o DP-3 -l 0 /tmp/hyprlock_screenshot1.png & grim -o HDMI-A-5 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock"
+
+    // Timer to delay lock command so menu can close
+    Timer {
+        id: lockTimer
+        interval: 200
+        onTriggered: lockProcess.running = true
+    }
+
+    // Process runners for each action
+    Process {
+        id: lockProcess
+        command: ["sh", "-c", root.lockCommand]
+    }
+
+    Process {
+        id: logoutProcess
+        command: ["hyprctl", "dispatch", "exit"]
+    }
+
+    Process {
+        id: suspendProcess
+        command: ["systemctl", "suspend"]
+    }
+
+    Process {
+        id: restartProcess
+        command: ["systemctl", "reboot"]
+    }
+
+    Process {
+        id: powerProcess
+        command: ["systemctl", "poweroff"]
+    }
+
+    width: Math.max(buttonRow.width, calendar.width) + Appearance.padding.large * 2
+    height: contentColumn.height + Appearance.padding.large * 2
+    radius: Appearance.rounding.normal
+    color: Colours.surface
+    border.width: 1
+    border.color: Qt.alpha(Colours.outline, 0.2)
+
+    // Smooth fade and scale animation like caelestia
+    opacity: root.open ? 1 : 0
+    scale: root.open ? 1 : 0.8
+    transformOrigin: Item.Left
+
+    Behavior on opacity {
+        Anim { duration: Appearance.anim.normal }
+    }
+
+    Behavior on scale {
+        Anim { 
+            duration: Appearance.anim.normal
+            easing.bezierCurve: Appearance.anim.expressiveDefaultSpatial
+        }
+    }
+
+    Column {
+        id: contentColumn
+        anchors.centerIn: parent
+        spacing: Appearance.spacing.large
+
+        // Calendar
+        Column {
+            id: calendar
+            width: 280
+            spacing: Appearance.spacing.normal
+
+            property date currentDate: new Date()
+            property int currMonth: currentDate.getMonth()
+            property int currYear: currentDate.getFullYear()
+
+            // Month navigation
+            Row {
+                width: parent.width
+                spacing: Appearance.spacing.small
+
+                // Previous month button
+                Rectangle {
+                    width: 30
+                    height: 30
+                    anchors.verticalCenter: parent.verticalCenter
+                    radius: Appearance.rounding.full
+                    color: prevMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: ""
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.large
+                        font.bold: true
+                        color: Colours.primary
+                    }
+
+                    MouseArea {
+                        id: prevMouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            calendar.currentDate = new Date(calendar.currYear, calendar.currMonth - 1, 1)
+                        }
+                    }
+                }
+
+                // Month/Year display
+                Text {
+                    width: parent.width - 60 - Appearance.spacing.small * 2
+                    anchors.verticalCenter: parent.verticalCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    text: Qt.formatDate(calendar.currentDate, "MMMM yyyy")
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.larger
+                    font.bold: true
+                    font.capitalization: Font.Capitalize
+                    color: Colours.primary
+                }
+
+                // Next month button
+                Rectangle {
+                    width: 30
+                    height: 30
+                    anchors.verticalCenter: parent.verticalCenter
+                    radius: Appearance.rounding.full
+                    color: nextMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: ""
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.large
+                        color: Colours.primary
+                    }
+
+                    MouseArea {
+                        id: nextMouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            calendar.currentDate = new Date(calendar.currYear, calendar.currMonth + 1, 1)
+                        }
+                    }
+                }
+            }
+
+            // Day of week headers
+            DayOfWeekRow {
+                width: parent.width
+                locale: Qt.locale()
+
+                delegate: Text {
+                    required property var model
+                    horizontalAlignment: Text.AlignHCenter
+                    text: model.shortName
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.smaller
+                    color: Colours.textOnSurface
+                    opacity: 0.7
+                }
+            }
+
+            // Calendar grid
+            Item {
+                width: parent.width
+                implicitHeight: grid.implicitHeight
+
+                MonthGrid {
+                    id: grid
+                    anchors.fill: parent
+                    month: calendar.currMonth
+                    year: calendar.currYear
+                    locale: Qt.locale()
+                    spacing: 2
+
+                    delegate: Rectangle {
+                        required property var model
+                        
+                        implicitWidth: 36
+                        implicitHeight: 36
+                        color: model.today ? Colours.primary : "transparent"
+                        radius: Appearance.rounding.small
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: model.day
+                            font.family: Appearance.font.mono
+                            font.pixelSize: Appearance.font.normal
+                            color: model.today ? Colours.textOnPrimary : 
+                                   (model.month === grid.month ? Colours.textOnSurface : Colours.textOnSurface)
+                            opacity: model.month === grid.month ? 1 : 0.4
+                        }
+                    }
+                }
+            }
+        }
+
+        // Divider
+        Rectangle {
+            width: Math.max(buttonRow.width, calendar.width)
+            height: 1
+            color: Colours.outline
+            opacity: 0.3
+        }
+
+        // Power buttons row
+        Row {
+            id: buttonRow
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: Appearance.spacing.normal
+
+        // Lock button
+        Rectangle {
+            width: 50
+            height: 50
+            radius: Appearance.rounding.small
+            color: Colours.surfaceContainer
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: ""
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.large
+                        font.bold: true
+                        color: Colours.primary
+                    }
+
+            MouseArea {
+                id: lockMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+
+                onClicked: {
+                    root.closeRequested()
+                    lockTimer.start()
+                }
+            }
+
+            // Hover overlay
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                color: lockMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+            }
+        }
+
+        // Logout button
+        Rectangle {
+            width: 50
+            height: 50
+            radius: Appearance.rounding.small
+            color: Colours.surfaceContainer
+
+            Text {
+                anchors.centerIn: parent
+                text: "󰍃"
+                font.family: Appearance.font.mono
+                font.pixelSize: Appearance.font.large
+                color: Colours.primary
+            }
+
+            MouseArea {
+                id: logoutMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+
+                onClicked: {
+                    root.closeRequested()
+                    logoutProcess.running = true
+                }
+            }
+
+            // Hover overlay
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                color: logoutMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+            }
+        }
+
+        // Suspend button
+        Rectangle {
+            width: 50
+            height: 50
+            radius: Appearance.rounding.small
+            color: Colours.surfaceContainer
+
+            Text {
+                anchors.centerIn: parent
+                text: "󰒲"
+                font.family: Appearance.font.mono
+                font.pixelSize: Appearance.font.large
+                color: Colours.primary
+            }
+
+            MouseArea {
+                id: suspendMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+
+                onClicked: {
+                    root.closeRequested()
+                    suspendProcess.running = true
+                }
+            }
+
+            // Hover overlay
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                color: suspendMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+            }
+        }
+
+        // Restart button
+        Rectangle {
+            width: 50
+            height: 50
+            radius: Appearance.rounding.small
+            color: Colours.surfaceContainer
+
+            Text {
+                anchors.centerIn: parent
+                text: "󰜉"
+                font.family: Appearance.font.mono
+                font.pixelSize: Appearance.font.large
+                color: Colours.primary
+            }
+
+            MouseArea {
+                id: restartMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+
+                onClicked: {
+                    root.closeRequested()
+                    restartProcess.running = true
+                }
+            }
+
+            // Hover overlay
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                color: restartMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+            }
+        }
+
+        // Power off button
+        Rectangle {
+            width: 50
+            height: 50
+            radius: Appearance.rounding.small
+            color: Colours.surfaceContainer
+
+            Text {
+                anchors.centerIn: parent
+                text: "󰐥"
+                font.family: Appearance.font.mono
+                font.pixelSize: Appearance.font.large
+                color: Colours.primary
+            }
+
+            MouseArea {
+                id: powerMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+
+                onClicked: {
+                    root.closeRequested()
+                    powerProcess.running = true
+                }
+            }
+
+            // Hover overlay
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                color: powerMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+            }
+        }
+        }
+    }
+}

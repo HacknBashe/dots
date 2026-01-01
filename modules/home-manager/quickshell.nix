@@ -16,4 +16,9 @@
       recursive = true;
     };
   };
+
+  # Set environment variable for lock command
+  home.sessionVariables = {
+    LOCK_COMMAND = config.lockCommand;
+  };
 }
