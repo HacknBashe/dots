@@ -2,3 +2,5 @@ module bar
 BarWindow 1.0 BarWindow.qml
 Bar 1.0 Bar.qml
 Menu 1.0 Menu.qml
+TrayPopout 1.0 TrayPopout.qml
+TrayMenuItem 1.0 TrayMenuItem.qml

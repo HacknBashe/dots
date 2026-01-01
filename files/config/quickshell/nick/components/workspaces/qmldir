@@ -1,0 +1,5 @@
+module components.workspaces
+
+Workspaces 1.0 Workspaces.qml
+Workspace 1.0 Workspace.qml
+WorkspaceIndicator 1.0 WorkspaceIndicator.qml

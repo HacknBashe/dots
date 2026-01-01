@@ -1,0 +1,3 @@
+#!/bin/sh
+rm -f /tmp/quickshell-menu-state
+touch /tmp/quickshell-menu-close

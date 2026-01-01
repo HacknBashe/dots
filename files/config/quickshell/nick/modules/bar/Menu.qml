@@ -8,13 +8,14 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
+import Quickshell.Services.Mpris
 
 // Slide-out menu content
 Rectangle {
     id: root
 
     property bool open: false
-    signal closeRequested()
+    signal closeRequested
 
     // Get lock command from environment variable set by Nix
     readonly property string lockCommand: Quickshell.env("LOCK_COMMAND") || "grim -o DP-3 -l 0 /tmp/hyprlock_screenshot1.png & grim -o HDMI-A-5 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock"
@@ -65,11 +66,13 @@ Rectangle {
     transformOrigin: Item.Left
 
     Behavior on opacity {
-        Anim { duration: Appearance.anim.normal }
+        Anim {
+            duration: Appearance.anim.normal
+        }
     }
 
     Behavior on scale {
-        Anim { 
+        Anim {
             duration: Appearance.anim.normal
             easing.bezierCurve: Appearance.anim.expressiveDefaultSpatial
         }
@@ -118,7 +121,7 @@ Rectangle {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            calendar.currentDate = new Date(calendar.currYear, calendar.currMonth - 1, 1)
+                            calendar.currentDate = new Date(calendar.currYear, calendar.currMonth - 1, 1);
                         }
                     }
                 }
@@ -158,7 +161,7 @@ Rectangle {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            calendar.currentDate = new Date(calendar.currYear, calendar.currMonth + 1, 1)
+                            calendar.currentDate = new Date(calendar.currYear, calendar.currMonth + 1, 1);
                         }
                     }
                 }
@@ -195,7 +198,7 @@ Rectangle {
 
                     delegate: Rectangle {
                         required property var model
-                        
+
                         implicitWidth: 36
                         implicitHeight: 36
                         color: model.today ? Colours.primary : "transparent"
@@ -206,9 +209,292 @@ Rectangle {
                             text: model.day
                             font.family: Appearance.font.mono
                             font.pixelSize: Appearance.font.normal
-                            color: model.today ? Colours.textOnPrimary : 
-                                   (model.month === grid.month ? Colours.textOnSurface : Colours.textOnSurface)
+                            color: model.today ? Colours.textOnPrimary : (model.month === grid.month ? Colours.textOnSurface : Colours.textOnSurface)
                             opacity: model.month === grid.month ? 1 : 0.4
+                        }
+                    }
+                }
+            }
+        }
+
+        // Clock and Weather row
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: Appearance.spacing.large
+
+            // Clock section
+            Rectangle {
+                width: 120
+                height: 80
+                radius: Appearance.rounding.normal
+                color: Colours.surfaceContainer
+
+                Column {
+                    anchors.centerIn: parent
+                    spacing: Appearance.spacing.small
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: ""
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.large
+                        color: Colours.primary
+                    }
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: Time.format("hh:mm")
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.larger
+                        font.bold: true
+                        color: Colours.textOnSurface
+                    }
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: Time.format("AP")
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.smaller
+                        color: Colours.secondary
+                    }
+                }
+            }
+
+            // Weather section
+            Rectangle {
+                width: 120
+                height: 80
+                radius: Appearance.rounding.normal
+                color: Colours.surfaceContainer
+
+                Column {
+                    anchors.centerIn: parent
+                    spacing: Appearance.spacing.small
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: Weather.weatherIcon
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.large
+                        color: Colours.primary
+                    }
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: Weather.temperature
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.larger
+                        font.bold: true
+                        color: Colours.textOnSurface
+                    }
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: Weather.condition
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.smaller
+                        color: Colours.secondary
+                        elide: Text.ElideRight
+                        width: 110
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+                }
+            }
+        }
+
+        // Now Playing widget
+        Rectangle {
+            width: Math.max(buttonRow.width, calendar.width)
+            height: 120
+            radius: Appearance.rounding.normal
+            color: Colours.surfaceContainer
+            visible: activePlayer !== null
+
+            // Select active player with priority: playing media > paused media > any player
+            // Prioritize actual music players (spotify, vlc, etc) over browsers
+            readonly property var activePlayer: {
+                let players = Mpris.players.values;
+                if (players.length === 0)
+                    return null;
+
+                // Browser identities to deprioritize
+                let browsers = ["brave", "chrome", "chromium", "firefox", "edge"];
+
+                // First, try to find a playing non-browser player
+                let playingPlayer = players.find(p => {
+                    let id = p.identity.toLowerCase();
+                    return p.isPlaying && !browsers.some(b => id.includes(b));
+                });
+                if (playingPlayer)
+                    return playingPlayer;
+
+                // Then, try any playing player (including browsers)
+                playingPlayer = players.find(p => p.isPlaying);
+                if (playingPlayer)
+                    return playingPlayer;
+
+                // Then, try a paused non-browser player
+                let pausedPlayer = players.find(p => {
+                    let id = p.identity.toLowerCase();
+                    return !browsers.some(b => id.includes(b));
+                });
+                if (pausedPlayer)
+                    return pausedPlayer;
+
+                // Finally, fall back to first player
+                return players[0];
+            }
+
+            Row {
+                anchors.fill: parent
+                anchors.margins: Appearance.padding.normal
+                spacing: Appearance.spacing.normal
+
+                // Album art
+                Rectangle {
+                    width: 90
+                    height: 90
+                    anchors.verticalCenter: parent.verticalCenter
+                    radius: Appearance.rounding.small
+                    color: Colours.surface
+                    clip: true
+
+                    // Fallback icon
+                    Text {
+                        anchors.centerIn: parent
+                        text: ""
+                        font.family: Appearance.font.mono
+                        font.pixelSize: 40
+                        color: Colours.secondary
+                        visible: !albumArt.visible
+                    }
+
+                    Image {
+                        id: albumArt
+                        anchors.fill: parent
+                        source: parent.parent.parent.activePlayer?.trackArtUrl ?? ""
+                        fillMode: Image.PreserveAspectCrop
+                        visible: status === Image.Ready
+                        smooth: true
+                    }
+                }
+
+                // Track info and controls
+                Column {
+                    width: parent.width - 90 - parent.spacing
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: Appearance.spacing.small
+
+                    // Track title
+                    Text {
+                        width: parent.width
+                        text: parent.parent.parent.activePlayer?.trackTitle || "No media"
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.normal
+                        font.bold: true
+                        color: Colours.textOnSurface
+                        elide: Text.ElideRight
+                    }
+
+                    // Artist
+                    Text {
+                        width: parent.width
+                        text: parent.parent.parent.activePlayer?.trackArtist || "Unknown artist"
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.smaller
+                        color: Colours.secondary
+                        elide: Text.ElideRight
+                    }
+
+                    // Album
+                    Text {
+                        width: parent.width
+                        text: parent.parent.parent.activePlayer?.trackAlbum || ""
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.smaller
+                        color: Colours.secondary
+                        elide: Text.ElideRight
+                        visible: text !== ""
+                    }
+
+                    // Media controls
+                    Row {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spacing: Appearance.spacing.small
+
+                        // Previous button
+                        Rectangle {
+                            width: 35
+                            height: 35
+                            radius: Appearance.rounding.full
+                            color: mediaPrevMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                            visible: parent.parent.parent.parent.activePlayer?.canGoPrevious ?? false
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: "󰒮"
+                                font.family: Appearance.font.mono
+                                font.pixelSize: Appearance.font.normal
+                                color: Colours.primary
+                            }
+
+                            MouseArea {
+                                id: mediaPrevMouseArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: parent.parent.parent.parent.parent.activePlayer?.previous()
+                            }
+                        }
+
+                        // Play/Pause button
+                        Rectangle {
+                            width: 35
+                            height: 35
+                            radius: Appearance.rounding.full
+                            color: mediaPlayMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                            visible: parent.parent.parent.parent.activePlayer?.canTogglePlaying ?? false
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: (parent.parent.parent.parent.parent.activePlayer?.isPlaying ?? false) ? "󰏤" : "󰐊"
+                                font.family: Appearance.font.mono
+                                font.pixelSize: Appearance.font.normal
+                                color: Colours.primary
+                            }
+
+                            MouseArea {
+                                id: mediaPlayMouseArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: parent.parent.parent.parent.parent.activePlayer?.togglePlaying()
+                            }
+                        }
+
+                        // Next button
+                        Rectangle {
+                            width: 35
+                            height: 35
+                            radius: Appearance.rounding.full
+                            color: mediaNextMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                            visible: parent.parent.parent.parent.activePlayer?.canGoNext ?? false
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: "󰒭"
+                                font.family: Appearance.font.mono
+                                font.pixelSize: Appearance.font.normal
+                                color: Colours.primary
+                            }
+
+                            MouseArea {
+                                id: mediaNextMouseArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: parent.parent.parent.parent.parent.activePlayer?.next()
+                            }
                         }
                     }
                 }
@@ -229,181 +515,181 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Appearance.spacing.normal
 
-        // Lock button
-        Rectangle {
-            width: 50
-            height: 50
-            radius: Appearance.rounding.small
-            color: Colours.surfaceContainer
+            // Lock button
+            Rectangle {
+                width: 50
+                height: 50
+                radius: Appearance.rounding.small
+                color: Colours.surfaceContainer
 
-                    Text {
-                        anchors.centerIn: parent
-                        text: ""
-                        font.family: Appearance.font.mono
-                        font.pixelSize: Appearance.font.large
-                        font.bold: true
-                        color: Colours.primary
+                Text {
+                    anchors.centerIn: parent
+                    text: ""
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.large
+                    font.bold: true
+                    color: Colours.primary
+                }
+
+                MouseArea {
+                    id: lockMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+
+                    onClicked: {
+                        root.closeRequested();
+                        lockTimer.start();
                     }
+                }
 
-            MouseArea {
-                id: lockMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-
-                onClicked: {
-                    root.closeRequested()
-                    lockTimer.start()
+                // Hover overlay
+                Rectangle {
+                    anchors.fill: parent
+                    radius: parent.radius
+                    color: lockMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
                 }
             }
 
-            // Hover overlay
+            // Logout button
             Rectangle {
-                anchors.fill: parent
-                radius: parent.radius
-                color: lockMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-            }
-        }
+                width: 50
+                height: 50
+                radius: Appearance.rounding.small
+                color: Colours.surfaceContainer
 
-        // Logout button
-        Rectangle {
-            width: 50
-            height: 50
-            radius: Appearance.rounding.small
-            color: Colours.surfaceContainer
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰍃"
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.large
+                    color: Colours.primary
+                }
 
-            Text {
-                anchors.centerIn: parent
-                text: "󰍃"
-                font.family: Appearance.font.mono
-                font.pixelSize: Appearance.font.large
-                color: Colours.primary
-            }
+                MouseArea {
+                    id: logoutMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
 
-            MouseArea {
-                id: logoutMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        root.closeRequested();
+                        logoutProcess.running = true;
+                    }
+                }
 
-                onClicked: {
-                    root.closeRequested()
-                    logoutProcess.running = true
+                // Hover overlay
+                Rectangle {
+                    anchors.fill: parent
+                    radius: parent.radius
+                    color: logoutMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
                 }
             }
 
-            // Hover overlay
+            // Suspend button
             Rectangle {
-                anchors.fill: parent
-                radius: parent.radius
-                color: logoutMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-            }
-        }
+                width: 50
+                height: 50
+                radius: Appearance.rounding.small
+                color: Colours.surfaceContainer
 
-        // Suspend button
-        Rectangle {
-            width: 50
-            height: 50
-            radius: Appearance.rounding.small
-            color: Colours.surfaceContainer
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰒲"
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.large
+                    color: Colours.primary
+                }
 
-            Text {
-                anchors.centerIn: parent
-                text: "󰒲"
-                font.family: Appearance.font.mono
-                font.pixelSize: Appearance.font.large
-                color: Colours.primary
-            }
+                MouseArea {
+                    id: suspendMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
 
-            MouseArea {
-                id: suspendMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        root.closeRequested();
+                        suspendProcess.running = true;
+                    }
+                }
 
-                onClicked: {
-                    root.closeRequested()
-                    suspendProcess.running = true
+                // Hover overlay
+                Rectangle {
+                    anchors.fill: parent
+                    radius: parent.radius
+                    color: suspendMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
                 }
             }
 
-            // Hover overlay
+            // Restart button
             Rectangle {
-                anchors.fill: parent
-                radius: parent.radius
-                color: suspendMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-            }
-        }
+                width: 50
+                height: 50
+                radius: Appearance.rounding.small
+                color: Colours.surfaceContainer
 
-        // Restart button
-        Rectangle {
-            width: 50
-            height: 50
-            radius: Appearance.rounding.small
-            color: Colours.surfaceContainer
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰜉"
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.large
+                    color: Colours.primary
+                }
 
-            Text {
-                anchors.centerIn: parent
-                text: "󰜉"
-                font.family: Appearance.font.mono
-                font.pixelSize: Appearance.font.large
-                color: Colours.primary
-            }
+                MouseArea {
+                    id: restartMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
 
-            MouseArea {
-                id: restartMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        root.closeRequested();
+                        restartProcess.running = true;
+                    }
+                }
 
-                onClicked: {
-                    root.closeRequested()
-                    restartProcess.running = true
+                // Hover overlay
+                Rectangle {
+                    anchors.fill: parent
+                    radius: parent.radius
+                    color: restartMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
                 }
             }
 
-            // Hover overlay
+            // Power off button
             Rectangle {
-                anchors.fill: parent
-                radius: parent.radius
-                color: restartMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-            }
-        }
+                width: 50
+                height: 50
+                radius: Appearance.rounding.small
+                color: Colours.surfaceContainer
 
-        // Power off button
-        Rectangle {
-            width: 50
-            height: 50
-            radius: Appearance.rounding.small
-            color: Colours.surfaceContainer
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰐥"
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.large
+                    color: Colours.primary
+                }
 
-            Text {
-                anchors.centerIn: parent
-                text: "󰐥"
-                font.family: Appearance.font.mono
-                font.pixelSize: Appearance.font.large
-                color: Colours.primary
-            }
+                MouseArea {
+                    id: powerMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
 
-            MouseArea {
-                id: powerMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        root.closeRequested();
+                        powerProcess.running = true;
+                    }
+                }
 
-                onClicked: {
-                    root.closeRequested()
-                    powerProcess.running = true
+                // Hover overlay
+                Rectangle {
+                    anchors.fill: parent
+                    radius: parent.radius
+                    color: powerMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
                 }
             }
-
-            // Hover overlay
-            Rectangle {
-                anchors.fill: parent
-                radius: parent.radius
-                color: powerMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-            }
-        }
         }
     }
 }

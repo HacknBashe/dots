@@ -1,0 +1,10 @@
+#!/bin/sh
+# Check current state
+if [ -f /tmp/quickshell-menu-state ]; then
+    # Menu is open, close it
+    rm /tmp/quickshell-menu-state
+else
+    # Menu is closed, open it
+    touch /tmp/quickshell-menu-state
+fi
+touch /tmp/quickshell-menu-toggle

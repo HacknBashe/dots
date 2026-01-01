@@ -27,8 +27,10 @@ Singleton {
 
     // Helper to apply transparency layer
     function layer(c, layerLevel) {
-        if (!transparencyEnabled) return c;
-        if (layerLevel === 0) return Qt.alpha(c, transparencyBase);
+        if (!transparencyEnabled)
+            return c;
+        if (layerLevel === 0)
+            return Qt.alpha(c, transparencyBase);
         return Qt.alpha(c, transparencyLayers);
     }
 }

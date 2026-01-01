@@ -8,108 +8,108 @@ Singleton {
     // Category to Nerd Font icon mapping
     // These map desktop entry categories to appropriate icons
     readonly property var categoryIcons: ({
-        // Browsers & Web
-        "WebBrowser": "󰖟",
-        "Network": "󰖟",
+            // Browsers & Web
+            "WebBrowser": "󰖟",
+            "Network": "󰖟",
 
-        // Development
-        "Development": "",
-        "IDE": "",
-        "TextEditor": "󰷈",
+            // Development
+            "Development": "",
+            "IDE": "",
+            "TextEditor": "󰷈",
 
-        // Terminal
-        "TerminalEmulator": "",
-        "ConsoleOnly": "",
+            // Terminal
+            "TerminalEmulator": "",
+            "ConsoleOnly": "",
 
-        // Files
-        "FileTools": "󰉋",
-        "FileManager": "󰉋",
-        "Filesystem": "󰉋",
-        "FileTransfer": "󰉋",
+            // Files
+            "FileTools": "󰉋",
+            "FileManager": "󰉋",
+            "Filesystem": "󰉋",
+            "FileTransfer": "󰉋",
 
-        // Media
-        "Audio": "󰝚",
-        "Music": "󰝚",
-        "Player": "󰝚",
-        "Video": "󰕧",
-        "AudioVideo": "󰕧",
-        "AudioVideoEditing": "󰕧",
-        "Recorder": "󰑊",
+            // Media
+            "Audio": "󰝚",
+            "Music": "󰝚",
+            "Player": "󰝚",
+            "Video": "󰕧",
+            "AudioVideo": "󰕧",
+            "AudioVideoEditing": "󰕧",
+            "Recorder": "󰑊",
 
-        // Graphics
-        "Graphics": "󰋩",
-        "2DGraphics": "󰋩",
-        "RasterGraphics": "󰋩",
+            // Graphics
+            "Graphics": "󰋩",
+            "2DGraphics": "󰋩",
+            "RasterGraphics": "󰋩",
 
-        // Games
-        "Game": "󰊗",
+            // Games
+            "Game": "󰊗",
 
-        // Settings & System
-        "Settings": "󰒓",
-        "DesktopSettings": "󰒓",
-        "HardwareSettings": "󰒓",
-        "System": "󰒓",
-        "Monitor": "󰍛",
+            // Settings & System
+            "Settings": "󰒓",
+            "DesktopSettings": "󰒓",
+            "HardwareSettings": "󰒓",
+            "System": "󰒓",
+            "Monitor": "󰍛",
 
-        // Office & Productivity
-        "Office": "󰈙",
-        "Printing": "󰐪",
+            // Office & Productivity
+            "Office": "󰈙",
+            "Printing": "󰐪",
 
-        // Utilities
-        "Utility": "󰑣",
-        "Archiving": "󰀼",
-        "Compression": "󰀼",
+            // Utilities
+            "Utility": "󰑣",
+            "Archiving": "󰀼",
+            "Compression": "󰀼",
 
-        // Communication
-        "Chat": "󰭹",
-        "InstantMessaging": "󰭹",
-        "Email": "󰇮",
+            // Communication
+            "Chat": "󰭹",
+            "InstantMessaging": "󰭹",
+            "Email": "󰇮",
 
-        // Security
-        "Security": "󰒃"
-    })
+            // Security
+            "Security": "󰒃"
+        })
 
     // App class/name to icon overrides for common apps
     readonly property var appIcons: ({
-        "firefox": "󰈹",
-        "chromium": "",
-        "google-chrome": "",
-        "brave-browser": "󰖟",
-        "code": "󰨞",
-        "Code": "󰨞",
-        "vscodium": "󰨞",
-        "neovim": "",
-        "nvim": "",
-        "vim": "",
-        "kitty": "󰄛",
-        "Alacritty": "",
-        "foot": "",
-        "ghostty": "󰊠",
-        "Ghostty": "󰊠",
-        "thunar": "󰉋",
-        "nautilus": "󰉋",
-        "dolphin": "󰉋",
-        "spotify": "󰓇",
-        "Spotify": "󰓇",
-        "discord": "󰙯",
-        "Discord": "󰙯",
-        "vesktop": "󰙯",
-        "slack": "󰒱",
-        "Slack": "󰒱",
-        "telegram": "",
-        "steam": "󰓓",
-        "Steam": "󰓓",
-        "obs": "󰑋",
-        "gimp": "",
-        "inkscape": "",
-        "blender": "󰂫",
-        "vlc": "󰕼",
-        "mpv": "",
-        "zathura": "",
-        "evince": "",
-        "libreoffice": "󰈙",
-        "thunderbird": "󰇮"
-    })
+            "firefox": "󰈹",
+            "chromium": "",
+            "google-chrome": "",
+            "brave-browser": "󰖟",
+            "code": "󰨞",
+            "Code": "󰨞",
+            "vscodium": "󰨞",
+            "neovim": "",
+            "nvim": "",
+            "vim": "",
+            "kitty": "󰄛",
+            "Alacritty": "",
+            "foot": "",
+            "ghostty": "󰊠",
+            "Ghostty": "󰊠",
+            "thunar": "󰉋",
+            "nautilus": "󰉋",
+            "dolphin": "󰉋",
+            "spotify": "󰓇",
+            "Spotify": "󰓇",
+            "discord": "󰙯",
+            "Discord": "󰙯",
+            "vesktop": "󰙯",
+            "slack": "󰒱",
+            "Slack": "󰒱",
+            "telegram": "",
+            "steam": "󰓓",
+            "Steam": "󰓓",
+            "obs": "󰑋",
+            "gimp": "",
+            "inkscape": "",
+            "blender": "󰂫",
+            "vlc": "󰕼",
+            "mpv": "",
+            "zathura": "",
+            "evince": "",
+            "libreoffice": "󰈙",
+            "thunderbird": "󰇮"
+        })
 
     // Default icon when nothing matches
     readonly property string defaultIcon: "󰣆"
@@ -117,7 +117,8 @@ Singleton {
     // Get icon for an app by its class name
     // First checks direct app mapping, then falls back to category lookup
     function getAppIcon(appClass) {
-        if (!appClass) return defaultIcon;
+        if (!appClass)
+            return defaultIcon;
 
         // Check direct app mapping first
         if (appIcons.hasOwnProperty(appClass)) {

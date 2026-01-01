@@ -7,6 +7,7 @@
   home.packages = [
     inputs.quickshell.packages.${pkgs.system}.default
     inputs.caelestia-shell.packages.${pkgs.system}.default
+    pkgs.qt6.qtdeclarative # Provides qmlformat
   ];
 
   home.file = {

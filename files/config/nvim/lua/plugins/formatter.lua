@@ -102,6 +102,17 @@ return {
 					end,
 				},
 
+				qml = {
+					function()
+						return {
+							exe = "qmlformat",
+							args = { "-i" },
+							stdin = false,
+							tempfile_postfix = ".qml",
+						}
+					end,
+				},
+
 				-- ["*"] = {
 				--   require("formatter.filetypes.any").remove_trailing_whitespace,
 				-- },
