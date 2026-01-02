@@ -16,13 +16,20 @@ ColumnLayout {
     id: root
 
     // Signal to toggle the menu
-    signal menuToggled()
-    property bool menuOpen: false
+    signal openMenuRequested()
 
     // Tray hover tracking
     property int hoveredTrayIndex: -1
     property SystemTrayItem hoveredTrayItem: null
-    property real trayPopoutTargetY: 0
+    property real trayIconCenterY: 0
+    
+    // Volume hover tracking
+    property bool volumeHovered: false
+    property real volumePopoutTargetY: 0
+    property alias volumeWidget: volumeWidget
+    
+    // Menu hover tracking
+    property bool nixButtonHovered: false
 
     spacing: Appearance.spacing.normal
 
@@ -30,27 +37,19 @@ ColumnLayout {
     function updateTrayHover(mouseY) {
         let idx = calculateTrayIndex(mouseY);
 
-        // Update if index changed OR if hoveredTrayItem was cleared (e.g., after menu click)
-        if (idx !== hoveredTrayIndex || (idx >= 0 && hoveredTrayItem === null)) {
-            hoveredTrayIndex = idx;
-
-            if (idx >= 0 && idx < trayRepeater.count) {
+        // Only update if hovering a valid tray icon
+        if (idx >= 0 && idx < trayRepeater.count) {
+            // Update if index changed OR if hoveredTrayItem was cleared (e.g., after menu click)
+            if (idx !== hoveredTrayIndex || hoveredTrayItem === null) {
+                hoveredTrayIndex = idx;
                 hoveredTrayItem = trayRepeater.itemAt(idx).modelData;
 
-                // Calculate centered Y position for popout
+                // Calculate icon center Y position for popout alignment
                 let trayStartY = traySection.y;
-                let iconCenterY = trayStartY + (idx * (32 + Appearance.spacing.small)) + 16;
-
-                // Estimate menu height (will be adjusted by popout based on actual content)
-                let estimatedMenuHeight = 200;
-                trayPopoutTargetY = iconCenterY - (estimatedMenuHeight / 2);
-
-                // Clamp to screen bounds (with padding)
-                trayPopoutTargetY = Math.max(16, Math.min(trayPopoutTargetY, root.height - estimatedMenuHeight - 16));
-            } else {
-                hoveredTrayItem = null;
+                trayIconCenterY = trayStartY + (idx * (32 + Appearance.spacing.small)) + 16;
             }
         }
+        // Don't clear hover state here - let the timer handle it
     }
 
     // Function to calculate which tray icon (if any) is hovered
@@ -104,6 +103,54 @@ ColumnLayout {
             } else if (button === Qt.RightButton) {
                 item.secondaryActivate();
             }
+        }
+    }
+    
+    // Function to update volume hover state
+    function updateVolumeHover(mouseY) {
+        let volumeY = volumeWidget.y;
+        let volumeHeight = volumeWidget.height;
+        
+        if (mouseY >= volumeY && mouseY <= volumeY + volumeHeight) {
+            volumeHovered = true;
+            
+            // Calculate popout target Y position
+            let iconCenterY = volumeY + (volumeHeight / 2);
+            volumePopoutTargetY = iconCenterY - 75;  // Center menu (estimated height 150px / 2)
+        }
+        // Don't clear hover state here - let the timer handle it
+    }
+    
+    // Function to clear volume hover
+    function clearVolumeHover() {
+        volumeHovered = false;
+    }
+    
+    // Function to clear nix button hover
+    function clearNixButtonHover() {
+        console.log("[BAR] clearNixButtonHover called");
+        nixButtonHovered = false;
+    }
+    
+    // Function to check if hovering over Nix button
+    function updateNixButtonHover(mouseY, isMenuOpen) {
+        let nixY = nixButton.y;
+        let nixHeight = nixButton.height;
+        
+        if (mouseY >= nixY && mouseY <= nixY + nixHeight) {
+            if (!nixButtonHovered) {
+                console.log("[BAR] Entered Nix button range");
+            }
+            nixButtonHovered = true;
+            
+            if (!isMenuOpen) {
+                openMenuRequested();
+            }
+        } else {
+            if (nixButtonHovered) {
+                console.log("[BAR] Left Nix button range - nixButtonHovered now false");
+            }
+            nixButtonHovered = false;
         }
     }
 
@@ -299,18 +346,23 @@ ColumnLayout {
 
     // Volume widget
     Volume {
+        id: volumeWidget
         Layout.alignment: Qt.AlignHCenter
     }
 
     // Bottom section - Nix logo button (opens menu)
     Item {
+        id: nixButton
         Layout.alignment: Qt.AlignHCenter
         Layout.preferredWidth: 36
         Layout.preferredHeight: 36
         Layout.bottomMargin: Appearance.padding.small
+        
+        width: 36
+        height: 36
 
         Rectangle {
-            id: nixButton
+            id: nixButtonRect
             anchors.fill: parent
             radius: Appearance.rounding.small
             color: Colours.surfaceContainer
@@ -323,20 +375,41 @@ ColumnLayout {
                 color: Colours.primary
             }
 
-            MouseArea {
-                id: nixMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-
-                onClicked: root.menuToggled()
-            }
-
             // Hover overlay
             Rectangle {
                 anchors.fill: parent
-                radius: nixButton.radius
+                radius: nixButtonRect.radius
                 color: nixMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+            }
+        }
+        
+        // MouseArea on the Item level, not inside Rectangle
+        MouseArea {
+            id: nixMouseArea
+            anchors.fill: parent
+            z: 2000  // Place above the bar's hover detection MouseArea
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            acceptedButtons: Qt.NoButton  // Don't capture clicks
+
+            Component.onCompleted: {
+                console.log("===== NEW Nix MouseArea created =====");
+                console.log("  z:", z);
+                console.log("  hoverEnabled:", hoverEnabled);
+                console.log("  x:", x, "y:", y);
+                console.log("  width:", width, "height:", height);
+                console.log("  parent width:", parent.width, "parent height:", parent.height);
+            }
+
+            onEntered: {
+                console.log("===== NixMouseArea ENTERED =====");
+                if (!root.menuOpen) {
+                    root.menuToggled();
+                }
+            }
+            
+            onContainsMouseChanged: {
+                console.log("===== NixMouseArea containsMouse:", containsMouse, "=====");
             }
         }
     }

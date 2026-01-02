@@ -1,10 +1,20 @@
 import Quickshell
 import Quickshell.Io
 import "./modules/bar"
+import "./modules/launcher"
+import "./modules/notifications"
 
 ShellRoot {
     BarWindow {
         id: barWindow
+    }
+
+    LauncherWindow {
+        id: launcherWindow
+    }
+
+    NotificationWindow {
+        id: notificationWindow
     }
 
     // File watcher for IPC toggle trigger
@@ -26,6 +36,17 @@ ShellRoot {
         
         onFileChanged: {
             barWindow.closeMenu()
+        }
+    }
+
+    // File watcher for launcher toggle trigger
+    FileView {
+        id: launcherToggle
+        path: "/tmp/quickshell-launcher-toggle"
+        watchChanges: true
+        
+        onFileChanged: {
+            launcherWindow.toggleLauncher()
         }
     }
 }

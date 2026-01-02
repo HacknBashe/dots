@@ -29,7 +29,7 @@ Item {
                 if (parts.length > 0) {
                     let vol = parseInt(parts[0]);
                     if (!isNaN(vol)) {
-                        root.volume = Math.max(0, Math.min(100, vol));
+                        root.volume = Math.max(0, vol);  // Allow values over 100%
                     }
                 }
             }

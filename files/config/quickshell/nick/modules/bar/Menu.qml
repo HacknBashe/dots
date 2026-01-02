@@ -56,27 +56,16 @@ Rectangle {
     width: Math.max(buttonRow.width, calendar.width) + Appearance.padding.large * 2
     height: contentColumn.height + Appearance.padding.large * 2
     radius: Appearance.rounding.normal
-    color: Colours.surface
+    // Square corners on left side, rounded on right
+    topLeftRadius: 0
+    bottomLeftRadius: 0
+    color: Colours.background
     border.width: 1
     border.color: Qt.alpha(Colours.outline, 0.2)
 
-    // Smooth fade and scale animation like caelestia
-    opacity: root.open ? 1 : 0
-    scale: root.open ? 1 : 0.8
-    transformOrigin: Item.Left
-
-    Behavior on opacity {
-        Anim {
-            duration: Appearance.anim.normal
-        }
-    }
-
-    Behavior on scale {
-        Anim {
-            duration: Appearance.anim.normal
-            easing.bezierCurve: Appearance.anim.expressiveDefaultSpatial
-        }
-    }
+    // No animation - instant appearance
+    opacity: 1
+    scale: 1
 
     Column {
         id: contentColumn

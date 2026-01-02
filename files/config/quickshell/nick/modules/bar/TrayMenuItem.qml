@@ -14,25 +14,29 @@ Item {
     signal clicked
 
     width: 200
-    height: menuEntry.isSeparator ? 8 : 36
+    height: menuEntry.isSeparator ? 8 : 32
 
-    // Regular menu item
+    // Regular menu item with animated background
     Rectangle {
         id: itemBackground
         anchors.fill: parent
+        anchors.leftMargin: 0
+        anchors.rightMargin: 2
+        anchors.topMargin: 2
+        anchors.bottomMargin: 2
         visible: !root.menuEntry.isSeparator
-        color: itemMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+        color: itemMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.08) : "transparent"
         radius: Appearance.rounding.small
 
         Behavior on color {
-            Anim {
+            ColorAnimation {
                 duration: Appearance.anim.small
             }
         }
 
         Row {
             anchors.fill: parent
-            anchors.leftMargin: Appearance.padding.small
+            anchors.leftMargin: 0
             anchors.rightMargin: Appearance.padding.small
             spacing: Appearance.spacing.small
 
@@ -67,7 +71,12 @@ Item {
             hoverEnabled: true
             cursorShape: root.menuEntry.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
 
+            onContainsMouseChanged: {
+                console.log("[TRAY MENU ITEM] containsMouse changed to:", containsMouse, "for:", root.menuEntry.text);
+            }
+
             onClicked: {
+                console.log("[TRAY MENU ITEM] Clicked:", root.menuEntry.text);
                 if (root.menuEntry.enabled) {
                     root.menuEntry.triggered();
                     root.clicked();

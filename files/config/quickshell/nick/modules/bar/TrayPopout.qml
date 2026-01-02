@@ -10,97 +10,100 @@ import QtQuick
 
 // Single persistent popout window that displays tray icon menus
 // Content updates dynamically when hovering between different icons
-PanelWindow {
+Popout {
     id: popout
 
     property SystemTrayItem trayItem: null
-    property real targetY: 0
-    property bool mouseInside: false
     property var barRef: null  // Reference to Bar for calling closeTrayPopout
+    
+    // Cache the trayItem to keep menu items visible during slide-out animation
+    property SystemTrayItem cachedTrayItem: null
+    property bool isTransitioning: false
 
-    color: "transparent"
-    visible: trayItem !== null && (trayItem.hasMenu ?? false)
-
-    // Position from top, offset from left by bar width + gap
-    anchors {
-        top: true
-        left: true
+    shouldBeOpen: trayItem !== null && (trayItem.hasMenu ?? false)
+    popoutWidth: 200
+    
+    // Update cache and handle animations when tray item changes
+    onTrayItemChanged: {
+        if (trayItem !== null && (trayItem.hasMenu ?? false)) {
+            // If switching between different valid tray items, enable animations
+            if (cachedTrayItem !== null && trayItem !== cachedTrayItem) {
+                // Enable height and position animations immediately
+                animateHeight = true;
+                
+                // Update cache immediately so height recalculates right away
+                cachedTrayItem = trayItem;
+                
+                // Trigger crossfade animation
+                isTransitioning = true;
+                fadeInTimer.restart();
+            } else {
+                animateHeight = false;
+                // First time opening or same item, update immediately
+                cachedTrayItem = trayItem;
+            }
+        }
     }
-
-    margins {
-        left: 56  // Bar width (48) + gap (8)
-        top: targetY
+    
+    Timer {
+        id: heightAnimationTimer
+        interval: Appearance.anim.normal + 50  // Animation duration + buffer
+        onTriggered: popout.animateHeight = false
     }
-
-    // Smooth position animation when moving between icons
-    Behavior on margins.top {
-        Anim {
-            duration: Appearance.anim.small
+    
+    // Fade back in after brief delay to let content update
+    Timer {
+        id: fadeInTimer
+        interval: Appearance.anim.small / 2  // Brief delay (100ms)
+        onTriggered: {
+            popout.isTransitioning = false;
+            heightAnimationTimer.restart();
         }
     }
 
-    // Animate width to expand from left
-    implicitWidth: popout.visible ? 200 : 0
-    implicitHeight: contentRect.height
-
-    Behavior on implicitWidth {
-        Anim {
-            duration: Appearance.anim.normal
-            easing.bezierCurve: Appearance.anim.expressiveDefaultSpatial
-        }
-    }
-
-    WlrLayershell.namespace: "nick-tray-popout"
-    WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.exclusionMode: ExclusionMode.Ignore
-
-    // Content
-    Rectangle {
-        id: contentRect
-        color: Colours.surfaceContainer
-        width: 200
-        height: menuColumn.height
-        radius: Appearance.rounding.small
-        clip: true  // Clip content during animation
-
-        QsMenuOpener {
-            id: menuOpener
-            menu: popout.trayItem?.menu ?? null
-        }
-
-        Column {
-            id: menuColumn
+    contentItem: Component {
+        Item {
             width: parent.width
+            height: Math.max(40, menuColumn.height + 16)
 
-            Repeater {
-                model: menuOpener.children
+            QsMenuOpener {
+                id: menuOpener
+                menu: popout.cachedTrayItem?.menu ?? null
+            }
 
-                TrayMenuItem {
-                    required property var modelData
-                    menuEntry: modelData
+            Column {
+                id: menuColumn
+                anchors.centerIn: parent
+                width: parent.width
+                spacing: 0
+                
+                // Fade out when transitioning, fade back in when new content loads
+                opacity: popout.isTransitioning ? 0 : 1
+                
+                Behavior on opacity {
+                    Anim {
+                        duration: Appearance.anim.small
+                        easing.bezierCurve: Appearance.anim.standard
+                    }
+                }
 
-                    onClicked: {
-                        // Close popout when menu item is clicked
-                        console.log("Menu item clicked, calling closeTrayPopout");
-                        if (popout.barRef) {
-                            popout.barRef.closeTrayPopout();
+                Repeater {
+                    model: menuOpener.children
+
+                    TrayMenuItem {
+                        required property var modelData
+                        menuEntry: modelData
+
+                        onClicked: {
+                            // Close popout when menu item is clicked
+                            console.log("Menu item clicked, calling closeTrayPopout");
+                            if (popout.barRef) {
+                                popout.barRef.closeTrayPopout();
+                            }
                         }
                     }
                 }
             }
-        }
-
-        // Hover detection for keeping popout open (on top with high z-index)
-        MouseArea {
-            id: hoverArea
-            anchors.fill: parent
-            z: 1000  // Put on top of everything
-            hoverEnabled: true
-            propagateComposedEvents: true
-            acceptedButtons: Qt.NoButton  // Don't intercept clicks
-
-            onEntered: popout.mouseInside = true
-            onExited: popout.mouseInside = false
         }
     }
 }

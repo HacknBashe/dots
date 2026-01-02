@@ -1,0 +1,2 @@
+module notifications
+NotificationWindow 1.0 NotificationWindow.qml
