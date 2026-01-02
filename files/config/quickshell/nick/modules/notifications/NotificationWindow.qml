@@ -29,10 +29,10 @@ PanelWindow {
     }
 
     // Fixed size - never changes
-    width: 400
+    implicitWidth: 400
     // Use a very large fixed height instead of calculating from screen
-    height: 2000
-    
+    implicitHeight: 2000
+
     WlrLayershell.namespace: "nick-notifications"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
@@ -40,7 +40,7 @@ PanelWindow {
     // ListView to handle removal transitions properly
     ListView {
         id: notificationList
-        
+
         // Position at top of window
         anchors {
             top: parent.top
@@ -48,14 +48,14 @@ PanelWindow {
             right: parent.right
             bottom: parent.bottom
         }
-        
+
         spacing: Appearance.spacing.normal
-        
+
         // Disable scrolling
         interactive: false
-        
+
         model: Notifications.server.trackedNotifications
-        
+
         // Transition for adding items - slide in from right
         add: Transition {
             NumberAnimation {
@@ -66,7 +66,7 @@ PanelWindow {
                 easing.bezierCurve: Appearance.anim.emphasized
             }
         }
-        
+
         // Transition for removing items - slide out to right
         remove: Transition {
             NumberAnimation {
@@ -76,7 +76,7 @@ PanelWindow {
                 easing.bezierCurve: Appearance.anim.emphasized
             }
         }
-        
+
         // Smooth movement when items are added/removed
         displaced: Transition {
             NumberAnimation {
@@ -85,11 +85,11 @@ PanelWindow {
                 easing.bezierCurve: Appearance.anim.emphasized
             }
         }
-        
+
         delegate: NotificationWidget {
             required property var modelData
             notification: modelData
-            
+
             // ListView requires explicit width
             width: notificationList.width
         }

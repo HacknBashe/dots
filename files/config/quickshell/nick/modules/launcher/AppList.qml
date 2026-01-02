@@ -34,25 +34,25 @@ Item {
     // Scrollable list view
     ListView {
         id: listView
-        
+
         anchors.fill: parent
         clip: true
         spacing: Appearance.spacing.smaller
-        
+
         model: root.apps
         currentIndex: root.currentIndex
-        
+
         // Smooth scrolling
         highlightMoveDuration: Appearance.anim.small
         highlightMoveVelocity: -1
-        
+
         delegate: AppItem {
             required property var modelData
             required property int index
-            
+
             app: modelData
             isSelected: index === root.currentIndex
-            
+
             onClicked: {
                 root.currentIndex = index;
                 root.appSelected(modelData);
@@ -73,12 +73,12 @@ Item {
         // Scrollbar
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
-            
+
             contentItem: Rectangle {
                 implicitWidth: 6
                 radius: 3
                 color: Qt.alpha(Colours.primary, parent.pressed ? 0.5 : (parent.hovered ? 0.3 : 0.2))
-                
+
                 Behavior on color {
                     ColorAnimation {
                         duration: Appearance.anim.small

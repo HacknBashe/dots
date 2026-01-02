@@ -60,8 +60,7 @@ Rectangle {
     topLeftRadius: 0
     bottomLeftRadius: 0
     color: Colours.background
-    border.width: 1
-    border.color: Qt.alpha(Colours.outline, 0.2)
+    border.width: 0
 
     // No animation - instant appearance
     opacity: 1
@@ -210,10 +209,12 @@ Rectangle {
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Appearance.spacing.large
+            
+            readonly property real targetWidth: Math.max(buttonRow.width, calendar.width)
 
             // Clock section
             Rectangle {
-                width: 120
+                width: (parent.targetWidth - Appearance.spacing.large) / 2
                 height: 80
                 radius: Appearance.rounding.normal
                 color: Colours.surfaceContainer
@@ -251,7 +252,7 @@ Rectangle {
 
             // Weather section
             Rectangle {
-                width: 120
+                width: (parent.targetWidth - Appearance.spacing.large) / 2
                 height: 80
                 radius: Appearance.rounding.normal
                 color: Colours.surfaceContainer
@@ -260,21 +261,27 @@ Rectangle {
                     anchors.centerIn: parent
                     spacing: Appearance.spacing.small
 
-                    Text {
+                    // Weather icon and temperature on same line
+                    Row {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: Weather.weatherIcon
-                        font.family: Appearance.font.mono
-                        font.pixelSize: Appearance.font.large
-                        color: Colours.primary
-                    }
+                        spacing: Appearance.spacing.small
 
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: Weather.temperature
-                        font.family: Appearance.font.mono
-                        font.pixelSize: Appearance.font.larger
-                        font.bold: true
-                        color: Colours.textOnSurface
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: Weather.weatherIcon
+                            font.family: Appearance.font.mono
+                            font.pixelSize: Appearance.font.large
+                            color: Colours.primary
+                        }
+
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: Weather.temperature
+                            font.family: Appearance.font.mono
+                            font.pixelSize: Appearance.font.larger
+                            font.bold: true
+                            color: Colours.textOnSurface
+                        }
                     }
 
                     Text {
@@ -284,7 +291,7 @@ Rectangle {
                         font.pixelSize: Appearance.font.smaller
                         color: Colours.secondary
                         elide: Text.ElideRight
-                        width: 110
+                        width: parent.parent.width - Appearance.padding.normal * 2
                         horizontalAlignment: Text.AlignHCenter
                     }
                 }

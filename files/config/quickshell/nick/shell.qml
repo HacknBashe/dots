@@ -22,9 +22,9 @@ ShellRoot {
         id: ipcToggle
         path: "/tmp/quickshell-menu-toggle"
         watchChanges: true
-        
+
         onFileChanged: {
-            barWindow.toggleMenu()
+            barWindow.toggleMenu();
         }
     }
 
@@ -33,9 +33,9 @@ ShellRoot {
         id: ipcClose
         path: "/tmp/quickshell-menu-close"
         watchChanges: true
-        
+
         onFileChanged: {
-            barWindow.closeMenu()
+            barWindow.closeMenu();
         }
     }
 
@@ -44,9 +44,9 @@ ShellRoot {
         id: launcherToggle
         path: "/tmp/quickshell-launcher-toggle"
         watchChanges: true
-        
+
         onFileChanged: {
-            launcherWindow.toggleLauncher()
+            launcherWindow.toggleLauncher();
         }
     }
 }

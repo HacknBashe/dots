@@ -13,8 +13,8 @@ Rectangle {
 
     required property var app
     required property bool isSelected
-    
-    signal clicked()
+
+    signal clicked
 
     width: parent.width
     height: 60

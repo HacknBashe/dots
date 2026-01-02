@@ -17,17 +17,17 @@ Rectangle {
     property date createdAt: new Date()
     property bool removing: false
     property bool justCreated: true
-    
+
     // Unique instance ID to track which widget instance this is
     property string instanceId: {
         let random = Math.random().toString(36).substring(7);
         return root.notification.id + "-" + random;
     }
-    
+
     width: 380
     // Height calculated from content
     height: contentColumn.implicitHeight + Appearance.padding.normal * 2
-    
+
     // Clip content to prevent overflow during animations
     clip: true
 
@@ -35,23 +35,36 @@ Rectangle {
     radius: Appearance.rounding.normal
     border.width: 1
     border.color: Qt.alpha(Colours.outline, 0.2)  // Same subtle border for all
-    
+
     // Disable all Behavior animations - ListView handles transitions
-    Behavior on height { enabled: false }
-    Behavior on width { enabled: false }
-    Behavior on x { enabled: false }
-    Behavior on y { enabled: false }
-    Behavior on opacity { enabled: false }
-    Behavior on scale { enabled: false }
-
-
+    Behavior on height {
+        enabled: false
+    }
+    Behavior on width {
+        enabled: false
+    }
+    Behavior on x {
+        enabled: false
+    }
+    Behavior on y {
+        enabled: false
+    }
+    Behavior on opacity {
+        enabled: false
+    }
+    Behavior on scale {
+        enabled: false
+    }
 
     // Helper function to get urgency color
     function getUrgencyColor(urgency) {
-        switch(urgency) {
-            case NotificationUrgency.Critical: return "#f38ba8"; // Red
-            case NotificationUrgency.Low: return Qt.alpha(Colours.outline, 0.5);
-            default: return Qt.alpha(Colours.outline, 0.2);
+        switch (urgency) {
+        case NotificationUrgency.Critical:
+            return "#f38ba8"; // Red
+        case NotificationUrgency.Low:
+            return Qt.alpha(Colours.outline, 0.5);
+        default:
+            return Qt.alpha(Colours.outline, 0.2);
         }
     }
 
@@ -59,10 +72,13 @@ Rectangle {
     function formatRelativeTime() {
         let now = new Date();
         let diff = (now.getTime() - createdAt.getTime()) / 1000;  // seconds
-        
-        if (diff < 60) return "now";
-        if (diff < 3600) return Math.floor(diff / 60) + "m";
-        if (diff < 86400) return Math.floor(diff / 3600) + "h";
+
+        if (diff < 60)
+            return "now";
+        if (diff < 3600)
+            return Math.floor(diff / 60) + "m";
+        if (diff < 86400)
+            return Math.floor(diff / 3600) + "h";
         return Math.floor(diff / 86400) + "d";
     }
 
@@ -87,21 +103,13 @@ Rectangle {
         }
 
         spacing: Appearance.spacing.small
-        
+
         // Disable all animations on the layout (only writable properties)
-        Behavior on height { enabled: false }
-        Behavior on width { enabled: false }
-        
-        onImplicitHeightChanged: {
-            console.log("=== contentColumn implicitHeight CHANGED:", implicitHeight, "for notification:", root.notification.summary, "parent height:", root.height);
+        Behavior on height {
+            enabled: false
         }
-        
-        onHeightChanged: {
-            console.log("=== contentColumn HEIGHT CHANGED:", height, "for notification:", root.notification.summary);
-        }
-        
-        onWidthChanged: {
-            console.log("=== contentColumn WIDTH CHANGED:", width, "for notification:", root.notification.summary);
+        Behavior on width {
+            enabled: false
         }
 
         // Top row: Icon, App Name, Close button, Timestamp
@@ -115,17 +123,16 @@ Rectangle {
                 Layout.preferredHeight: 32
                 radius: Appearance.rounding.small
                 color: !hasAppIcon ? Qt.alpha(Colours.primary, 0.2) : "transparent"
-                
+
                 property bool hasAppIcon: {
-                    if (!root.notification) return false;
+                    if (!root.notification)
+                        return false;
                     let icon = root.notification.appIcon;
                     let desktop = root.notification.desktopEntry;
                     let image = root.notification.image;
-                    
+
                     // Has app icon if any of these are not empty
-                    return (icon !== "" && icon !== undefined) || 
-                           (desktop !== "" && desktop !== undefined) || 
-                           (image !== "" && image !== undefined);
+                    return (icon !== "" && icon !== undefined) || (desktop !== "" && desktop !== undefined) || (image !== "" && image !== undefined);
                 }
 
                 // App icon - uses IconImage with Quickshell.iconPath for theme resolution
@@ -134,22 +141,19 @@ Rectangle {
                     anchors.centerIn: parent
                     implicitSize: 28
                     visible: parent.hasAppIcon
-                    
+
                     source: {
-                        if (!root.notification) return "";
-                        
+                        if (!root.notification)
+                            return "";
+
                         let appIconValue = root.notification.appIcon;
-                        
+
                         // Check if appIcon is a URL (file://, http://, etc.)
-                        let isUrl = appIconValue.startsWith("file://") || 
-                                   appIconValue.startsWith("http://") || 
-                                   appIconValue.startsWith("https://") ||
-                                   appIconValue.startsWith("image://");
-                        
+                        let isUrl = appIconValue.startsWith("file://") || appIconValue.startsWith("http://") || appIconValue.startsWith("https://") || appIconValue.startsWith("image://");
+
                         // If it's a file:// URL to a chromium temp dir, skip it and use desktop entry
                         // These temp files are often deleted or don't exist
-                        if (appIconValue.includes(".org.chromium.Chromium.") || 
-                            appIconValue.includes("/tmp/") && appIconValue.includes("logo.png")) {
+                        if (appIconValue.includes(".org.chromium.Chromium.") || appIconValue.includes("/tmp/") && appIconValue.includes("logo.png")) {
                             // Skip temp files, go straight to desktop entry
                             if (root.notification.desktopEntry !== "") {
                                 let iconPath = Quickshell.iconPath(root.notification.desktopEntry, "");
@@ -158,7 +162,7 @@ Rectangle {
                                 }
                             }
                         }
-                        
+
                         // Try appIcon
                         if (appIconValue !== "") {
                             if (isUrl) {
@@ -172,7 +176,7 @@ Rectangle {
                                 }
                             }
                         }
-                        
+
                         // Fall back to desktop entry name for icon resolution
                         if (root.notification.desktopEntry !== "") {
                             let iconPath = Quickshell.iconPath(root.notification.desktopEntry, "");
@@ -180,12 +184,12 @@ Rectangle {
                                 return iconPath;
                             }
                         }
-                        
+
                         // Fall back to image field
                         if (root.notification.image !== "") {
                             return root.notification.image;
                         }
-                        
+
                         return "";
                     }
                 }
@@ -239,12 +243,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    
+
                     onClicked: {
                         root.notification.dismiss();
                         mouse.accepted = true;
                     }
-                    
+
                     onPressed: mouse.accepted = true
                     onReleased: mouse.accepted = true
                 }
@@ -314,12 +318,12 @@ Rectangle {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        
+
                         onClicked: {
                             parent.modelData.invoke();
                             mouse.accepted = true;
                         }
-                        
+
                         onPressed: mouse.accepted = true
                         onReleased: mouse.accepted = true
                     }

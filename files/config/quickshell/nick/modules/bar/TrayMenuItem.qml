@@ -71,12 +71,7 @@ Item {
             hoverEnabled: true
             cursorShape: root.menuEntry.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
 
-            onContainsMouseChanged: {
-                console.log("[TRAY MENU ITEM] containsMouse changed to:", containsMouse, "for:", root.menuEntry.text);
-            }
-
             onClicked: {
-                console.log("[TRAY MENU ITEM] Clicked:", root.menuEntry.text);
                 if (root.menuEntry.enabled) {
                     root.menuEntry.triggered();
                     root.clicked();

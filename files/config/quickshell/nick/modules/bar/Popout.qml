@@ -57,45 +57,44 @@ PanelWindow {
             topLeftRadius: 0
             bottomLeftRadius: 0
             clip: true
-            
+
             // Vertically center the popout with the target icon
             y: Math.max(0, Math.min(parent.height - height, popout.targetIconCenterY - height / 2))
-            
+
             // Slide animation
             x: popout.shouldBeOpen ? 0 : -width
-        
-        Behavior on x {
-            Anim {
-                duration: Appearance.anim.normal
-                easing.bezierCurve: Appearance.anim.standard
-            }
-        }
-        
-        // Height animation (only when enabled, e.g., switching between menus)
-        Behavior on height {
-            enabled: popout.animateHeight
-            Anim {
-                duration: Appearance.anim.normal
-                easing.bezierCurve: Appearance.anim.standard
-            }
-        }
 
-        // Content loader
-        Loader {
-            id: contentLoader
-            width: parent.width
-        }
-
-        // Hover detection for keeping popout open
-        // HoverHandler doesn't block events like MouseArea does
-        HoverHandler {
-            id: hoverHandler
-            
-            onHoveredChanged: {
-                console.log("[POPOUT HOVER] hovered changed to:", hovered);
-                popout.mouseInside = hovered;
+            Behavior on x {
+                Anim {
+                    duration: Appearance.anim.normal
+                    easing.bezierCurve: Appearance.anim.standard
+                }
             }
-        }
+
+            // Height animation (only when enabled, e.g., switching between menus)
+            Behavior on height {
+                enabled: popout.animateHeight
+                Anim {
+                    duration: Appearance.anim.normal
+                    easing.bezierCurve: Appearance.anim.standard
+                }
+            }
+
+            // Content loader
+            Loader {
+                id: contentLoader
+                width: parent.width
+            }
+
+            // Hover detection for keeping popout open
+            // HoverHandler doesn't block events like MouseArea does
+            HoverHandler {
+                id: hoverHandler
+
+                onHoveredChanged: {
+                    popout.mouseInside = hovered;
+                }
+            }
         }
     }
 }

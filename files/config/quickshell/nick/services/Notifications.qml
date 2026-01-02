@@ -23,20 +23,12 @@ Singleton {
 
         // Handle incoming notifications
         onNotification: notification => {
-            console.log("=== NEW NOTIFICATION:", notification.summary);
-            console.log("    appIcon:", notification.appIcon);
-            console.log("    desktopEntry:", notification.desktopEntry);
-            console.log("    image:", notification.image);
-            console.log("    urgency:", notification.urgency);
-            
             // Track the notification so it appears in trackedNotifications
             notification.tracked = true;
-            
+
             // Set up auto-dismiss timer
-            let timeout = notification.expireTimeout > 0 
-                ? notification.expireTimeout * 1000 
-                : 5000;  // Default 5 seconds
-            
+            let timeout = notification.expireTimeout > 0 ? notification.expireTimeout * 1000 : 5000;  // Default 5 seconds
+
             // Create a timer component for this notification
             let timer = notificationDismissTimer.createObject(root, {
                 notification: notification,
@@ -49,13 +41,13 @@ Singleton {
     // Helper component for notification dismiss timers
     Component {
         id: notificationDismissTimer
-        
+
         Timer {
             property var notification: null
-            
+
             running: false
             repeat: false
-            
+
             onTriggered: {
                 if (notification !== null && notification.tracked) {
                     try {

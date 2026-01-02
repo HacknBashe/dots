@@ -10,18 +10,43 @@ import QtQuick.Layouts
 // Volume widget with speaker icon and percentage
 Item {
     id: root
-    
+
     implicitWidth: column.implicitWidth
     implicitHeight: column.implicitHeight
-    
+
     property int volume: 50
-    
+    property string deviceName: ""
+
+    // Get current default sink device name
+    Process {
+        id: getDevice
+        running: true
+        command: ["/etc/profiles/per-user/nick/bin/pulsemixer", "--list-sinks"]
+
+        stdout: SplitParser {
+            onRead: data => {
+                // Parse the output to find the default sink
+                let lines = data.trim().split('\n');
+                for (let line of lines) {
+                    if (line.includes('Default')) {
+                        // Extract the Name field
+                        let nameMatch = line.match(/Name: ([^,]+)/);
+                        if (nameMatch) {
+                            root.deviceName = nameMatch[1].trim();
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     // Get current volume from pulsemixer
     Process {
         id: getVolume
         running: true
         command: ["/etc/profiles/per-user/nick/bin/pulsemixer", "--get-volume"]
-        
+
         stdout: SplitParser {
             onRead: data => {
                 // pulsemixer outputs "LEFT RIGHT" (e.g., "50 50")
@@ -35,85 +60,96 @@ Item {
             }
         }
     }
-    
-    // Poll volume every second
+
+    // Poll volume and device every second
     Timer {
         interval: 1000
         running: true
         repeat: true
-        onTriggered: getVolume.running = true
+        onTriggered: {
+            getVolume.running = true;
+            getDevice.running = true;
+        }
     }
-    
+
     // Processes for changing volume (separate for increase/decrease)
     Process {
         id: volumeUp
         command: ["/etc/profiles/per-user/nick/bin/pulsemixer", "--change-volume", "+5"]
-        
+
         onExited: {
             getVolume.running = true;
         }
     }
-    
+
     Process {
         id: volumeDown
         command: ["/etc/profiles/per-user/nick/bin/pulsemixer", "--change-volume", "-5"]
-        
+
         onExited: {
             getVolume.running = true;
         }
     }
-    
+
     ColumnLayout {
         id: column
         anchors.centerIn: parent
         spacing: Appearance.spacing.small
-        
-        // Speaker icon (changes based on volume level)
+
+        // Device icon
         Item {
             Layout.alignment: Qt.AlignHCenter
-            implicitWidth: speakerIcon.implicitWidth
-            implicitHeight: speakerIcon.implicitHeight
-            
+            implicitWidth: deviceIcon.implicitWidth
+            implicitHeight: deviceIcon.implicitHeight
+
             Text {
-                id: speakerIcon
+                id: deviceIcon
                 anchors.centerIn: parent
                 text: {
-                    if (root.volume === 0) return "󰖁";  // Muted
-                    if (root.volume < 33) return "󰕿";   // Low
-                    if (root.volume < 66) return "󰖀";   // Medium
-                    return "󰕾";                          // High
+                    let device = root.deviceName.toLowerCase();
+                    if (device.includes("headset") || device.includes("headphone"))
+                        return "󰋋";  // Headset
+                    if (device.includes("bluetooth") || device.includes("bt"))
+                        return "󰂯";  // Bluetooth
+                    if (device.includes("soundbar") || device.includes("speaker"))
+                        return "󰓃";  // Soundbar/Speakers
+                    if (device.includes("steam"))
+                        return "󰓓";  // Steam/Gaming
+                    if (device.includes("hdmi") || device.includes("displayport"))
+                        return "󰍹";  // HDMI/Display
+                    return "󰓃";  // Default to speakers
                 }
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.large
                 color: Colours.secondary
             }
         }
-        
+
         // Volume percentage
         Item {
             Layout.alignment: Qt.AlignHCenter
             implicitWidth: volumeText.implicitWidth
             implicitHeight: volumeText.implicitHeight
-            
+
             Text {
                 id: volumeText
                 anchors.centerIn: parent
                 text: root.volume + "%"
                 font.family: Appearance.font.mono
-                font.pixelSize: Appearance.font.normal
+                font.pixelSize: Appearance.font.larger
                 color: Colours.secondary
             }
         }
     }
-    
+
     // Mouse area for scroll wheel control - overlays the entire widget
     MouseArea {
         anchors.fill: parent
         z: 2000  // Place above the bar's hover detection MouseArea
         hoverEnabled: true
         acceptedButtons: Qt.NoButton
-        
-        onWheel: (wheel) => {
+
+        onWheel: wheel => {
             if (wheel.angleDelta.y > 0) {
                 volumeUp.running = true;
             } else {

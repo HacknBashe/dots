@@ -71,44 +71,88 @@ Singleton {
 
     // App class/name to icon overrides for common apps
     readonly property var appIcons: ({
+            // Browsers
             "firefox": "󰈹",
             "chromium": "",
             "google-chrome": "",
             "brave-browser": "󰖟",
+            "brave": "󰖟",
+
+            // Development
             "code": "󰨞",
             "Code": "󰨞",
             "vscodium": "󰨞",
             "neovim": "",
             "nvim": "",
             "vim": "",
+            "jetbrains-idea": "",
+            "jetbrains-pycharm": "",
+
+            // Terminals (with common class name patterns)
             "kitty": "󰄛",
             "Alacritty": "",
+            "alacritty": "",
             "foot": "",
             "ghostty": "󰊠",
             "Ghostty": "󰊠",
+            "com.mitchellh.ghostty": "󰊠",
+            "org.wezfurlong.wezterm": "",
+            "wezterm": "",
+
+            // File managers
             "thunar": "󰉋",
+            "Thunar": "󰉋",
             "nautilus": "󰉋",
             "dolphin": "󰉋",
+            "org.kde.dolphin": "󰉋",
+            "pcmanfm": "󰉋",
+
+            // Media
             "spotify": "󰓇",
             "Spotify": "󰓇",
+            "vlc": "󰕼",
+            "mpv": "",
+
+            // Communication
             "discord": "󰙯",
             "Discord": "󰙯",
             "vesktop": "󰙯",
             "slack": "󰒱",
             "Slack": "󰒱",
             "telegram": "",
+            "signal": "󰭹",
+
+            // Gaming
             "steam": "󰓓",
             "Steam": "󰓓",
+            "lutris": "󰊗",
+            "heroic": "󰊗",
+
+            // Recording/Streaming
             "obs": "󰑋",
+            "com.obsproject.Studio": "󰑋",
+
+            // Graphics
             "gimp": "",
+            "org.gimp.GIMP": "",
             "inkscape": "",
+            "org.inkscape.Inkscape": "",
             "blender": "󰂫",
-            "vlc": "󰕼",
-            "mpv": "",
+            "krita": "󰋩",
+
+            // Viewers
             "zathura": "",
             "evince": "",
+            "org.gnome.Evince": "",
+            "okular": "",
+
+            // Office
             "libreoffice": "󰈙",
-            "thunderbird": "󰇮"
+            "thunderbird": "󰇮",
+
+            // System
+            "pavucontrol": "󰕾",
+            "blueman-manager": "󰂯"
         })
 
     // Default icon when nothing matches
@@ -120,7 +164,7 @@ Singleton {
         if (!appClass)
             return defaultIcon;
 
-        // Check direct app mapping first
+        // Check direct app mapping first (exact match)
         if (appIcons.hasOwnProperty(appClass)) {
             return appIcons[appClass];
         }
@@ -129,6 +173,18 @@ Singleton {
         const lowerClass = appClass.toLowerCase();
         if (appIcons.hasOwnProperty(lowerClass)) {
             return appIcons[lowerClass];
+        }
+
+        // Try partial matching for reverse domain names (e.g., "com.mitchellh.ghostty" -> "ghostty")
+        if (appClass.includes('.')) {
+            const parts = appClass.split('.');
+            const lastPart = parts[parts.length - 1];
+            if (appIcons.hasOwnProperty(lastPart)) {
+                return appIcons[lastPart];
+            }
+            if (appIcons.hasOwnProperty(lastPart.toLowerCase())) {
+                return appIcons[lastPart.toLowerCase()];
+            }
         }
 
         // Try to get categories from desktop entry

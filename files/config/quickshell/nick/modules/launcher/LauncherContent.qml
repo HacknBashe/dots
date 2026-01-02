@@ -12,13 +12,13 @@ FocusScope {
 
     property bool open: false
     property real screenHeight: 1080
-    signal closeRequested()
+    signal closeRequested
 
     width: 600
     height: contentColumn.height + Appearance.padding.large * 2
     focus: true
     clip: true
-    
+
     Behavior on height {
         NumberAnimation {
             duration: Appearance.anim.normal
@@ -40,7 +40,7 @@ FocusScope {
     transform: Translate {
         id: slideTransform
         y: root.open ? 0 : (root.screenHeight / 2 + root.height / 2 + 50)
-        
+
         Behavior on y {
             NumberAnimation {
                 duration: Appearance.anim.normal
@@ -63,7 +63,7 @@ FocusScope {
 
     ColumnLayout {
         id: contentColumn
-        
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -102,7 +102,7 @@ FocusScope {
                 // Text input
                 TextInput {
                     id: searchField
-                    
+
                     Layout.fillWidth: true
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.normal
@@ -112,7 +112,7 @@ FocusScope {
                     clip: true
                     focus: true
                     activeFocusOnTab: true
-                    
+
                     Text {
                         anchors.fill: parent
                         text: "Search applications..."
@@ -178,13 +178,13 @@ FocusScope {
         // App list
         AppList {
             id: appList
-            
+
             Layout.fillWidth: true
             Layout.preferredHeight: implicitHeight
             Layout.maximumHeight: 480
-            
+
             apps: Apps.search(searchField.text)
-            
+
             onAppSelected: app => {
                 if (Apps.launch(app)) {
                     root.closeRequested();

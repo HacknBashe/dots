@@ -78,11 +78,11 @@ Variants {
 
                 LauncherContent {
                     id: launcher
-                    
+
                     anchors.centerIn: parent
                     open: scope.launcherOpen
                     screenHeight: launcherWindow.height
-                    
+
                     onCloseRequested: {
                         scope.launcherOpen = false;
                     }

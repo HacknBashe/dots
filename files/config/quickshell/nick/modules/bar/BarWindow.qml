@@ -36,10 +36,6 @@ Variants {
         required property ShellScreen modelData
         property bool menuOpen: false
         property bool menuMouseInside: false
-        
-        onMenuOpenChanged: {
-            console.log("[SCOPE] menuOpen changed to:", menuOpen);
-        }
 
         PanelWindow {
             id: window
@@ -84,10 +80,7 @@ Variants {
 
                 anchors.fill: parent
                 color: Colours.background
-                radius: Appearance.rounding.normal
-                // Remove rounding on left side (screen edge)
-                topLeftRadius: 0
-                bottomLeftRadius: 0
+                radius: 0
                 border.width: 1
                 border.color: Qt.alpha(Colours.outline, 0.2)
             }
@@ -100,7 +93,6 @@ Variants {
                 anchors.margins: Appearance.padding.smaller
 
                 onOpenMenuRequested: {
-                    console.log("[BARWINDOW] Signal received! Setting menu open");
                     scope.menuOpen = true;
                 }
             }
@@ -114,13 +106,11 @@ Variants {
 
                 onEntered: window.isHovered = true
                 onExited: {
-                    console.log("[BARWINDOW] Mouse exited bar - starting timers");
                     window.isHovered = false;
                     clearTrayTimer.restart();
                     clearVolumeTimer.restart();
                     bar.clearNixButtonHover();
                     if (scope.menuOpen) {
-                        console.log("[BARWINDOW] Menu is open, starting clearMenuTimer");
                         clearMenuTimer.restart();
                     }
                 }
@@ -132,7 +122,7 @@ Variants {
                     let volumeY = bar.volumeWidget.y;
                     let volumeHeight = bar.volumeWidget.height;
                     let overVolume = mouse.y >= volumeY && mouse.y <= volumeY + volumeHeight;
-                    
+
                     // Update hover states (this will open popouts if hovering)
                     bar.updateTrayHover(mouse.y);
                     bar.updateVolumeHover(mouse.y);
@@ -147,7 +137,7 @@ Variants {
                             clearTrayTimer.start();
                         }
                     }
-                    
+
                     // Volume timer logic: start timer if volume popout is open but mouse not over volume/popout
                     if (volumePopout.visible) {
                         if (overVolume || volumePopout.mouseInside) {
@@ -156,7 +146,7 @@ Variants {
                             clearVolumeTimer.start();
                         }
                     }
-                    
+
                     // Menu close logic: start timer if menu is open but mouse not over button/menu
                     if (scope.menuOpen) {
                         if (bar.nixButtonHovered || scope.menuMouseInside) {
@@ -195,7 +185,7 @@ Variants {
                     }
                 }
             }
-            
+
             // Timer for volume popout clear delay
             Timer {
                 id: clearVolumeTimer
@@ -207,21 +197,15 @@ Variants {
                     }
                 }
             }
-            
+
             // Timer for menu close delay
             Timer {
                 id: clearMenuTimer
                 interval: 150
                 onTriggered: {
-                    console.log("[TIMER] clearMenuTimer triggered");
-                    console.log("[TIMER] nixButtonHovered:", bar.nixButtonHovered);
-                    console.log("[TIMER] menuMouseInside:", scope.menuMouseInside);
                     // Close menu if mouse not over button and not over menu
                     if (!bar.nixButtonHovered && !scope.menuMouseInside) {
-                        console.log("[TIMER] Closing menu");
                         scope.menuOpen = false;
-                    } else {
-                        console.log("[TIMER] Not closing - still hovering something");
                     }
                 }
             }
@@ -242,7 +226,7 @@ Variants {
 
             margins {
                 left: window.barWidth + Appearance.padding.smaller * 2 - 1  // Flush against bar, adjusted 1px left
-                bottom: Appearance.spacing.normal
+                bottom: 0
             }
 
             // Menu dimensions - no animation
@@ -260,9 +244,9 @@ Variants {
                 id: menu
 
                 anchors.bottom: parent.bottom
-                // Animate x position for slide effect
+                // Animate x position for slide effect (account for left extension)
                 x: scope.menuOpen ? 0 : -menu.width
-                
+
                 Behavior on x {
                     Anim {
                         duration: Appearance.anim.normal
@@ -273,7 +257,7 @@ Variants {
                 open: scope.menuOpen
                 onCloseRequested: scope.menuOpen = false
             }
-            
+
             // MouseArea to track menu hover
             MouseArea {
                 anchors.fill: parent
@@ -281,18 +265,12 @@ Variants {
                 hoverEnabled: true
                 propagateComposedEvents: true
                 acceptedButtons: Qt.NoButton
-                
-                Component.onCompleted: {
-                    console.log("[MENU] MouseArea created - width:", width, "height:", height);
-                }
-                
+
                 onEntered: {
-                    console.log("[MENU] Mouse entered menu - stopping timer");
                     scope.menuMouseInside = true;
                     clearMenuTimer.stop();
                 }
                 onExited: {
-                    console.log("[MENU] Mouse exited menu - starting timer");
                     scope.menuMouseInside = false;
                     clearMenuTimer.restart();
                 }
@@ -316,13 +294,13 @@ Variants {
                 }
             }
         }
-        
+
         VolumePopout {
             id: volumePopout
             screen: scope.modelData
             targetIconCenterY: bar.volumeIconCenterY
             barMouseInside: bar.volumeHovered
-            
+
             // When mouse leaves popout, start clear timer
             onMouseInsideChanged: {
                 if (!mouseInside && visible) {

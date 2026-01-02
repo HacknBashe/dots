@@ -140,16 +140,13 @@ Singleton {
                     root.weatherIcon = weatherCodes[current.weatherCode] || "󰖐";
                     root.loading = false;
                     root.error = false;
-                    console.log("Weather updated:", root.condition, root.temperature);
                 } catch (e) {
-                    console.log("Weather parse error:", e);
                     root.error = true;
                     root.loading = false;
                 } finally {
                     root.jsonBuffer = "";  // Clear buffer for next fetch
                 }
             } else {
-                console.log("Weather fetch error, exit code:", exitCode);
                 root.error = true;
                 root.loading = false;
                 root.jsonBuffer = "";
@@ -171,7 +168,6 @@ Singleton {
         triggeredOnStart: true
 
         onTriggered: {
-            console.log("Fetching weather data...");
             root.loading = true;
             weatherProcess.running = true;
         }
