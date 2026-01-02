@@ -43,6 +43,42 @@ export const IndicatorPlugin = async ({ directory, worktree, client, $ }) => {
     } catch (e) {}
   };
 
+  // Play a beep sound when agent finishes
+  // NOTE: This uses direct audio playback commands because Ghostty's native bell audio
+  // support (via '\a' character) is not yet available on macOS and requires a newer
+  // version on Linux (see https://github.com/ghostty-org/ghostty/discussions/2710).
+  // Once native bell support is available on both platforms, this can be simplified to:
+  //   await $`/bin/sh -lc 'printf "\\a" > /dev/tty'`;
+  // And the Ghostty config can be updated with:
+  //   bell-features = audio,attention,title
+  //   bell-audio-path = sounds/beep.wav
+  //   bell-audio-volume = 0.5
+  const playBeep = async () => {
+    try {
+      const os = process.platform;
+      const soundPath = `${process.env.HOME}/.config/dots/files/config/ghostty/sounds/beep.wav`;
+      
+      if (os === 'darwin') {
+        // macOS - use afplay (built-in)
+        await $`afplay ${soundPath}`;
+      } else if (os === 'linux') {
+        // Linux - try pw-play first, fall back to aplay
+        try {
+          await $`pw-play ${soundPath}`;
+        } catch (e) {
+          try {
+            await $`aplay ${soundPath}`;
+          } catch (e2) {
+            // If both fail, just do the terminal bell (no sound, but shows 🔔)
+            await $`/bin/sh -lc 'printf "\\a" > /dev/tty'`;
+          }
+        }
+      }
+    } catch (e) {
+      // Silently fail if sound can't be played
+    }
+  };
+
   return {
     event: async ({ event }) => {
       if (event.type === "session.updated") {
@@ -50,7 +86,7 @@ export const IndicatorPlugin = async ({ directory, worktree, client, $ }) => {
       }
       if (event.type === "session.idle") {
         await setTitle("Agent: idle");
-        await $`/bin/sh -lc 'printf "\\a" > /dev/tty'`;
+        await playBeep();
       }
     },
   };
