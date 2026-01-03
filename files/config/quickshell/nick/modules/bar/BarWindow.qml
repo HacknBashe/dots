@@ -5,6 +5,7 @@ import "../../services"
 import "../../components"
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 
@@ -19,6 +20,7 @@ Variants {
         if (variants.instances.length > 0) {
             const firstScope = variants.instances[0];
             firstScope.menuOpen = !firstScope.menuOpen;
+            firstScope.bar.menuOpen = firstScope.menuOpen;
         }
     }
 
@@ -27,6 +29,7 @@ Variants {
         if (variants.instances.length > 0) {
             const firstScope = variants.instances[0];
             firstScope.menuOpen = false;
+            firstScope.bar.menuOpen = false;
         }
     }
 
@@ -36,6 +39,7 @@ Variants {
         required property ShellScreen modelData
         property bool menuOpen: false
         property bool menuMouseInside: false
+        property alias bar: bar
 
         PanelWindow {
             id: window
@@ -220,20 +224,20 @@ Variants {
             screen: scope.modelData
             color: "transparent"
 
-            // Position anchored to bottom, offset from left by bar width
             anchors {
-                bottom: true
                 left: true
+                bottom: true
+                top: true
             }
 
             margins {
-                left: window.barWidth + Appearance.padding.smaller * 2 - 1  // Flush against bar, adjusted 1px left
-                bottom: 0
+                left: 60
+                bottom: 20
+                top: 20
             }
 
-            // Menu dimensions - no animation
-            implicitWidth: menu.width
-            implicitHeight: menu.height
+            width: menu.width
+            height: menu.height
 
             // Stay visible during animation
             visible: scope.menuOpen || menu.x > -menu.width
@@ -241,6 +245,13 @@ Variants {
             WlrLayershell.namespace: "nick-menu"
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.keyboardFocus: KeyboardFocus.Exclusive
+            
+            // Use Hyprland focus grab to ensure keyboard input is captured
+            HyprlandFocusGrab {
+                active: scope.menuOpen
+                windows: [menuWindow]
+            }
 
             Menu {
                 id: menu
@@ -264,9 +275,9 @@ Variants {
             }
 
             // MouseArea to track menu hover
+            // Note: This MouseArea is behind the menu content (no z-index) so hover events reach buttons
             MouseArea {
                 anchors.fill: parent
-                z: 1000
                 hoverEnabled: true
                 propagateComposedEvents: true
                 acceptedButtons: Qt.NoButton

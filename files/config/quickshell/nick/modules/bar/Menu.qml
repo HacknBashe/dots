@@ -16,6 +16,61 @@ Rectangle {
 
     property bool open: false
     signal closeRequested
+    
+    // Keyboard navigation
+    property int selectedButtonIndex: -1
+    readonly property int buttonCount: 5  // lock, logout, suspend, restart, power
+    
+    focus: true
+    
+    Keys.onPressed: (event) => {
+        console.log("[MENU] Key pressed:", event.key, "open:", root.open);
+        if (!root.open) return;
+        
+        if (event.key === Qt.Key_Escape) {
+            root.closeRequested();
+            event.accepted = true;
+        } else if (event.key === Qt.Key_Left) {
+            if (selectedButtonIndex < 0) {
+                selectedButtonIndex = 0;
+            } else {
+                selectedButtonIndex = Math.max(0, selectedButtonIndex - 1);
+            }
+            event.accepted = true;
+        } else if (event.key === Qt.Key_Right) {
+            if (selectedButtonIndex < 0) {
+                selectedButtonIndex = 0;
+            } else {
+                selectedButtonIndex = Math.min(buttonCount - 1, selectedButtonIndex + 1);
+            }
+            event.accepted = true;
+        } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+            if (selectedButtonIndex >= 0) {
+                // Trigger the selected button action
+                root.closeRequested();
+                if (selectedButtonIndex === 0) {
+                    lockTimer.start();
+                } else if (selectedButtonIndex === 1) {
+                    logoutProcess.running = true;
+                } else if (selectedButtonIndex === 2) {
+                    suspendProcess.running = true;
+                } else if (selectedButtonIndex === 3) {
+                    restartProcess.running = true;
+                } else if (selectedButtonIndex === 4) {
+                    powerProcess.running = true;
+                }
+                event.accepted = true;
+            }
+        }
+    }
+    
+    // Focus when menu opens
+    onOpenChanged: {
+        if (open) {
+            root.forceActiveFocus();
+            selectedButtonIndex = -1; // Reset selection
+        }
+    }
 
     // Get lock command from environment variable set by Nix
     readonly property string lockCommand: Quickshell.env("LOCK_COMMAND") || "grim -o DP-3 -l 0 /tmp/hyprlock_screenshot1.png & grim -o HDMI-A-5 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock"
@@ -233,7 +288,7 @@ Rectangle {
 
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: Time.format("hh:mm")
+                        text: Time.format("hh:mm AP")
                         font.family: Appearance.font.mono
                         font.pixelSize: Appearance.font.larger
                         font.bold: true
@@ -516,7 +571,23 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: Colours.surfaceContainer
+                color: root.selectedButtonIndex === 0 ? Colours.primary : Colours.surfaceContainer
+                scale: lockMouseArea.containsMouse || root.selectedButtonIndex === 0 ? 1.1 : 1.0
+                transformOrigin: Item.Center
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
+                
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.OutBack
+                    }
+                }
 
                 Text {
                     anchors.centerIn: parent
@@ -524,7 +595,14 @@ Rectangle {
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
                     font.bold: true
-                    color: Colours.primary
+                    color: root.selectedButtonIndex === 0 ? Colours.textOnPrimary : Colours.primary
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
 
                 MouseArea {
@@ -537,13 +615,22 @@ Rectangle {
                         root.closeRequested();
                         lockTimer.start();
                     }
+                    
+                    onEntered: root.selectedButtonIndex = 0
                 }
 
-                // Hover overlay
+                // Hover overlay (only when not keyboard selected)
                 Rectangle {
                     anchors.fill: parent
                     radius: parent.radius
-                    color: lockMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    color: lockMouseArea.containsMouse && root.selectedButtonIndex !== 0 ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
             }
 
@@ -552,14 +639,37 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: Colours.surfaceContainer
+                color: root.selectedButtonIndex === 1 ? Colours.primary : Colours.surfaceContainer
+                scale: logoutMouseArea.containsMouse || root.selectedButtonIndex === 1 ? 1.1 : 1.0
+                transformOrigin: Item.Center
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
+                
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.OutBack
+                    }
+                }
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰍃"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: Colours.primary
+                    color: root.selectedButtonIndex === 1 ? Colours.textOnPrimary : Colours.primary
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
 
                 MouseArea {
@@ -572,13 +682,22 @@ Rectangle {
                         root.closeRequested();
                         logoutProcess.running = true;
                     }
+                    
+                    onEntered: root.selectedButtonIndex = 1
                 }
 
-                // Hover overlay
+                // Hover overlay (only when not keyboard selected)
                 Rectangle {
                     anchors.fill: parent
                     radius: parent.radius
-                    color: logoutMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    color: logoutMouseArea.containsMouse && root.selectedButtonIndex !== 1 ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
             }
 
@@ -587,14 +706,37 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: Colours.surfaceContainer
+                color: root.selectedButtonIndex === 2 ? Colours.primary : Colours.surfaceContainer
+                scale: suspendMouseArea.containsMouse || root.selectedButtonIndex === 2 ? 1.1 : 1.0
+                transformOrigin: Item.Center
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
+                
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.OutBack
+                    }
+                }
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰒲"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: Colours.primary
+                    color: root.selectedButtonIndex === 2 ? Colours.textOnPrimary : Colours.primary
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
 
                 MouseArea {
@@ -607,13 +749,22 @@ Rectangle {
                         root.closeRequested();
                         suspendProcess.running = true;
                     }
+                    
+                    onEntered: root.selectedButtonIndex = 2
                 }
 
-                // Hover overlay
+                // Hover overlay (only when not keyboard selected)
                 Rectangle {
                     anchors.fill: parent
                     radius: parent.radius
-                    color: suspendMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    color: suspendMouseArea.containsMouse && root.selectedButtonIndex !== 2 ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
             }
 
@@ -622,14 +773,37 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: Colours.surfaceContainer
+                color: root.selectedButtonIndex === 3 ? Colours.primary : Colours.surfaceContainer
+                scale: restartMouseArea.containsMouse || root.selectedButtonIndex === 3 ? 1.1 : 1.0
+                transformOrigin: Item.Center
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
+                
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.OutBack
+                    }
+                }
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰜉"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: Colours.primary
+                    color: root.selectedButtonIndex === 3 ? Colours.textOnPrimary : Colours.primary
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
 
                 MouseArea {
@@ -642,13 +816,22 @@ Rectangle {
                         root.closeRequested();
                         restartProcess.running = true;
                     }
+                    
+                    onEntered: root.selectedButtonIndex = 3
                 }
 
-                // Hover overlay
+                // Hover overlay (only when not keyboard selected)
                 Rectangle {
                     anchors.fill: parent
                     radius: parent.radius
-                    color: restartMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    color: restartMouseArea.containsMouse && root.selectedButtonIndex !== 3 ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
             }
 
@@ -657,14 +840,37 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: Colours.surfaceContainer
+                color: root.selectedButtonIndex === 4 ? Colours.primary : Colours.surfaceContainer
+                scale: powerMouseArea.containsMouse || root.selectedButtonIndex === 4 ? 1.1 : 1.0
+                transformOrigin: Item.Center
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
+                
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.OutBack
+                    }
+                }
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰐥"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: Colours.primary
+                    color: root.selectedButtonIndex === 4 ? Colours.textOnPrimary : Colours.primary
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
 
                 MouseArea {
@@ -677,13 +883,22 @@ Rectangle {
                         root.closeRequested();
                         powerProcess.running = true;
                     }
+                    
+                    onEntered: root.selectedButtonIndex = 4
                 }
 
-                // Hover overlay
+                // Hover overlay (only when not keyboard selected)
                 Rectangle {
                     anchors.fill: parent
                     radius: parent.radius
-                    color: powerMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    color: powerMouseArea.containsMouse && root.selectedButtonIndex !== 4 ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
             }
         }

@@ -358,11 +358,20 @@ ColumnLayout {
             anchors.fill: parent
             radius: Appearance.rounding.small
             color: root.menuOpen ? Colours.primary : Colours.surfaceContainer
+            scale: nixMouseArea.containsMouse || root.menuOpen ? 1.1 : 1.0
+            transformOrigin: Item.Center
 
             Behavior on color {
                 ColorAnimation {
                     duration: Appearance.anim.small
                     easing.type: Easing.Linear
+                }
+            }
+            
+            Behavior on scale {
+                NumberAnimation {
+                    duration: Appearance.anim.small
+                    easing.type: Easing.OutBack
                 }
             }
 
