@@ -55,6 +55,12 @@ Rectangle {
     readonly property int groupOffset: 0
     readonly property int shownWorkspaces: 10
 
+    // Force initial update after component loads
+    Component.onCompleted: {
+        // Refresh Hyprland data to ensure pill can find active workspace
+        Hyprland.refreshWorkspaces();
+    }
+
     // Listen to Hyprland events to refresh toplevels, workspaces, and monitors
     // This ensures lastIpcObject properties are populated for new windows/workspaces
     Connections {
@@ -94,7 +100,13 @@ Rectangle {
         readonly property var activeItem: {
             if (currentWsIdx < 0)
                 return null;
-            return workspaces.itemAt(currentWsIdx);
+            let item = workspaces.itemAt(currentWsIdx);
+            // Force reactivity by accessing repeater count
+            let _ = workspaces.count;
+            // Force re-evaluation by checking the item exists and has valid geometry
+            if (item && item.implicitHeight !== undefined)
+                return item;
+            return item;
         }
 
         // Check if active item is the last visible item in the layout
@@ -126,7 +138,14 @@ Rectangle {
                 // Last visible - position so pill bottom is flush with container bottom
                 return root.implicitHeight - targetHeight;
             }
-            // For middle workspaces, position relative to layout with padding
+            // For middle workspaces
+            // If it's a perfect circle (empty workspace), center it on the item
+            let baseHeight = activeItem.implicitHeight + Appearance.padding.smaller * 2;
+            if (baseHeight < root.implicitWidth) {
+                // Perfect circle - center on the workspace item
+                return layout.y + itemY + (activeItem.implicitHeight / 2) - (root.implicitWidth / 2);
+            }
+            // Otherwise, position relative to layout with padding
             return layout.y + itemY - Appearance.padding.smaller;
         }
 
@@ -169,6 +188,12 @@ Rectangle {
         height: targetHeight
         radius: Appearance.rounding.full
         color: Colours.primary
+        
+        Component.onCompleted: {
+            // Force initial update
+            y = targetY;
+            height = targetHeight;
+        }
 
         Behavior on y {
             Anim {
@@ -179,7 +204,7 @@ Rectangle {
 
         Behavior on height {
             Anim {
-                duration: Appearance.anim.normal
+                duration: Appearance.anim.small
                 easing.bezierCurve: Appearance.anim.emphasized
             }
         }
@@ -371,7 +396,7 @@ Rectangle {
         id: layout
 
         anchors.centerIn: parent
-        spacing: Appearance.spacing.normal
+        spacing: Appearance.spacing.larger
 
         // Regular workspaces (1-10)
         Repeater {
