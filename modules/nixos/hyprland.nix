@@ -106,6 +106,7 @@
     wtype
     xdg-utils
   ];
+  services.udisks2.enable = true;
 
   environment.etc."nix/vars.ts".text = ''
     export const MONITOR_1_COMMAND = "${config.monitor1Command}";
