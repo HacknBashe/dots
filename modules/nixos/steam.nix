@@ -68,4 +68,34 @@
     protonup-qt
     prismlauncher
   ];
+
+  # Bind mount for exFAT external drive Steam library
+  #
+  # PROBLEM: The external drive "Spinner" is formatted as exFAT, which does not
+  # support symbolic links. When Proton/Wine creates game prefixes (compatdata),
+  # it needs to create symlinks for Windows directory structures like:
+  #   "Local Settings/Application Data" -> "AppData/Local"
+  # Without symlink support, games fail to launch with errors like:
+  #   PermissionError: [Errno 1] Operation not permitted: '../AppData/Local'
+  #
+  # SOLUTION: Store compatdata (Wine prefixes) on the ext4 /home partition where
+  # symlinks ARE supported, then bind mount it to where Steam expects it on the
+  # exFAT drive. This allows:
+  #   - Game files to remain on the large exFAT external drive
+  #   - Wine prefixes (compatdata) to live on ext4 where symlinks work
+  #   - Steam to see everything in the expected locations
+  #
+  # The bind mount only activates after the external drive is mounted, ensuring
+  # proper ordering via systemd dependencies.
+  systemd.mounts = [{
+    description = "Bind mount Steam compatdata from ext4 to exFAT drive";
+    what = "/home/nick/.local/share/steam-external-compatdata/Spinner";
+    where = "/run/media/nick/Spinner/SteamLibrary/steamapps/compatdata";
+    type = "none";
+    options = "bind";
+    wantedBy = [ "multi-user.target" ];
+    # Wait for the external drive to be mounted first
+    requires = [ "run-media-nick-Spinner.mount" ];
+    after = [ "run-media-nick-Spinner.mount" ];
+  }];
 }
