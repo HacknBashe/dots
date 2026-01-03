@@ -24,7 +24,6 @@ Rectangle {
     focus: true
     
     Keys.onPressed: (event) => {
-        console.log("[MENU] Key pressed:", event.key, "open:", root.open);
         if (!root.open) return;
         
         if (event.key === Qt.Key_Escape) {
@@ -69,6 +68,7 @@ Rectangle {
         if (open) {
             root.forceActiveFocus();
             selectedButtonIndex = -1; // Reset selection
+            calendar.currentDate = new Date(); // Reset to current month
         }
     }
 
@@ -120,6 +120,64 @@ Rectangle {
     // No animation - instant appearance
     opacity: 1
     scale: 1
+
+    // ResourceBar component definition
+    component ResourceBar: Row {
+        id: resBar
+        required property string label
+        required property real value
+        required property string rightText
+        required property color barColor
+
+        spacing: Appearance.spacing.small
+
+        // Label
+        Text {
+            width: 22
+            anchors.verticalCenter: parent.verticalCenter
+            text: resBar.label
+            font.family: Appearance.font.mono
+            font.pixelSize: Appearance.font.normal
+            font.bold: true
+            color: resBar.barColor
+            horizontalAlignment: Text.AlignLeft
+        }
+
+        // Bar container
+        Rectangle {
+            width: parent.width - 22 - 35 - Appearance.spacing.small * 2
+            height: 6
+            anchors.verticalCenter: parent.verticalCenter
+            radius: Appearance.rounding.full
+            color: Qt.alpha(Colours.textOnBackground, 0.1)
+
+            // Fill bar
+            Rectangle {
+                width: parent.width * Math.max(0, Math.min(1, resBar.value))
+                height: parent.height
+                radius: parent.radius
+                color: resBar.barColor
+
+                Behavior on width {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.OutCubic
+                    }
+                }
+            }
+        }
+
+        // Right text (percentage or temp)
+        Text {
+            width: 35
+            anchors.verticalCenter: parent.verticalCenter
+            text: resBar.rightText
+            font.family: Appearance.font.mono
+            font.pixelSize: Appearance.font.smaller
+            color: resBar.barColor
+            horizontalAlignment: Text.AlignRight
+        }
+    }
 
     Column {
         id: contentColumn
@@ -260,55 +318,17 @@ Rectangle {
             }
         }
 
-        // Clock and Weather row
+        // Weather and Performance row
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Appearance.spacing.large
             
             readonly property real targetWidth: Math.max(buttonRow.width, calendar.width)
 
-            // Clock section
+            // Weather section (40%)
             Rectangle {
-                width: (parent.targetWidth - Appearance.spacing.large) / 2
-                height: 80
-                radius: Appearance.rounding.normal
-                color: Colours.surfaceContainer
-
-                Column {
-                    anchors.centerIn: parent
-                    spacing: Appearance.spacing.small
-
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: ""
-                        font.family: Appearance.font.mono
-                        font.pixelSize: Appearance.font.large
-                        color: Colours.primary
-                    }
-
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: Time.format("hh:mm AP")
-                        font.family: Appearance.font.mono
-                        font.pixelSize: Appearance.font.larger
-                        font.bold: true
-                        color: Colours.textOnSurface
-                    }
-
-                    Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: Time.format("AP")
-                        font.family: Appearance.font.mono
-                        font.pixelSize: Appearance.font.smaller
-                        color: Colours.secondary
-                    }
-                }
-            }
-
-            // Weather section
-            Rectangle {
-                width: (parent.targetWidth - Appearance.spacing.large) / 2
-                height: 80
+                width: parent.targetWidth * 0.4 - Appearance.spacing.large * 0.6
+                height: 120
                 radius: Appearance.rounding.normal
                 color: Colours.surfaceContainer
 
@@ -348,6 +368,56 @@ Rectangle {
                         elide: Text.ElideRight
                         width: parent.parent.width - Appearance.padding.normal * 2
                         horizontalAlignment: Text.AlignHCenter
+                    }
+                }
+            }
+
+            // Performance stats (60%)
+            Rectangle {
+                width: parent.targetWidth * 0.6 - Appearance.spacing.large * 0.4
+                height: 120
+                radius: Appearance.rounding.normal
+                color: Colours.surfaceContainer
+
+                Column {
+                    anchors.centerIn: parent
+                    width: parent.width - Appearance.padding.normal * 2
+                    spacing: Appearance.spacing.small
+
+                    // CPU
+                    ResourceBar {
+                        width: parent.width
+                        label: ""
+                        value: SystemUsage.cpuPerc
+                        rightText: `${Math.round(SystemUsage.cpuTemp)}°C`
+                        barColor: Colours.primary
+                    }
+
+                    // GPU
+                    ResourceBar {
+                        width: parent.width
+                        label: "󰢮"
+                        value: SystemUsage.gpuPerc
+                        rightText: SystemUsage.gpuType !== "NONE" ? `${Math.round(SystemUsage.gpuTemp)}°C` : "N/A"
+                        barColor: Colours.tertiary
+                    }
+
+                    // RAM
+                    ResourceBar {
+                        width: parent.width
+                        label: ""
+                        value: SystemUsage.memPerc
+                        rightText: `${Math.round(SystemUsage.memPerc * 100)}%`
+                        barColor: Colours.quaternary
+                    }
+
+                    // Storage
+                    ResourceBar {
+                        width: parent.width
+                        label: ""
+                        value: SystemUsage.storagePerc
+                        rightText: `${Math.round(SystemUsage.storagePerc * 100)}%`
+                        barColor: Colours.quinary
                     }
                 }
             }
@@ -618,20 +688,6 @@ Rectangle {
                     
                     onEntered: root.selectedButtonIndex = 0
                 }
-
-                // Hover overlay (only when not keyboard selected)
-                Rectangle {
-                    anchors.fill: parent
-                    radius: parent.radius
-                    color: lockMouseArea.containsMouse && root.selectedButtonIndex !== 0 ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-                    
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
             }
 
             // Logout button
@@ -684,20 +740,6 @@ Rectangle {
                     }
                     
                     onEntered: root.selectedButtonIndex = 1
-                }
-
-                // Hover overlay (only when not keyboard selected)
-                Rectangle {
-                    anchors.fill: parent
-                    radius: parent.radius
-                    color: logoutMouseArea.containsMouse && root.selectedButtonIndex !== 1 ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-                    
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
                 }
             }
 
@@ -752,20 +794,6 @@ Rectangle {
                     
                     onEntered: root.selectedButtonIndex = 2
                 }
-
-                // Hover overlay (only when not keyboard selected)
-                Rectangle {
-                    anchors.fill: parent
-                    radius: parent.radius
-                    color: suspendMouseArea.containsMouse && root.selectedButtonIndex !== 2 ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-                    
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
             }
 
             // Restart button
@@ -819,20 +847,6 @@ Rectangle {
                     
                     onEntered: root.selectedButtonIndex = 3
                 }
-
-                // Hover overlay (only when not keyboard selected)
-                Rectangle {
-                    anchors.fill: parent
-                    radius: parent.radius
-                    color: restartMouseArea.containsMouse && root.selectedButtonIndex !== 3 ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-                    
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
             }
 
             // Power off button
@@ -885,20 +899,6 @@ Rectangle {
                     }
                     
                     onEntered: root.selectedButtonIndex = 4
-                }
-
-                // Hover overlay (only when not keyboard selected)
-                Rectangle {
-                    anchors.fill: parent
-                    radius: parent.radius
-                    color: powerMouseArea.containsMouse && root.selectedButtonIndex !== 4 ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-                    
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
                 }
             }
         }

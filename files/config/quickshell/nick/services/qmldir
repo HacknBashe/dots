@@ -5,3 +5,4 @@ singleton Icons 1.0 Icons.qml
 singleton Weather 1.0 Weather.qml
 singleton Apps 1.0 Apps.qml
 singleton Notifications 1.0 Notifications.qml
+singleton SystemUsage 1.0 SystemUsage.qml

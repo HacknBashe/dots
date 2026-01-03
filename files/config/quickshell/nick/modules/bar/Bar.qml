@@ -47,7 +47,7 @@ ColumnLayout {
 
                 // Calculate icon center Y position for popout alignment
                 let trayStartY = traySection.y;
-                trayIconCenterY = trayStartY + (idx * (32 + Appearance.spacing.small)) + 16;
+                trayIconCenterY = trayStartY + (idx * (40 + 4)) + 20;
             }
         }
     // Don't clear hover state here - let the timer handle it
@@ -62,8 +62,8 @@ ColumnLayout {
         if (relativeY < 0)
             return -1;
 
-        let iconHeight = 32;
-        let iconSpacing = Appearance.spacing.small;
+        let iconHeight = 40;
+        let iconSpacing = 4;
         let totalPerIcon = iconHeight + iconSpacing;
 
         let idx = Math.floor(relativeY / totalPerIcon);
@@ -281,7 +281,7 @@ ColumnLayout {
     Column {
         id: traySection
         Layout.alignment: Qt.AlignHCenter
-        spacing: Appearance.spacing.small
+        spacing: 4
 
         Repeater {
             id: trayRepeater
@@ -291,11 +291,17 @@ ColumnLayout {
                 required property SystemTrayItem modelData
                 required property int index
 
-                width: 32
-                height: 32
+                width: 40
+                height: 40
                 anchors.horizontalCenter: parent.horizontalCenter
-                radius: Appearance.rounding.full
-                color: "transparent"
+                radius: Appearance.rounding.normal
+                color: bar.hoveredTrayIndex === index ? Qt.alpha(Colours.textOnBackground, 0.08) : "transparent"
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                    }
+                }
 
                 Image {
                     anchors.centerIn: parent
@@ -340,6 +346,7 @@ ColumnLayout {
     Volume {
         id: volumeWidget
         Layout.alignment: Qt.AlignHCenter
+        isHovered: bar.volumeHovered
     }
 
     // Bottom section - Nix logo button (opens menu)

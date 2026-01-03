@@ -1,29 +1,62 @@
 pragma Singleton
 
 import Quickshell
+import Quickshell.Io
 import QtQuick
 
-// Simplified colour palette - can be expanded later to use Material 3 dynamic colours
+// Color palette loaded from Nix-generated theme file (ANSI colors only)
 Singleton {
     id: root
 
-    // Catppuccin Mocha inspired defaults - flattened palette
-    // Note: Using "text" prefix instead of "on" to avoid QML signal handler conflict
-    readonly property color background: "#1e1e2e"
-    readonly property color surface: "#313244"
-    readonly property color surfaceContainer: "#45475a"
-    readonly property color primary: "#cba6f7"
-    readonly property color secondary: "#f5c2e7"
-    readonly property color textOnBackground: "#cdd6f4"
-    readonly property color textOnSurface: "#cdd6f4"
-    readonly property color textOnPrimary: "#1e1e2e"
-    readonly property color outline: "#6c7086"
-    readonly property color shadow: "#000000"
+    // Semantic colors mapped to ANSI
+    property color primary
+    property color secondary
+    property color tertiary
+    property color quaternary
+    property color quinary
+    
+    // Base colors
+    property color background
+    property color foreground
+    property color surface
+    property color surfaceContainer
+    property color textOnBackground
+    property color textOnSurface
+    property color textOnPrimary
+    property color outline
+    property color shadow
 
     // Transparency settings
     readonly property bool transparencyEnabled: false
     readonly property real transparencyBase: 0.85
     readonly property real transparencyLayers: 0.4
+
+    // Load colors from theme file
+    FileView {
+        id: themeFile
+        path: Quickshell.env("HOME") + "/.config/quickshell/theme-colors.json"
+        
+        onLoaded: {
+            const colors = JSON.parse(text());
+            // Semantic colors
+            root.primary = colors.primary;
+            root.secondary = colors.secondary;
+            root.tertiary = colors.tertiary;
+            root.quaternary = colors.quaternary;
+            root.quinary = colors.quinary;
+            
+            // Base colors
+            root.background = colors.background;
+            root.foreground = colors.foreground;
+            root.surface = colors.surface;
+            root.surfaceContainer = colors.surfaceContainer;
+            root.textOnBackground = colors.textOnBackground;
+            root.textOnSurface = colors.textOnSurface;
+            root.textOnPrimary = colors.textOnPrimary;
+            root.outline = colors.outline;
+            root.shadow = colors.shadow;
+        }
+    }
 
     // Helper to apply transparency layer
     function layer(c, layerLevel) {

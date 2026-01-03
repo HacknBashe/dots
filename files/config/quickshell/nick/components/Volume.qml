@@ -11,11 +11,12 @@ import QtQuick.Layouts
 Item {
     id: root
 
-    implicitWidth: column.implicitWidth
-    implicitHeight: column.implicitHeight
+    implicitWidth: 48
+    implicitHeight: column.implicitHeight + Appearance.padding.small * 2
 
     property int volume: 50
     property string deviceName: ""
+    property bool isHovered: false
 
     // Get current default sink device name
     Process {
@@ -91,6 +92,20 @@ Item {
         }
     }
 
+    // Background rectangle for hover effect
+    Rectangle {
+        anchors.fill: parent
+        radius: Appearance.rounding.normal
+        color: root.isHovered ? Qt.alpha(Colours.textOnBackground, 0.08) : "transparent"
+        z: -1
+        
+        Behavior on color {
+            ColorAnimation {
+                duration: Appearance.anim.small
+            }
+        }
+    }
+
     ColumnLayout {
         id: column
         anchors.centerIn: parent
@@ -144,9 +159,10 @@ Item {
 
     // Mouse area for scroll wheel control - overlays the entire widget
     MouseArea {
+        id: volumeMouseArea
         anchors.fill: parent
         z: 2000  // Place above the bar's hover detection MouseArea
-        hoverEnabled: true
+        hoverEnabled: false
         acceptedButtons: Qt.NoButton
 
         onWheel: wheel => {

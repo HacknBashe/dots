@@ -272,23 +272,17 @@ Variants {
                     scope.menuOpen = false;
                     bar.menuOpen = false;
                 }
-            }
-
-            // MouseArea to track menu hover
-            // Note: This MouseArea is behind the menu content (no z-index) so hover events reach buttons
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-                propagateComposedEvents: true
-                acceptedButtons: Qt.NoButton
-
-                onEntered: {
-                    scope.menuMouseInside = true;
-                    clearMenuTimer.stop();
-                }
-                onExited: {
-                    scope.menuMouseInside = false;
-                    clearMenuTimer.restart();
+                
+                // Track hover on the menu itself
+                HoverHandler {
+                    onHoveredChanged: {
+                        scope.menuMouseInside = hovered;
+                        if (hovered) {
+                            clearMenuTimer.stop();
+                        } else {
+                            clearMenuTimer.restart();
+                        }
+                    }
                 }
             }
         }
