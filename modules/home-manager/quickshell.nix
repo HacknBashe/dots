@@ -9,7 +9,7 @@
   themeColors = builtins.toJSON {
     # Semantic color names mapped to ANSI colors
     primary = config.theme.colors.default.magenta;     # Purple
-    secondary = config.theme.colors.default.blue;      # Soft blue
+    secondary = config.theme.colors.indexed.three;     # Light pink
     tertiary = config.theme.colors.indexed.one;        # Orange
     quaternary = config.theme.colors.default.yellow;   # Yellow
     quinary = config.theme.colors.default.green;       # Green

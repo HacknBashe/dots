@@ -16,16 +16,17 @@ Rectangle {
 
     property bool open: false
     signal closeRequested
-    
+
     // Keyboard navigation
     property int selectedButtonIndex: -1
     readonly property int buttonCount: 5  // lock, logout, suspend, restart, power
-    
+
     focus: true
-    
-    Keys.onPressed: (event) => {
-        if (!root.open) return;
-        
+
+    Keys.onPressed: event => {
+        if (!root.open)
+            return;
+
         if (event.key === Qt.Key_Escape) {
             root.closeRequested();
             event.accepted = true;
@@ -50,9 +51,9 @@ Rectangle {
                 if (selectedButtonIndex === 0) {
                     lockTimer.start();
                 } else if (selectedButtonIndex === 1) {
-                    logoutProcess.running = true;
-                } else if (selectedButtonIndex === 2) {
                     suspendProcess.running = true;
+                } else if (selectedButtonIndex === 2) {
+                    logoutProcess.running = true;
                 } else if (selectedButtonIndex === 3) {
                     restartProcess.running = true;
                 } else if (selectedButtonIndex === 4) {
@@ -62,7 +63,7 @@ Rectangle {
             }
         }
     }
-    
+
     // Focus when menu opens
     onOpenChanged: {
         if (open) {
@@ -322,7 +323,7 @@ Rectangle {
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Appearance.spacing.large
-            
+
             readonly property real targetWidth: Math.max(buttonRow.width, calendar.width)
 
             // Weather section (40%)
@@ -651,7 +652,7 @@ Rectangle {
                         easing.type: Easing.Linear
                     }
                 }
-                
+
                 Behavior on scale {
                     NumberAnimation {
                         duration: Appearance.anim.small
@@ -666,7 +667,7 @@ Rectangle {
                     font.pixelSize: Appearance.font.large
                     font.bold: true
                     color: root.selectedButtonIndex === 0 ? Colours.textOnPrimary : Colours.primary
-                    
+
                     Behavior on color {
                         ColorAnimation {
                             duration: Appearance.anim.small
@@ -685,61 +686,8 @@ Rectangle {
                         root.closeRequested();
                         lockTimer.start();
                     }
-                    
+
                     onEntered: root.selectedButtonIndex = 0
-                }
-            }
-
-            // Logout button
-            Rectangle {
-                width: 50
-                height: 50
-                radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 1 ? Colours.primary : Colours.surfaceContainer
-                scale: logoutMouseArea.containsMouse || root.selectedButtonIndex === 1 ? 1.1 : 1.0
-                transformOrigin: Item.Center
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.Linear
-                    }
-                }
-                
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.OutBack
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "󰍃"
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 1 ? Colours.textOnPrimary : Colours.primary
-                    
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
-
-                MouseArea {
-                    id: logoutMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-
-                    onClicked: {
-                        root.closeRequested();
-                        logoutProcess.running = true;
-                    }
-                    
-                    onEntered: root.selectedButtonIndex = 1
                 }
             }
 
@@ -748,8 +696,8 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 2 ? Colours.primary : Colours.surfaceContainer
-                scale: suspendMouseArea.containsMouse || root.selectedButtonIndex === 2 ? 1.1 : 1.0
+                color: root.selectedButtonIndex === 1 ? Colours.primary : Colours.surfaceContainer
+                scale: suspendMouseArea.containsMouse || root.selectedButtonIndex === 1 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -758,7 +706,7 @@ Rectangle {
                         easing.type: Easing.Linear
                     }
                 }
-                
+
                 Behavior on scale {
                     NumberAnimation {
                         duration: Appearance.anim.small
@@ -771,8 +719,8 @@ Rectangle {
                     text: "󰒲"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 2 ? Colours.textOnPrimary : Colours.primary
-                    
+                    color: root.selectedButtonIndex === 1 ? Colours.textOnPrimary : Colours.primary
+
                     Behavior on color {
                         ColorAnimation {
                             duration: Appearance.anim.small
@@ -791,7 +739,60 @@ Rectangle {
                         root.closeRequested();
                         suspendProcess.running = true;
                     }
-                    
+
+                    onEntered: root.selectedButtonIndex = 1
+                }
+            }
+
+            // Logout button
+            Rectangle {
+                width: 50
+                height: 50
+                radius: Appearance.rounding.small
+                color: root.selectedButtonIndex === 2 ? Colours.primary : Colours.surfaceContainer
+                scale: logoutMouseArea.containsMouse || root.selectedButtonIndex === 2 ? 1.1 : 1.0
+                transformOrigin: Item.Center
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
+
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.OutBack
+                    }
+                }
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰍃"
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.large
+                    color: root.selectedButtonIndex === 2 ? Colours.textOnPrimary : Colours.primary
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
+                }
+
+                MouseArea {
+                    id: logoutMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+
+                    onClicked: {
+                        root.closeRequested();
+                        logoutProcess.running = true;
+                    }
+
                     onEntered: root.selectedButtonIndex = 2
                 }
             }
@@ -811,7 +812,7 @@ Rectangle {
                         easing.type: Easing.Linear
                     }
                 }
-                
+
                 Behavior on scale {
                     NumberAnimation {
                         duration: Appearance.anim.small
@@ -825,7 +826,7 @@ Rectangle {
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
                     color: root.selectedButtonIndex === 3 ? Colours.textOnPrimary : Colours.primary
-                    
+
                     Behavior on color {
                         ColorAnimation {
                             duration: Appearance.anim.small
@@ -844,7 +845,7 @@ Rectangle {
                         root.closeRequested();
                         restartProcess.running = true;
                     }
-                    
+
                     onEntered: root.selectedButtonIndex = 3
                 }
             }
@@ -864,7 +865,7 @@ Rectangle {
                         easing.type: Easing.Linear
                     }
                 }
-                
+
                 Behavior on scale {
                     NumberAnimation {
                         duration: Appearance.anim.small
@@ -878,7 +879,7 @@ Rectangle {
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
                     color: root.selectedButtonIndex === 4 ? Colours.textOnPrimary : Colours.primary
-                    
+
                     Behavior on color {
                         ColorAnimation {
                             duration: Appearance.anim.small
@@ -897,7 +898,7 @@ Rectangle {
                         root.closeRequested();
                         powerProcess.running = true;
                     }
-                    
+
                     onEntered: root.selectedButtonIndex = 4
                 }
             }

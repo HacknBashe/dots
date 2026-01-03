@@ -374,7 +374,7 @@ ColumnLayout {
                     easing.type: Easing.Linear
                 }
             }
-            
+
             Behavior on scale {
                 NumberAnimation {
                     duration: Appearance.anim.small
@@ -389,7 +389,7 @@ ColumnLayout {
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.large
                 color: root.menuOpen ? Colours.textOnPrimary : Colours.primary
-                
+
                 Behavior on color {
                     ColorAnimation {
                         duration: Appearance.anim.small
@@ -403,7 +403,7 @@ ColumnLayout {
                 anchors.fill: parent
                 radius: nixButtonRect.radius
                 color: nixMouseArea.containsMouse && !root.menuOpen ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-                
+
                 Behavior on color {
                     ColorAnimation {
                         duration: Appearance.anim.small

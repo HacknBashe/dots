@@ -246,7 +246,7 @@ Variants {
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
             WlrLayershell.keyboardFocus: KeyboardFocus.Exclusive
-            
+
             // Use Hyprland focus grab to ensure keyboard input is captured
             HyprlandFocusGrab {
                 active: scope.menuOpen
@@ -272,7 +272,7 @@ Variants {
                     scope.menuOpen = false;
                     bar.menuOpen = false;
                 }
-                
+
                 // Track hover on the menu itself
                 HoverHandler {
                     onHoveredChanged: {
