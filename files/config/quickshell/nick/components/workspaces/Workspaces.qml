@@ -11,7 +11,15 @@ Rectangle {
     id: root
 
     implicitWidth: 50
-    implicitHeight: layout.implicitHeight + Appearance.padding.normal * 2
+    implicitHeight: {
+        // Base layout height plus minimal padding
+        // The pill extends slightly beyond workspace items due to center-based positioning
+        // We only need enough padding to accommodate the pill's radius on empty workspaces
+        let baseHeight = layout.implicitHeight;
+        
+        // Add just enough padding for the pill to fit (half the pill padding on each side)
+        return baseHeight + Appearance.padding.smaller * 2;
+    }
 
     color: Colours.surfaceContainer
     radius: Appearance.rounding.full
@@ -101,7 +109,8 @@ Rectangle {
             if (currentWsIdx < 0)
                 return null;
             let item = workspaces.itemAt(currentWsIdx);
-            // Force reactivity by accessing repeater count
+            // Access repeater count to ensure QML tracks this dependency
+            // Without this, activeItem doesn't reactively update when workspaces are added/removed
             let _ = workspaces.count;
             // Force re-evaluation by checking the item exists and has valid geometry
             if (item && item.implicitHeight !== undefined)
@@ -109,74 +118,31 @@ Rectangle {
             return item;
         }
 
-        // Check if active item is the last visible item in the layout
-        readonly property bool isLastVisibleWorkspace: {
-            if (!activeItem)
-                return false;
-            // Check if this is the last item by comparing y + height with layout height
-            let itemBottom = activeItem.y + activeItem.height;
-            return Math.abs(itemBottom - layout.height) < 1; // Within 1px tolerance
-        }
-
         // Store computed position to ensure it updates when activeItem changes
         property real targetY: {
             if (!activeItem)
                 return 0;
 
-            // Wait for y to be defined (layout complete)
             const itemY = activeItem.y;
             if (itemY === undefined || itemY === null)
                 return 0;
 
-            // Check if this is the first visible workspace (y position is 0 in layout)
-            if (itemY === 0) {
-                // First visible workspace - pill should be flush at top (y=0)
-                return 0;
-            }
-            // Check if this is the last visible workspace
-            if (isLastVisibleWorkspace) {
-                // Last visible - position so pill bottom is flush with container bottom
-                return root.implicitHeight - targetHeight;
-            }
-            // For middle workspaces
-            // If it's a perfect circle (empty workspace), center it on the item
-            let baseHeight = activeItem.implicitHeight + Appearance.padding.smaller * 2;
-            if (baseHeight < root.implicitWidth) {
-                // Perfect circle - center on the workspace item
-                return layout.y + itemY + (activeItem.implicitHeight / 2) - (root.implicitWidth / 2);
-            }
-            // Otherwise, position relative to layout with padding
-            return layout.y + itemY - Appearance.padding.smaller;
+            // Calculate workspace item's center in layout coordinates
+            let itemCenterY = layout.y + itemY + (activeItem.implicitHeight / 2);
+
+            // Position pill centered on the workspace item
+            return itemCenterY - (targetHeight / 2);
         }
 
         property real targetHeight: {
             if (!activeItem)
                 return root.implicitWidth;
 
-            const itemY = activeItem.y;
-            if (itemY === undefined || itemY === null)
-                return root.implicitWidth;
+            // Calculate height based on implicit height (final target, not animated value)
+            let pillHeight = activeItem.implicitHeight + Appearance.padding.smaller * 2;
 
-            let baseHeight = activeItem.height + Appearance.padding.smaller * 2;
-
-            // For empty workspaces (small height), make it a perfect circle
-            if (baseHeight < root.implicitWidth) {
-                baseHeight = root.implicitWidth; // Same as width for perfect circle
-            }
-
-            // Check if this is the first visible workspace
-            if (itemY === 0) {
-                // First visible - extend pill to cover padding area to reach top
-                return Math.max(baseHeight, activeItem.height + layout.y + Appearance.padding.smaller);
-            }
-            // Check if this is the last visible workspace
-            if (isLastVisibleWorkspace) {
-                // Last visible - extend pill to cover padding area to reach bottom
-                let remainingSpace = root.implicitHeight - (layout.y + itemY);
-                return Math.max(baseHeight, remainingSpace + Appearance.padding.smaller);
-            }
-            // For middle workspaces, ensure minimum circle size
-            return baseHeight;
+            // Ensure minimum circle size for empty workspaces
+            return Math.max(pillHeight, root.implicitWidth);
         }
 
         anchors.horizontalCenter: parent.horizontalCenter
@@ -197,15 +163,15 @@ Rectangle {
 
         Behavior on y {
             Anim {
-                duration: Appearance.anim.normal
-                easing.bezierCurve: Appearance.anim.emphasized
+                duration: Appearance.anim.small
+                easing.bezierCurve: Appearance.anim.standard
             }
         }
 
         Behavior on height {
             Anim {
                 duration: Appearance.anim.small
-                easing.bezierCurve: Appearance.anim.emphasized
+                easing.bezierCurve: Appearance.anim.standard
             }
         }
     }
@@ -234,53 +200,27 @@ Rectangle {
             return specialWorkspacesRepeater.itemAt(currentSpecialIdx);
         }
 
-        // Check if this special workspace is at the end of the layout (last visible item)
-        readonly property bool isLastVisibleItem: {
-            if (!activeItem)
-                return false;
-            let itemBottom = activeItem.y + activeItem.height;
-            return Math.abs(itemBottom - layout.height) < 1;
-        }
-
         // Compute target position based on activeItem
         property real targetY: {
-            if (activeItem && activeItem.y !== undefined) {
-                // Check if first visible item in layout (should be at top)
-                if (activeItem.y === 0) {
-                    return 0;
-                }
-                // Check if last visible item in layout (should be at bottom)
-                if (isLastVisibleItem) {
-                    return root.implicitHeight - targetHeight;
-                }
-                // Middle items - normal positioning with padding
-                return layout.y + activeItem.y - Appearance.padding.smaller;
-            }
-            return 0;
+            if (!activeItem || activeItem.y === undefined)
+                return 0;
+
+            // Calculate workspace item's center in layout coordinates
+            let itemCenterY = layout.y + activeItem.y + (activeItem.implicitHeight / 2);
+
+            // Position pill centered on the workspace item
+            return itemCenterY - (targetHeight / 2);
         }
 
         property real targetHeight: {
-            if (activeItem && activeItem.y !== undefined) {
-                let baseHeight = activeItem.height + Appearance.padding.smaller * 2;
+            if (!activeItem)
+                return root.implicitWidth;
 
-                // For empty/small items, make it a perfect circle
-                if (baseHeight < root.implicitWidth) {
-                    baseHeight = root.implicitWidth;
-                }
+            // Calculate height based on implicit height (final target, not animated value)
+            let pillHeight = activeItem.implicitHeight + Appearance.padding.smaller * 2;
 
-                // First visible - extend to top
-                if (activeItem.y === 0) {
-                    return Math.max(baseHeight, activeItem.height + layout.y + Appearance.padding.smaller);
-                }
-                // Last visible - extend to bottom
-                if (isLastVisibleItem) {
-                    let remainingSpace = root.implicitHeight - (layout.y + activeItem.y);
-                    return Math.max(baseHeight, remainingSpace + Appearance.padding.smaller);
-                }
-                // Middle items - ensure minimum circle size
-                return baseHeight;
-            }
-            return root.implicitWidth; // Perfect circle for fallback
+            // Ensure minimum circle size for empty workspaces
+            return Math.max(pillHeight, root.implicitWidth);
         }
 
         anchors.horizontalCenter: parent.horizontalCenter
@@ -360,8 +300,8 @@ Rectangle {
             id: yBehavior
             enabled: false  // Controlled manually
             Anim {
-                duration: Appearance.anim.normal
-                easing.bezierCurve: Appearance.anim.emphasized
+                duration: Appearance.anim.small
+                easing.bezierCurve: Appearance.anim.standard
             }
         }
 
@@ -370,8 +310,8 @@ Rectangle {
             id: heightBehavior
             enabled: false  // Controlled manually
             Anim {
-                duration: Appearance.anim.normal
-                easing.bezierCurve: Appearance.anim.emphasized
+                duration: Appearance.anim.small
+                easing.bezierCurve: Appearance.anim.standard
             }
         }
 

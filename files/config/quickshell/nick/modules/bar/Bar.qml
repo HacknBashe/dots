@@ -30,6 +30,7 @@ ColumnLayout {
 
     // Menu hover tracking
     property bool nixButtonHovered: false
+    property bool menuOpen: false
 
     spacing: Appearance.spacing.normal
 
@@ -356,21 +357,43 @@ ColumnLayout {
             id: nixButtonRect
             anchors.fill: parent
             radius: Appearance.rounding.small
-            color: Colours.surfaceContainer
+            color: root.menuOpen ? Colours.primary : Colours.surfaceContainer
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Appearance.anim.small
+                    easing.type: Easing.Linear
+                }
+            }
 
             Text {
+                id: nixIcon
                 anchors.centerIn: parent
                 text: "󱄅"
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.large
-                color: Colours.primary
+                color: root.menuOpen ? Colours.textOnPrimary : Colours.primary
+                
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
             }
 
-            // Hover overlay
+            // Hover overlay (only show when menu is closed)
             Rectangle {
                 anchors.fill: parent
                 radius: nixButtonRect.radius
-                color: nixMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                color: nixMouseArea.containsMouse && !root.menuOpen ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
             }
         }
 

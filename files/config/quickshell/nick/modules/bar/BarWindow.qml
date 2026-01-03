@@ -94,6 +94,7 @@ Variants {
 
                 onOpenMenuRequested: {
                     scope.menuOpen = true;
+                    bar.menuOpen = true;
                 }
             }
 
@@ -206,6 +207,7 @@ Variants {
                     // Close menu if mouse not over button and not over menu
                     if (!bar.nixButtonHovered && !scope.menuMouseInside) {
                         scope.menuOpen = false;
+                        bar.menuOpen = false;
                     }
                 }
             }
@@ -255,7 +257,10 @@ Variants {
                 }
 
                 open: scope.menuOpen
-                onCloseRequested: scope.menuOpen = false
+                onCloseRequested: {
+                    scope.menuOpen = false;
+                    bar.menuOpen = false;
+                }
             }
 
             // MouseArea to track menu hover

@@ -58,6 +58,13 @@ ColumnLayout {
             font.family: Appearance.font.mono
             font.pixelSize: Appearance.font.large
             color: root.isActive ? Colours.textOnPrimary : Colours.textOnSurface
+            
+            Behavior on color {
+                ColorAnimation {
+                    duration: Appearance.anim.small
+                    easing.type: Easing.Linear
+                }
+            }
         }
     }
 
@@ -131,6 +138,13 @@ ColumnLayout {
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
                     color: root.isActive ? Colours.textOnPrimary : Colours.textOnSurface
+                    
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
                 }
             }
         }
@@ -138,7 +152,8 @@ ColumnLayout {
 
     Behavior on Layout.preferredHeight {
         Anim {
-            duration: Appearance.anim.normal
+            duration: Appearance.anim.small
+            easing.bezierCurve: Appearance.anim.standard
         }
     }
 }
