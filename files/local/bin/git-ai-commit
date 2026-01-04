@@ -10,7 +10,7 @@ if [ -z "$staged_diff" ]; then
 fi
 
 # Generate commit message using Claude
-commit_message=$(echo "$staged_diff" | opencode "run" "Generate a concise commit message for these staged changes. Return only the commit message, no explanations or formatting.")
+commit_message=$(echo "$staged_diff" | opencode "run" "Generate a concise commit message for these staged changes. Return only the commit message, no explanations or formatting. Prefix all commit messages with one of the following, feat(*APP*): , bug(*APP*):, tweak(*APP*):, chore(*APP*):, where *APP* is the program we are modifying. Chore is basically only for updates, otherwise use another prefix")
 
 # Commit with the generated message
 git commit -m "$commit_message"
