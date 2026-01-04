@@ -36,7 +36,6 @@ Singleton {
     readonly property QtObject font: QtObject {
         property string sans: "Rubik"
         property string mono: "CaskaydiaCove NF"
-        property string material: "Material Symbols Rounded"
 
         property int small: 11
         property int smaller: 12

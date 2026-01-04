@@ -435,6 +435,7 @@ Rectangle {
 
         // Now Playing widget
         Rectangle {
+            id: mediaWidget
             width: Math.max(buttonRow.width, calendarContainer.width)
             height: 120
             radius: Appearance.rounding.normal
@@ -503,7 +504,7 @@ Rectangle {
                     Image {
                         id: albumArt
                         anchors.fill: parent
-                        source: parent.parent.parent.activePlayer?.trackArtUrl ?? ""
+                        source: mediaWidget.activePlayer?.trackArtUrl ?? ""
                         fillMode: Image.PreserveAspectCrop
                         visible: status === Image.Ready
                         smooth: true
@@ -519,7 +520,7 @@ Rectangle {
                     // Track title
                     Text {
                         width: parent.width
-                        text: parent.parent.parent.activePlayer?.trackTitle || "No media"
+                        text: mediaWidget.activePlayer?.trackTitle || "No media"
                         font.family: Appearance.font.mono
                         font.pixelSize: Appearance.font.normal
                         font.bold: true
@@ -530,7 +531,7 @@ Rectangle {
                     // Artist
                     Text {
                         width: parent.width
-                        text: parent.parent.parent.activePlayer?.trackArtist || "Unknown artist"
+                        text: mediaWidget.activePlayer?.trackArtist || "Unknown artist"
                         font.family: Appearance.font.mono
                         font.pixelSize: Appearance.font.smaller
                         color: Colours.secondary
@@ -540,7 +541,7 @@ Rectangle {
                     // Album
                     Text {
                         width: parent.width
-                        text: parent.parent.parent.activePlayer?.trackAlbum || ""
+                        text: mediaWidget.activePlayer?.trackAlbum || ""
                         font.family: Appearance.font.mono
                         font.pixelSize: Appearance.font.smaller
                         color: Colours.secondary
@@ -559,7 +560,7 @@ Rectangle {
                             height: 35
                             radius: Appearance.rounding.full
                             color: mediaPrevMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-                            visible: parent.parent.parent.parent.activePlayer?.canGoPrevious ?? false
+                            visible: mediaWidget.activePlayer?.canGoPrevious ?? false
 
                             Text {
                                 anchors.centerIn: parent
@@ -574,7 +575,7 @@ Rectangle {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: parent.parent.parent.parent.parent.activePlayer?.previous()
+                                onClicked: mediaWidget.activePlayer?.previous()
                             }
                         }
 
@@ -584,11 +585,11 @@ Rectangle {
                             height: 35
                             radius: Appearance.rounding.full
                             color: mediaPlayMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-                            visible: parent.parent.parent.parent.activePlayer?.canTogglePlaying ?? false
+                            visible: mediaWidget.activePlayer?.canTogglePlaying ?? false
 
                             Text {
                                 anchors.centerIn: parent
-                                text: (parent.parent.parent.parent.parent.activePlayer?.isPlaying ?? false) ? "󰏤" : "󰐊"
+                                text: (mediaWidget.activePlayer?.isPlaying ?? false) ? "󰏤" : "󰐊"
                                 font.family: Appearance.font.mono
                                 font.pixelSize: Appearance.font.normal
                                 color: Colours.primary
@@ -599,7 +600,7 @@ Rectangle {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: parent.parent.parent.parent.parent.activePlayer?.togglePlaying()
+                                onClicked: mediaWidget.activePlayer?.togglePlaying()
                             }
                         }
 
@@ -609,7 +610,7 @@ Rectangle {
                             height: 35
                             radius: Appearance.rounding.full
                             color: mediaNextMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-                            visible: parent.parent.parent.parent.activePlayer?.canGoNext ?? false
+                            visible: mediaWidget.activePlayer?.canGoNext ?? false
 
                             Text {
                                 anchors.centerIn: parent
@@ -624,7 +625,7 @@ Rectangle {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: parent.parent.parent.parent.parent.activePlayer?.next()
+                                onClicked: mediaWidget.activePlayer?.next()
                             }
                         }
                     }
