@@ -41,6 +41,7 @@ ColumnLayout {
 
     Layout.alignment: Qt.AlignHCenter
     Layout.preferredHeight: visible ? implicitHeight : 0
+    z: 20
 
     spacing: 0
 
@@ -58,7 +59,7 @@ ColumnLayout {
             font.family: Appearance.font.mono
             font.pixelSize: Appearance.font.large
             color: root.isActive ? Colours.textOnPrimary : Colours.textOnSurface
-            
+
             Behavior on color {
                 ColorAnimation {
                     duration: Appearance.anim.small
@@ -138,7 +139,7 @@ ColumnLayout {
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
                     color: root.isActive ? Colours.textOnPrimary : Colours.textOnSurface
-                    
+
                     Behavior on color {
                         ColorAnimation {
                             duration: Appearance.anim.small
