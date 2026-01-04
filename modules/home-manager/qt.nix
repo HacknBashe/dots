@@ -4,8 +4,8 @@
   lib,
   ...
 }: let
-  colors = config.theme.colors;
-  base16 = colors.base16;
+  # Use ANSI colors instead of base16
+  c = config.theme.colors;
 
   # Helper function to convert a single hex digit to decimal
   hexDigitToInt = c:
@@ -40,53 +40,53 @@
     b = hexPairToInt (builtins.substring 4 2 cleanHex);
   in "${toString r},${toString g},${toString b}";
 
-  # Color mappings based on your Tokyo Night theme
+  # Color mappings using ANSI colors
   # KDE uses RGB format: r,g,b
   kdeColors = {
     # Window/View backgrounds and foregrounds
-    windowBg = hexToRgb base16.base00; # #16161e - darkest background
-    windowFg = hexToRgb base16.base05; # #787c99 - normal text
-    viewBg = hexToRgb base16.base00; # #16161e - view background
-    viewFg = hexToRgb base16.base05; # #787c99 - view text
+    windowBg = hexToRgb c.default.black; # Dark background
+    windowFg = hexToRgb c.default.white; # Normal text
+    viewBg = hexToRgb c.default.black; # View background
+    viewFg = hexToRgb c.default.white; # View text
 
     # Buttons
-    buttonBg = hexToRgb base16.base02; # #2f3549 - button background
-    buttonFg = hexToRgb base16.base05; # #787c99 - button text
+    buttonBg = hexToRgb c.indexed.four; # Mid-tone button background
+    buttonFg = hexToRgb c.default.white; # Button text
 
     # Selection/highlight
-    selectionBg = hexToRgb base16.base0D; # #82aaff - blue accent
-    selectionFg = hexToRgb base16.base00; # #16161e - dark text on selection
+    selectionBg = hexToRgb c.default.blue; # Blue accent
+    selectionFg = hexToRgb c.default.black; # Dark text on selection
 
     # Tooltips
-    tooltipBg = hexToRgb base16.base01; # #1a1b26 - slightly lighter bg
-    tooltipFg = hexToRgb base16.base05; # #787c99 - tooltip text
+    tooltipBg = hexToRgb c.background; # Background color
+    tooltipFg = hexToRgb c.default.white; # Tooltip text
 
     # Links
-    linkColor = hexToRgb base16.base0D; # #82aaff - blue
-    visitedLink = hexToRgb base16.base0E; # #bb9af7 - purple
+    linkColor = hexToRgb c.default.blue; # Blue links
+    visitedLink = hexToRgb c.default.magenta; # Purple visited links
 
     # Negative/Positive/Neutral for status
-    negativeText = hexToRgb base16.base08; # #ff757f - red
-    positiveText = hexToRgb base16.base0B; # #41a6b5 - teal/green
-    neutralText = hexToRgb base16.base0A; # #ffc777 - yellow
+    negativeText = hexToRgb c.default.red; # Red for errors
+    positiveText = hexToRgb c.default.green; # Green for success
+    neutralText = hexToRgb c.default.yellow; # Yellow for warnings
 
     # Inactive/disabled states (dimmed versions)
-    inactiveFg = hexToRgb base16.base03; # #444b6a - dimmed text
-    disabledFg = hexToRgb base16.base03; # #444b6a - disabled text
+    inactiveFg = hexToRgb c.bright.black; # Dimmed text
+    disabledFg = hexToRgb c.bright.black; # Disabled text
 
     # Header/titlebar
-    headerBg = hexToRgb base16.base01; # #1a1b26
-    headerFg = hexToRgb base16.base05; # #787c99
+    headerBg = hexToRgb c.background; # Background color
+    headerFg = hexToRgb c.default.white; # Header text
 
     # Complementary colors
-    complementaryBg = hexToRgb base16.base01; # #1a1b26
-    complementaryFg = hexToRgb base16.base06; # #cbccd1 - brighter text
-    complementaryHover = hexToRgb base16.base02; # #2f3549
-    complementaryFocus = hexToRgb base16.base0D; # #82aaff
+    complementaryBg = hexToRgb c.background; # Background color
+    complementaryFg = hexToRgb c.bright.white; # Brighter text
+    complementaryHover = hexToRgb c.indexed.four; # Mid-tone hover
+    complementaryFocus = hexToRgb c.default.blue; # Blue focus
 
     # Focus decoration
-    focusColor = hexToRgb base16.base0D; # #82aaff - blue accent
-    hoverColor = hexToRgb base16.base02; # #2f3549 - subtle hover
+    focusColor = hexToRgb c.default.blue; # Blue accent
+    hoverColor = hexToRgb c.indexed.four; # Subtle hover
   };
 
   # Generate the kdeglobals content

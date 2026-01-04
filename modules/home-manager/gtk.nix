@@ -5,96 +5,152 @@
   lib,
   ...
 }: let
-  colors = config.theme.colors.base16;
+  # Use ANSI colors instead of base16
+  c = config.theme.colors;
   baseCss = ''
-    @define-color accent_color ${colors.base0D};
-    @define-color accent_bg_color ${colors.base0D};
-    @define-color accent_fg_color ${colors.base00};
-    @define-color destructive_color ${colors.base08};
-    @define-color destructive_bg_color ${colors.base08};
-    @define-color destructive_fg_color ${colors.base00};
-    @define-color success_color ${colors.base0B};
-    @define-color success_bg_color ${colors.base0B};
-    @define-color success_fg_color ${colors.base00};
-    @define-color warning_color ${colors.base0E};
-    @define-color warning_bg_color ${colors.base0E};
-    @define-color warning_fg_color ${colors.base00};
-    @define-color error_color ${colors.base08};
-    @define-color error_bg_color ${colors.base08};
-    @define-color error_fg_color ${colors.base00};
-    @define-color window_bg_color ${colors.base00};
-    @define-color window_fg_color ${colors.base05};
-    @define-color view_bg_color ${colors.base00};
-    @define-color view_fg_color ${colors.base05};
-    @define-color headerbar_bg_color ${colors.base01};
-    @define-color headerbar_fg_color ${colors.base05};
-    @define-color headerbar_border_color alpha(${colors.base01}, 0.7);
-    @define-color headerbar_backdrop_color @window_bg_color;
-    @define-color headerbar_shade_color rgba(0, 0, 0, 0.07);
-    @define-color headerbar_darker_shade_color rgba(0, 0, 0, 0.07);
-    @define-color sidebar_bg_color ${colors.base01};
-    @define-color sidebar_fg_color ${colors.base05};
-    @define-color sidebar_backdrop_color @window_bg_color;
-    @define-color sidebar_shade_color rgba(0, 0, 0, 0.07);
-    @define-color secondary_sidebar_bg_color @sidebar_bg_color;
-    @define-color secondary_sidebar_fg_color @sidebar_fg_color;
-    @define-color secondary_sidebar_backdrop_color @sidebar_backdrop_color;
-    @define-color secondary_sidebar_shade_color @sidebar_shade_color;
-    @define-color card_bg_color ${colors.base01};
-    @define-color card_fg_color ${colors.base05};
-    @define-color card_shade_color rgba(0, 0, 0, 0.07);
-    @define-color dialog_bg_color ${colors.base01};
-    @define-color dialog_fg_color ${colors.base05};
-    @define-color popover_bg_color ${colors.base01};
-    @define-color popover_fg_color ${colors.base05};
-    @define-color popover_shade_color rgba(0, 0, 0, 0.07);
-    @define-color shade_color rgba(0, 0, 0, 0.07);
-    @define-color scrollbar_outline_color ${colors.base02};
-    @define-color blue_1 ${colors.base0D};
-    @define-color blue_2 ${colors.base0D};
-    @define-color blue_3 ${colors.base0D};
-    @define-color blue_4 ${colors.base0D};
-    @define-color blue_5 ${colors.base0D};
-    @define-color green_1 ${colors.base0B};
-    @define-color green_2 ${colors.base0B};
-    @define-color green_3 ${colors.base0B};
-    @define-color green_4 ${colors.base0B};
-    @define-color green_5 ${colors.base0B};
-    @define-color yellow_1 ${colors.base0A};
-    @define-color yellow_2 ${colors.base0A};
-    @define-color yellow_3 ${colors.base0A};
-    @define-color yellow_4 ${colors.base0A};
-    @define-color yellow_5 ${colors.base0A};
-    @define-color orange_1 ${colors.base09};
-    @define-color orange_2 ${colors.base09};
-    @define-color orange_3 ${colors.base09};
-    @define-color orange_4 ${colors.base09};
-    @define-color orange_5 ${colors.base09};
-    @define-color red_1 ${colors.base08};
-    @define-color red_2 ${colors.base08};
-    @define-color red_3 ${colors.base08};
-    @define-color red_4 ${colors.base08};
-    @define-color red_5 ${colors.base08};
-    @define-color purple_1 ${colors.base0E};
-    @define-color purple_2 ${colors.base0E};
-    @define-color purple_3 ${colors.base0E};
-    @define-color purple_4 ${colors.base0E};
-    @define-color purple_5 ${colors.base0E};
-    @define-color brown_1 ${colors.base0F};
-    @define-color brown_2 ${colors.base0F};
-    @define-color brown_3 ${colors.base0F};
-    @define-color brown_4 ${colors.base0F};
-    @define-color brown_5 ${colors.base0F};
-    @define-color light_1 ${colors.base01};
-    @define-color light_2 ${colors.base01};
-    @define-color light_3 ${colors.base01};
-    @define-color light_4 ${colors.base01};
-    @define-color light_5 ${colors.base01};
-    @define-color dark_1 ${colors.base01};
-    @define-color dark_2 ${colors.base01};
-    @define-color dark_3 ${colors.base01};
-    @define-color dark_4 ${colors.base01};
-    @define-color dark_5 ${colors.base01};
+    /* Color variables for themes that respect them */
+    @define-color accent_color ${c.default.blue};
+    @define-color accent_bg_color ${c.default.blue};
+    @define-color accent_fg_color ${c.default.black};
+    @define-color destructive_color ${c.default.red};
+    @define-color destructive_bg_color ${c.default.red};
+    @define-color destructive_fg_color ${c.default.black};
+    @define-color success_color ${c.default.green};
+    @define-color success_bg_color ${c.default.green};
+    @define-color success_fg_color ${c.default.black};
+    @define-color warning_color ${c.default.magenta};
+    @define-color warning_bg_color ${c.default.magenta};
+    @define-color warning_fg_color ${c.default.black};
+    @define-color error_color ${c.default.red};
+    @define-color error_bg_color ${c.default.red};
+    @define-color error_fg_color ${c.default.black};
+    @define-color window_bg_color ${c.default.black};
+    @define-color window_fg_color ${c.default.white};
+    @define-color view_bg_color ${c.default.black};
+    @define-color view_fg_color ${c.default.white};
+    @define-color headerbar_bg_color ${c.background};
+    @define-color headerbar_fg_color ${c.default.white};
+    @define-color theme_bg_color ${c.default.black};
+    @define-color theme_fg_color ${c.default.white};
+    @define-color theme_base_color ${c.default.black};
+    @define-color theme_text_color ${c.default.white};
+    @define-color theme_selected_bg_color ${c.default.blue};
+    @define-color theme_selected_fg_color ${c.default.black};
+    @define-color borders ${c.indexed.four};
+    
+    /* Direct CSS overrides with !important to force colors through */
+    window,
+    .background {
+      background-color: ${c.default.black} !important;
+      color: ${c.default.white} !important;
+    }
+    
+    headerbar,
+    .titlebar {
+      background-color: ${c.background} !important;
+      color: ${c.default.white} !important;
+    }
+    
+    .view,
+    textview text,
+    iconview,
+    .content-view {
+      background-color: ${c.default.black} !important;
+      color: ${c.default.white} !important;
+    }
+    
+    entry,
+    .entry {
+      background-color: ${c.default.black} !important;
+      color: ${c.default.white} !important;
+      border-color: ${c.indexed.four} !important;
+    }
+    
+    button {
+      background-color: ${c.indexed.four} !important;
+      color: ${c.default.white} !important;
+    }
+    
+    button:hover {
+      background-color: ${c.bright.black} !important;
+    }
+    
+    button:active,
+    button:checked {
+      background-color: ${c.default.blue} !important;
+      color: ${c.default.black} !important;
+    }
+    
+    .sidebar,
+    sidebar {
+      background-color: ${c.background} !important;
+      color: ${c.default.white} !important;
+    }
+    
+    menu,
+    .menu,
+    popover,
+    .popover {
+      background-color: ${c.background} !important;
+      color: ${c.default.white} !important;
+    }
+    
+    menuitem:hover,
+    .menuitem:hover {
+      background-color: ${c.default.blue} !important;
+      color: ${c.default.black} !important;
+    }
+    
+    *:selected,
+    *:selected:focus {
+      background-color: ${c.default.blue} !important;
+      color: ${c.default.black} !important;
+    }
+    @define-color blue_1 ${c.default.blue};
+    @define-color blue_2 ${c.default.blue};
+    @define-color blue_3 ${c.default.blue};
+    @define-color blue_4 ${c.default.blue};
+    @define-color blue_5 ${c.default.blue};
+    @define-color green_1 ${c.default.green};
+    @define-color green_2 ${c.default.green};
+    @define-color green_3 ${c.default.green};
+    @define-color green_4 ${c.default.green};
+    @define-color green_5 ${c.default.green};
+    @define-color yellow_1 ${c.default.yellow};
+    @define-color yellow_2 ${c.default.yellow};
+    @define-color yellow_3 ${c.default.yellow};
+    @define-color yellow_4 ${c.default.yellow};
+    @define-color yellow_5 ${c.default.yellow};
+    @define-color orange_1 ${c.indexed.one};
+    @define-color orange_2 ${c.indexed.one};
+    @define-color orange_3 ${c.indexed.one};
+    @define-color orange_4 ${c.indexed.one};
+    @define-color orange_5 ${c.indexed.one};
+    @define-color red_1 ${c.default.red};
+    @define-color red_2 ${c.default.red};
+    @define-color red_3 ${c.default.red};
+    @define-color red_4 ${c.default.red};
+    @define-color red_5 ${c.default.red};
+    @define-color purple_1 ${c.default.magenta};
+    @define-color purple_2 ${c.default.magenta};
+    @define-color purple_3 ${c.default.magenta};
+    @define-color purple_4 ${c.default.magenta};
+    @define-color purple_5 ${c.default.magenta};
+    @define-color brown_1 ${c.indexed.two};
+    @define-color brown_2 ${c.indexed.two};
+    @define-color brown_3 ${c.indexed.two};
+    @define-color brown_4 ${c.indexed.two};
+    @define-color brown_5 ${c.indexed.two};
+    @define-color light_1 ${c.background};
+    @define-color light_2 ${c.background};
+    @define-color light_3 ${c.background};
+    @define-color light_4 ${c.background};
+    @define-color light_5 ${c.background};
+    @define-color dark_1 ${c.background};
+    @define-color dark_2 ${c.background};
+    @define-color dark_3 ${c.background};
+    @define-color dark_4 ${c.background};
+    @define-color dark_5 ${c.background};
   '';
 in {
   gtk = {
@@ -110,7 +166,7 @@ in {
     };
 
     theme = {
-      # adw-gtk3 respects libadwaita color variables, so our CSS overrides work
+      # adw-gtk3 provides the best balance of dark theme + respecting some color variables
       package = pkgs.adw-gtk3;
       name = "adw-gtk3-dark";
     };

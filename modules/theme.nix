@@ -153,27 +153,10 @@ in {
           white = "#c8d3f5";
         };
         indexed = {
-          one = "#ff966c";
-          two = "#c53b53";
-        };
-
-        base16 = {
-          base00 = "#16161e";
-          base01 = "#1a1b26";
-          base02 = "#2f3549";
-          base03 = "#444b6a";
-          base04 = "#787c99";
-          base05 = "#787c99";
-          base06 = "#cbccd1";
-          base07 = "#d5d6db";
-          base08 = "#ff757f";
-          base09 = "#ff9e64";
-          base0A = "#ffc777";
-          base0B = "#41a6b5";
-          base0C = "#86e1fc";
-          base0D = "#82aaff";
-          base0E = "#bb9af7";
-          base0F = "#d18616";
+          one = "#ff966c";    # Orange
+          two = "#c53b53";    # Dark red
+          three = "#ffb3d9";  # Pastel retrowave pink
+          four = "#2f3549";   # Mid-tone background (for buttons, hover states)
         };
       };
     };

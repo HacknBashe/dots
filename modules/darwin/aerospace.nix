@@ -10,8 +10,9 @@
     sketchybar.enable = true;
     jankyborders = {
       enable = true;
-      active_color = "0xff${builtins.substring 1 6 config.theme.colors.base16.base0C}";
-      inactive_color = "0x00${builtins.substring 1 6 config.theme.colors.base16.base02}";
+      # Use ANSI cyan for active border, mid-tone background for inactive
+      active_color = "0xff${builtins.substring 1 6 config.theme.colors.default.cyan}";
+      inactive_color = "0x00${builtins.substring 1 6 config.theme.colors.indexed.four}";
       width = 10.0;
     };
   };
