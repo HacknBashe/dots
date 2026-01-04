@@ -12,7 +12,8 @@ import QtQuick.Layouts
 // Creates bar windows for each screen
 Variants {
     id: variants
-    model: Quickshell.screens
+    // Filter to only show on ultrawide monitor (3440x1440)
+    model: Quickshell.screens.filter(screen => screen.width === 3440 && screen.height === 1440)
 
     // Function to toggle menu on primary screen
     function toggleMenu() {
