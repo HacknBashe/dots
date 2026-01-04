@@ -186,7 +186,7 @@ ColumnLayout {
 
             // Animate icon changes with scale
             property string lastIcon: text
-            onTextChanged: {
+            onTextChanged: text => {
                 if (text !== lastIcon) {
                     iconAnim.restart();
                     lastIcon = text;

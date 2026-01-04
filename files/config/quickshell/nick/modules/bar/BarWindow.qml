@@ -237,8 +237,8 @@ Variants {
                 top: 20
             }
 
-            width: menu.width
-            height: menu.height
+            implicitWidth: menu.width
+            implicitHeight: menu.height
 
             // Stay visible during animation
             visible: scope.menuOpen || menu.x > -menu.width
@@ -246,7 +246,7 @@ Variants {
             WlrLayershell.namespace: "nick-menu"
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
-            WlrLayershell.keyboardFocus: KeyboardFocus.Exclusive
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
 
             // Use Hyprland focus grab to ensure keyboard input is captured
             HyprlandFocusGrab {
