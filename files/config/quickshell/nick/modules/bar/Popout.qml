@@ -49,7 +49,7 @@ PanelWindow {
 
         Rectangle {
             id: contentRect
-            color: Colours.background
+            color: Colours.layer(Colours.background, 0)
             width: popoutWidth
             height: Math.max(40, contentLoader.height)
             radius: Appearance.rounding.small

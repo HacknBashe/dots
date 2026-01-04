@@ -14,7 +14,7 @@ Singleton {
     property color tertiary
     property color quaternary
     property color quinary
-    
+
     // Base colors
     property color background
     property color foreground
@@ -27,15 +27,15 @@ Singleton {
     property color shadow
 
     // Transparency settings
-    readonly property bool transparencyEnabled: false
-    readonly property real transparencyBase: 0.85
+    readonly property bool transparencyEnabled: true
+    readonly property real transparencyBase: 0.7
     readonly property real transparencyLayers: 0.4
 
     // Load colors from theme file
     FileView {
         id: themeFile
         path: Quickshell.env("HOME") + "/.config/quickshell/theme-colors.json"
-        
+
         onLoaded: {
             const colors = JSON.parse(text());
             // Semantic colors
@@ -44,7 +44,7 @@ Singleton {
             root.tertiary = colors.tertiary;
             root.quaternary = colors.quaternary;
             root.quinary = colors.quinary;
-            
+
             // Base colors
             root.background = colors.background;
             root.foreground = colors.foreground;

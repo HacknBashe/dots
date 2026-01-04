@@ -115,7 +115,7 @@ Rectangle {
     // Square corners on left side, rounded on right
     topLeftRadius: 0
     bottomLeftRadius: 0
-    color: Colours.background
+    color: Colours.layer(Colours.background, 0)
     border.width: 0
 
     // No animation - instant appearance
@@ -186,133 +186,142 @@ Rectangle {
         spacing: Appearance.spacing.large
 
         // Calendar
-        Column {
-            id: calendar
-            width: 280
-            spacing: Appearance.spacing.normal
+        Rectangle {
+            id: calendarContainer
+            width: Math.max(buttonRow.width, 280)
+            implicitHeight: calendar.implicitHeight + Appearance.padding.large * 2
+            radius: Appearance.rounding.normal
+            color: Colours.layer(Colours.surfaceContainer, 0)
 
-            property date currentDate: new Date()
-            property int currMonth: currentDate.getMonth()
-            property int currYear: currentDate.getFullYear()
+            Column {
+                id: calendar
+                anchors.centerIn: parent
+                width: parent.width - Appearance.padding.large * 2
+                spacing: Appearance.spacing.normal
 
-            // Month navigation
-            Row {
-                width: parent.width
-                spacing: Appearance.spacing.small
+                property date currentDate: new Date()
+                property int currMonth: currentDate.getMonth()
+                property int currYear: currentDate.getFullYear()
 
-                // Previous month button
-                Rectangle {
-                    width: 30
-                    height: 30
-                    anchors.verticalCenter: parent.verticalCenter
-                    radius: Appearance.rounding.full
-                    color: prevMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                // Month navigation
+                Row {
+                    width: parent.width
+                    spacing: Appearance.spacing.small
 
-                    Text {
-                        anchors.centerIn: parent
-                        text: ""
-                        font.family: Appearance.font.mono
-                        font.pixelSize: Appearance.font.large
-                        font.bold: true
-                        color: Colours.primary
-                    }
-
-                    MouseArea {
-                        id: prevMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            calendar.currentDate = new Date(calendar.currYear, calendar.currMonth - 1, 1);
-                        }
-                    }
-                }
-
-                // Month/Year display
-                Text {
-                    width: parent.width - 60 - Appearance.spacing.small * 2
-                    anchors.verticalCenter: parent.verticalCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    text: Qt.formatDate(calendar.currentDate, "MMMM yyyy")
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.larger
-                    font.bold: true
-                    font.capitalization: Font.Capitalize
-                    color: Colours.primary
-                }
-
-                // Next month button
-                Rectangle {
-                    width: 30
-                    height: 30
-                    anchors.verticalCenter: parent.verticalCenter
-                    radius: Appearance.rounding.full
-                    color: nextMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: ""
-                        font.family: Appearance.font.mono
-                        font.pixelSize: Appearance.font.large
-                        color: Colours.primary
-                    }
-
-                    MouseArea {
-                        id: nextMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            calendar.currentDate = new Date(calendar.currYear, calendar.currMonth + 1, 1);
-                        }
-                    }
-                }
-            }
-
-            // Day of week headers
-            DayOfWeekRow {
-                width: parent.width
-                locale: Qt.locale()
-
-                delegate: Text {
-                    required property var model
-                    horizontalAlignment: Text.AlignHCenter
-                    text: model.shortName
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.smaller
-                    color: Colours.textOnSurface
-                    opacity: 0.7
-                }
-            }
-
-            // Calendar grid
-            Item {
-                width: parent.width
-                implicitHeight: grid.implicitHeight
-
-                MonthGrid {
-                    id: grid
-                    anchors.fill: parent
-                    month: calendar.currMonth
-                    year: calendar.currYear
-                    locale: Qt.locale()
-                    spacing: 2
-
-                    delegate: Rectangle {
-                        required property var model
-
-                        implicitWidth: 36
-                        implicitHeight: 36
-                        color: model.today ? Colours.primary : "transparent"
-                        radius: Appearance.rounding.small
+                    // Previous month button
+                    Rectangle {
+                        width: 30
+                        height: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        radius: Appearance.rounding.full
+                        color: prevMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
 
                         Text {
                             anchors.centerIn: parent
-                            text: model.day
+                            text: ""
                             font.family: Appearance.font.mono
-                            font.pixelSize: Appearance.font.normal
-                            color: model.today ? Colours.textOnPrimary : (model.month === grid.month ? Colours.textOnSurface : Colours.textOnSurface)
-                            opacity: model.month === grid.month ? 1 : 0.4
+                            font.pixelSize: Appearance.font.large
+                            font.bold: true
+                            color: Colours.primary
+                        }
+
+                        MouseArea {
+                            id: prevMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                calendar.currentDate = new Date(calendar.currYear, calendar.currMonth - 1, 1);
+                            }
+                        }
+                    }
+
+                    // Month/Year display
+                    Text {
+                        width: parent.width - 60 - Appearance.spacing.small * 2
+                        anchors.verticalCenter: parent.verticalCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        text: Qt.formatDate(calendar.currentDate, "MMMM yyyy")
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.larger
+                        font.bold: true
+                        font.capitalization: Font.Capitalize
+                        color: Colours.primary
+                    }
+
+                    // Next month button
+                    Rectangle {
+                        width: 30
+                        height: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        radius: Appearance.rounding.full
+                        color: nextMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: ""
+                            font.family: Appearance.font.mono
+                            font.pixelSize: Appearance.font.large
+                            color: Colours.primary
+                        }
+
+                        MouseArea {
+                            id: nextMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                calendar.currentDate = new Date(calendar.currYear, calendar.currMonth + 1, 1);
+                            }
+                        }
+                    }
+                }
+
+                // Day of week headers
+                DayOfWeekRow {
+                    width: parent.width
+                    locale: Qt.locale()
+
+                    delegate: Text {
+                        required property var model
+                        horizontalAlignment: Text.AlignHCenter
+                        text: model.shortName
+                        font.family: Appearance.font.mono
+                        font.pixelSize: Appearance.font.smaller
+                        color: Colours.textOnSurface
+                        opacity: 0.7
+                    }
+                }
+
+                // Calendar grid
+                Item {
+                    width: parent.width
+                    implicitHeight: grid.implicitHeight
+
+                    MonthGrid {
+                        id: grid
+                        anchors.fill: parent
+                        month: calendar.currMonth
+                        year: calendar.currYear
+                        locale: Qt.locale()
+                        spacing: 2
+
+                        delegate: Rectangle {
+                            required property var model
+
+                            implicitWidth: 36
+                            implicitHeight: 36
+                            color: model.today ? Colours.primary : "transparent"
+                            radius: Appearance.rounding.small
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: model.day
+                                font.family: Appearance.font.mono
+                                font.pixelSize: Appearance.font.normal
+                                color: model.today ? Colours.textOnPrimary : (model.month === grid.month ? Colours.textOnSurface : Colours.textOnSurface)
+                                opacity: model.month === grid.month ? 1 : 0.4
+                            }
                         }
                     }
                 }
@@ -324,7 +333,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Appearance.spacing.large
 
-            readonly property real targetWidth: Math.max(buttonRow.width, calendar.width)
+            readonly property real targetWidth: Math.max(buttonRow.width, calendarContainer.width)
 
             // Weather section (40%)
             Rectangle {
@@ -426,7 +435,7 @@ Rectangle {
 
         // Now Playing widget
         Rectangle {
-            width: Math.max(buttonRow.width, calendar.width)
+            width: Math.max(buttonRow.width, calendarContainer.width)
             height: 120
             radius: Appearance.rounding.normal
             color: Colours.surfaceContainer

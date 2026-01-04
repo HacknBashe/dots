@@ -85,7 +85,7 @@ Variants {
                 id: background
 
                 anchors.fill: parent
-                color: Colours.background
+                color: Colours.layer(Colours.background, 0)
                 radius: 0
                 border.width: 1
                 border.color: Qt.alpha(Colours.outline, 0.2)

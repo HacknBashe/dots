@@ -16,12 +16,12 @@ Rectangle {
         // The pill extends slightly beyond workspace items due to center-based positioning
         // We only need enough padding to accommodate the pill's radius on empty workspaces
         let baseHeight = layout.implicitHeight;
-        
+
         // Add just enough padding for the pill to fit (half the pill padding on each side)
         return baseHeight + Appearance.padding.smaller * 2;
     }
 
-    color: Colours.surfaceContainer
+    color: Colours.layer(Colours.surfaceContainer, 0)
     radius: Appearance.rounding.full
     topLeftRadius: Appearance.rounding.full
     topRightRadius: Appearance.rounding.full
@@ -154,7 +154,7 @@ Rectangle {
         height: targetHeight
         radius: Appearance.rounding.full
         color: Colours.primary
-        
+
         Component.onCompleted: {
             // Force initial update
             y = targetY;

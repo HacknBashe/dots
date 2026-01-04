@@ -364,7 +364,7 @@ ColumnLayout {
             id: nixButtonRect
             anchors.fill: parent
             radius: Appearance.rounding.small
-            color: root.menuOpen ? Colours.primary : Colours.surfaceContainer
+            color: root.menuOpen ? Colours.primary : Colours.layer(Colours.surfaceContainer, 0)
             scale: nixMouseArea.containsMouse || root.menuOpen ? 1.1 : 1.0
             transformOrigin: Item.Center
 
