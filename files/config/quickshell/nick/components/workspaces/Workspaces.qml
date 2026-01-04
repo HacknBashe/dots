@@ -46,21 +46,32 @@ Item {
         return values.filter(ws => ws.name.startsWith("special:") && ws.lastIpcObject.windows > 0).sort((a, b) => b.id - a.id);
     }
 
-    // Get workspaces assigned to each monitor
-    // Returns array of workspace IDs (1-10) for each monitor
-    readonly property var monitor1Workspaces: {
+    // Track workspaces that are animating out (ghosts)
+    property var animatingOutMon1: []
+    property var animatingOutMon2: []
+
+    // Timer to clean up finished animations
+    Timer {
+        id: cleanupTimer
+        interval: Appearance.anim.small + 50 // Slightly longer than animation
+        repeat: false
+        onTriggered: {
+            console.log("Cleanup: removing ghosts");
+            animatingOutMon1 = [];
+            animatingOutMon2 = [];
+        }
+    }
+
+    // Get current "real" workspaces for monitor 1
+    readonly property var currentMonitor1Workspaces: {
         const values = Hyprland.workspaces.values || [];
         const wsIds = [];
 
-        // Check workspaces 1-10
         for (let i = 1; i <= root.shownWorkspaces; i++) {
             const ws = values.find(w => w.id === i);
-            // If workspace exists and is on DP-3 (Monitor 1), add it
             if (ws && ws.lastIpcObject?.monitor === "DP-3") {
                 wsIds.push(i);
-            } else
-            // If workspace doesn't exist but is active, check if focused monitor is DP-3
-            if (!ws && i === activeWsId && Hyprland.focusedMonitor?.name === "DP-3") {
+            } else if (!ws && i === activeWsId && Hyprland.focusedMonitor?.name === "DP-3") {
                 wsIds.push(i);
             }
         }
@@ -68,24 +79,64 @@ Item {
         return wsIds;
     }
 
-    readonly property var monitor2Workspaces: {
+    // Get current "real" workspaces for monitor 2
+    readonly property var currentMonitor2Workspaces: {
         const values = Hyprland.workspaces.values || [];
         const wsIds = [];
 
-        // Check workspaces 1-10
         for (let i = 1; i <= root.shownWorkspaces; i++) {
             const ws = values.find(w => w.id === i);
-            // If workspace exists and is on HDMI-A-5 (Monitor 0), add it
             if (ws && ws.lastIpcObject?.monitor === "HDMI-A-5") {
                 wsIds.push(i);
-            } else
-            // If workspace doesn't exist but is active, check if focused monitor is HDMI-A-5
-            if (!ws && i === activeWsId && Hyprland.focusedMonitor?.name === "HDMI-A-5") {
+            } else if (!ws && i === activeWsId && Hyprland.focusedMonitor?.name === "HDMI-A-5") {
                 wsIds.push(i);
             }
         }
 
         return wsIds;
+    }
+
+    property var previousMonitor1Workspaces: []
+    property var previousMonitor2Workspaces: []
+
+    // Final workspace lists including ghosts
+    readonly property var monitor1Workspaces: {
+        const combined = new Set([...currentMonitor1Workspaces, ...animatingOutMon1]);
+        return Array.from(combined).sort((a, b) => a - b);
+    }
+
+    readonly property var monitor2Workspaces: {
+        const combined = new Set([...currentMonitor2Workspaces, ...animatingOutMon2]);
+        return Array.from(combined).sort((a, b) => a - b);
+    }
+
+    // Watch for changes and update ghost lists
+    onCurrentMonitor1WorkspacesChanged: {
+        console.log("Monitor 1 workspaces changed:", JSON.stringify(currentMonitor1Workspaces));
+
+        // Find removed workspaces
+        const removed = previousMonitor1Workspaces.filter(id => !currentMonitor1Workspaces.includes(id));
+        if (removed.length > 0) {
+            console.log("Monitor 1 removed:", JSON.stringify(removed));
+            animatingOutMon1 = removed;
+            cleanupTimer.restart();
+        }
+
+        previousMonitor1Workspaces = currentMonitor1Workspaces;
+    }
+
+    onCurrentMonitor2WorkspacesChanged: {
+        console.log("Monitor 2 workspaces changed:", JSON.stringify(currentMonitor2Workspaces));
+
+        // Find removed workspaces
+        const removed = previousMonitor2Workspaces.filter(id => !currentMonitor2Workspaces.includes(id));
+        if (removed.length > 0) {
+            console.log("Monitor 2 removed:", JSON.stringify(removed));
+            animatingOutMon2 = removed;
+            cleanupTimer.restart();
+        }
+
+        previousMonitor2Workspaces = currentMonitor2Workspaces;
     }
 
     // Track which special workspace is active for the highlight pill
@@ -224,15 +275,14 @@ Item {
             Item {
                 id: column1Container
                 Layout.preferredWidth: 25
-                Layout.preferredHeight: column1.implicitHeight + Appearance.padding.small * 2
-                Layout.bottomMargin: 2
+                Layout.preferredHeight: column1.implicitHeight
                 visible: column1Repeater.count > 0
 
                 ColumnLayout {
                     id: column1
 
-                    anchors.centerIn: parent
-                    anchors.verticalCenterOffset: 3
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: Appearance.spacing.larger
 
                     Repeater {
@@ -241,12 +291,43 @@ Item {
                         model: root.monitor1Workspaces
 
                         Workspace {
+                            id: workspaceItem
                             required property int modelData
+
+                            // Check if this workspace is "real" or a ghost animating out
+                            readonly property bool _isGhost: {
+                                const values = Hyprland.workspaces.values || [];
+                                const workspace = values.find(w => w.id === modelData);
+
+                                // Ghost if workspace doesn't exist on DP-3 and isn't active on DP-3
+                                if (workspace && workspace.lastIpcObject?.monitor === "DP-3") {
+                                    return false;
+                                }
+                                if (modelData === root.activeWsId && Hyprland.focusedMonitor?.name === "DP-3") {
+                                    return false;
+                                }
+                                return true;
+                            }
 
                             wsId: modelData
                             activeWsId: root.activeWsId
                             occupied: root.occupied
                             groupOffset: root.groupOffset
+                            isGhost: _isGhost
+
+                            // Store the target height
+                            readonly property real targetHeight: _isGhost ? 0 : implicitHeight
+
+                            // Explicitly set height and animate it
+                            Layout.preferredHeight: targetHeight
+
+                            Behavior on Layout.preferredHeight {
+                                NumberAnimation {
+                                    duration: Appearance.anim.small
+                                    easing.type: Easing.Bezier
+                                    easing.bezierCurve: Appearance.anim.standard
+                                }
+                            }
                         }
                     }
                 }
@@ -256,15 +337,15 @@ Item {
             Item {
                 id: column2Container
                 Layout.preferredWidth: 25
-                Layout.preferredHeight: column2.implicitHeight + Appearance.padding.small * 2
-                Layout.bottomMargin: 2
+                Layout.preferredHeight: column2.implicitHeight
                 visible: column2Repeater.count > 0
 
                 ColumnLayout {
                     id: column2
 
-                    anchors.centerIn: parent
-                    anchors.verticalCenterOffset: 3
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing: Appearance.spacing.larger
 
                     Repeater {
@@ -273,12 +354,43 @@ Item {
                         model: root.monitor2Workspaces
 
                         Workspace {
+                            id: workspaceItem
                             required property int modelData
+
+                            // Check if this workspace is "real" or a ghost animating out
+                            readonly property bool _isGhost: {
+                                const values = Hyprland.workspaces.values || [];
+                                const workspace = values.find(w => w.id === modelData);
+
+                                // Ghost if workspace doesn't exist on HDMI-A-5 and isn't active on HDMI-A-5
+                                if (workspace && workspace.lastIpcObject?.monitor === "HDMI-A-5") {
+                                    return false;
+                                }
+                                if (modelData === root.activeWsId && Hyprland.focusedMonitor?.name === "HDMI-A-5") {
+                                    return false;
+                                }
+                                return true;
+                            }
 
                             wsId: modelData
                             activeWsId: root.activeWsId
                             occupied: root.occupied
                             groupOffset: root.groupOffset
+                            isGhost: _isGhost
+
+                            // Store the target height
+                            readonly property real targetHeight: _isGhost ? 0 : implicitHeight
+
+                            // Explicitly set height and animate it
+                            Layout.preferredHeight: targetHeight
+
+                            Behavior on Layout.preferredHeight {
+                                NumberAnimation {
+                                    duration: Appearance.anim.small
+                                    easing.type: Easing.Bezier
+                                    easing.bezierCurve: Appearance.anim.standard
+                                }
+                            }
                         }
                     }
                 }
@@ -290,15 +402,15 @@ Item {
             id: specialWorkspacesContainer
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: 25
-            Layout.preferredHeight: specialWorkspacesColumn.implicitHeight + Appearance.padding.small * 2
-            Layout.bottomMargin: 2
+            Layout.preferredHeight: specialWorkspacesColumn.implicitHeight
             visible: specialWorkspacesRepeater.count > 0
 
             ColumnLayout {
                 id: specialWorkspacesColumn
 
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: 3
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.right: parent.right
                 spacing: Appearance.spacing.larger
 
                 Repeater {

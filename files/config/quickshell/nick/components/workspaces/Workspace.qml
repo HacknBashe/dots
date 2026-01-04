@@ -17,6 +17,7 @@ ColumnLayout {
     property bool isSpecial: false
     property string wsName: ""
     property string activeSpecialWsName: ""  // For special workspaces
+    property bool isGhost: false  // Set by parent when animating out
 
     readonly property int ws: wsId
     readonly property bool isOccupied: occupied[ws] ?? false
@@ -36,14 +37,34 @@ ColumnLayout {
         return "S";  // Default for other special workspaces
     }
 
-    // Hide empty workspaces (special workspaces only show when occupied)
-    visible: isSpecial ? isOccupied : (isOccupied || activeWsId === ws)
-
+    anchors.left: parent.left
+    anchors.right: parent.right
     Layout.alignment: Qt.AlignHCenter
-    Layout.preferredHeight: visible ? implicitHeight : 0
     z: 20
 
     spacing: 0
+    clip: true
+
+    // Animate opacity with height for smoother appearance
+    opacity: isGhost ? 0 : 1
+
+    // Animate scale slightly for a nicer effect
+    scale: isGhost ? 0.8 : 1.0
+
+    Behavior on opacity {
+        NumberAnimation {
+            duration: Appearance.anim.small
+            easing.type: Easing.Linear
+        }
+    }
+
+    Behavior on scale {
+        NumberAnimation {
+            duration: Appearance.anim.small
+            easing.type: Easing.Bezier
+            easing.bezierCurve: Appearance.anim.standard
+        }
+    }
 
     // Workspace number/letter
     Item {
@@ -54,6 +75,8 @@ ColumnLayout {
         Text {
             id: numberText
             anchors.centerIn: parent
+            horizontalAlignment: Text.justify
+            anchors.fill: parent
 
             text: root.isSpecial ? root.specialLetter : root.ws
             font.family: Appearance.font.mono
@@ -73,6 +96,7 @@ ColumnLayout {
     Column {
         id: windows
 
+        anchors.right: parent.right
         Layout.alignment: Qt.AlignHCenter
         Layout.topMargin: 4
 
@@ -134,6 +158,7 @@ ColumnLayout {
                 Text {
                     id: iconText
                     anchors.centerIn: parent
+                    horizontalAlignment: Text.AlignJustify
 
                     text: Icons.getAppIcon(parent.windowClass)
                     font.family: Appearance.font.mono
@@ -148,13 +173,6 @@ ColumnLayout {
                     }
                 }
             }
-        }
-    }
-
-    Behavior on Layout.preferredHeight {
-        Anim {
-            duration: Appearance.anim.small
-            easing.bezierCurve: Appearance.anim.standard
         }
     }
 }
