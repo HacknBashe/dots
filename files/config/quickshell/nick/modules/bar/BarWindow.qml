@@ -12,8 +12,9 @@ import QtQuick.Layouts
 // Creates bar windows for each screen
 Variants {
     id: variants
-    // Filter to only show on ultrawide monitor (3440x1440)
-    model: Quickshell.screens.filter(screen => screen.width === 3440 && screen.height === 1440)
+    // Filter to specific monitor by name (run: hyprctl monitors -j | jq -r '.[].name' to see all)
+    // Current monitor: HDMI-A-5 (Dell AW3418DW Alienware ultrawide 3440x1440)
+    model: Quickshell.screens.filter(screen => screen.name === "HDMI-A-5")
 
     // Function to toggle menu on primary screen
     function toggleMenu() {
