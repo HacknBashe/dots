@@ -58,15 +58,19 @@ return {
 			lspconfig.nixd.setup({})
 			lspconfig.templ.setup({})
 			lspconfig.clangd.setup({})
-			lspconfig.csharp_ls.setup({
-				capabilities = lsp_capabilities,
-				cmd = {
-					"env",
-					"DOTNET_ROOT=" .. os.getenv("DOTNET_ROOT"),
-					"PATH=" .. os.getenv("DOTNET_ROOT") .. ":" .. os.getenv("PATH"),
-					"csharp-ls",
-				},
-			})
+
+			local dotnet_root = os.getenv("DOTNET_ROOT")
+			if dotnet_root then
+				lspconfig.csharp_ls.setup({
+					capabilities = lsp_capabilities,
+					cmd = {
+						"env",
+						"DOTNET_ROOT=" .. dotnet_root,
+						"PATH=" .. dotnet_root .. ":" .. os.getenv("PATH"),
+						"csharp-ls",
+					},
+				})
+			end
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				desc = "LSP actions",
