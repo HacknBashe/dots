@@ -15,4 +15,7 @@ files/local/bin/dvx
 files/local/bin/hsclaude
 files/local/bin/hs-git-migration-tools
 files/local/bin/hs-local
+files/local/bin/m2-cleanup
+files/local/bin/mercedes-phev
+files/local/bin/project-monitor
 files/local/bin/python3.12
