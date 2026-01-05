@@ -11,7 +11,7 @@ import QtQuick.Layouts
 Item {
     id: root
 
-    implicitWidth: 48
+    implicitWidth: 60
     implicitHeight: column.implicitHeight + Appearance.padding.small * 2
 
     property int volume: 50

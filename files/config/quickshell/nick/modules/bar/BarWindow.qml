@@ -47,12 +47,10 @@ Variants {
             id: window
 
             // Bar configuration
-            readonly property int barWidth: 48
-            readonly property int borderThickness: 4
-            readonly property int contentWidth: barWidth + Appearance.padding.smaller * 2
+            readonly property int barWidth: 64
+            readonly property int contentWidth: barWidth + 4
 
             // Visibility state
-            property bool shouldBeVisible: true
             property bool isHovered: false
 
             screen: scope.modelData
@@ -66,8 +64,8 @@ Variants {
             }
 
             // The exclusive zone reserves space on the left edge
-            exclusiveZone: shouldBeVisible ? contentWidth : borderThickness
-            implicitWidth: shouldBeVisible ? contentWidth : borderThickness
+            exclusiveZone: contentWidth
+            implicitWidth: contentWidth
 
             WlrLayershell.namespace: "nick-bar"
             WlrLayershell.layer: WlrLayer.Top
@@ -96,7 +94,6 @@ Variants {
                 id: bar
 
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.smaller
 
                 onOpenMenuRequested: {
                     scope.menuOpen = true;

@@ -69,14 +69,17 @@ ColumnLayout {
     // Workspace number/letter
     Item {
         Layout.alignment: Qt.AlignHCenter
-        implicitWidth: numberText.implicitWidth
+        Layout.topMargin: 5
+        anchors.left: root.left
+        anchors.right: root.right
         implicitHeight: numberText.implicitHeight
 
         Text {
             id: numberText
-            anchors.centerIn: parent
-            horizontalAlignment: Text.justify
-            anchors.fill: parent
+            width: root.width
+            anchors.left: root.left
+            anchors.right: root.right
+            horizontalAlignment: Text.AlignHCenter
 
             text: root.isSpecial ? root.specialLetter : root.ws
             font.family: Appearance.font.mono
@@ -96,9 +99,11 @@ ColumnLayout {
     Column {
         id: windows
 
-        anchors.right: parent.right
+        anchors.left: root.left
+        anchors.right: root.right
         Layout.alignment: Qt.AlignHCenter
         Layout.topMargin: 4
+        Layout.bottomMargin: 5
 
         visible: root.hasWindows
         spacing: 2
@@ -152,13 +157,12 @@ ColumnLayout {
                     return "";
                 }
 
-                implicitWidth: iconText.implicitWidth
                 implicitHeight: iconText.implicitHeight
+                width: root.width
 
                 Text {
                     id: iconText
-                    anchors.centerIn: parent
-                    horizontalAlignment: Text.AlignJustify
+                    anchors.horizontalCenter: parent.horizontalCenter
 
                     text: Icons.getAppIcon(parent.windowClass)
                     font.family: Appearance.font.mono

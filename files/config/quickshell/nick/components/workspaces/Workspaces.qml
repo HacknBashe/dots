@@ -10,7 +10,7 @@ import QtQuick.Layouts
 Item {
     id: root
 
-    implicitWidth: 50
+    implicitWidth: 64
     implicitHeight: {
         // Base layout height plus minimal padding
         let baseHeight = mainLayout.implicitHeight;
@@ -180,7 +180,7 @@ Item {
         id: column1Background
         x: regularWorkspacesRow.x + column1Container.x
         y: regularWorkspacesRow.y + column1Container.y
-        width: 25
+        width: 30
         height: column1.implicitHeight + Appearance.padding.small * 2
         color: Colours.layer(Colours.surfaceContainer, 0)
         radius: Appearance.rounding.full
@@ -207,7 +207,7 @@ Item {
         id: column2Background
         x: regularWorkspacesRow.x + column2Container.x
         y: regularWorkspacesRow.y + column2Container.y
-        width: 25
+        width: 30
         height: column2.implicitHeight + Appearance.padding.small * 2
         color: Colours.layer(Colours.surfaceContainer, 0)
         radius: Appearance.rounding.full
@@ -234,7 +234,7 @@ Item {
         id: specialBackground
         x: specialWorkspacesContainer.x
         y: specialWorkspacesContainer.y
-        width: 25
+        width: 30
         height: specialWorkspacesColumn.implicitHeight + Appearance.padding.small * 2
         color: Colours.layer(Colours.surfaceContainer, 0)
         radius: Appearance.rounding.full
@@ -274,7 +274,7 @@ Item {
             // Column 1: Monitor 1 (DP-3) workspaces
             Item {
                 id: column1Container
-                Layout.preferredWidth: 25
+                Layout.preferredWidth: 30
                 Layout.preferredHeight: column1.implicitHeight
                 visible: column1Repeater.count > 0
 
@@ -336,7 +336,7 @@ Item {
             // Column 2: Monitor 2 (HDMI-A-5) workspaces
             Item {
                 id: column2Container
-                Layout.preferredWidth: 25
+                Layout.preferredWidth: 30
                 Layout.preferredHeight: column2.implicitHeight
                 visible: column2Repeater.count > 0
 
@@ -401,7 +401,7 @@ Item {
         Item {
             id: specialWorkspacesContainer
             Layout.alignment: Qt.AlignHCenter
-            Layout.preferredWidth: 25
+            Layout.preferredWidth: 30
             Layout.preferredHeight: specialWorkspacesColumn.implicitHeight
             visible: specialWorkspacesRepeater.count > 0
 
@@ -492,7 +492,7 @@ Item {
                 return 0;
 
             // Get container's width
-            const containerWidth = activeColumn.container.width || 25;
+            const containerWidth = activeColumn.container.width || 30;
 
             // Center pill on the container
             return regularWorkspacesRow.x + containerX + (containerWidth / 2) - (width / 2);
@@ -508,7 +508,8 @@ Item {
 
             // Calculate workspace item's center in absolute coordinates
             // Account for: regularWorkspacesRow -> container -> column -> item
-            let itemCenterY = regularWorkspacesRow.y + activeColumn.container.y + activeColumn.column.y + itemY + (activeItem.implicitHeight / 2);
+            // The container has padding.small on top, and column is vertically centered in container
+            let itemCenterY = regularWorkspacesRow.y + activeColumn.container.y + Appearance.padding.small + activeColumn.column.y + itemY + (activeItem.implicitHeight / 2);
 
             // Position pill centered on the workspace item
             return itemCenterY - (targetHeight / 2);
@@ -526,11 +527,11 @@ Item {
         }
 
         property real targetWidth: {
-            // Use container's width (fixed at 25px)
+            // Use container's width (fixed at 30)
             if (!activeItem || !activeColumn)
-                return 25;
+                return 30;
 
-            return activeColumn.container.width || 25;
+            return activeColumn.container.width || 30;
         }
 
         x: targetX
@@ -603,7 +604,7 @@ Item {
                 return 0;
 
             const containerX = specialWorkspacesContainer.x;
-            const containerWidth = specialWorkspacesContainer.width || 25;
+            const containerWidth = specialWorkspacesContainer.width || 30;
 
             return containerX + (containerWidth / 2) - (width / 2);
         }
@@ -614,7 +615,8 @@ Item {
 
             // Calculate workspace item's center in absolute coordinates
             // Account for: container -> column -> item
-            let itemCenterY = specialWorkspacesContainer.y + specialWorkspacesColumn.y + activeItem.y + (activeItem.implicitHeight / 2);
+            // The container has padding.small on top, and column is vertically centered in container
+            let itemCenterY = specialWorkspacesContainer.y + Appearance.padding.small + specialWorkspacesColumn.y + activeItem.y + (activeItem.implicitHeight / 2);
 
             // Position pill centered on the workspace item
             return itemCenterY - (targetHeight / 2);
@@ -632,8 +634,8 @@ Item {
         }
 
         property real targetWidth: {
-            // Use container's width (fixed at 25px)
-            return specialWorkspacesContainer ? specialWorkspacesContainer.width : 25;
+            // Use container's width (fixed at 30)
+            return specialWorkspacesContainer ? specialWorkspacesContainer.width : 30;
         }
 
         x: targetX
