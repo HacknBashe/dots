@@ -19,6 +19,9 @@ ColumnLayout {
     property string activeSpecialWsName: ""  // For special workspaces
     property bool isGhost: false  // Set by parent when animating out
 
+    // Signal when removal animation completes
+    signal removalAnimationComplete()
+
     readonly property int ws: wsId
     readonly property bool isOccupied: occupied[ws] ?? false
     readonly property bool hasWindows: isOccupied
@@ -85,6 +88,16 @@ ColumnLayout {
             duration: Appearance.anim.small
             easing.type: Easing.Bezier
             easing.bezierCurve: Appearance.anim.standard
+        }
+    }
+
+    // Detect when removal animation completes
+    onOpacityChanged: {
+        if (isGhost && opacity <= 0.01) {
+            // Animation finished - notify parent
+            console.log("Workspace", wsId, "emitting removalAnimationComplete signal - opacity:", opacity);
+            removalAnimationComplete();
+            console.log("Workspace", wsId, "signal emitted");
         }
     }
 

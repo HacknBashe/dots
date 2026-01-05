@@ -61,18 +61,8 @@ Item {
         // Items: { wsId: int, isGhost: bool }
     }
 
-    // Timer to clean up finished animations
-    Timer {
-        id: cleanupTimer
-        interval: Appearance.anim.small + 100 // Slightly longer than animation for safety
-        repeat: false
-        onTriggered: {
-            // Clear ghost arrays - this will trigger model updates
-            // which will remove the ghost items from the ListModels
-            animatingOutMon1 = [];
-            animatingOutMon2 = [];
-        }
-    }
+    // Note: Ghost cleanup is now handled by signals from Workspace items
+    // when their removal animations complete, rather than by a timer
 
     // Get current "real" workspaces for monitor 1
     readonly property var currentMonitor1Workspaces: {
@@ -117,7 +107,7 @@ Item {
         const removed = previousMonitor1Workspaces.filter(id => !currentMonitor1Workspaces.includes(id));
         if (removed.length > 0) {
             animatingOutMon1 = removed;
-            cleanupTimer.restart();
+            // Ghost cleanup now handled by signals from Workspace items
         }
 
         previousMonitor1Workspaces = currentMonitor1Workspaces;
@@ -170,7 +160,7 @@ Item {
         const removed = previousMonitor2Workspaces.filter(id => !currentMonitor2Workspaces.includes(id));
         if (removed.length > 0) {
             animatingOutMon2 = removed;
-            cleanupTimer.restart();
+            // Ghost cleanup now handled by signals from Workspace items
         }
 
         previousMonitor2Workspaces = currentMonitor2Workspaces;
@@ -260,11 +250,17 @@ Item {
         x: regularWorkspacesRow.x + column1Container.x
         y: regularWorkspacesRow.y + column1Container.y
         width: 30
-        height: column1.implicitHeight + Appearance.padding.small * 2
+        // Use actual height of column1, not implicit height
+        // This accounts for animating workspace heights
+        height: column1.height + Appearance.padding.small * 2
         color: Colours.layer(Colours.surfaceContainer, 0)
         radius: Appearance.rounding.full
         z: 0
         visible: column1Repeater.count > 0
+        
+        onHeightChanged: {
+            console.log("Column1 background height changed to:", height, "column1.height:", column1.height, "model count:", column1Model.count);
+        }
 
         Behavior on height {
             Anim {
@@ -287,7 +283,9 @@ Item {
         x: regularWorkspacesRow.x + column2Container.x
         y: regularWorkspacesRow.y + column2Container.y
         width: 30
-        height: column2.implicitHeight + Appearance.padding.small * 2
+        // Use actual height of column2, not implicit height
+        // This accounts for animating workspace heights
+        height: column2.height + Appearance.padding.small * 2
         color: Colours.layer(Colours.surfaceContainer, 0)
         radius: Appearance.rounding.full
         z: 0
@@ -357,17 +355,25 @@ Item {
                 Layout.preferredHeight: column1.implicitHeight
                 visible: column1Repeater.count > 0
 
-                ColumnLayout {
-                    id: column1
+                    ColumnLayout {
+                        id: column1
 
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    spacing: Appearance.spacing.larger
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: Appearance.spacing.larger
+                        
+                        onImplicitHeightChanged: {
+                            console.log("Column1 implicitHeight changed to:", implicitHeight, "actual height:", height);
+                        }
 
                     Repeater {
                         id: column1Repeater
 
                         model: column1Model
+                        
+                        onCountChanged: {
+                            console.log("Column1 Repeater count changed to:", count);
+                        }
 
                         delegate: Workspace {
                             id: workspaceItem
@@ -393,9 +399,37 @@ Item {
 
                             Behavior on Layout.preferredHeight {
                                 NumberAnimation {
+                                    id: column1HeightAnim
                                     duration: Appearance.anim.small
                                     easing.type: Easing.Bezier
                                     easing.bezierCurve: Appearance.anim.standard
+                                    
+                                    onRunningChanged: {
+                                        if (!running && workspaceItem.isGhost && workspaceItem.Layout.preferredHeight <= 0.1) {
+                                            console.log("Column1: Height animation completed for ghost", workspaceItem.wsId);
+                                            console.log("Column1: Removing ghost", workspaceItem.wsId, "from animatingOutMon1:", JSON.stringify(animatingOutMon1));
+                                            
+                                            // Remove from ghost list
+                                            const newGhosts = animatingOutMon1.filter(id => id !== workspaceItem.wsId);
+                                            animatingOutMon1 = newGhosts;
+                                            
+                                            console.log("Column1: After removal, animatingOutMon1:", JSON.stringify(animatingOutMon1));
+                                            
+                                            // Manually trigger model update since we changed animatingOutMon1
+                                            const current = currentMonitor1Workspaces;
+                                            const combined = Array.from(new Set([...current, ...newGhosts])).sort((a, b) => a - b);
+                                            console.log("Column1: Manually updating model with combined:", JSON.stringify(combined));
+                                            
+                                            // Remove items not in combined
+                                            for (let i = column1Model.count - 1; i >= 0; i--) {
+                                                const item = column1Model.get(i);
+                                                if (!combined.includes(item.wsId)) {
+                                                    console.log("Column1: Removing wsId", item.wsId, "from model");
+                                                    column1Model.remove(i);
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -447,9 +481,37 @@ Item {
 
                             Behavior on Layout.preferredHeight {
                                 NumberAnimation {
+                                    id: column2HeightAnim
                                     duration: Appearance.anim.small
                                     easing.type: Easing.Bezier
                                     easing.bezierCurve: Appearance.anim.standard
+                                    
+                                    onRunningChanged: {
+                                        if (!running && workspaceItem.isGhost && workspaceItem.Layout.preferredHeight <= 0.1) {
+                                            console.log("Column2: Height animation completed for ghost", workspaceItem.wsId);
+                                            console.log("Column2: Removing ghost", workspaceItem.wsId, "from animatingOutMon2:", JSON.stringify(animatingOutMon2));
+                                            
+                                            // Remove from ghost list
+                                            const newGhosts = animatingOutMon2.filter(id => id !== workspaceItem.wsId);
+                                            animatingOutMon2 = newGhosts;
+                                            
+                                            console.log("Column2: After removal, animatingOutMon2:", JSON.stringify(animatingOutMon2));
+                                            
+                                            // Manually trigger model update since we changed animatingOutMon2
+                                            const current = currentMonitor2Workspaces;
+                                            const combined = Array.from(new Set([...current, ...newGhosts])).sort((a, b) => a - b);
+                                            console.log("Column2: Manually updating model with combined:", JSON.stringify(combined));
+                                            
+                                            // Remove items not in combined
+                                            for (let i = column2Model.count - 1; i >= 0; i--) {
+                                                const item = column2Model.get(i);
+                                                if (!combined.includes(item.wsId)) {
+                                                    console.log("Column2: Removing wsId", item.wsId, "from model");
+                                                    column2Model.remove(i);
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
