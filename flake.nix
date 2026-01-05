@@ -56,6 +56,11 @@
       url = "github:WiVRn/WiVRn/v25.12";  # Pin to v25.12 release to match headset version
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    opencode = {
+      url = "github:anomalyco/opencode";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

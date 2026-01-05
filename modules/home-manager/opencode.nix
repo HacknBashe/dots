@@ -1,9 +1,10 @@
 {
   pkgs,
   config,
+  inputs,
   ...
 }: {
-  home.packages = with pkgs; [opencode];
+  home.packages = [inputs.opencode.packages.${pkgs.system}.default];
 
   home.file = {
     "opencode/opencode.json" = {

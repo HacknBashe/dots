@@ -911,6 +911,26 @@
         "type": "github"
       }
     },
+    "opencode": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767633889,
+        "narHash": "sha256-R1r4Lbe8riY0Ph/u/ZRfuN2G19mJzfhcXxcaFq2DR9U=",
+        "owner": "anomalyco",
+        "repo": "opencode",
+        "rev": "bbd1c071c4f3258cc2612f20a7ba306ac730060a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anomalyco",
+        "repo": "opencode",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -988,6 +1008,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",
         "nixpkgsold": "nixpkgsold",
+        "opencode": "opencode",
         "quickshell": "quickshell_2",
         "wivrn": "wivrn"
       }
