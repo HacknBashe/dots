@@ -50,13 +50,25 @@ Item {
     property var animatingOutMon1: []
     property var animatingOutMon2: []
 
+    // ListModels for workspace items (prevents full recreation on changes)
+    ListModel {
+        id: column1Model
+        // Items: { wsId: int, isGhost: bool }
+    }
+
+    ListModel {
+        id: column2Model
+        // Items: { wsId: int, isGhost: bool }
+    }
+
     // Timer to clean up finished animations
     Timer {
         id: cleanupTimer
-        interval: Appearance.anim.small + 50 // Slightly longer than animation
+        interval: Appearance.anim.small + 100 // Slightly longer than animation for safety
         repeat: false
         onTriggered: {
-            console.log("Cleanup: removing ghosts");
+            // Clear ghost arrays - this will trigger model updates
+            // which will remove the ghost items from the ListModels
             animatingOutMon1 = [];
             animatingOutMon2 = [];
         }
@@ -99,44 +111,111 @@ Item {
     property var previousMonitor1Workspaces: []
     property var previousMonitor2Workspaces: []
 
-    // Final workspace lists including ghosts
-    readonly property var monitor1Workspaces: {
-        const combined = new Set([...currentMonitor1Workspaces, ...animatingOutMon1]);
-        return Array.from(combined).sort((a, b) => a - b);
-    }
-
-    readonly property var monitor2Workspaces: {
-        const combined = new Set([...currentMonitor2Workspaces, ...animatingOutMon2]);
-        return Array.from(combined).sort((a, b) => a - b);
-    }
-
-    // Watch for changes and update ghost lists
+    // Watch for changes and update ghost lists and model
     onCurrentMonitor1WorkspacesChanged: {
-        console.log("Monitor 1 workspaces changed:", JSON.stringify(currentMonitor1Workspaces));
-
         // Find removed workspaces
         const removed = previousMonitor1Workspaces.filter(id => !currentMonitor1Workspaces.includes(id));
         if (removed.length > 0) {
-            console.log("Monitor 1 removed:", JSON.stringify(removed));
             animatingOutMon1 = removed;
             cleanupTimer.restart();
         }
 
         previousMonitor1Workspaces = currentMonitor1Workspaces;
+
+        // Update ListModel surgically
+        const current = currentMonitor1Workspaces;
+        const ghosts = animatingOutMon1;
+        const combined = Array.from(new Set([...current, ...ghosts])).sort((a, b) => a - b);
+
+        // 1. Remove items not in combined
+        for (let i = column1Model.count - 1; i >= 0; i--) {
+            const item = column1Model.get(i);
+            if (!combined.includes(item.wsId)) {
+                column1Model.remove(i);
+            }
+        }
+
+        // 2. Update isGhost status for existing items
+        for (let i = 0; i < column1Model.count; i++) {
+            const item = column1Model.get(i);
+            column1Model.setProperty(i, "isGhost", ghosts.includes(item.wsId));
+        }
+
+        // 3. Add new items and ensure correct order
+        combined.forEach((id, targetIndex) => {
+            // Find if item exists
+            let foundIndex = -1;
+            for (let i = 0; i < column1Model.count; i++) {
+                if (column1Model.get(i).wsId === id) {
+                    foundIndex = i;
+                    break;
+                }
+            }
+
+            if (foundIndex === -1) {
+                // New item - insert at correct sorted position
+                column1Model.insert(targetIndex, {
+                    wsId: id,
+                    isGhost: ghosts.includes(id)
+                });
+            } else if (foundIndex !== targetIndex) {
+                // Item exists but in wrong position - move it
+                column1Model.move(foundIndex, targetIndex, 1);
+            }
+        });
     }
 
     onCurrentMonitor2WorkspacesChanged: {
-        console.log("Monitor 2 workspaces changed:", JSON.stringify(currentMonitor2Workspaces));
-
         // Find removed workspaces
         const removed = previousMonitor2Workspaces.filter(id => !currentMonitor2Workspaces.includes(id));
         if (removed.length > 0) {
-            console.log("Monitor 2 removed:", JSON.stringify(removed));
             animatingOutMon2 = removed;
             cleanupTimer.restart();
         }
 
         previousMonitor2Workspaces = currentMonitor2Workspaces;
+
+        // Update ListModel surgically
+        const current = currentMonitor2Workspaces;
+        const ghosts = animatingOutMon2;
+        const combined = Array.from(new Set([...current, ...ghosts])).sort((a, b) => a - b);
+
+        // 1. Remove items not in combined
+        for (let i = column2Model.count - 1; i >= 0; i--) {
+            const item = column2Model.get(i);
+            if (!combined.includes(item.wsId)) {
+                column2Model.remove(i);
+            }
+        }
+
+        // 2. Update isGhost status for existing items
+        for (let i = 0; i < column2Model.count; i++) {
+            const item = column2Model.get(i);
+            column2Model.setProperty(i, "isGhost", ghosts.includes(item.wsId));
+        }
+
+        // 3. Add new items and ensure correct order
+        combined.forEach((id, targetIndex) => {
+            // Find if item exists
+            let foundIndex = -1;
+            for (let i = 0; i < column2Model.count; i++) {
+                if (column2Model.get(i).wsId === id) {
+                    foundIndex = i;
+                    break;
+                }
+            }
+
+            if (foundIndex === -1) {
+                // New item - insert at correct sorted position
+                column2Model.insert(targetIndex, {
+                    wsId: id,
+                    isGhost: ghosts.includes(id)
+                });
+            } else if (foundIndex !== targetIndex) {
+                // Item exists but in wrong position - move it
+                column2Model.move(foundIndex, targetIndex, 1);
+            }
+        });
     }
 
     // Track which special workspace is active for the highlight pill
@@ -288,35 +367,26 @@ Item {
                     Repeater {
                         id: column1Repeater
 
-                        model: root.monitor1Workspaces
+                        model: column1Model
 
-                        Workspace {
+                        delegate: Workspace {
                             id: workspaceItem
-                            required property int modelData
+                            required property int index
+                            required property var model
 
-                            // Check if this workspace is "real" or a ghost animating out
-                            readonly property bool _isGhost: {
-                                const values = Hyprland.workspaces.values || [];
-                                const workspace = values.find(w => w.id === modelData);
-
-                                // Ghost if workspace doesn't exist on DP-3 and isn't active on DP-3
-                                if (workspace && workspace.lastIpcObject?.monitor === "DP-3") {
-                                    return false;
-                                }
-                                if (modelData === root.activeWsId && Hyprland.focusedMonitor?.name === "DP-3") {
-                                    return false;
-                                }
-                                return true;
-                            }
-
-                            wsId: modelData
+                            wsId: model.wsId
+                            isGhost: model.isGhost
                             activeWsId: root.activeWsId
                             occupied: root.occupied
                             groupOffset: root.groupOffset
-                            isGhost: _isGhost
 
-                            // Store the target height
-                            readonly property real targetHeight: _isGhost ? 0 : implicitHeight
+                            // Store the target height - start at 0 for new items
+                            readonly property real targetHeight: {
+                                if (_isNewlyCreated && !isGhost) {
+                                    return 0;  // Start at 0 height for entrance animation
+                                }
+                                return isGhost ? 0 : implicitHeight;
+                            }
 
                             // Explicitly set height and animate it
                             Layout.preferredHeight: targetHeight
@@ -351,35 +421,26 @@ Item {
                     Repeater {
                         id: column2Repeater
 
-                        model: root.monitor2Workspaces
+                        model: column2Model
 
-                        Workspace {
+                        delegate: Workspace {
                             id: workspaceItem
-                            required property int modelData
+                            required property int index
+                            required property var model
 
-                            // Check if this workspace is "real" or a ghost animating out
-                            readonly property bool _isGhost: {
-                                const values = Hyprland.workspaces.values || [];
-                                const workspace = values.find(w => w.id === modelData);
-
-                                // Ghost if workspace doesn't exist on HDMI-A-5 and isn't active on HDMI-A-5
-                                if (workspace && workspace.lastIpcObject?.monitor === "HDMI-A-5") {
-                                    return false;
-                                }
-                                if (modelData === root.activeWsId && Hyprland.focusedMonitor?.name === "HDMI-A-5") {
-                                    return false;
-                                }
-                                return true;
-                            }
-
-                            wsId: modelData
+                            wsId: model.wsId
+                            isGhost: model.isGhost
                             activeWsId: root.activeWsId
                             occupied: root.occupied
                             groupOffset: root.groupOffset
-                            isGhost: _isGhost
 
-                            // Store the target height
-                            readonly property real targetHeight: _isGhost ? 0 : implicitHeight
+                            // Store the target height - start at 0 for new items
+                            readonly property real targetHeight: {
+                                if (_isNewlyCreated && !isGhost) {
+                                    return 0;  // Start at 0 height for entrance animation
+                                }
+                                return isGhost ? 0 : implicitHeight;
+                            }
 
                             // Explicitly set height and animate it
                             Layout.preferredHeight: targetHeight
@@ -443,26 +504,28 @@ Item {
             if (activeWsId < 1 || activeWsId > root.shownWorkspaces)
                 return null;
 
-            // Check column 1
-            const col1Idx = root.monitor1Workspaces.indexOf(activeWsId);
-            if (col1Idx >= 0) {
-                return {
-                    column: column1,
-                    repeater: column1Repeater,
-                    index: col1Idx,
-                    container: column1Container
-                };
+            // Check column 1 model
+            for (let i = 0; i < column1Model.count; i++) {
+                if (column1Model.get(i).wsId === activeWsId) {
+                    return {
+                        column: column1,
+                        repeater: column1Repeater,
+                        index: i,
+                        container: column1Container
+                    };
+                }
             }
 
-            // Check column 2
-            const col2Idx = root.monitor2Workspaces.indexOf(activeWsId);
-            if (col2Idx >= 0) {
-                return {
-                    column: column2,
-                    repeater: column2Repeater,
-                    index: col2Idx,
-                    container: column2Container
-                };
+            // Check column 2 model
+            for (let i = 0; i < column2Model.count; i++) {
+                if (column2Model.get(i).wsId === activeWsId) {
+                    return {
+                        column: column2,
+                        repeater: column2Repeater,
+                        index: i,
+                        container: column2Container
+                    };
+                }
             }
 
             return null;

@@ -24,6 +24,16 @@ ColumnLayout {
     readonly property bool hasWindows: isOccupied
     readonly property bool isActive: isSpecial ? (wsName === activeSpecialWsName) : (activeWsId === ws)
 
+    // Track if this is a newly created workspace to enable entrance animation
+    property bool _isNewlyCreated: true
+
+    Component.onCompleted: {
+        // On next frame, mark as no longer new to trigger entrance animation
+        Qt.callLater(() => {
+            _isNewlyCreated = false;
+        });
+    }
+
     // Map special workspace names to letters
     readonly property string specialLetter: {
         if (!isSpecial)
@@ -46,10 +56,22 @@ ColumnLayout {
     clip: true
 
     // Animate opacity with height for smoother appearance
-    opacity: isGhost ? 0 : 1
+    // New workspaces start at 0 opacity and animate in
+    opacity: {
+        if (_isNewlyCreated && !isGhost) {
+            return 0;  // Start invisible for new items
+        }
+        return isGhost ? 0 : 1;
+    }
 
     // Animate scale slightly for a nicer effect
-    scale: isGhost ? 0.8 : 1.0
+    // New workspaces start scaled down and animate in
+    scale: {
+        if (_isNewlyCreated && !isGhost) {
+            return 0.8;  // Start scaled down for new items
+        }
+        return isGhost ? 0.8 : 1.0;
+    }
 
     Behavior on opacity {
         NumberAnimation {
