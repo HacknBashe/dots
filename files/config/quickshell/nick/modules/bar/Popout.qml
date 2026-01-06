@@ -21,7 +21,7 @@ PanelWindow {
 
     color: "transparent"
     // Keep visible during slide animation
-    visible: shouldBeOpen || contentRect.x > -contentRect.width
+    visible: shouldBeOpen || contentRect.x < contentRect.width
 
     // Position from top, offset from right by bar width + gap
     anchors {
