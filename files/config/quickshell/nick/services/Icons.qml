@@ -92,14 +92,14 @@ Singleton {
 
             // Terminals (with common class name patterns)
             "kitty": "󰄛",
-            "Alacritty": "",
-            "alacritty": "",
-            "foot": "",
+            "Alacritty": "",
+            "alacritty": "",
+            "foot": "",
             "ghostty": "󰊠",
             "Ghostty": "󰊠",
             "com.mitchellh.ghostty": "󰊠",
-            "org.wezfurlong.wezterm": "",
-            "wezterm": "",
+            "org.wezfurlong.wezterm": "",
+            "wezterm": "",
 
             // File managers
             "thunar": "󰉋",
