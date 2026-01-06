@@ -12,6 +12,8 @@ import QtQuick.Layouts
 PanelWindow {
     id: window
 
+    property bool menuOpen: false
+
     // Use secondary screen
     screen: Quickshell.screens[1]
     color: "transparent"
@@ -27,9 +29,7 @@ PanelWindow {
         right: 68 + Appearance.spacing.large  // Bar width (68px) + spacing
     }
 
-    // Fixed size - never changes
     implicitWidth: 400
-    // Use a very large fixed height instead of calculating from screen
     implicitHeight: 2000
 
     WlrLayershell.namespace: "nick-notifications"
@@ -92,5 +92,15 @@ PanelWindow {
             // ListView requires explicit width
             width: notificationList.width
         }
+    }
+
+    // Debug border to visualize notification area (temporary)
+    Rectangle {
+        anchors.fill: parent
+        color: "transparent"
+        border.color: "red"
+        border.width: 2
+        z: 1000
+        enabled: false  // Don't capture mouse events
     }
 }

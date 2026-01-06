@@ -19,7 +19,7 @@ Rectangle {
 
     // Keyboard navigation
     property int selectedButtonIndex: -1
-    readonly property int buttonCount: 5  // lock, logout, suspend, restart, power
+    readonly property int buttonCount: 5  // power, restart, logout, suspend, lock
 
     focus: true
 
@@ -32,15 +32,19 @@ Rectangle {
             event.accepted = true;
         } else if (event.key === Qt.Key_Left) {
             if (selectedButtonIndex < 0) {
-                selectedButtonIndex = 0;
+                // First press: start from rightmost
+                selectedButtonIndex = buttonCount - 1;
             } else {
+                // Navigate left (decrease index)
                 selectedButtonIndex = Math.max(0, selectedButtonIndex - 1);
             }
             event.accepted = true;
         } else if (event.key === Qt.Key_Right) {
             if (selectedButtonIndex < 0) {
+                // First press: start from leftmost
                 selectedButtonIndex = 0;
             } else {
+                // Navigate right (increase index)
                 selectedButtonIndex = Math.min(buttonCount - 1, selectedButtonIndex + 1);
             }
             event.accepted = true;
@@ -49,15 +53,15 @@ Rectangle {
                 // Trigger the selected button action
                 root.closeRequested();
                 if (selectedButtonIndex === 0) {
-                    lockTimer.start();
+                    powerProcess.running = true;
                 } else if (selectedButtonIndex === 1) {
-                    suspendProcess.running = true;
+                    restartProcess.running = true;
                 } else if (selectedButtonIndex === 2) {
                     logoutProcess.running = true;
                 } else if (selectedButtonIndex === 3) {
-                    restartProcess.running = true;
+                    suspendProcess.running = true;
                 } else if (selectedButtonIndex === 4) {
-                    powerProcess.running = true;
+                    lockTimer.start();
                 }
                 event.accepted = true;
             }
@@ -647,13 +651,13 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Appearance.spacing.normal
 
-            // Lock button
+            // Power off button
             Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
                 color: root.selectedButtonIndex === 0 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: lockMouseArea.containsMouse || root.selectedButtonIndex === 0 ? 1.1 : 1.0
+                scale: powerMouseArea.containsMouse || root.selectedButtonIndex === 0 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -672,10 +676,9 @@ Rectangle {
 
                 Text {
                     anchors.centerIn: parent
-                    text: ""
+                    text: "󰐥"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    font.bold: true
                     color: root.selectedButtonIndex === 0 ? NixConfig.textOnPrimary : NixConfig.primary
 
                     Behavior on color {
@@ -687,27 +690,27 @@ Rectangle {
                 }
 
                 MouseArea {
-                    id: lockMouseArea
+                    id: powerMouseArea
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
 
                     onClicked: {
                         root.closeRequested();
-                        lockTimer.start();
+                        powerProcess.running = true;
                     }
 
                     onEntered: root.selectedButtonIndex = 0
                 }
             }
 
-            // Suspend button
+            // Restart button
             Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
                 color: root.selectedButtonIndex === 1 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: suspendMouseArea.containsMouse || root.selectedButtonIndex === 1 ? 1.1 : 1.0
+                scale: restartMouseArea.containsMouse || root.selectedButtonIndex === 1 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -726,7 +729,7 @@ Rectangle {
 
                 Text {
                     anchors.centerIn: parent
-                    text: "󰒲"
+                    text: "󰜉"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
                     color: root.selectedButtonIndex === 1 ? NixConfig.textOnPrimary : NixConfig.primary
@@ -740,14 +743,14 @@ Rectangle {
                 }
 
                 MouseArea {
-                    id: suspendMouseArea
+                    id: restartMouseArea
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
 
                     onClicked: {
                         root.closeRequested();
-                        suspendProcess.running = true;
+                        restartProcess.running = true;
                     }
 
                     onEntered: root.selectedButtonIndex = 1
@@ -807,13 +810,13 @@ Rectangle {
                 }
             }
 
-            // Restart button
+            // Suspend button
             Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
                 color: root.selectedButtonIndex === 3 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: restartMouseArea.containsMouse || root.selectedButtonIndex === 3 ? 1.1 : 1.0
+                scale: suspendMouseArea.containsMouse || root.selectedButtonIndex === 3 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -832,7 +835,7 @@ Rectangle {
 
                 Text {
                     anchors.centerIn: parent
-                    text: "󰜉"
+                    text: "󰒲"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
                     color: root.selectedButtonIndex === 3 ? NixConfig.textOnPrimary : NixConfig.primary
@@ -846,27 +849,27 @@ Rectangle {
                 }
 
                 MouseArea {
-                    id: restartMouseArea
+                    id: suspendMouseArea
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
 
                     onClicked: {
                         root.closeRequested();
-                        restartProcess.running = true;
+                        suspendProcess.running = true;
                     }
 
                     onEntered: root.selectedButtonIndex = 3
                 }
             }
 
-            // Power off button
+            // Lock button
             Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
                 color: root.selectedButtonIndex === 4 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: powerMouseArea.containsMouse || root.selectedButtonIndex === 4 ? 1.1 : 1.0
+                scale: lockMouseArea.containsMouse || root.selectedButtonIndex === 4 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -885,9 +888,10 @@ Rectangle {
 
                 Text {
                     anchors.centerIn: parent
-                    text: "󰐥"
+                    text: ""
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
+                    font.bold: true
                     color: root.selectedButtonIndex === 4 ? NixConfig.textOnPrimary : NixConfig.primary
 
                     Behavior on color {
@@ -899,14 +903,14 @@ Rectangle {
                 }
 
                 MouseArea {
-                    id: powerMouseArea
+                    id: lockMouseArea
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
 
                     onClicked: {
                         root.closeRequested();
-                        powerProcess.running = true;
+                        lockTimer.start();
                     }
 
                     onEntered: root.selectedButtonIndex = 4

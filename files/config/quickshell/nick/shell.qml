@@ -15,6 +15,7 @@ ShellRoot {
 
     NotificationWindow {
         id: notificationWindow
+        menuOpen: barWindow.menuOpen
     }
 
     // File watcher for IPC toggle trigger
