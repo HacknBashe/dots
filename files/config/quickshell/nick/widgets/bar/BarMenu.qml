@@ -57,9 +57,9 @@ Rectangle {
                 } else if (selectedButtonIndex === 1) {
                     restartProcess.running = true;
                 } else if (selectedButtonIndex === 2) {
-                    logoutProcess.running = true;
-                } else if (selectedButtonIndex === 3) {
                     suspendProcess.running = true;
+                } else if (selectedButtonIndex === 3) {
+                    logoutProcess.running = true;
                 } else if (selectedButtonIndex === 4) {
                     lockTimer.start();
                 }
@@ -757,66 +757,13 @@ Rectangle {
                 }
             }
 
-            // Logout button
-            Rectangle {
-                width: 50
-                height: 50
-                radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 2 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: logoutMouseArea.containsMouse || root.selectedButtonIndex === 2 ? 1.1 : 1.0
-                transformOrigin: Item.Center
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.Linear
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.OutBack
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "󰍃"
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 2 ? NixConfig.textOnPrimary : NixConfig.primary
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
-
-                MouseArea {
-                    id: logoutMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-
-                    onClicked: {
-                        root.closeRequested();
-                        logoutProcess.running = true;
-                    }
-
-                    onEntered: root.selectedButtonIndex = 2
-                }
-            }
-
             // Suspend button
             Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 3 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: suspendMouseArea.containsMouse || root.selectedButtonIndex === 3 ? 1.1 : 1.0
+                color: root.selectedButtonIndex === 2 ? NixConfig.primary : NixConfig.surfaceContainer
+                scale: suspendMouseArea.containsMouse || root.selectedButtonIndex === 2 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -838,7 +785,7 @@ Rectangle {
                     text: "󰒲"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 3 ? NixConfig.textOnPrimary : NixConfig.primary
+                    color: root.selectedButtonIndex === 2 ? NixConfig.textOnPrimary : NixConfig.primary
 
                     Behavior on color {
                         ColorAnimation {
@@ -857,6 +804,59 @@ Rectangle {
                     onClicked: {
                         root.closeRequested();
                         suspendProcess.running = true;
+                    }
+
+                    onEntered: root.selectedButtonIndex = 2
+                }
+            }
+
+            // Logout button
+            Rectangle {
+                width: 50
+                height: 50
+                radius: Appearance.rounding.small
+                color: root.selectedButtonIndex === 3 ? NixConfig.primary : NixConfig.surfaceContainer
+                scale: logoutMouseArea.containsMouse || root.selectedButtonIndex === 3 ? 1.1 : 1.0
+                transformOrigin: Item.Center
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
+
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.OutBack
+                    }
+                }
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰍃"
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.large
+                    color: root.selectedButtonIndex === 3 ? NixConfig.textOnPrimary : NixConfig.primary
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
+                }
+
+                MouseArea {
+                    id: logoutMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+
+                    onClicked: {
+                        root.closeRequested();
+                        logoutProcess.running = true;
                     }
 
                     onEntered: root.selectedButtonIndex = 3
