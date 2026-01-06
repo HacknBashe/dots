@@ -50,8 +50,7 @@ ColumnLayout {
         return "S";  // Default for other special workspaces
     }
 
-    anchors.left: parent.left
-    anchors.right: parent.right
+    Layout.fillWidth: true
     Layout.alignment: Qt.AlignHCenter
     z: 20
 
@@ -103,17 +102,15 @@ ColumnLayout {
 
     // Workspace number/letter
     Item {
+        Layout.fillWidth: true
         Layout.alignment: Qt.AlignHCenter
         Layout.topMargin: 5
-        anchors.left: root.left
-        anchors.right: root.right
         implicitHeight: numberText.implicitHeight
 
         Text {
             id: numberText
-            width: root.width
-            anchors.left: root.left
-            anchors.right: root.right
+            anchors.left: parent.left
+            anchors.right: parent.right
             horizontalAlignment: Text.AlignHCenter
 
             text: root.isSpecial ? root.specialLetter : root.ws
@@ -134,8 +131,7 @@ ColumnLayout {
     Column {
         id: windows
 
-        anchors.left: root.left
-        anchors.right: root.right
+        Layout.fillWidth: true
         Layout.alignment: Qt.AlignHCenter
         Layout.topMargin: 4
         Layout.bottomMargin: 5
