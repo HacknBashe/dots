@@ -26,8 +26,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     float apply = abs(sin(fragCoord.y) * 0.25 * scan);
         
     // sample the texture
-    vec3 color = texture(iChannel0, uv).rgb;
+    vec4 origColor = texture(iChannel0, uv);
+    vec3 color = origColor.rgb;
 
     // mix the sampled color with the scanline intensity
-    fragColor = vec4(mix(color, vec3(0.0), apply), 1.0);
+    // preserve alpha channel to respect background-opacity on macOS
+    fragColor = vec4(mix(color, vec3(0.0), apply), origColor.a);
 }
