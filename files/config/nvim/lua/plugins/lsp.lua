@@ -10,7 +10,7 @@ return {
 			{
 				"git@git.hubteam.com:HubSpot/bend.nvim.git",
 				enabled = function()
-					return vim.fn.hostname() == "JGR2T59639"
+					return vim.fn.hostname() == "JGR2T596J9"
 				end,
 			},
 		},
