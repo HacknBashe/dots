@@ -337,9 +337,18 @@ Item {
     ColumnLayout {
         id: mainLayout
 
-        anchors.centerIn: parent
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
         spacing: Appearance.spacing.larger
         z: 10
+
+        Behavior on y {
+            NumberAnimation {
+                duration: Appearance.anim.small
+                easing.type: Easing.Bezier
+                easing.bezierCurve: Appearance.anim.standard
+            }
+        }
 
         // Regular workspaces - two columns side by side
         RowLayout {
@@ -355,10 +364,17 @@ Item {
                 Layout.preferredHeight: column2.implicitHeight
                 visible: column2Repeater.count > 0
 
+                Behavior on Layout.preferredHeight {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Bezier
+                        easing.bezierCurve: Appearance.anim.standard
+                    }
+                }
+
                 ColumnLayout {
                     id: column2
 
-                    anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.right: parent.right
                     spacing: Appearance.spacing.larger
@@ -436,6 +452,14 @@ Item {
                 Layout.preferredWidth: 30
                 Layout.preferredHeight: column1.implicitHeight
                 visible: column1Repeater.count > 0
+
+                Behavior on Layout.preferredHeight {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Bezier
+                        easing.bezierCurve: Appearance.anim.standard
+                    }
+                }
 
                 ColumnLayout {
                     id: column1
