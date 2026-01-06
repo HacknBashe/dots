@@ -84,6 +84,10 @@ export const IndicatorPlugin = async ({ directory, worktree, client, $ }) => {
       if (event.type === "session.updated") {
         await setTitle("Agent: working");
       }
+      if (event.type === "permission.asked") {
+        await setTitle("Agent: waiting");
+        await playBeep();
+      }
       if (event.type === "session.idle") {
         await setTitle("Agent: idle");
         await playBeep();
