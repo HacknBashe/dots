@@ -82,11 +82,13 @@ Singleton {
             "code": "󰨞",
             "Code": "󰨞",
             "vscodium": "󰨞",
-            "neovim": "",
-            "nvim": "",
-            "vim": "",
+            "neovim": "",
+            "nvim": "",
+            "vim": "",
             "jetbrains-idea": "",
             "jetbrains-pycharm": "",
+            "Godot": "",
+            "godot": "",
 
             // Terminals (with common class name patterns)
             "kitty": "󰄛",

@@ -1,5 +1,5 @@
-import "../config"
-import "../services"
+import "../../config"
+import "../../services"
 import "../shared"
 import Quickshell
 import Quickshell.Hyprland

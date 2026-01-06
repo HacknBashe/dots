@@ -1,4 +1,4 @@
-import "../config"
+import "../../config"
 import QtQuick
 
 // Animation helper that uses Material Design inspired curves

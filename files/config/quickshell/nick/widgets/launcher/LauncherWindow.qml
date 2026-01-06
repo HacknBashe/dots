@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
-import "../config"
-import "../services"
+import "../../config"
+import "../../services"
 import QtQuick
 import Quickshell
 import Quickshell.Wayland

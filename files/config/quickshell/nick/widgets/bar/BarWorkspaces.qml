@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
-import "../config"
-import "../services"
+import "../../config"
+import "../../services"
 import "../shared"
 import Quickshell.Hyprland
 import QtQuick
