@@ -534,6 +534,14 @@ Item {
 
                             // Explicitly set height and animate it
                             Layout.preferredHeight: targetHeight
+                            
+                            // Pull up this item if the previous item is a ghost
+                            // This cancels out the spacing between the ghost and this item
+                            Layout.topMargin: {
+                                if (index === 0) return 0;  // First item has no previous
+                                const prevItem = column2Model.get(index - 1);
+                                return (prevItem && prevItem.isGhost) ? -Appearance.spacing.larger : 0;
+                            }
 
                             Behavior on Layout.preferredHeight {
                                 NumberAnimation {
@@ -631,6 +639,14 @@ Item {
 
                             // Explicitly set height and animate it
                             Layout.preferredHeight: targetHeight
+                            
+                            // Pull up this item if the previous item is a ghost
+                            // This cancels out the spacing between the ghost and this item
+                            Layout.topMargin: {
+                                if (index === 0) return 0;  // First item has no previous
+                                const prevItem = column1Model.get(index - 1);
+                                return (prevItem && prevItem.isGhost) ? -Appearance.spacing.larger : 0;
+                            }
 
                             Behavior on Layout.preferredHeight {
                                 NumberAnimation {
