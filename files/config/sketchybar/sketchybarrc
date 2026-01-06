@@ -34,10 +34,10 @@ sketchybar --default "${default[@]}"
 
 ##### Adding Left Items #####
 source $ITEM_DIR/aerospace.sh
-source $ITEM_DIR/audio.sh
 source $ITEM_DIR/spotify.sh
 
 ##### Adding Right Items #####
+source $ITEM_DIR/audio.sh
 source $ITEM_DIR/weather.sh
 source $ITEM_DIR/clock.sh
 source $ITEM_DIR/calendar.sh

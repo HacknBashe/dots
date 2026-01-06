@@ -2,7 +2,7 @@
 
 icon=$(if [ "$(SwitchAudioSource -c)" == "Jabra Link 390" ]; then echo "󰋋"; else echo "󰓃"; fi)
 sketchybar \
-  --add item audio left \
+  --add item audio right \
   --set audio script="$PLUGIN_DIR/audio_volume.sh" \
   icon=$icon \
   icon.padding_left=5 \
