@@ -3,10 +3,10 @@ customCommands:
     command: 'tmux neww ''zsh -i -c "git-worktree-switch {{.SelectedLocalBranch.Name}}"'''
     context: "localBranches"
     loadingText: "Switch worktree"
-  # - key: "<c-c>"
-  #   command: "tmux neww 'zsh -i -c git-worktree-create'"
-  #   context: "localBranches"
-  #   loadingText: "Create worktree from existing branch"
+  - key: "<c-c>"
+    command: "tmux neww 'zsh -i -c git-worktree-create'"
+    context: "localBranches"
+    loadingText: "Create worktree from existing branch"
   - key: "<c-n>"
     prompts:
       - type: "input"
