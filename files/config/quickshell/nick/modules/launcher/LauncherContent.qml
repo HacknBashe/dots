@@ -30,9 +30,9 @@ FocusScope {
     Rectangle {
         anchors.fill: parent
         radius: Appearance.rounding.normal
-        color: Colours.surface
+        color: NixConfig.surface
         border.width: 1
-        border.color: Qt.alpha(Colours.outline, 0.2)
+        border.color: Qt.alpha(NixConfig.outline, 0.2)
     }
 
     // Slide animation from bottom
@@ -75,9 +75,9 @@ FocusScope {
             Layout.fillWidth: true
             Layout.preferredHeight: 50
             radius: Appearance.rounding.full
-            color: Colours.surfaceContainer
+            color: NixConfig.surfaceContainer
             border.width: searchField.activeFocus ? 2 : 0
-            border.color: Colours.primary
+            border.color: NixConfig.primary
 
             Behavior on border.width {
                 NumberAnimation {
@@ -96,7 +96,7 @@ FocusScope {
                     text: "󰍉"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.larger
-                    color: Colours.primary
+                    color: NixConfig.primary
                 }
 
                 // Text input
@@ -106,9 +106,9 @@ FocusScope {
                     Layout.fillWidth: true
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.normal
-                    color: Colours.textOnSurface
-                    selectionColor: Colours.primary
-                    selectedTextColor: Colours.textOnPrimary
+                    color: NixConfig.textOnSurface
+                    selectionColor: NixConfig.primary
+                    selectedTextColor: NixConfig.textOnPrimary
                     clip: true
                     focus: true
                     activeFocusOnTab: true
@@ -117,7 +117,7 @@ FocusScope {
                         anchors.fill: parent
                         text: "Search applications..."
                         font: searchField.font
-                        color: Colours.secondary
+                        color: NixConfig.secondary
                         opacity: 0.5
                         visible: searchField.text === "" && !searchField.activeFocus
                     }
@@ -150,7 +150,7 @@ FocusScope {
                     Layout.preferredWidth: 30
                     Layout.preferredHeight: 30
                     radius: Appearance.rounding.full
-                    color: clearMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                    color: clearMouseArea.containsMouse ? Qt.alpha(NixConfig.textOnBackground, 0.1) : "transparent"
                     visible: searchField.text !== ""
 
                     Text {
@@ -158,7 +158,7 @@ FocusScope {
                         text: "󰅖"
                         font.family: Appearance.font.mono
                         font.pixelSize: Appearance.font.normal
-                        color: Colours.secondary
+                        color: NixConfig.secondary
                     }
 
                     MouseArea {

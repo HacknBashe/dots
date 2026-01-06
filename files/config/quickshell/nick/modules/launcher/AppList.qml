@@ -66,7 +66,7 @@ Item {
             text: "No applications found"
             font.family: Appearance.font.mono
             font.pixelSize: Appearance.font.normal
-            color: Colours.secondary
+            color: NixConfig.secondary
             opacity: 0.7
         }
 
@@ -77,7 +77,7 @@ Item {
             contentItem: Rectangle {
                 implicitWidth: 6
                 radius: 3
-                color: Qt.alpha(Colours.primary, parent.pressed ? 0.5 : (parent.hovered ? 0.3 : 0.2))
+                color: Qt.alpha(NixConfig.primary, parent.pressed ? 0.5 : (parent.hovered ? 0.3 : 0.2))
 
                 Behavior on color {
                     ColorAnimation {

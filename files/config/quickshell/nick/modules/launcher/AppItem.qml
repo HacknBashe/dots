@@ -19,7 +19,7 @@ Rectangle {
     width: parent.width
     height: 60
     radius: Appearance.rounding.small
-    color: isSelected ? Qt.alpha(Colours.primary, 0.15) : (mouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.08) : "transparent")
+    color: isSelected ? Qt.alpha(NixConfig.primary, 0.15) : (mouseArea.containsMouse ? Qt.alpha(NixConfig.textOnBackground, 0.08) : "transparent")
 
     Behavior on color {
         ColorAnimation {
@@ -46,7 +46,7 @@ Rectangle {
             Layout.preferredHeight: 40
             Layout.alignment: Qt.AlignVCenter
             radius: Appearance.rounding.small
-            color: Qt.alpha(Colours.primary, 0.1)
+            color: Qt.alpha(NixConfig.primary, 0.1)
 
             IconImage {
                 anchors.fill: parent
@@ -69,7 +69,7 @@ Rectangle {
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.normal
                 font.bold: true
-                color: Colours.textOnSurface
+                color: NixConfig.textOnSurface
                 elide: Text.ElideRight
             }
 
@@ -79,7 +79,7 @@ Rectangle {
                 text: root.app.description || ""
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.small
-                color: Colours.secondary
+                color: NixConfig.secondary
                 elide: Text.ElideRight
                 visible: text !== ""
                 opacity: 0.8

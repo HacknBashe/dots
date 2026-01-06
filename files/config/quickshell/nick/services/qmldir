@@ -1,5 +1,4 @@
 module services
-singleton Colours 1.0 Colours.qml
 singleton Time 1.0 Time.qml
 singleton Icons 1.0 Icons.qml
 singleton Weather 1.0 Weather.qml

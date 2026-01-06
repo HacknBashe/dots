@@ -182,7 +182,7 @@ ColumnLayout {
             text: Icons.getAppIcon(activeWindowSection.windowClass)
             font.family: Appearance.font.mono
             font.pixelSize: Appearance.font.large
-            color: Colours.primary
+            color: NixConfig.primary
 
             // Animate icon changes with scale
             property string lastIcon: text
@@ -240,7 +240,7 @@ ColumnLayout {
                 text: activeWindowSection.showFirst ? activeWindowSection.windowTitle : ""
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.large
-                color: Colours.primary
+                color: NixConfig.primary
                 opacity: activeWindowSection.showFirst ? 1 : 0
 
                 rotation: -90
@@ -262,7 +262,7 @@ ColumnLayout {
                 text: activeWindowSection.showFirst ? "" : activeWindowSection.windowTitle
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.large
-                color: Colours.primary
+                color: NixConfig.primary
                 opacity: activeWindowSection.showFirst ? 0 : 1
 
                 rotation: -90
@@ -295,7 +295,7 @@ ColumnLayout {
                 height: 40
                 anchors.horizontalCenter: parent.horizontalCenter
                 radius: Appearance.rounding.normal
-                color: bar.hoveredTrayIndex === index ? Qt.alpha(Colours.textOnBackground, 0.08) : "transparent"
+                color: bar.hoveredTrayIndex === index ? Qt.alpha(NixConfig.textOnBackground, 0.08) : "transparent"
 
                 Behavior on color {
                     ColorAnimation {
@@ -327,7 +327,7 @@ ColumnLayout {
             text: "󰸗"
             font.family: Appearance.font.mono
             font.pixelSize: Appearance.font.large
-            color: Colours.secondary
+            color: NixConfig.secondary
         }
 
         // Time display (hh\nmm\nAP format - 12 hour with AM/PM, zero-padded)
@@ -337,7 +337,7 @@ ColumnLayout {
             text: Time.format("hh\nmm\nAP")
             font.family: Appearance.font.mono
             font.pixelSize: Appearance.font.larger
-            color: Colours.secondary
+            color: NixConfig.secondary
             renderType: Text.NativeRendering
         }
     }
@@ -364,7 +364,7 @@ ColumnLayout {
             id: nixButtonRect
             anchors.fill: parent
             radius: Appearance.rounding.small
-            color: root.menuOpen ? Colours.primary : Colours.layer(Colours.surfaceContainer, 0)
+            color: root.menuOpen ? NixConfig.primary : NixConfig.layer(NixConfig.surfaceContainer, 0)
             scale: nixMouseArea.containsMouse || root.menuOpen ? 1.1 : 1.0
             transformOrigin: Item.Center
 
@@ -388,7 +388,7 @@ ColumnLayout {
                 text: "󱄅"
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.large
-                color: root.menuOpen ? Colours.textOnPrimary : Colours.primary
+                color: root.menuOpen ? NixConfig.textOnPrimary : NixConfig.primary
 
                 Behavior on color {
                     ColorAnimation {
@@ -402,7 +402,7 @@ ColumnLayout {
             Rectangle {
                 anchors.fill: parent
                 radius: nixButtonRect.radius
-                color: nixMouseArea.containsMouse && !root.menuOpen ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                color: nixMouseArea.containsMouse && !root.menuOpen ? Qt.alpha(NixConfig.textOnBackground, 0.1) : "transparent"
 
                 Behavior on color {
                     ColorAnimation {

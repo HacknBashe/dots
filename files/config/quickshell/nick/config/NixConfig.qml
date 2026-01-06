@@ -4,18 +4,25 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 
-// Color palette loaded from Nix-generated theme file (ANSI colors only)
+// Combined configuration loaded from Nix-generated config file
+// Includes both monitor settings and color palette
 Singleton {
     id: root
 
-    // Semantic colors mapped to ANSI
+    // Monitor configuration properties
+    property string monitor1Name: ""
+    property string monitor2Name: ""
+    property string barMonitor: ""
+    property string lockCommand: ""
+
+    // Color palette - Semantic colors
     property color primary
     property color secondary
     property color tertiary
     property color quaternary
     property color quinary
 
-    // Base colors
+    // Color palette - Base colors
     property color background
     property color foreground
     property color surface
@@ -31,13 +38,23 @@ Singleton {
     readonly property real transparencyBase: 0.7
     readonly property real transparencyLayers: 0.4
 
-    // Load colors from theme file
+    // Load configuration from Nix-generated JSON file
     FileView {
-        id: themeFile
-        path: Quickshell.env("HOME") + "/.config/quickshell/theme-colors.json"
+        id: configFile
+        path: Quickshell.env("HOME") + "/.config/quickshell/nix-config.json"
 
         onLoaded: {
-            const colors = JSON.parse(text());
+            const config = JSON.parse(text());
+            
+            // Load monitor configuration
+            const monitors = config.monitors;
+            root.monitor1Name = monitors.monitor1Name;
+            root.monitor2Name = monitors.monitor2Name;
+            root.barMonitor = monitors.barMonitor;
+            root.lockCommand = monitors.lockCommand;
+            
+            // Load color palette
+            const colors = config.colors;
             // Semantic colors
             root.primary = colors.primary;
             root.secondary = colors.secondary;
@@ -58,7 +75,7 @@ Singleton {
         }
     }
 
-    // Helper to apply transparency layer
+    // Helper function to apply transparency layer
     function layer(c, layerLevel) {
         if (!transparencyEnabled)
             return c;

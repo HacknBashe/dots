@@ -31,10 +31,10 @@ Rectangle {
     // Clip content to prevent overflow during animations
     clip: true
 
-    color: Colours.surfaceContainer
+    color: NixConfig.surfaceContainer
     radius: Appearance.rounding.normal
     border.width: 1
-    border.color: Qt.alpha(Colours.outline, 0.2)  // Same subtle border for all
+    border.color: Qt.alpha(NixConfig.outline, 0.2)  // Same subtle border for all
 
     // Disable all Behavior animations - ListView handles transitions
     Behavior on height {
@@ -62,9 +62,9 @@ Rectangle {
         case NotificationUrgency.Critical:
             return "#f38ba8"; // Red
         case NotificationUrgency.Low:
-            return Qt.alpha(Colours.outline, 0.5);
+            return Qt.alpha(NixConfig.outline, 0.5);
         default:
-            return Qt.alpha(Colours.outline, 0.2);
+            return Qt.alpha(NixConfig.outline, 0.2);
         }
     }
 
@@ -122,7 +122,7 @@ Rectangle {
                 Layout.preferredWidth: 32
                 Layout.preferredHeight: 32
                 radius: Appearance.rounding.small
-                color: !hasAppIcon ? Qt.alpha(Colours.primary, 0.2) : "transparent"
+                color: !hasAppIcon ? Qt.alpha(NixConfig.primary, 0.2) : "transparent"
 
                 property bool hasAppIcon: {
                     if (!root.notification)
@@ -200,7 +200,7 @@ Rectangle {
                     text: (root.notification && root.notification.urgency === NotificationUrgency.Critical) ? "󱈸" : "󰂚"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.larger
-                    color: (root.notification && root.notification.urgency === NotificationUrgency.Critical) ? "#f38ba8" : Colours.primary
+                    color: (root.notification && root.notification.urgency === NotificationUrgency.Critical) ? "#f38ba8" : NixConfig.primary
                     visible: !parent.hasAppIcon
                 }
             }
@@ -211,7 +211,7 @@ Rectangle {
                 text: root.notification.appName
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.normal
-                color: Colours.secondary
+                color: NixConfig.secondary
                 elide: Text.ElideRight
             }
 
@@ -220,7 +220,7 @@ Rectangle {
                 text: root.relativeTime
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.small
-                color: Colours.outline
+                color: NixConfig.outline
             }
 
             // Close button
@@ -228,14 +228,14 @@ Rectangle {
                 Layout.preferredWidth: 24
                 Layout.preferredHeight: 24
                 radius: Appearance.rounding.full
-                color: closeMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                color: closeMouseArea.containsMouse ? Qt.alpha(NixConfig.textOnBackground, 0.1) : "transparent"
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰅖"  // Close icon
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.normal
-                    color: Colours.textOnSurface
+                    color: NixConfig.textOnSurface
                 }
 
                 MouseArea {
@@ -262,7 +262,7 @@ Rectangle {
             font.family: Appearance.font.sans
             font.pixelSize: Appearance.font.larger
             font.weight: Font.Bold
-            color: root.notification.urgency === NotificationUrgency.Critical ? "#f38ba8" : Colours.primary
+            color: root.notification.urgency === NotificationUrgency.Critical ? "#f38ba8" : NixConfig.primary
             wrapMode: Text.Wrap
             maximumLineCount: 2
             elide: Text.ElideRight
@@ -275,7 +275,7 @@ Rectangle {
             text: root.notification.body
             font.family: Appearance.font.sans
             font.pixelSize: Appearance.font.normal
-            color: Colours.textOnSurface
+            color: NixConfig.textOnSurface
             wrapMode: Text.Wrap
             maximumLineCount: 4
             elide: Text.ElideRight
@@ -300,16 +300,16 @@ Rectangle {
                     Layout.maximumWidth: (root.width - Appearance.padding.normal * 2 - Appearance.spacing.small * (root.notification.actions.length - 1)) / root.notification.actions.length
 
                     radius: Appearance.rounding.small
-                    color: actionMouseArea.containsMouse ? Qt.alpha(Colours.primary, 0.2) : Qt.alpha(Colours.surface, 0.5)
+                    color: actionMouseArea.containsMouse ? Qt.alpha(NixConfig.primary, 0.2) : Qt.alpha(NixConfig.surface, 0.5)
                     border.width: 1
-                    border.color: Qt.alpha(Colours.primary, 0.3)
+                    border.color: Qt.alpha(NixConfig.primary, 0.3)
 
                     Text {
                         anchors.centerIn: parent
                         text: parent.modelData.text
                         font.family: Appearance.font.sans
                         font.pixelSize: Appearance.font.normal
-                        color: Colours.primary
+                        color: NixConfig.primary
                         elide: Text.ElideRight
                     }
 

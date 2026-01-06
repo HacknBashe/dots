@@ -23,14 +23,14 @@ PanelWindow {
     // Keep visible during slide animation
     visible: shouldBeOpen || contentRect.x > -contentRect.width
 
-    // Position from top, offset from left by bar width + gap
+    // Position from top, offset from right by bar width + gap
     anchors {
         top: true
-        left: true
+        right: true
     }
 
     margins {
-        left: 48 + 7 * 2 - 1  // Bar width + padding.smaller * 2 - 1 (matches Menu positioning)
+        right: 68  // Bar contentWidth (64 + 4 padding) - matches Menu positioning
         top: 0
         bottom: 12  // Prevent popouts from going to the very bottom of the screen
     }
@@ -49,20 +49,20 @@ PanelWindow {
 
         Rectangle {
             id: contentRect
-            color: Colours.layer(Colours.background, 0)
+            color: NixConfig.layer(NixConfig.background, 0)
             width: popoutWidth
             height: Math.max(40, contentLoader.height)
             radius: Appearance.rounding.small
-            // Square corners on left side, rounded on right
-            topLeftRadius: 0
-            bottomLeftRadius: 0
+            // Square corners on right side, rounded on left
+            topRightRadius: 0
+            bottomRightRadius: 0
             clip: true
 
             // Vertically center the popout with the target icon
             y: Math.max(0, Math.min(parent.height - height, popout.targetIconCenterY - height / 2))
 
             // Slide animation
-            x: popout.shouldBeOpen ? 0 : -width
+            x: popout.shouldBeOpen ? 0 : width
 
             Behavior on x {
                 Anim {

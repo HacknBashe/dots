@@ -96,7 +96,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: Appearance.rounding.normal
-        color: root.isHovered ? Qt.alpha(Colours.textOnBackground, 0.08) : "transparent"
+        color: root.isHovered ? Qt.alpha(NixConfig.textOnBackground, 0.08) : "transparent"
         z: -1
         
         Behavior on color {
@@ -136,7 +136,7 @@ Item {
                 }
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.large
-                color: Colours.secondary
+                color: NixConfig.secondary
             }
         }
 
@@ -152,7 +152,7 @@ Item {
                 text: root.volume + "%"
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.larger
-                color: Colours.secondary
+                color: NixConfig.secondary
             }
         }
     }

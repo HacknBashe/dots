@@ -119,7 +119,7 @@ ColumnLayout {
             text: root.isSpecial ? root.specialLetter : root.ws
             font.family: Appearance.font.mono
             font.pixelSize: Appearance.font.large
-            color: root.isActive ? Colours.textOnPrimary : Colours.textOnSurface
+            color: root.isActive ? NixConfig.textOnPrimary : NixConfig.textOnSurface
 
             Behavior on color {
                 ColorAnimation {
@@ -202,7 +202,7 @@ ColumnLayout {
                     text: Icons.getAppIcon(parent.windowClass)
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: root.isActive ? Colours.textOnPrimary : Colours.textOnSurface
+                    color: root.isActive ? NixConfig.textOnPrimary : NixConfig.textOnSurface
 
                     Behavior on color {
                         ColorAnimation {

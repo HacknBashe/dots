@@ -97,7 +97,7 @@ Popout {
                         width: parent.width
                         height: 36
                         radius: Appearance.rounding.small
-                        color: sinkMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.1) : "transparent"
+                        color: sinkMouseArea.containsMouse ? Qt.alpha(NixConfig.textOnBackground, 0.1) : "transparent"
 
                         Row {
                             anchors.verticalCenter: parent.verticalCenter
@@ -122,7 +122,7 @@ Popout {
                                 }
                                 font.family: Appearance.font.mono
                                 font.pixelSize: Appearance.font.normal
-                                color: sinkItem.modelData.isDefault ? Colours.primary : Colours.textOnBackground
+                                color: sinkItem.modelData.isDefault ? NixConfig.primary : NixConfig.textOnBackground
                             }
 
                             // Device name
@@ -132,7 +132,7 @@ Popout {
                                 text: sinkItem.modelData.name
                                 font.family: Appearance.font.mono
                                 font.pixelSize: Appearance.font.normal
-                                color: sinkItem.modelData.isDefault ? Colours.primary : Colours.textOnBackground
+                                color: sinkItem.modelData.isDefault ? NixConfig.primary : NixConfig.textOnBackground
                                 elide: Text.ElideRight
                             }
                         }

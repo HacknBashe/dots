@@ -25,7 +25,7 @@ Item {
         anchors.topMargin: 2
         anchors.bottomMargin: 2
         visible: !root.menuEntry.isSeparator
-        color: itemMouseArea.containsMouse ? Qt.alpha(Colours.textOnBackground, 0.08) : "transparent"
+        color: itemMouseArea.containsMouse ? Qt.alpha(NixConfig.textOnBackground, 0.08) : "transparent"
         radius: Appearance.rounding.small
 
         Behavior on color {
@@ -58,7 +58,7 @@ Item {
                 text: root.menuEntry.text ?? ""
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.normal
-                color: root.menuEntry.enabled ? Colours.textOnBackground : Qt.alpha(Colours.textOnBackground, 0.5)
+                color: root.menuEntry.enabled ? NixConfig.textOnBackground : Qt.alpha(NixConfig.textOnBackground, 0.5)
                 elide: Text.ElideRight
                 width: parent.width - (iconImage.visible ? iconImage.width + parent.spacing : 0)
             }
@@ -86,6 +86,6 @@ Item {
         width: parent.width - Appearance.padding.small * 2
         height: 1
         visible: root.menuEntry.isSeparator
-        color: Qt.alpha(Colours.textOnBackground, 0.2)
+        color: Qt.alpha(NixConfig.textOnBackground, 0.2)
     }
 }
