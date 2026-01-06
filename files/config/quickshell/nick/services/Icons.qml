@@ -130,6 +130,10 @@ Singleton {
             "lutris": "󰊗",
             "heroic": "󰊗",
 
+            // VR
+            "wivrn": "",
+            "io.github.wivrn.wivrn": "",
+
             // Recording/Streaming
             "obs": "󰑋",
             "com.obsproject.Studio": "󰑋",
