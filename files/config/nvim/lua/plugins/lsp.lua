@@ -16,7 +16,6 @@ return {
 		},
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
-			local lspconfig = require("lspconfig")
 			local luasnip = require("luasnip")
 			local lspkind = require("lspkind")
 			local cmp = require("cmp")
@@ -29,7 +28,8 @@ return {
 
 			require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets/" } })
 
-			lspconfig.lua_ls.setup({
+			-- Configure lua_ls with custom settings
+			vim.lsp.config("lua_ls", {
 				capabilities = lsp_capabilities,
 				settings = {
 					Lua = {
@@ -47,21 +47,22 @@ return {
 					},
 				},
 			})
-			lspconfig.jdtls.setup({})
-			lspconfig.gopls.setup({})
-			lspconfig.ts_ls.setup(isHubspot and {
-				init_options = {
-					tsserver_path = bend.getTsServerPathForCurrentFile(),
-				},
-			} or {})
-			lspconfig.pyright.setup({})
-			lspconfig.nixd.setup({})
-			lspconfig.templ.setup({})
-			lspconfig.clangd.setup({})
+			vim.lsp.enable("lua_ls")
 
+			-- Configure ts_ls with HubSpot bend.nvim support
+			if isHubspot then
+				vim.lsp.config("ts_ls", {
+					init_options = {
+						tsserver_path = bend.getTsServerPathForCurrentFile(),
+					},
+				})
+			end
+			vim.lsp.enable("ts_ls")
+
+			-- Configure csharp_ls with DOTNET_ROOT
 			local dotnet_root = os.getenv("DOTNET_ROOT")
 			if dotnet_root then
-				lspconfig.csharp_ls.setup({
+				vim.lsp.config("csharp_ls", {
 					capabilities = lsp_capabilities,
 					cmd = {
 						"env",
@@ -70,7 +71,16 @@ return {
 						"csharp-ls",
 					},
 				})
+				vim.lsp.enable("csharp_ls")
 			end
+
+			-- Enable language servers with default configs
+			vim.lsp.enable("jdtls")
+			vim.lsp.enable("gopls")
+			vim.lsp.enable("pyright")
+			vim.lsp.enable("nixd")
+			vim.lsp.enable("templ")
+			vim.lsp.enable("clangd")
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				desc = "LSP actions",
