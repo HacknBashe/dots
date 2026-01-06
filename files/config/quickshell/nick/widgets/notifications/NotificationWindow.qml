@@ -30,7 +30,7 @@ PanelWindow {
     }
 
     implicitWidth: 400
-    implicitHeight: 2000
+    implicitHeight: Math.max(1, notificationList.contentHeight)
 
     WlrLayershell.namespace: "nick-notifications"
     WlrLayershell.layer: WlrLayer.Overlay
