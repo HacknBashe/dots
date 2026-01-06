@@ -1,0 +1,5 @@
+module launcher
+LauncherWindow 1.0 LauncherWindow.qml
+LauncherContent 1.0 LauncherContent.qml
+LauncherAppList 1.0 LauncherAppList.qml
+LauncherAppItem 1.0 LauncherAppItem.qml

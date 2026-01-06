@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
-import "../../config"
-import "../../services"
-import "../../components"
+import "../config"
+import "../services"
+import "../shared"
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts

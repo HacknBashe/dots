@@ -1,0 +1,11 @@
+module bar
+BarWindow 1.0 BarWindow.qml
+Bar 1.0 Bar.qml
+BarMenu 1.0 BarMenu.qml
+BarPopout 1.0 BarPopout.qml
+BarVolume 1.0 BarVolume.qml
+BarVolumePopout 1.0 BarVolumePopout.qml
+BarTrayPopout 1.0 BarTrayPopout.qml
+BarTrayMenuItem 1.0 BarTrayMenuItem.qml
+BarWorkspace 1.0 BarWorkspace.qml
+BarWorkspaces 1.0 BarWorkspaces.qml

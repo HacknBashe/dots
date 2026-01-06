@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
-import "../../config"
-import "../../services"
-import "../../components"
+import "../config"
+import "../services"
+import "../shared"
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
@@ -251,7 +251,7 @@ Variants {
                 windows: [menuWindow]
             }
 
-            Menu {
+            BarMenu {
                 id: menu
 
                 anchors.bottom: parent.bottom
@@ -286,7 +286,7 @@ Variants {
         }
 
         // Single tray popout instance
-        TrayPopout {
+        BarTrayPopout {
             id: trayPopout
             screen: scope.modelData
             trayItem: bar.hoveredTrayItem
@@ -303,7 +303,7 @@ Variants {
             }
         }
 
-        VolumePopout {
+        BarVolumePopout {
             id: volumePopout
             screen: scope.modelData
             targetIconCenterY: bar.volumeIconCenterY

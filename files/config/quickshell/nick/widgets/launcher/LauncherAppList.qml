@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
-import "../../config"
-import "../../services"
+import "../config"
+import "../services"
 import QtQuick
 import QtQuick.Controls
 
@@ -46,7 +46,7 @@ Item {
         highlightMoveDuration: Appearance.anim.small
         highlightMoveVelocity: -1
 
-        delegate: AppItem {
+        delegate: LauncherAppItem {
             required property var modelData
             required property int index
 

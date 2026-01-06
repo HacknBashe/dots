@@ -1,9 +1,8 @@
 pragma ComponentBehavior: Bound
 
-import "../../config"
-import "../../services"
-import "../../components"
-import "../../components/workspaces"
+import "../config"
+import "../services"
+import "../shared"
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Services.SystemTray
@@ -152,7 +151,7 @@ ColumnLayout {
     }
 
     // Workspace indicator
-    Workspaces {
+    BarWorkspaces {
         Layout.alignment: Qt.AlignHCenter
     }
 
@@ -343,7 +342,7 @@ ColumnLayout {
     }
 
     // Volume widget
-    Volume {
+    BarVolume {
         id: volumeWidget
         Layout.alignment: Qt.AlignHCenter
         isHovered: bar.volumeHovered

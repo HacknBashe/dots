@@ -1,8 +1,0 @@
-module bar
-BarWindow 1.0 BarWindow.qml
-Bar 1.0 Bar.qml
-Menu 1.0 Menu.qml
-Popout 1.0 Popout.qml
-TrayPopout 1.0 TrayPopout.qml
-TrayMenuItem 1.0 TrayMenuItem.qml
-VolumePopout 1.0 VolumePopout.qml

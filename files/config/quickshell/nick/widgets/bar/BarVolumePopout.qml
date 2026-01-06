@@ -1,15 +1,15 @@
 pragma ComponentBehavior: Bound
 
-import "../../config"
-import "../../services"
-import "../../components"
+import "../config"
+import "../services"
+import "../shared"
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 
 // Popout window that displays audio device list
-Popout {
+BarPopout {
     id: popout
 
     property bool barMouseInside: false

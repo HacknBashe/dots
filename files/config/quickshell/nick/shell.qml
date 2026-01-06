@@ -1,8 +1,8 @@
 import Quickshell
 import Quickshell.Io
-import "./modules/bar"
-import "./modules/launcher"
-import "./modules/notifications"
+import "./widgets/bar"
+import "./widgets/launcher"
+import "./widgets/notifications"
 
 ShellRoot {
     BarWindow {

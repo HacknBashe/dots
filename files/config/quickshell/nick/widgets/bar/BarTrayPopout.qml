@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
-import "../../config"
-import "../../services"
-import "../../components"
+import "../config"
+import "../services"
+import "../shared"
 import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Wayland
@@ -10,7 +10,7 @@ import QtQuick
 
 // Single persistent popout window that displays tray icon menus
 // Content updates dynamically when hovering between different icons
-Popout {
+BarPopout {
     id: popout
 
     property SystemTrayItem trayItem: null
@@ -90,7 +90,7 @@ Popout {
                 Repeater {
                     model: menuOpener.children
 
-                    TrayMenuItem {
+                    BarTrayMenuItem {
                         required property var modelData
                         menuEntry: modelData
 

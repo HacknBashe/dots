@@ -1,6 +1,6 @@
-import "../../config"
-import "../../services"
-import "../"
+import "../config"
+import "../services"
+import "../shared"
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io

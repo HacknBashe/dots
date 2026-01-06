@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
-import "../../config"
-import "../../services"
+import "../config"
+import "../services"
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -176,7 +176,7 @@ FocusScope {
         }
 
         // App list
-        AppList {
+        LauncherAppList {
             id: appList
 
             Layout.fillWidth: true

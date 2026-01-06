@@ -1,2 +1,3 @@
 module notifications
 NotificationWindow 1.0 NotificationWindow.qml
+NotificationWidget 1.0 NotificationWidget.qml

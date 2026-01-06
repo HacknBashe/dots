@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
-import "../../config"
-import "../../services"
-import "../"
+import "../config"
+import "../services"
+import "../shared"
 import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
@@ -489,7 +489,7 @@ Item {
 
                         model: column2Model
 
-                        delegate: Workspace {
+                        delegate: BarWorkspace {
                             id: workspaceItem
                             required property int index
                             required property var model
@@ -581,7 +581,7 @@ Item {
 
                         model: column1Model
 
-                        delegate: Workspace {
+                        delegate: BarWorkspace {
                             id: workspaceItem
                             required property int index
                             required property var model
@@ -708,7 +708,7 @@ Item {
 
                     model: specialWorkspacesModel
 
-                    Workspace {
+                    BarWorkspace {
                         id: workspaceItem
                         required property int index
                         required property var model
