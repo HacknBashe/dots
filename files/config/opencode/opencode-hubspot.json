@@ -18,9 +18,24 @@
   },
   "permission": {
     "bash": {
-      "git *": "ask",
+      "*": "allow",
       "nix *": "ask",
-      "*": "allow"
+      "git *": "ask",
+      "git status*": "allow",
+      "git log*": "allow",
+      "git show*": "allow",
+      "git diff*": "allow",
+      "git branch": "allow",
+      "git branch -l*": "allow",
+      "git branch --list*": "allow",
+      "git remote": "allow",
+      "git remote -v*": "allow",
+      "git ls-files*": "allow",
+      "git cat-file*": "allow",
+      "git rev-parse*": "allow",
+      "git describe*": "allow",
+      "git config --get*": "allow",
+      "git config --list*": "allow"
     }
   }
 }
