@@ -88,9 +88,9 @@ Item {
 
         for (let i = 1; i <= root.shownWorkspaces; i++) {
             const ws = values.find(w => w.id === i);
-            if (ws && ws.lastIpcObject?.monitor === "HDMI-A-5") {
+            if (ws && ws.lastIpcObject?.monitor === "DP-4") {
                 wsIds.push(i);
-            } else if (!ws && i === activeWsId && Hyprland.focusedMonitor?.name === "HDMI-A-5") {
+            } else if (!ws && i === activeWsId && Hyprland.focusedMonitor?.name === "DP-4") {
                 wsIds.push(i);
             }
         }
@@ -437,7 +437,7 @@ Item {
                 }
             }
 
-            // Column 2: Monitor 2 (HDMI-A-5) workspaces
+            // Column 2: Monitor 2 (DP-4) workspaces
             Item {
                 id: column2Container
                 Layout.preferredWidth: 30

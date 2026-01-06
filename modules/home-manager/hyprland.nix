@@ -27,7 +27,7 @@
           vibrancy_darkness = 0.0;
         }
         {
-          monitor = "HDMI-A-5";
+          monitor = "DP-4";
           path = "/tmp/hyprlock_screenshot2.png";
           blur_passes = 1;
           blur_size = 8;

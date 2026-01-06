@@ -13,8 +13,8 @@ import QtQuick.Layouts
 Variants {
     id: variants
     // Filter to specific monitor by name (run: hyprctl monitors -j | jq -r '.[].name' to see all)
-    // Current monitor: HDMI-A-5 (Dell AW3418DW Alienware ultrawide 3440x1440)
-    model: Quickshell.screens.filter(screen => screen.name === "HDMI-A-5")
+    // Current monitor: DP-4 (Dell AW3418DW Alienware ultrawide 3440x1440)
+    model: Quickshell.screens.filter(screen => screen.name === "DP-4")
 
     // Function to toggle menu on primary screen
     function toggleMenu() {
