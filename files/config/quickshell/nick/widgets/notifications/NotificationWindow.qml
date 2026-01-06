@@ -94,13 +94,5 @@ PanelWindow {
         }
     }
 
-    // Debug border to visualize notification area (temporary)
-    Rectangle {
-        anchors.fill: parent
-        color: "transparent"
-        border.color: "red"
-        border.width: 2
-        z: 1000
-        enabled: false  // Don't capture mouse events
-    }
+
 }

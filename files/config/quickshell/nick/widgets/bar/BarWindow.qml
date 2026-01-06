@@ -271,35 +271,22 @@ Variants {
                     scope.menuOpen = false;
                     bar.menuOpen = false;
                 }
-            }
-
-            // Track hover on menu window (outside the menu component to not block button hovers)
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-                propagateComposedEvents: true
-                acceptedButtons: Qt.NoButton
-                z: -1  // Below the menu so it doesn't block button hovers
                 
-                onEntered: {
-                    scope.menuMouseInside = true;
-                    clearMenuTimer.stop();
-                }
-                onExited: {
-                    scope.menuMouseInside = false;
-                    clearMenuTimer.restart();
+                // Track when mouse is over the menu content using HoverHandler
+                HoverHandler {
+                    id: menuHoverHandler
+                    onHoveredChanged: {
+                        scope.menuMouseInside = hovered;
+                        if (hovered) {
+                            clearMenuTimer.stop();
+                        } else if (scope.menuOpen) {
+                            clearMenuTimer.restart();
+                        }
+                    }
                 }
             }
 
-            // Debug border to visualize menu window area (temporary)
-            Rectangle {
-                anchors.fill: parent
-                color: "transparent"
-                border.color: "blue"
-                border.width: 2
-                z: 1000
-                enabled: false  // Don't capture mouse events
-            }
+
         }
 
         // Single tray popout instance
