@@ -8,7 +8,15 @@
 find_pane_by_title() {
     local title="$1"
     # Match panes whose title starts with "$title"
-    tmux list-panes -s -F "#{pane_id} #{pane_title}" | grep "$title" | head -1 | awk '{print $1}'
+    local pane_id=$(tmux list-panes -s -F "#{pane_id} #{pane_title}" | grep "$title" | head -1 | awk '{print $1}')
+    
+    # Smart fallback: if "Agent:" not found, also try OpenCode naming patterns
+    # OpenCode uses: "OpenCode" (idle) or "OC | <description>" (working)
+    if [[ -z "$pane_id" ]] && [[ "$title" == "Agent:" ]]; then
+        pane_id=$(tmux list-panes -s -F "#{pane_id} #{pane_title}" | grep -E "(OpenCode|OC \|)" | head -1 | awk '{print $1}')
+    fi
+    
+    echo "$pane_id"
 }
 
 # Find window containing pane with title
