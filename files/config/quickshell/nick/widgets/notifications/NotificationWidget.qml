@@ -21,7 +21,7 @@ Rectangle {
     // Unique instance ID to track which widget instance this is
     property string instanceId: {
         let random = Math.random().toString(36).substring(7);
-        return root.notification.id + "-" + random;
+        return (root.notification ? root.notification.id : "unknown") + "-" + random;
     }
 
     width: 380
@@ -208,7 +208,7 @@ Rectangle {
             // App name
             Text {
                 Layout.fillWidth: true
-                text: root.notification.appName
+                text: root.notification ? root.notification.appName : ""
                 font.family: Appearance.font.mono
                 font.pixelSize: Appearance.font.normal
                 color: NixConfig.secondary
@@ -245,7 +245,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
 
                     onClicked: {
-                        root.notification.dismiss();
+                        if (root.notification)
+                            root.notification.dismiss();
                         mouse.accepted = true;
                     }
 
@@ -258,11 +259,11 @@ Rectangle {
         // Summary (title)
         Text {
             Layout.fillWidth: true
-            text: root.notification.summary
+            text: root.notification ? root.notification.summary : ""
             font.family: Appearance.font.sans
             font.pixelSize: Appearance.font.larger
             font.weight: Font.Bold
-            color: root.notification.urgency === NotificationUrgency.Critical ? "#f38ba8" : NixConfig.primary
+            color: (root.notification && root.notification.urgency === NotificationUrgency.Critical) ? "#f38ba8" : NixConfig.primary
             wrapMode: Text.Wrap
             maximumLineCount: 2
             elide: Text.ElideRight
@@ -272,7 +273,7 @@ Rectangle {
         // Body text
         Text {
             Layout.fillWidth: true
-            text: root.notification.body
+            text: root.notification ? root.notification.body : ""
             font.family: Appearance.font.sans
             font.pixelSize: Appearance.font.normal
             color: NixConfig.textOnSurface
@@ -287,17 +288,17 @@ Rectangle {
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.small
-            visible: root.notification.actions.length > 0
+            visible: root.notification && root.notification.actions.length > 0
 
             Repeater {
-                model: root.notification.actions
+                model: root.notification ? root.notification.actions : []
 
                 Rectangle {
                     required property var modelData
 
                     Layout.preferredHeight: 32
                     Layout.fillWidth: true
-                    Layout.maximumWidth: (root.width - Appearance.padding.normal * 2 - Appearance.spacing.small * (root.notification.actions.length - 1)) / root.notification.actions.length
+                    Layout.maximumWidth: root.notification ? (root.width - Appearance.padding.normal * 2 - Appearance.spacing.small * (root.notification.actions.length - 1)) / root.notification.actions.length : 0
 
                     radius: Appearance.rounding.small
                     color: actionMouseArea.containsMouse ? Qt.alpha(NixConfig.primary, 0.2) : Qt.alpha(NixConfig.surface, 0.5)
@@ -320,7 +321,8 @@ Rectangle {
                         cursorShape: Qt.PointingHandCursor
 
                         onClicked: {
-                            parent.modelData.invoke();
+                            if (parent.modelData)
+                                parent.modelData.invoke();
                             mouse.accepted = true;
                         }
 
