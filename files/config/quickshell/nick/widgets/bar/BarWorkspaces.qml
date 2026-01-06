@@ -1075,18 +1075,39 @@ Item {
     MouseArea {
         anchors.fill: mainLayout
         onClicked: event => {
-            // Check regular workspaces in both columns
-            let item = column1.childAt(event.x - column1.x, event.y - column1.y);
-            if (!item) {
-                item = column2.childAt(event.x - column2.x, event.y - column2.y);
+            // Map click coordinates from MouseArea to each column's coordinate system
+            // MouseArea fills mainLayout, so event coordinates are relative to mainLayout
+            
+            let item = null;
+            
+            // Check column 1 (Monitor 1 workspaces)
+            if (column1Repeater.count > 0) {
+                const mapped1 = mapToItem(column1, event.x, event.y);
+                item = column1.childAt(mapped1.x, mapped1.y);
             }
-            // Check special workspaces
-            if (!item) {
-                item = specialWorkspacesColumn.childAt(event.x - specialWorkspacesColumn.x, event.y - specialWorkspacesColumn.y);
+            
+            // Check column 2 (Monitor 2 workspaces) if not found in column 1
+            if (!item && column2Repeater.count > 0) {
+                const mapped2 = mapToItem(column2, event.x, event.y);
+                item = column2.childAt(mapped2.x, mapped2.y);
+            }
+            
+            // Check special workspaces if not found in regular columns
+            if (!item && specialWorkspacesRepeater.count > 0) {
+                const mappedSpecial = mapToItem(specialWorkspacesColumn, event.x, event.y);
+                item = specialWorkspacesColumn.childAt(mappedSpecial.x, mappedSpecial.y);
             }
 
-            if (item && item.ws) {
-                Hyprland.dispatch(`workspace ${item.ws}`);
+            if (item && item.ws !== undefined) {
+                // Determine if this is a special workspace and dispatch accordingly
+                if (item.isSpecial && item.wsName) {
+                    // For special workspaces, use togglespecialworkspace with the name (without "special:" prefix)
+                    const specialName = item.wsName.replace("special:", "");
+                    Hyprland.dispatch(`togglespecialworkspace ${specialName}`);
+                } else {
+                    // For regular workspaces, use workspace with the ID
+                    Hyprland.dispatch(`workspace ${item.ws}`);
+                }
             }
         }
     }
