@@ -224,29 +224,22 @@ Item {
     property var previousSpecialWorkspaces: []
 
     onCurrentSpecialWorkspacesChanged: {
-        console.log("Special: currentSpecialWorkspaces changed:", JSON.stringify(currentSpecialWorkspaces.map(ws => ({ id: ws.id, name: ws.name }))));
         
         // Find removed workspaces by id
         const currentIds = currentSpecialWorkspaces.map(ws => ws.id);
         const previousIds = previousSpecialWorkspaces.map(ws => ws.id);
         const removed = previousIds.filter(id => !currentIds.includes(id));
         
-        console.log("Special: Current IDs:", JSON.stringify(currentIds));
-        console.log("Special: Previous IDs:", JSON.stringify(previousIds));
-        console.log("Special: Removed IDs:", JSON.stringify(removed));
         
         // Clear any ghosts that have reappeared in current
         const reappeared = animatingOutSpecial.filter(id => currentIds.includes(id));
         if (reappeared.length > 0) {
-            console.log("Special: Clearing reappeared ghosts:", JSON.stringify(reappeared));
             animatingOutSpecial = animatingOutSpecial.filter(id => !currentIds.includes(id));
-            console.log("Special: Updated animatingOutSpecial:", JSON.stringify(animatingOutSpecial));
         }
         
         if (removed.length > 0) {
             // Replace animatingOutSpecial (we already cleared reappeared ghosts above)
             animatingOutSpecial = removed;
-            console.log("Special: Set animatingOutSpecial to:", JSON.stringify(animatingOutSpecial));
             // Ghost cleanup now handled by signals from Workspace items
         }
 
@@ -257,7 +250,6 @@ Item {
         const previous = previousSpecialWorkspaces;
         const combined = [...current];
         
-        console.log("Special: Building combined list. Current:", JSON.stringify(current.map(ws => ws.id)), "Ghosts:", JSON.stringify(ghosts));
         
         // Add ghosts that aren't in current
         ghosts.forEach(ghostId => {
@@ -265,10 +257,8 @@ Item {
                 // Find the ghost's name from previous (before it was updated)
                 const ghostWs = previous.find(ws => ws.id === ghostId);
                 if (ghostWs) {
-                    console.log("Special: Adding ghost to combined:", ghostId, ghostWs.name);
                     combined.push({ id: ghostId, name: ghostWs.name });
                 } else {
-                    console.log("Special: WARNING - Could not find ghost info for", ghostId);
                 }
             }
         });
@@ -276,14 +266,11 @@ Item {
         // Sort by id descending (most recent first)
         combined.sort((a, b) => b.id - a.id);
         
-        console.log("Special: Combined list:", JSON.stringify(combined.map(ws => ({ id: ws.id, name: ws.name }))));
 
         // 1. Remove items not in combined
-        console.log("Special: Model has", specialWorkspacesModel.count, "items before cleanup");
         for (let i = specialWorkspacesModel.count - 1; i >= 0; i--) {
             const item = specialWorkspacesModel.get(i);
             if (!combined.find(ws => ws.id === item.wsId)) {
-                console.log("Special: Removing item", item.wsId, "from model at index", i);
                 specialWorkspacesModel.remove(i);
             }
         }
@@ -292,7 +279,6 @@ Item {
         for (let i = 0; i < specialWorkspacesModel.count; i++) {
             const item = specialWorkspacesModel.get(i);
             const isGhost = ghosts.includes(item.wsId);
-            console.log("Special: Setting item", item.wsId, "at index", i, "isGhost:", isGhost);
             specialWorkspacesModel.setProperty(i, "isGhost", isGhost);
         }
 
@@ -309,7 +295,6 @@ Item {
 
             if (foundIndex === -1) {
                 // New item - insert at correct sorted position
-                console.log("Special: Inserting new item", ws.id, ws.name, "at index", targetIndex, "isGhost:", ghosts.includes(ws.id));
                 specialWorkspacesModel.insert(targetIndex, {
                     wsId: ws.id,
                     wsName: ws.name,
@@ -317,23 +302,18 @@ Item {
                 });
             } else if (foundIndex !== targetIndex) {
                 // Item exists but in wrong position - move it
-                console.log("Special: Moving item", ws.id, "from", foundIndex, "to", targetIndex);
                 specialWorkspacesModel.move(foundIndex, targetIndex, 1);
             }
         });
         
-        console.log("Special: Final model count:", specialWorkspacesModel.count);
         
         // Only update previousSpecialWorkspaces for additions, NOT removals
         // For removals, keep the ghost info until animation completes
         const added = currentIds.filter(id => !previousIds.includes(id));
         if (added.length > 0) {
-            console.log("Special: Updating previousSpecialWorkspaces because additions detected:", JSON.stringify(added));
             previousSpecialWorkspaces = currentSpecialWorkspaces;
         } else if (removed.length > 0) {
-            console.log("Special: NOT updating previousSpecialWorkspaces (removal detected, keeping ghost info)");
         } else {
-            console.log("Special: NOT updating previousSpecialWorkspaces (no changes)");
         }
     }
 
@@ -386,10 +366,6 @@ Item {
         radius: Appearance.rounding.full
         z: 0
         visible: column1Repeater.count > 0
-
-        onHeightChanged: {
-            console.log("Column1 background height changed to:", height, "column1.height:", column1.height, "model count:", column1Model.count);
-        }
 
         Behavior on height {
             Anim {
@@ -552,25 +528,20 @@ Item {
 
                                     onRunningChanged: {
                                         if (!running && workspaceItem.isGhost && workspaceItem.Layout.preferredHeight <= 0.1) {
-                                            console.log("Column2: Height animation completed for ghost", workspaceItem.wsId);
-                                            console.log("Column2: Removing ghost", workspaceItem.wsId, "from animatingOutMon2:", JSON.stringify(animatingOutMon2));
 
                                             // Remove from ghost list
                                             const newGhosts = animatingOutMon2.filter(id => id !== workspaceItem.wsId);
                                             animatingOutMon2 = newGhosts;
 
-                                            console.log("Column2: After removal, animatingOutMon2:", JSON.stringify(animatingOutMon2));
 
                                             // Manually trigger model update since we changed animatingOutMon2
                                             const current = currentMonitor2Workspaces;
                                             const combined = Array.from(new Set([...current, ...newGhosts])).sort((a, b) => a - b);
-                                            console.log("Column2: Manually updating model with combined:", JSON.stringify(combined));
 
                                             // Remove items not in combined
                                             for (let i = column2Model.count - 1; i >= 0; i--) {
                                                 const item = column2Model.get(i);
                                                 if (!combined.includes(item.wsId)) {
-                                                    console.log("Column2: Removing wsId", item.wsId, "from model");
                                                     column2Model.remove(i);
                                                 }
                                             }
@@ -605,18 +576,10 @@ Item {
                     anchors.right: parent.right
                     spacing: Appearance.spacing.larger
 
-                    onImplicitHeightChanged: {
-                        console.log("Column1 implicitHeight changed to:", implicitHeight, "actual height:", height);
-                    }
-
                     Repeater {
                         id: column1Repeater
 
                         model: column1Model
-
-                        onCountChanged: {
-                            console.log("Column1 Repeater count changed to:", count);
-                        }
 
                         delegate: Workspace {
                             id: workspaceItem
@@ -657,25 +620,20 @@ Item {
 
                                     onRunningChanged: {
                                         if (!running && workspaceItem.isGhost && workspaceItem.Layout.preferredHeight <= 0.1) {
-                                            console.log("Column1: Height animation completed for ghost", workspaceItem.wsId);
-                                            console.log("Column1: Removing ghost", workspaceItem.wsId, "from animatingOutMon1:", JSON.stringify(animatingOutMon1));
 
                                             // Remove from ghost list
                                             const newGhosts = animatingOutMon1.filter(id => id !== workspaceItem.wsId);
                                             animatingOutMon1 = newGhosts;
 
-                                            console.log("Column1: After removal, animatingOutMon1:", JSON.stringify(animatingOutMon1));
 
                                             // Manually trigger model update since we changed animatingOutMon1
                                             const current = currentMonitor1Workspaces;
                                             const combined = Array.from(new Set([...current, ...newGhosts])).sort((a, b) => a - b);
-                                            console.log("Column1: Manually updating model with combined:", JSON.stringify(combined));
 
                                             // Remove items not in combined
                                             for (let i = column1Model.count - 1; i >= 0; i--) {
                                                 const item = column1Model.get(i);
                                                 if (!combined.includes(item.wsId)) {
-                                                    console.log("Column1: Removing wsId", item.wsId, "from model");
                                                     column1Model.remove(i);
                                                 }
                                             }
@@ -705,40 +663,31 @@ Item {
                     easing.bezierCurve: Appearance.anim.standard
                     
                     onRunningChanged: {
-                        console.log("Special Container: Height animation", running ? "STARTED" : "STOPPED", "height:", specialWorkspacesContainer.Layout.preferredHeight, "column implicitHeight:", specialWorkspacesColumn.implicitHeight);
                         
                         // When container finishes shrinking, wait a bit before removing ghosts
                         // This gives workspace Y animations time to complete
                         if (!running && animatingOutSpecial.length > 0) {
-                            console.log("Special Container: Animation complete, waiting before ghost removal");
                             
                             Qt.callLater(() => {
-                                console.log("Special Container: Now removing ghosts:", JSON.stringify(animatingOutSpecial));
-                                console.log("Special Container: Current model count:", specialWorkspacesModel.count);
                                 
                                 // Log current positions before removal
                                 for (let i = 0; i < specialWorkspacesModel.count; i++) {
                                     const item = specialWorkspacesModel.get(i);
-                                    console.log("Special Container: Before removal - Item", i, "wsId:", item.wsId, "isGhost:", item.isGhost);
                                 }
                                 
                                 // Remove all ghosts that have height 0
                                 for (let i = specialWorkspacesModel.count - 1; i >= 0; i--) {
                                     const item = specialWorkspacesModel.get(i);
                                     if (item.isGhost) {
-                                        console.log("Special Container: About to remove ghost", item.wsId, "from model at index", i);
                                         specialWorkspacesModel.remove(i);
-                                        console.log("Special Container: Ghost removed, new model count:", specialWorkspacesModel.count);
                                     }
                                 }
                                 
                                 // Clear the ghost list
                                 if (animatingOutSpecial.length > 0) {
-                                    console.log("Special Container: Clearing animatingOutSpecial");
                                     animatingOutSpecial = [];
                                     
                                     // Update previousSpecialWorkspaces now
-                                    console.log("Special Container: Updating previousSpecialWorkspaces after ghost cleanup");
                                     previousSpecialWorkspaces = currentSpecialWorkspaces;
                                 }
                             });
@@ -800,7 +749,6 @@ Item {
                                 easing.bezierCurve: Appearance.anim.standard
 
                                 onRunningChanged: {
-                                    console.log("Special: Height animation running changed for", workspaceItem.wsId, "running:", running, "isGhost:", workspaceItem.isGhost, "height:", workspaceItem.Layout.preferredHeight);
                                     // Ghost cleanup now handled by container animation completion
                                 }
                             }

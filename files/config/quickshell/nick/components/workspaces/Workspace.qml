@@ -100,25 +100,20 @@ ColumnLayout {
             
             onRunningChanged: {
                 if (running) {
-                    console.log("Workspace", wsId, "(",isSpecial ? wsName : "", ") Y animation STARTED. From:", root.y, "enabled:", yAnimation.enabled);
                 } else {
-                    console.log("Workspace", wsId, "(",isSpecial ? wsName : "", ") Y animation STOPPED. Final Y:", root.y);
                 }
             }
         }
     }
     
     onYChanged: {
-        console.log("Workspace", wsId, "(", (isSpecial ? wsName : ""), ") Y changed to:", y, "isGhost:", isGhost, "yAnim running:", yAnimation.running);
     }
 
     // Detect when removal animation completes
     onOpacityChanged: {
         if (isGhost && opacity <= 0.01) {
             // Animation finished - notify parent
-            console.log("Workspace", wsId, "emitting removalAnimationComplete signal - opacity:", opacity);
             removalAnimationComplete();
-            console.log("Workspace", wsId, "signal emitted");
         }
     }
 
