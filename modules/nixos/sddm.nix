@@ -28,8 +28,11 @@
       videoDrivers = ["nvidia"];
       displayManager = {
         setupCommands = ''
+          # Capture xrandr state during SDDM startup for debugging
+          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --listmonitors > /tmp/sddm-xrandr-monitors.log 2>&1
+          
           ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --output DP-0 --off --output HDMI-0 --off
-          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --output HDMI-0 --auto --primary --output DP-0 --noprimary --mode 1920x1080 --left-of HDMI-0
+          ${lib.getBin pkgs.xorg.xrandr}/bin/xrandr --output DP-2 --auto --primary --output DP-0 --noprimary --mode 1920x1080 --left-of DP-2
         '';
       };
     };
