@@ -90,6 +90,28 @@ ColumnLayout {
         }
     }
 
+    Behavior on y {
+        enabled: true
+        NumberAnimation {
+            id: yAnimation
+            duration: Appearance.anim.small
+            easing.type: Easing.Bezier
+            easing.bezierCurve: Appearance.anim.standard
+            
+            onRunningChanged: {
+                if (running) {
+                    console.log("Workspace", wsId, "(",isSpecial ? wsName : "", ") Y animation STARTED. From:", root.y, "enabled:", yAnimation.enabled);
+                } else {
+                    console.log("Workspace", wsId, "(",isSpecial ? wsName : "", ") Y animation STOPPED. Final Y:", root.y);
+                }
+            }
+        }
+    }
+    
+    onYChanged: {
+        console.log("Workspace", wsId, "(", (isSpecial ? wsName : ""), ") Y changed to:", y, "isGhost:", isGhost, "yAnim running:", yAnimation.running);
+    }
+
     // Detect when removal animation completes
     onOpacityChanged: {
         if (isGhost && opacity <= 0.01) {
