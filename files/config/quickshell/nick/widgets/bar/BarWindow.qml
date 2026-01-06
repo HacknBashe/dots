@@ -205,7 +205,7 @@ Variants {
             // Timer for menu close delay
             Timer {
                 id: clearMenuTimer
-                interval: 150
+                interval: 500  // Longer delay to allow for interactions
                 onTriggered: {
                     // Close menu if mouse not over button and not over menu
                     if (!bar.nixButtonHovered && !scope.menuMouseInside) {
@@ -242,7 +242,7 @@ Variants {
             visible: scope.menuOpen || menu.x > -menu.width
 
             WlrLayershell.namespace: "nick-menu"
-            WlrLayershell.layer: WlrLayer.Overlay
+            WlrLayershell.layer: WlrLayer.Top  // Below notifications (which are on Overlay)
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
             // Use Hyprland focus grab to ensure keyboard input is captured
@@ -272,14 +272,19 @@ Variants {
                 }
 
                 // Track hover on the menu itself
-                HoverHandler {
-                    onHoveredChanged: {
-                        scope.menuMouseInside = hovered;
-                        if (hovered) {
-                            clearMenuTimer.stop();
-                        } else {
-                            clearMenuTimer.restart();
-                        }
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+                    acceptedButtons: Qt.NoButton
+                    
+                    onEntered: {
+                        scope.menuMouseInside = true;
+                        clearMenuTimer.stop();
+                    }
+                    onExited: {
+                        scope.menuMouseInside = false;
+                        clearMenuTimer.restart();
                     }
                 }
             }

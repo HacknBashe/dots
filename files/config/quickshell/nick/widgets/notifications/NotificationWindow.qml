@@ -12,8 +12,8 @@ import QtQuick.Layouts
 PanelWindow {
     id: window
 
-    // Use primary screen only
-    screen: Quickshell.screens[0]
+    // Use secondary screen
+    screen: Quickshell.screens[1]
     color: "transparent"
 
     // Position at top-right
@@ -24,7 +24,7 @@ PanelWindow {
 
     margins {
         top: Appearance.spacing.large
-        right: Appearance.spacing.large
+        right: 68 + Appearance.spacing.large  // Bar width (68px) + spacing
     }
 
     // Fixed size - never changes

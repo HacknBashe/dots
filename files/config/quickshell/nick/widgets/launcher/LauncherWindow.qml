@@ -4,6 +4,7 @@ import "../../config"
 import "../../services"
 import QtQuick
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Wayland
 
 // Full-screen launcher overlay
@@ -11,19 +12,40 @@ Variants {
     id: variants
     model: Quickshell.screens
 
-    // Function to toggle launcher on primary screen
+    // Function to toggle launcher on active screen
     function toggleLauncher() {
-        if (variants.instances.length > 0) {
-            const firstScope = variants.instances[0];
-            firstScope.launcherOpen = !firstScope.launcherOpen;
+        // Get the name of the currently focused monitor from Hyprland
+        const focusedMonitorName = Hyprland.focusedMonitor?.name ?? "";
+        
+        // Find the launcher instance that matches the focused monitor
+        const matchingInstance = variants.instances.find(
+            inst => inst.modelData.name === focusedMonitorName
+        );
+        
+        if (matchingInstance) {
+            matchingInstance.launcherOpen = !matchingInstance.launcherOpen;
         }
     }
 
-    // Function to close launcher
+    // Function to close launcher on active screen
     function closeLauncher() {
-        if (variants.instances.length > 0) {
-            const firstScope = variants.instances[0];
-            firstScope.launcherOpen = false;
+        // Get the name of the currently focused monitor from Hyprland
+        const focusedMonitorName = Hyprland.focusedMonitor?.name ?? "";
+        
+        // Find the launcher instance that matches the focused monitor
+        const matchingInstance = variants.instances.find(
+            inst => inst.modelData.name === focusedMonitorName
+        );
+        
+        if (matchingInstance) {
+            matchingInstance.launcherOpen = false;
+        }
+    }
+
+    // Function to close all open launchers across all screens
+    function closeAllLaunchers() {
+        for (let i = 0; i < variants.instances.length; i++) {
+            variants.instances[i].launcherOpen = false;
         }
     }
 
@@ -84,7 +106,8 @@ Variants {
                     screenHeight: launcherWindow.height
 
                     onCloseRequested: {
-                        scope.launcherOpen = false;
+                        // Close all launchers across all screens
+                        variants.closeAllLaunchers();
                     }
                 }
             }
