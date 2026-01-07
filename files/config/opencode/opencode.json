@@ -2,7 +2,35 @@
   "theme": "system",
   "$schema": "https://opencode.ai/config.json",
   "lsp": {},
-  "mcp": {},
+  "mcp": {
+    "brave-search": {
+      "type": "local",
+      "command": [
+        "/etc/profiles/per-user/nick/bin/npx",
+        "-y",
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "enabled": true,
+      "environment": {
+        "BRAVE_API_KEY": "{env:BRAVE_API_KEY}"
+      }
+    },
+    "github": {
+      "type": "local",
+      "command": [
+        "docker",
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "environment": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{env:GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    }
+  },
   "permission": {
     "bash": {
       "*": "allow",

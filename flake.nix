@@ -61,12 +61,18 @@
       url = "github:anomalyco/opencode";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     nixpkgs,
     nixpkgsold,
     home-manager,
+    sops-nix,
     ...
   } @ inputs: let
     systemLinux = "x86_64-linux";
@@ -91,6 +97,9 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.sharedModules = [
+              sops-nix.homeManagerModules.sops
+            ];
             home-manager.users = {
               nick = {
                 imports = [

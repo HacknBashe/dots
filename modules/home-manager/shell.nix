@@ -31,6 +31,19 @@
       };
     };
 in {
+  # Configure sops age key location
+  sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+  
+  # Configure sops secrets for CLI tools
+  sops.secrets.brave_api_key = {
+    sopsFile = ../../secrets/secrets.yaml;
+    format = "yaml";
+  };
+  sops.secrets.github_token = {
+    sopsFile = ../../secrets/secrets.yaml;
+    format = "yaml";
+  };
+
   programs.zsh = {
     enable = false;
     sessionVariables = {
@@ -111,6 +124,8 @@ in {
   home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
   home.packages = with pkgs;
     [
+      age
+      sops
       bat
       chntpw
       cmatrix
@@ -249,6 +264,21 @@ in {
             alias -- br='NODE_ARGS="--max_old_space_size=8192" bend reactor serve --UNSUPPORTED_LOCAL_DEV_SETTING bend-webpack.enableFastRefresh --UNSUPPORTED_LOCAL_DEV_SETTING bend-webpack.useWebpack5 --UNSUPPORTED_LOCAL_DEV_SETTING bend-webpack.devtool=eval-source-map $@ --ts-watch --update --enable-tools --run-tests'
           '';
         target = ".zshrc.generated";
+      };
+      ".zshrc.secrets" = {
+        text = 
+          if config.isHubspot
+          then ""
+          else ''
+            # API Keys for CLI tools (managed by sops-nix)
+            if [ -f "${config.sops.secrets.brave_api_key.path}" ]; then
+              export BRAVE_API_KEY=$(cat ${config.sops.secrets.brave_api_key.path})
+            fi
+            if [ -f "${config.sops.secrets.github_token.path}" ]; then
+              export GITHUB_PERSONAL_ACCESS_TOKEN=$(cat ${config.sops.secrets.github_token.path})
+            fi
+          '';
+        target = ".zshrc.secrets";
       };
       "nvm.plugin.zsh" = {
         source = ../../files/config/zsh/nvm.plugin.zsh;
