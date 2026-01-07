@@ -260,7 +260,11 @@ return {
 
 				triggers = {
 					{ mode = "n", keys = "<Leader>" },
+					{ mode = "v", keys = "<Leader>" },
 					{ mode = "x", keys = "<Leader>" },
+					{ mode = "n", keys = "<Localleader>" },
+					{ mode = "v", keys = "<Localleader>" },
+					{ mode = "x", keys = "<Localleader>" },
 
 					{ mode = "i", keys = "<C-x>" },
 
@@ -294,6 +298,24 @@ return {
 					{ mode = "n", keys = "<Leader>t", desc = "Tables" },
 					{ mode = "n", keys = "<Leader>v", desc = "View" },
 				},
+			})
+
+			-- Enable clue triggers in all Octo-related buffers
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = { "octo", "octo_panel" },
+				callback = function()
+					clue.ensure_buf_triggers()
+				end,
+				desc = "Enable mini.clue triggers in Octo buffers",
+			})
+
+			-- Enable clue triggers in Octo review diff buffers
+			vim.api.nvim_create_autocmd("BufEnter", {
+				pattern = "octo://*",
+				callback = function()
+					clue.ensure_buf_triggers()
+				end,
+				desc = "Enable mini.clue triggers in Octo review diff buffers",
 			})
 		end
 	end,
