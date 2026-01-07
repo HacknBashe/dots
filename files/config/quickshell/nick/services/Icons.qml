@@ -153,6 +153,7 @@ Singleton {
             "okular": "",
 
             // Office
+            "Todoist": "󰃶",
             "libreoffice": "󰈙",
             "thunderbird": "󰇮",
 
