@@ -176,6 +176,10 @@ run = ['layout floating']
 if.app-name-regex-substring = 'Chromium'
 run = ['layout floating']
 
+[[on-window-detected]]
+if.app-id = 'com.mitchellh.ghostty'
+run = ['layout accordion']
+
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
