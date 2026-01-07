@@ -239,8 +239,9 @@ Variants {
             implicitWidth: menu.width
             implicitHeight: menu.height
 
-            // Stay visible during animation
-            visible: scope.menuOpen || menu.x > -menu.width
+            // Only visible (and blocking clicks) when menu is open or still animating closed
+            // When closed: menu.x = menu.width (off screen), so x < menu.width means still visible
+            visible: scope.menuOpen || menu.x < menu.width
 
             WlrLayershell.namespace: "nick-menu"
             WlrLayershell.layer: WlrLayer.Overlay  // Above notifications
