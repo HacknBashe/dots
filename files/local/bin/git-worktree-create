@@ -15,10 +15,10 @@ top="$(dirname "$worktree_dir")"
 
 if [ $# -ne 0 ]; then
   # Check if argument is a GitHub URL
-  if [[ "$1" =~ ^https://git\.hubteam\.com/.*/(issues|pull)/[0-9]+$ ]]; then
+  if [[ "$1" =~ ^https://github\.com/.*/(issues|pull)/[0-9]+$ ]]; then
     # Extract repo and issue/PR ID from URL
     GITHUB_URL="$1"
-    ISSUE_REPO=$(echo "$GITHUB_URL" | sed -n 's|https://git\.hubteam\.com/\([^/]*/[^/]*\)/.*|\1|p')
+    ISSUE_REPO=$(echo "$GITHUB_URL" | sed -n 's|https://github\.com/\([^/]*/[^/]*\)/.*|\1|p')
     ISSUE_ID=$(echo "$GITHUB_URL" | sed -n 's|.*/\([0-9][0-9]*\)$|\1|p')
     
     echo "Detected GitHub URL - Repo: $ISSUE_REPO, Issue/PR: $ISSUE_ID"
