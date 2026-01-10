@@ -106,8 +106,8 @@ function y() {
 }
 eval "$(zoxide init zsh)"
 
-if [ -f ~/.zshrc.secrets ]; then
-  source ~/.zshrc.secrets
+if [ -f ~/.zshrc.sops ]; then
+  source ~/.zshrc.sops
 fi
 
 if [ -f ~/.zshrc.local ]; then

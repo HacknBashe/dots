@@ -106,6 +106,7 @@
                   ./hosts/meraxes/home.nix
                   ./modules/theme.nix
                   ./modules/home-manager/shell.nix
+                  ./modules/home-manager/sops.nix
                   ./modules/home-manager/development.nix
                   ./modules/home-manager/vms.nix
                   ./modules/home-manager/neovim-lazy.nix
