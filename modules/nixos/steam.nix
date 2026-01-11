@@ -88,20 +88,24 @@
   # AUTOMOUNT: The bind mount activates automatically when Steam accesses the
   # compatdata directory. This handles drive unplug/replug scenarios gracefully.
   # The mount waits for the external drive to be available before activating.
-  systemd.mounts = [{
-    description = "Bind mount Steam compatdata from ext4 to exFAT drive";
-    what = "/home/nick/.local/share/steam-external-compatdata/Spinner";
-    where = "/run/media/nick/Spinner/SteamLibrary/steamapps/compatdata";
-    type = "none";
-    options = "bind";
-    # Wait for the external drive to be mounted first
-    requires = [ "run-media-nick-Spinner.mount" ];
-    after = [ "run-media-nick-Spinner.mount" ];
-  }];
+  systemd.mounts = [
+    {
+      description = "Bind mount Steam compatdata from ext4 to exFAT drive";
+      what = "/home/nick/.local/share/steam-external-compatdata/Spinner";
+      where = "/run/media/nick/Spinner/SteamLibrary/steamapps/compatdata";
+      type = "none";
+      options = "bind";
+      # Wait for the external drive to be mounted first
+      requires = ["run-media-nick-Spinner.mount"];
+      after = ["run-media-nick-Spinner.mount"];
+    }
+  ];
 
-  systemd.automounts = [{
-    description = "Automount Steam compatdata bind mount";
-    where = "/run/media/nick/Spinner/SteamLibrary/steamapps/compatdata";
-    wantedBy = [ "multi-user.target" ];
-  }];
+  systemd.automounts = [
+    {
+      description = "Automount Steam compatdata bind mount";
+      where = "/run/media/nick/Spinner/SteamLibrary/steamapps/compatdata";
+      wantedBy = ["multi-user.target"];
+    }
+  ];
 }
