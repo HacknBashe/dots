@@ -41,6 +41,7 @@ vim.opt.expandtab = true
 vim.opt.smarttab = true
 vim.opt.autoindent = true
 vim.opt.smartindent = true
+vim.opt.textwidth = 140
 
 vim.opt.wrap = false
 
@@ -50,7 +51,7 @@ vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
 
-vim.opt.colorcolumn = "20,40,60,80,100,120,140,160,180,200"
+vim.opt.colorcolumn = "80,160"
 
 vim.opt.signcolumn = "yes"
 
