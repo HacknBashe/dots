@@ -128,7 +128,7 @@ in {
   config = {
     monitor1Name = "DP-3";
     monitor2Name = "DP-4";
-    monitor1Command = "DP-3,3840x2160,3440x0,2";
+    monitor1Command = "DP-3,3840x2160,3440x0,1.33";
     monitor2Command = "DP-4,3440x1440,0x180,1";
     lockCommand = "grim -o DP-3 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-4 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock";
 
