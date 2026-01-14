@@ -8,7 +8,8 @@ return {
 			"hrsh7th/cmp-nvim-lsp",
 			"saadparwaiz1/cmp_luasnip",
 			{
-				"git@git.hubteam.com:HubSpot/bend.nvim.git",
+				url = "git@git.hubteam.com:HubSpot/bend.nvim.git",
+				branch = "jsprinkle/config-flag",
 				enabled = function()
 					return vim.fn.hostname() == "JGR2T596J9"
 				end,
@@ -23,7 +24,8 @@ return {
 			local isHubspot, bend = pcall(require, "bend")
 
 			if isHubspot then
-				bend.setup({})
+				vim.lsp.set_log_level("info")
+				bend.setup({ trust_me = true })
 			end
 
 			require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets/" } })
@@ -52,8 +54,12 @@ return {
 			-- Configure ts_ls with HubSpot bend.nvim support
 			if isHubspot then
 				vim.lsp.config("ts_ls", {
+					cmd = { "typescript-language-server", "--stdio" },
 					init_options = {
-						tsserver_path = bend.getTsServerPathForCurrentFile(),
+						hostInfo = "neovim",
+						tsserver = {
+							path = bend.getTsServerPathForCurrentFile(),
+						},
 					},
 				})
 			end
