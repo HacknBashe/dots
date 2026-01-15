@@ -356,8 +356,8 @@ Item {
     // Background for column 1
     Rectangle {
         id: column1Background
-        x: regularWorkspacesRow.x + column1Container.x
-        y: regularWorkspacesRow.y + column1Container.y
+        x: mainLayout.x + regularWorkspacesRow.x + column1Container.x
+        y: mainLayout.y + regularWorkspacesRow.y + column1Container.y
         width: 30
         // Use actual height of column1, not implicit height
         // This accounts for animating workspace heights
@@ -385,8 +385,8 @@ Item {
     // Background for column 2
     Rectangle {
         id: column2Background
-        x: regularWorkspacesRow.x + column2Container.x
-        y: regularWorkspacesRow.y + column2Container.y
+        x: mainLayout.x + regularWorkspacesRow.x + column2Container.x
+        y: mainLayout.y + regularWorkspacesRow.y + column2Container.y
         width: 30
         // Use actual height of column2, not implicit height
         // This accounts for animating workspace heights
@@ -414,8 +414,8 @@ Item {
     // Background for special workspaces
     Rectangle {
         id: specialBackground
-        x: specialWorkspacesContainer.x
-        y: specialWorkspacesContainer.y
+        x: mainLayout.x + specialWorkspacesContainer.x
+        y: mainLayout.y + specialWorkspacesContainer.y
         width: 30
         height: specialWorkspacesColumn.implicitHeight + Appearance.padding.small * 2
         color: NixConfig.layer(NixConfig.surfaceContainer, 0)
@@ -822,7 +822,7 @@ Item {
             const containerWidth = activeColumn.container.width || 30;
 
             // Center pill on the container
-            return regularWorkspacesRow.x + containerX + (containerWidth / 2) - (width / 2);
+            return mainLayout.x + regularWorkspacesRow.x + containerX + (containerWidth / 2) - (width / 2);
         }
 
         property real targetY: {
@@ -834,9 +834,9 @@ Item {
                 return 0;
 
             // Calculate workspace item's center in absolute coordinates
-            // Account for: regularWorkspacesRow -> container -> column -> item
+            // Account for: mainLayout -> regularWorkspacesRow -> container -> column -> item
             // The container has padding.small on top, and column is vertically centered in container
-            let itemCenterY = regularWorkspacesRow.y + activeColumn.container.y + Appearance.padding.small + activeColumn.column.y + itemY + (activeItem.implicitHeight / 2);
+            let itemCenterY = mainLayout.y + regularWorkspacesRow.y + activeColumn.container.y + Appearance.padding.small + activeColumn.column.y + itemY + (activeItem.implicitHeight / 2);
 
             // Position pill centered on the workspace item
             return itemCenterY - (targetHeight / 2);
@@ -933,7 +933,7 @@ Item {
             const containerX = specialWorkspacesContainer.x;
             const containerWidth = specialWorkspacesContainer.width || 30;
 
-            return containerX + (containerWidth / 2) - (width / 2);
+            return mainLayout.x + containerX + (containerWidth / 2) - (width / 2);
         }
 
         property real targetY: {
@@ -941,9 +941,9 @@ Item {
                 return 0;
 
             // Calculate workspace item's center in absolute coordinates
-            // Account for: container -> column -> item
+            // Account for: mainLayout -> container -> column -> item
             // The container has padding.small on top, and column is vertically centered in container
-            let itemCenterY = specialWorkspacesContainer.y + Appearance.padding.small + specialWorkspacesColumn.y + activeItem.y + (activeItem.implicitHeight / 2);
+            let itemCenterY = mainLayout.y + specialWorkspacesContainer.y + Appearance.padding.small + specialWorkspacesColumn.y + activeItem.y + (activeItem.implicitHeight / 2);
 
             // Position pill centered on the workspace item
             return itemCenterY - (targetHeight / 2);
