@@ -41,10 +41,10 @@ Create a pull request with an intelligent, contextually rich body based on git c
 
    ## Related links
 
-   Closes https://git.hubteam.com/[OWNER]/[REPO]/issues/[ISSUE_NUMBER]
+   Closes https://github.com/[OWNER]/[REPO]/issues/[ISSUE_NUMBER]
 
    [If part of an epic, add:]
-   Part of epic: [Epic Title](https://git.hubteam.com/[OWNER]/[REPO]/issues/[EPIC_NUMBER])
+   Part of epic: [Epic Title](https://github.com/[OWNER]/[REPO]/issues/[EPIC_NUMBER])
 
    ## Screenshots
 

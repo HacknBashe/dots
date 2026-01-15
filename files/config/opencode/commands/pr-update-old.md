@@ -56,7 +56,7 @@ Update the pr for this branch based on the following instructions
 
    ## Related links
 
-   Closes https://git.hubteam.com/HubSpot/[CORRECT_REPO]/issues/[ISSUE_NUMBER]
+   Closes https://github.com/HubSpotEngineering/[CORRECT_REPO]/issues/[ISSUE_NUMBER]
 
    ## Screenshots
 
