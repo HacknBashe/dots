@@ -73,61 +73,45 @@ Singleton {
     readonly property var appIcons: ({
             // Browsers
             "firefox": "󰈹",
-            "chromium": "",
-            "google-chrome": "",
             "brave-browser": "󰖟",
             "brave": "󰖟",
 
             // Development
             "code": "󰨞",
             "Code": "󰨞",
-            "vscodium": "󰨞",
+
             "neovim": "",
             "nvim": "",
             "vim": "",
-            "jetbrains-idea": "",
-            "jetbrains-pycharm": "",
+
             "Godot": "",
             "godot": "",
 
             // Terminals (with common class name patterns)
-            "kitty": "󰄛",
+
             "Alacritty": "",
             "alacritty": "",
-            "foot": "",
             "ghostty": "󰊠",
             "Ghostty": "󰊠",
             "com.mitchellh.ghostty": "󰊠",
-            "org.wezfurlong.wezterm": "",
-            "wezterm": "",
 
             // File managers
-            "thunar": "󰉋",
-            "Thunar": "󰉋",
-            "nautilus": "󰉋",
             "dolphin": "󰉋",
             "org.kde.dolphin": "󰉋",
-            "pcmanfm": "󰉋",
 
             // Media
             "spotify": "󰓇",
             "Spotify": "󰓇",
             "vlc": "󰕼",
-            "mpv": "",
 
             // Communication
             "discord": "󰙯",
             "Discord": "󰙯",
             "vesktop": "󰙯",
-            "slack": "󰒱",
-            "Slack": "󰒱",
-            "telegram": "",
-            "signal": "󰭹",
 
             // Gaming
             "steam": "󰓓",
             "Steam": "󰓓",
-            "lutris": "󰊗",
             "heroic": "󰊗",
 
             // VR
@@ -141,24 +125,13 @@ Singleton {
             // Graphics
             "gimp": "",
             "org.gimp.GIMP": "",
-            "inkscape": "",
-            "org.inkscape.Inkscape": "",
             "blender": "󰂫",
-            "krita": "󰋩",
 
-            // Viewers
-            "zathura": "",
-            "evince": "",
-            "org.gnome.Evince": "",
-            "okular": "",
 
             // Office
             "Todoist": "󰃶",
-            "libreoffice": "󰈙",
-            "thunderbird": "󰇮",
 
             // System
-            "pavucontrol": "󰕾",
             "blueman-manager": "󰂯",
             "qpwgraph": "󰡀",
         })
