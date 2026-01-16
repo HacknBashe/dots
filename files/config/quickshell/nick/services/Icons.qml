@@ -13,13 +13,13 @@ Singleton {
             "Network": "󰖟",
 
             // Development
-            "Development": "",
-            "IDE": "",
+            "Development": "",
+            "IDE": "",
             "TextEditor": "󰷈",
 
             // Terminal
-            "TerminalEmulator": "",
-            "ConsoleOnly": "",
+            "TerminalEmulator": "",
+            "ConsoleOnly": "",
 
             // Files
             "FileTools": "󰉋",
@@ -73,36 +73,24 @@ Singleton {
     readonly property var appIcons: ({
             // Browsers
             "firefox": "󰈹",
-            "brave-browser": "󰖟",
-            "brave": "󰖟",
 
             // Development
             "code": "󰨞",
             "Code": "󰨞",
-
             "neovim": "",
             "nvim": "",
             "vim": "",
-
             "Godot": "",
             "godot": "",
 
             // Terminals (with common class name patterns)
-
-            "Alacritty": "",
-            "alacritty": "",
             "ghostty": "󰊠",
             "Ghostty": "󰊠",
             "com.mitchellh.ghostty": "󰊠",
 
-            // File managers
-            "dolphin": "󰉋",
-            "org.kde.dolphin": "󰉋",
-
             // Media
             "spotify": "󰓇",
             "Spotify": "󰓇",
-            "vlc": "󰕼",
 
             // Communication
             "discord": "󰙯",
@@ -112,28 +100,13 @@ Singleton {
             // Gaming
             "steam": "󰓓",
             "Steam": "󰓓",
-            "heroic": "󰊗",
 
             // VR
             "wivrn": "",
             "io.github.wivrn.wivrn": "",
 
-            // Recording/Streaming
-            "obs": "󰑋",
-            "com.obsproject.Studio": "󰑋",
-
-            // Graphics
-            "gimp": "",
-            "org.gimp.GIMP": "",
-            "blender": "󰂫",
-
-
-            // Office
-            "Todoist": "󰃶",
-
-            // System
-            "blueman-manager": "󰂯",
-            "qpwgraph": "󰡀",
+            // Custom icons
+            "qpwgraph": "󰡀"
         })
 
     // Default icon when nothing matches
