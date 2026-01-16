@@ -12,7 +12,7 @@
     firefox
     gimp
     gparted
-    helvum
+    qpwgraph
     makemkv
     qalculate-qt
     qbittorrent
