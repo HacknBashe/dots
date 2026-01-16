@@ -159,7 +159,8 @@ Singleton {
 
             // System
             "pavucontrol": "󰕾",
-            "blueman-manager": "󰂯"
+            "blueman-manager": "󰂯",
+            "qpwgraph": "󰡀",
         })
 
     // Default icon when nothing matches
@@ -192,6 +193,12 @@ Singleton {
             if (appIcons.hasOwnProperty(lastPart.toLowerCase())) {
                 return appIcons[lastPart.toLowerCase()];
             }
+        }
+
+        // Generic Steam game pattern (steam_app_APPID)
+        // Check specific game overrides first (already checked above), then use generic gamepad icon
+        if (appClass.startsWith("steam_app_")) {
+            return "󰊗";  // Gamepad icon for all Steam games
         }
 
         // Try to get categories from desktop entry
