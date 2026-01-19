@@ -17,6 +17,7 @@
     qalculate-qt
     qbittorrent
     qimgv
+    reaper
     spotify
     todoist-electron
     vesktop
