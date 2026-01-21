@@ -8,7 +8,7 @@ set -e
 PROJECT_ID="1532"
 
 # Issues repository (where issues actually live)
-ISSUES_OWNER="${ISSUES_OWNER:-HubSpot}"
+ISSUES_OWNER="${ISSUES_OWNER:-HubSpotEngineering}"
 ISSUES_REPO="${ISSUES_REPO:-SocialCoreTeam}"
 
 # Check if we're in a git repository
