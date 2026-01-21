@@ -1,6 +1,7 @@
 {
   "theme": "system",
   "$schema": "https://opencode.ai/config.json",
+  "instructions": ["/Users/nhackford/.config/opencode/AGENTS_HUBSPOT.md"],
   "lsp": {
     "typescript": {
       "disabled": true
