@@ -24,8 +24,6 @@ in {
 
     csharp-ls
     csharpier
-
-    blender
   ];
 
   environment.sessionVariables = {

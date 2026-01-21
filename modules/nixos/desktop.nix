@@ -8,20 +8,25 @@
 
   environment.systemPackages = with pkgs; [
     brave
-    drawio
     firefox
+
     gimp
+    reaper
+    blender
+    kdePackages.kdenlive
+
     gparted
     qpwgraph
-    makemkv
     qalculate-qt
     qbittorrent
-    qimgv
-    reaper
+
+    vlc
+    makemkv
+
     spotify
     todoist-electron
     vesktop
-    vlc
+
     wine
     winetricks
   ];
