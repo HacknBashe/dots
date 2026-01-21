@@ -126,18 +126,24 @@ parse_typescript_errors() {
     local content="$1"
     local result=""
     
-    # TypeScript format: filepath(line,col): error TS####: message
-    local ts_errors=$(echo "$content" | grep -E "[a-zA-Z0-9_/.-]+\.(js|ts|tsx|jsx|py|java|go|rs|cpp|c|h|md|txt|json|yaml|yml|toml|css|scss|html|vue|php|rb|sh|lua|nix)\([0-9]+,[0-9]+\): error TS[0-9]+:")
-    
-    while IFS= read -r error_line; do
-        if [[ -n "$error_line" ]]; then
-            file_path=$(echo "$error_line" | sed -E 's/^([^(]+)\([0-9]+,[0-9]+\): error.*/\1/')
-            line_num=$(echo "$error_line" | sed -E 's/^[^(]+\(([0-9]+),[0-9]+\): error.*/\1/')
-            error_msg=$(echo "$error_line" | sed -E 's/.*: error TS[0-9]+: (.*)/\1/')
+    # Find all TypeScript error headers (process line by line to handle multi-line errors)
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^[a-zA-Z0-9_/.-]+\.(js|ts|tsx|jsx|py|java|go|rs|cpp|c|h|md|txt|json|yaml|yml|toml|css|scss|html|vue|php|rb|sh|lua|nix)\([0-9]+,[0-9]+\):[[:space:]]*error[[:space:]]*TS[0-9]+: ]]; then
+            # Extract file path and line number
+            file_path=$(echo "$line" | sed -E 's/^([^(]+)\([0-9]+,[0-9]+\): error.*/\1/')
+            line_num=$(echo "$line" | sed -E 's/^[^(]+\(([0-9]+),[0-9]+\): error.*/\1/')
+            
+            # Extract error message - just the first part before it gets too long
+            error_msg=$(echo "$line" | sed -E 's/.*: error TS[0-9]+: (.*)/\1/')
+            
+            # Truncate very long error messages to keep them readable in fzf
+            if [[ ${#error_msg} -gt 100 ]]; then
+                error_msg="${error_msg:0:100}..."
+            fi
             
             result+="$error_msg|$file_path|$line_num"$'\n'
         fi
-    done <<< "$ts_errors"
+    done <<< "$content"
     
     echo "$result"
 }
