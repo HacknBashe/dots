@@ -97,6 +97,7 @@
     kdePackages.kwallet-pam
     kdePackages.polkit-kde-agent-1
     kdePackages.dolphin
+    kdePackages.ark
     kdePackages.gwenview
 
     grim
