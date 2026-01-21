@@ -294,7 +294,7 @@ in {
       };
 
       "fastfetch" = {
-        source = ../../files/config/fastfetch/config.jsonc;
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/fastfetch/config.jsonc";
         target = ".config/fastfetch/config.jsonc";
       };
     }
