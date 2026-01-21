@@ -35,6 +35,9 @@ return {
 					path = "~/notes",
 				},
 			},
+			note_id_func = function(title)
+				return title:gsub(" ", "-"):gsub("\\[\\^A-Za-z0-9-\\]", ""):lower()
+			end,
 		})
 
 		vim.keymap.set("n", "<leader>nt", function()
@@ -62,7 +65,7 @@ return {
 			callback = function()
 				local obsidian_workspace = vim.fn.expand("~/notes")
 				local current_file = vim.fn.expand("%:p")
-				
+
 				-- Only add keymap if we're NOT in the Obsidian workspace
 				if not vim.startswith(current_file, obsidian_workspace) then
 					vim.keymap.set("n", "<CR>", function()
