@@ -154,11 +154,11 @@ alt-shift-ctrl-h = [
   'exec-and-forget /bin/bash -c "sleep 0.1; /run/current-system/sw/bin/sketchybar --trigger aerospace_workspace_change"'
 ]
 alt-shift-ctrl-j = [
-  'move-workspace-to-monitor down',
+  'move-workspace-to-monitor up',
   'exec-and-forget /bin/bash -c "sleep 0.1; /run/current-system/sw/bin/sketchybar --trigger aerospace_workspace_change"'
 ]
 alt-shift-ctrl-k = [
-  'move-workspace-to-monitor up',
+  'move-workspace-to-monitor down',
   'exec-and-forget /bin/bash -c "sleep 0.1; /run/current-system/sw/bin/sketchybar --trigger aerospace_workspace_change"'
 ]
 alt-shift-ctrl-l = [
