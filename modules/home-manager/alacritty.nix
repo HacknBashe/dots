@@ -32,11 +32,11 @@
           indexed_colors = [
             {
               index = 16;
-              color = config.theme.colors.indexed.one;
+              color = config.theme.colors.indexed.orange;
             }
             {
               index = 17;
-              color = config.theme.colors.indexed.two;
+              color = config.theme.colors.indexed.red1;
             }
           ];
         };

@@ -21,7 +21,7 @@
                 magenta "${config.theme.colors.default.magenta}"
                 cyan "${config.theme.colors.default.cyan}"
                 white "${config.theme.colors.default.white}"
-                orange "${config.theme.colors.indexed.one}"
+                orange "${config.theme.colors.indexed.orange}"
             }
         }
       '';

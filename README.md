@@ -49,6 +49,11 @@ sudo apt install docker-compose
 sudo usermod -aG docker azureuser                                                                                                                                                                 azureuser@ae-camel 18:34:23
 ```
 
+## Theme
+
+Based on [tokyonight.nvim](https://github.com/folke/tokyonight.nvim) with night background + moon colors, look at theme.nix for the source
+of truth
+
 ## TODO
 
 - Fix config value to help inplace symlinks

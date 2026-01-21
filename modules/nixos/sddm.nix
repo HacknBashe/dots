@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }: {
   services = {
@@ -48,7 +49,7 @@
         backgroundFillMode = "pad";
         passwordCharacter = "•";
         passwordFontSize = 96;
-        passwordCursorColor = "#ffffff";
+        passwordCursorColor = config.theme.colors.cursor;
         sessionsFontSize = 24;
         usersFontSize = 48;
       };

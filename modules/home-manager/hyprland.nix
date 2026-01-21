@@ -3,7 +3,26 @@
   pkgs,
   inputs,
   ...
-}: {
+}: let
+  # Convert hex color to rgb() string for hyprlock
+  hexToRgb = hex: let
+    r = builtins.substring 1 2 hex;
+    g = builtins.substring 3 2 hex;
+    b = builtins.substring 5 2 hex;
+    hexToInt = s: let
+      chars = {
+        "0" = 0; "1" = 1; "2" = 2; "3" = 3; "4" = 4;
+        "5" = 5; "6" = 6; "7" = 7; "8" = 8; "9" = 9;
+        "a" = 10; "b" = 11; "c" = 12; "d" = 13; "e" = 14; "f" = 15;
+        "A" = 10; "B" = 11; "C" = 12; "D" = 13; "E" = 14; "F" = 15;
+      };
+      h = builtins.substring 0 1 s;
+      l = builtins.substring 1 1 s;
+    in chars.${h} * 16 + chars.${l};
+  in "rgb(${toString (hexToInt r)}, ${toString (hexToInt g)}, ${toString (hexToInt b)})";
+
+  fgColor = hexToRgb config.theme.colors.foreground;
+in {
   programs.hyprlock = {
     enable = true;
     package = inputs.hyprlock.packages.${pkgs.system}.hyprlock;
@@ -48,10 +67,10 @@
         dots_center = true;
         outer_color = "rgba(0, 0, 0, 0)";
         inner_color = "rgba(0, 0, 0, 0.5)";
-        font_color = "rgb(200, 200, 200)";
+        font_color = fgColor;
         fade_on_empty = false;
         placeholder_text = ''
-          <i><span foreground="##cdd6f4">󰌆 </span></i>
+          <i><span foreground="#${config.theme.colors.foreground}">󰌆 </span></i>
         '';
         hide_input = false;
         position = "0, -120";
@@ -65,7 +84,7 @@
         text = ''
           cmd[update:1000] echo "$(date +"%H:%M")"
         '';
-        color = "rgba(205, 214, 244, 1)";
+        color = fgColor;
         font_size = 120;
         font_family = config.theme.fonts.mono;
         position = "0, -300";
@@ -110,7 +129,7 @@
   home.file = {
     "hypr/vars.conf" = {
       text = ''
-        $activeColor = ${builtins.substring 1 6 config.theme.colors.default.blue + "cc"}
+        $activeColor = ${builtins.substring 1 6 config.theme.colors.extended.blue1 + "cc"}
         $inactiveColor = ${builtins.substring 1 6 config.theme.colors.bright.black + "99"}
         $shadowColor = ${builtins.substring 1 6 config.theme.colors.text + "ee"}
 

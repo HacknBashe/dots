@@ -54,8 +54,8 @@
         gradient_color_3 = '${config.theme.colors.default.cyan}'
         gradient_color_4 = '${config.theme.colors.default.green}'
         gradient_color_5 = '${config.theme.colors.default.yellow}'
-        gradient_color_6 = '${config.theme.colors.indexed.one}'
-        gradient_color_7 = '${config.theme.colors.indexed.two}'
+        gradient_color_6 = '${config.theme.colors.indexed.orange}'
+        gradient_color_7 = '${config.theme.colors.indexed.red1}'
       '';
       target = ".config/cava/config";
     };

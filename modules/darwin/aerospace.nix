@@ -11,8 +11,8 @@
     jankyborders = {
       enable = true;
       # Use ANSI cyan for active border, mid-tone background for inactive
-      active_color = "0xff${builtins.substring 1 6 config.theme.colors.default.cyan}";
-      inactive_color = "0x00${builtins.substring 1 6 config.theme.colors.indexed.four}";
+      active_color = "0xff${builtins.substring 1 6 config.theme.colors.extended.blue1}";
+      inactive_color = "0x00${builtins.substring 1 6 config.theme.colors.indexed.bgHighlight}";
       width = 10.0;
     };
   };

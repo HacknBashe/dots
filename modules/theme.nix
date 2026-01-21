@@ -146,8 +146,9 @@ in {
       };
 
       colors = {
+        # Night background + Moon colors
         background = "#1a1b26";
-        foreground = "#c0caf5";
+        foreground = "#c8d3f5";
         cursor = "#c8d3f5";
         text = "#1a1b26";
         default = {
@@ -162,19 +163,37 @@ in {
         };
         bright = {
           black = "#444a73";
-          red = "#ff757f";
-          green = "#c3e88d";
-          yellow = "#ffc777";
-          blue = "#82aaff";
-          magenta = "#c099ff";
-          cyan = "#86e1fc";
+          red = "#ff8d94";
+          green = "#c7fb6d";
+          yellow = "#ffd8ab";
+          blue = "#9ab8ff";
+          magenta = "#caabff";
+          cyan = "#b2ebff";
           white = "#c8d3f5";
         };
         indexed = {
-          one = "#ff966c";    # Orange
-          two = "#c53b53";    # Dark red
-          three = "#ffb3d9";  # Pastel retrowave pink
-          four = "#2f3549";   # Mid-tone background (for buttons, hover states)
+          orange = "#ff966c";
+          red1 = "#c53b53";       # Error color
+          purple = "#fca7ea";     # Pink-ish, per folke's naming
+          bgHighlight = "#2f334d";
+        };
+        extended = {
+          # Blues
+          blue0 = "#3e68d7";      # Search bg
+          blue1 = "#65bcff";      # Types, border highlight
+          blue2 = "#0db9d7";      # Info diagnostics
+          blue5 = "#89ddff";      # Operators, punctuation
+          # Greens
+          green1 = "#4fd6be";     # Properties, teal
+          green2 = "#41a6b5";     # Hints
+          # Other
+          magenta2 = "#ff007c";   # Flash, emphasis
+          comment = "#636da6";
+          dark3 = "#545c7e";      # Dimmed text
+          dark5 = "#737aa2";      # Concealed
+          fgGutter = "#3b4261";   # Line numbers
+          # Night variant backgrounds
+          bgDark = "#16161e";     # Sidebars, floats
         };
       };
     };

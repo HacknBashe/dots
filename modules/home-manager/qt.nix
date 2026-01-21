@@ -50,7 +50,7 @@
     viewFg = hexToRgb c.default.white; # View text
 
     # Buttons
-    buttonBg = hexToRgb c.indexed.four; # Mid-tone button background
+    buttonBg = hexToRgb c.indexed.bgHighlight; # Mid-tone button background
     buttonFg = hexToRgb c.default.white; # Button text
 
     # Selection/highlight
@@ -81,12 +81,12 @@
     # Complementary colors
     complementaryBg = hexToRgb c.background; # Background color
     complementaryFg = hexToRgb c.bright.white; # Brighter text
-    complementaryHover = hexToRgb c.indexed.four; # Mid-tone hover
+    complementaryHover = hexToRgb c.indexed.bgHighlight; # Mid-tone hover
     complementaryFocus = hexToRgb c.default.blue; # Blue focus
 
     # Focus decoration
     focusColor = hexToRgb c.default.blue; # Blue accent
-    hoverColor = hexToRgb c.indexed.four; # Subtle hover
+    hoverColor = hexToRgb c.indexed.bgHighlight; # Subtle hover
   };
 
   # Generate the kdeglobals content

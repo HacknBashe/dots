@@ -11,8 +11,8 @@
     colors = {
       # Semantic color names mapped to ANSI colors
       primary = config.theme.colors.default.magenta;     # Purple
-      secondary = config.theme.colors.indexed.three;     # Light pink
-      tertiary = config.theme.colors.indexed.one;        # Orange
+      secondary = config.theme.colors.indexed.purple;     # Light pink
+      tertiary = config.theme.colors.indexed.orange;        # Orange
       quaternary = config.theme.colors.default.yellow;   # Yellow
       quinary = config.theme.colors.default.green;       # Green
       
@@ -20,7 +20,7 @@
       background = config.theme.colors.background;
       foreground = config.theme.colors.foreground;
       surface = config.theme.colors.default.black;
-      surfaceContainer = "#2f334f";  # Middle ground between default.black and bright.black
+      surfaceContainer = config.theme.colors.indexed.bgHighlight;
       textOnBackground = config.theme.colors.foreground;
       textOnSurface = config.theme.colors.bright.white;
       textOnPrimary = config.theme.colors.background;
