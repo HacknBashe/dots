@@ -98,7 +98,7 @@ Item {
         radius: Appearance.rounding.normal
         color: root.isHovered ? Qt.alpha(NixConfig.textOnBackground, 0.08) : "transparent"
         z: -1
-        
+
         Behavior on color {
             ColorAnimation {
                 duration: Appearance.anim.small
@@ -124,6 +124,8 @@ Item {
                     let device = root.deviceName.toLowerCase();
                     if (device.includes("headset") || device.includes("headphone"))
                         return "󰋋";  // Headset
+                    if (device.includes("quad cortex"))
+                        return "󰺢";  // Quad Cortex
                     if (device.includes("bluetooth") || device.includes("bt"))
                         return "󰂯";  // Bluetooth
                     if (device.includes("soundbar") || device.includes("speaker"))

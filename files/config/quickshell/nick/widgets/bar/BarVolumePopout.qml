@@ -17,11 +17,25 @@ BarPopout {
     shouldBeOpen: mouseInside || barMouseInside
     popoutWidth: 250
 
-    // Get list of audio sinks using wpctl
+    // Get list of audio sinks using wpctl (includes both Sinks and pro-audio Filters)
     Process {
         id: listSinks
         running: true
-        command: ["bash", "-c", "wpctl status | sed -n '/Sinks:/,/Sources:/p' | grep -E '^\\s*│\\s+[*]?\\s*[0-9]+\\.'"]
+        command: ["bash", "-c", `
+            wpctl status | awk '/Sinks:|Filters:/{flag=1} /Sources:|Video/{flag=0} flag' | grep -E '^\\s*│\\s+[*]?\\s*[0-9]+\\.' | grep -v 'Audio/Source' | while IFS= read -r line; do
+                if echo "$line" | grep -q "alsa_"; then
+                    id=$(echo "$line" | grep -oP '\\d+(?=\\.)')
+                    desc=$(wpctl inspect "$id" 2>/dev/null | grep 'node.description' | cut -d'"' -f2)
+                    if [ -n "$desc" ]; then
+                        echo "$line" | sed "s|alsa_[^ ]*|$desc|"
+                    else
+                        echo "$line"
+                    fi
+                else
+                    echo "$line"
+                fi
+            done
+        `]
 
         property var sinks: []
         property string buffer: ""
@@ -118,6 +132,9 @@ BarPopout {
                                         return "";
                                     if (name.includes("Headset"))
                                         return "󰋋";
+                                    if (name.includes("Quad Cortex"))
+                                        return "󰺢";
+                                    if (name.includes("Soundbar"))
                                     return "󰓃";  // Default: speakers
                                 }
                                 font.family: Appearance.font.mono
