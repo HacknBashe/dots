@@ -146,6 +146,44 @@ in {
         (pkgs.writeTextDir
           "share/wireplumber/wireplumber.conf.d/51-device-setup.conf" ''
             monitor.alsa.rules = [
+                # Device-level rules to force profiles
+                {
+                   matches = [
+                     {
+                       device.name = "alsa_card.usb-Macronix_Razer_Barracuda_Pro_2.4_1234-00"
+                     }
+                   ]
+                   actions = {
+                     update-props = {
+                       device.profile = "output:iec958-stereo+input:mono-fallback"
+                     }
+                   }
+                }
+                {
+                   matches = [
+                     {
+                       device.name = "alsa_card.usb-GHW_Micro_GHW_USB_AUDIO_2020-02-20-0000-0000-0000--00"
+                     }
+                   ]
+                   actions = {
+                     update-props = {
+                       device.profile = "pro-audio"
+                     }
+                   }
+                }
+                {
+                   matches = [
+                     {
+                       device.name = "alsa_card.usb-Neural_DSP_Quad_Cortex-00"
+                     }
+                   ]
+                   actions = {
+                     update-props = {
+                       device.profile = "pro-audio"
+                     }
+                   }
+                }
+                # Node-level rules to rename
                 {
                    matches = [
                      {
