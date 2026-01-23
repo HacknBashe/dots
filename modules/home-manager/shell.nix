@@ -140,8 +140,8 @@ in {
   home.file =
     {
       "bin" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/local/bin";
-        target = ".local/bin";
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/local/bin/global";
+        target = ".local/bin/global";
         recursive = true;
       };
 

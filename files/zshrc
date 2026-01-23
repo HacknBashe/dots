@@ -47,6 +47,10 @@ addToPathFront() {
 }
 addToPathFront $HOME/bin:/usr/local/bin
 addToPathFront $HOME/.local/bin
+# Add all subdirectories of .local/bin to PATH
+for dir in $HOME/.local/bin/*/; do
+  [ -d "$dir" ] && addToPathFront "${dir%/}"
+done
 addToPathFront $HOME/.yarn/bin
 addToPathFront $HOME/.config/yarn/global/node_modules/.bin
 addToPathFront $HOME/.cargo/bin

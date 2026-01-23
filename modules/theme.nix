@@ -126,11 +126,11 @@ in {
   };
 
   config = {
-    monitor1Name = "DP-3";
-    monitor2Name = "DP-4";
-    monitor1Command = "DP-3,3840x2160,3440x0,1.33";
-    monitor2Command = "DP-4,3440x1440,0x180,1";
-    lockCommand = "grim -o DP-3 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-4 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock";
+    monitor1Name = "DP-4";
+    monitor2Name = "DP-3";
+    monitor1Command = "DP-4,3440x1440,0x180,1";
+    monitor2Command = "DP-3,3840x2160,3440x0,1.33";
+    lockCommand = "grim -o DP-4 -l 0 /tmp/hyprlock_screenshot1.png & grim -o DP-3 -l 0 /tmp/hyprlock_screenshot2.png & wait && hyprlock";
 
     theme = {
       wallWide = "/home/nick/Pictures/Walls/nebula-red.png";
@@ -173,27 +173,27 @@ in {
         };
         indexed = {
           orange = "#ff966c";
-          red1 = "#c53b53";       # Error color
-          purple = "#fca7ea";     # Pink-ish, per folke's naming
+          red1 = "#c53b53"; # Error color
+          purple = "#fca7ea"; # Pink-ish, per folke's naming
           bgHighlight = "#2f334d";
         };
         extended = {
           # Blues
-          blue0 = "#3e68d7";      # Search bg
-          blue1 = "#65bcff";      # Types, border highlight
-          blue2 = "#0db9d7";      # Info diagnostics
-          blue5 = "#89ddff";      # Operators, punctuation
+          blue0 = "#3e68d7"; # Search bg
+          blue1 = "#65bcff"; # Types, border highlight
+          blue2 = "#0db9d7"; # Info diagnostics
+          blue5 = "#89ddff"; # Operators, punctuation
           # Greens
-          green1 = "#4fd6be";     # Properties, teal
-          green2 = "#41a6b5";     # Hints
+          green1 = "#4fd6be"; # Properties, teal
+          green2 = "#41a6b5"; # Hints
           # Other
-          magenta2 = "#ff007c";   # Flash, emphasis
+          magenta2 = "#ff007c"; # Flash, emphasis
           comment = "#636da6";
-          dark3 = "#545c7e";      # Dimmed text
-          dark5 = "#737aa2";      # Concealed
-          fgGutter = "#3b4261";   # Line numbers
+          dark3 = "#545c7e"; # Dimmed text
+          dark5 = "#737aa2"; # Concealed
+          fgGutter = "#3b4261"; # Line numbers
           # Night variant backgrounds
-          bgDark = "#16161e";     # Sidebars, floats
+          bgDark = "#16161e"; # Sidebars, floats
         };
       };
     };

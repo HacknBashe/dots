@@ -50,6 +50,12 @@ in {
       recursive = true;
     };
     
+    "quickshell/scripts" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/local/bin/quickshell";
+      target = ".local/bin/quickshell";
+      recursive = true;
+    };
+    
     # Generate combined Nix configuration JSON for quickshell
     "quickshell-nix-config" = {
       target = ".config/quickshell/nix-config.json";

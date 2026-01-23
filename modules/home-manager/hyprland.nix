@@ -5,6 +5,7 @@
   ...
 }: let
   # Convert hex color to rgb() string for hyprlock
+  # TODO: Is this even needed?
   hexToRgb = hex: let
     r = builtins.substring 1 2 hex;
     g = builtins.substring 3 2 hex;
@@ -35,7 +36,7 @@ in {
 
       background = [
         {
-          monitor = "DP-3";
+          monitor = "DP-4";
           path = "/tmp/hyprlock_screenshot1.png";
           blur_passes = 1;
           blur_size = 8;
@@ -46,7 +47,7 @@ in {
           vibrancy_darkness = 0.0;
         }
         {
-          monitor = "DP-4";
+          monitor = "DP-3";
           path = "/tmp/hyprlock_screenshot2.png";
           blur_passes = 1;
           blur_size = 8;
@@ -143,6 +144,15 @@ in {
       '';
       target = ".config/hypr/vars.conf";
     };
+    "hypr/monitor-vars.sh" = {
+      text = ''
+        MONITOR1_NAME="${config.monitor1Name}"
+        MONITOR1_CONFIG="${config.monitor1Command}"
+        MONITOR2_NAME="${config.monitor2Name}"
+        MONITOR2_CONFIG="${config.monitor2Command}"
+      '';
+      target = ".config/hypr/monitor-vars.sh";
+    };
     "hypr/hyprland.conf" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/hypr/hyprland.conf";
       target = ".config/hypr/hyprland.conf";
@@ -159,7 +169,7 @@ in {
     };
     "hypr/scripts" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/hypr/scripts";
-      target = ".config/hypr/scripts";
+      target = ".local/bin/hypr";
       recursive = true;
     };
     "hypr/shaders" = {

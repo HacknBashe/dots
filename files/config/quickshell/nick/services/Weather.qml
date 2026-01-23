@@ -119,7 +119,7 @@ Singleton {
     // Process to fetch weather data
     Process {
         id: weatherProcess
-        command: [Quickshell.env("HOME") + "/.local/bin/quickshell-weather"]
+        command: [Quickshell.env("HOME") + "/.local/bin/quickshell/quickshell-weather"]
         running: false
 
         stdout: SplitParser {

@@ -1,1 +1,0 @@
-/nix/store/faj7jivwmdpk4x0kr1z13bskx33hanh6-home-manager-files/.local/bin/toggle_parental_apps.sh

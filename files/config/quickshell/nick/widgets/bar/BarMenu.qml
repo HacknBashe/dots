@@ -19,7 +19,11 @@ Rectangle {
 
     // Keyboard navigation
     property int selectedButtonIndex: -1
-    readonly property int buttonCount: 5  // power, restart, logout, suspend, lock
+    readonly property int buttonCount: 7  // monitor1, monitor2, power, restart, logout, suspend, lock
+
+    // Monitor status tracking
+    property bool monitor1On: false
+    property bool monitor2On: false
 
     focus: true
 
@@ -53,14 +57,18 @@ Rectangle {
                 // Trigger the selected button action
                 root.closeRequested();
                 if (selectedButtonIndex === 0) {
-                    powerProcess.running = true;
+                    monitor1ToggleProcess.running = true;
                 } else if (selectedButtonIndex === 1) {
-                    restartProcess.running = true;
+                    monitor2ToggleProcess.running = true;
                 } else if (selectedButtonIndex === 2) {
-                    logoutProcess.running = true;
+                    powerProcess.running = true;
                 } else if (selectedButtonIndex === 3) {
-                    suspendProcess.running = true;
+                    restartProcess.running = true;
                 } else if (selectedButtonIndex === 4) {
+                    logoutProcess.running = true;
+                } else if (selectedButtonIndex === 5) {
+                    suspendProcess.running = true;
+                } else if (selectedButtonIndex === 6) {
                     lockTimer.start();
                 }
                 event.accepted = true;
@@ -74,6 +82,7 @@ Rectangle {
             root.forceActiveFocus();
             selectedButtonIndex = -1; // Reset selection
             calendar.currentDate = new Date(); // Reset to current month
+            monitorCheckProcess.running = true; // Check monitor status
         }
     }
 
@@ -113,7 +122,54 @@ Rectangle {
         command: ["systemctl", "poweroff"]
     }
 
-    width: Math.max(buttonRow.width, calendar.width) + Appearance.padding.large * 2
+    // Monitor status check process
+    Process {
+        id: monitorCheckProcess
+        command: ["hyprctl", "monitors"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                // Check if monitors are in the output
+                root.monitor1On = text.includes("Monitor " + NixConfig.monitor1Name);
+                root.monitor2On = text.includes("Monitor " + NixConfig.monitor2Name);
+            }
+        }
+    }
+
+    // Monitor toggle processes
+    Process {
+        id: monitor1ToggleProcess
+        command: ["sh", "/home/nick/.config/dots/files/config/hypr/scripts/toggle_monitor.sh", "1"]
+        onExited: {
+            // Refresh monitor status after toggle
+            monitorCheckTimer.start();
+        }
+    }
+
+    Process {
+        id: monitor2ToggleProcess
+        command: ["sh", "/home/nick/.config/dots/files/config/hypr/scripts/toggle_monitor.sh", "2"]
+        onExited: {
+            // Refresh monitor status after toggle
+            monitorCheckTimer.start();
+        }
+    }
+
+    // Timer to refresh monitor status after toggle
+    Timer {
+        id: monitorCheckTimer
+        interval: 500
+        onTriggered: monitorCheckProcess.running = true
+    }
+
+    // Timer to periodically check monitor status
+    Timer {
+        running: root.open
+        interval: 5000
+        repeat: true
+        onTriggered: monitorCheckProcess.running = true
+    }
+
+    width: Math.max(buttonRow.width, monitorRow.width, calendar.width) + Appearance.padding.large * 2
     height: contentColumn.height + Appearance.padding.large * 2
     radius: Appearance.rounding.normal
     // Square corners on right side, rounded on left
@@ -637,9 +693,124 @@ Rectangle {
             }
         }
 
+        // Monitor buttons row
+        Row {
+            id: monitorRow
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: Appearance.spacing.normal
+
+            // Monitor 1 button
+            Rectangle {
+                width: 50
+                height: 50
+                radius: Appearance.rounding.small
+                color: root.selectedButtonIndex === 0 ? NixConfig.primary : NixConfig.surfaceContainer
+                scale: monitor1MouseArea.containsMouse || root.selectedButtonIndex === 0 ? 1.1 : 1.0
+                transformOrigin: Item.Center
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
+
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.OutBack
+                    }
+                }
+
+                Text {
+                    anchors.centerIn: parent
+                    text: root.monitor1On ? "󰎤" : "󰎦"
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.large
+                    font.bold: true
+                    color: root.selectedButtonIndex === 0 ? NixConfig.textOnPrimary : NixConfig.primary
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
+                }
+
+                MouseArea {
+                    id: monitor1MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+
+                    onClicked: {
+                        root.closeRequested();
+                        monitor1ToggleProcess.running = true;
+                    }
+
+                    onEntered: root.selectedButtonIndex = 0
+                }
+            }
+
+            // Monitor 2 button
+            Rectangle {
+                width: 50
+                height: 50
+                radius: Appearance.rounding.small
+                color: root.selectedButtonIndex === 1 ? NixConfig.primary : NixConfig.surfaceContainer
+                scale: monitor2MouseArea.containsMouse || root.selectedButtonIndex === 1 ? 1.1 : 1.0
+                transformOrigin: Item.Center
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Linear
+                    }
+                }
+
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.OutBack
+                    }
+                }
+
+                Text {
+                    anchors.centerIn: parent
+                    text: root.monitor2On ? "󰎧" : "󰎩"
+                    font.family: Appearance.font.mono
+                    font.pixelSize: Appearance.font.large
+                    font.bold: true
+                    color: root.selectedButtonIndex === 1 ? NixConfig.textOnPrimary : NixConfig.primary
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.anim.small
+                            easing.type: Easing.Linear
+                        }
+                    }
+                }
+
+                MouseArea {
+                    id: monitor2MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+
+                    onClicked: {
+                        root.closeRequested();
+                        monitor2ToggleProcess.running = true;
+                    }
+
+                    onEntered: root.selectedButtonIndex = 1
+                }
+            }
+        }
+
         // Divider
         Rectangle {
-            width: Math.max(buttonRow.width, calendar.width)
+    width: Math.max(buttonRow.width, monitorRow.width, calendar.width) + Appearance.padding.large * 2
             height: 1
             color: NixConfig.outline
             opacity: 0.3
@@ -656,8 +827,8 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 0 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: powerMouseArea.containsMouse || root.selectedButtonIndex === 0 ? 1.1 : 1.0
+                color: root.selectedButtonIndex === 2 ? NixConfig.primary : NixConfig.surfaceContainer
+                scale: powerMouseArea.containsMouse || root.selectedButtonIndex === 2 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -679,7 +850,7 @@ Rectangle {
                     text: "󰐥"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 0 ? NixConfig.textOnPrimary : NixConfig.primary
+                    color: root.selectedButtonIndex === 2 ? NixConfig.textOnPrimary : NixConfig.primary
 
                     Behavior on color {
                         ColorAnimation {
@@ -700,7 +871,7 @@ Rectangle {
                         powerProcess.running = true;
                     }
 
-                    onEntered: root.selectedButtonIndex = 0
+                    onEntered: root.selectedButtonIndex = 2
                 }
             }
 
@@ -709,8 +880,8 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 1 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: restartMouseArea.containsMouse || root.selectedButtonIndex === 1 ? 1.1 : 1.0
+                color: root.selectedButtonIndex === 3 ? NixConfig.primary : NixConfig.surfaceContainer
+                scale: restartMouseArea.containsMouse || root.selectedButtonIndex === 3 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -732,7 +903,7 @@ Rectangle {
                     text: "󰜉"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 1 ? NixConfig.textOnPrimary : NixConfig.primary
+                    color: root.selectedButtonIndex === 3 ? NixConfig.textOnPrimary : NixConfig.primary
 
                     Behavior on color {
                         ColorAnimation {
@@ -753,7 +924,7 @@ Rectangle {
                         restartProcess.running = true;
                     }
 
-                    onEntered: root.selectedButtonIndex = 1
+                    onEntered: root.selectedButtonIndex = 3
                 }
             }
 
@@ -762,8 +933,8 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 2 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: logoutMouseArea.containsMouse || root.selectedButtonIndex === 2 ? 1.1 : 1.0
+                color: root.selectedButtonIndex === 4 ? NixConfig.primary : NixConfig.surfaceContainer
+                scale: logoutMouseArea.containsMouse || root.selectedButtonIndex === 4 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -785,7 +956,7 @@ Rectangle {
                     text: "󰍃"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 2 ? NixConfig.textOnPrimary : NixConfig.primary
+                    color: root.selectedButtonIndex === 4 ? NixConfig.textOnPrimary : NixConfig.primary
 
                     Behavior on color {
                         ColorAnimation {
@@ -806,7 +977,7 @@ Rectangle {
                         logoutProcess.running = true;
                     }
 
-                    onEntered: root.selectedButtonIndex = 2
+                    onEntered: root.selectedButtonIndex = 4
                 }
             }
 
@@ -815,8 +986,8 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 3 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: suspendMouseArea.containsMouse || root.selectedButtonIndex === 3 ? 1.1 : 1.0
+                color: root.selectedButtonIndex === 5 ? NixConfig.primary : NixConfig.surfaceContainer
+                scale: suspendMouseArea.containsMouse || root.selectedButtonIndex === 5 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -838,7 +1009,7 @@ Rectangle {
                     text: "󰒲"
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 3 ? NixConfig.textOnPrimary : NixConfig.primary
+                    color: root.selectedButtonIndex === 5 ? NixConfig.textOnPrimary : NixConfig.primary
 
                     Behavior on color {
                         ColorAnimation {
@@ -859,7 +1030,7 @@ Rectangle {
                         suspendProcess.running = true;
                     }
 
-                    onEntered: root.selectedButtonIndex = 3
+                    onEntered: root.selectedButtonIndex = 5
                 }
             }
 
@@ -868,8 +1039,8 @@ Rectangle {
                 width: 50
                 height: 50
                 radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 4 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: lockMouseArea.containsMouse || root.selectedButtonIndex === 4 ? 1.1 : 1.0
+                color: root.selectedButtonIndex === 6 ? NixConfig.primary : NixConfig.surfaceContainer
+                scale: lockMouseArea.containsMouse || root.selectedButtonIndex === 6 ? 1.1 : 1.0
                 transformOrigin: Item.Center
 
                 Behavior on color {
@@ -892,7 +1063,7 @@ Rectangle {
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
                     font.bold: true
-                    color: root.selectedButtonIndex === 4 ? NixConfig.textOnPrimary : NixConfig.primary
+                    color: root.selectedButtonIndex === 6 ? NixConfig.textOnPrimary : NixConfig.primary
 
                     Behavior on color {
                         ColorAnimation {
@@ -913,7 +1084,7 @@ Rectangle {
                         lockTimer.start();
                     }
 
-                    onEntered: root.selectedButtonIndex = 4
+                    onEntered: root.selectedButtonIndex = 6
                 }
             }
         }
