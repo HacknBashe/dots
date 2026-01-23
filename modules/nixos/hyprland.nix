@@ -109,12 +109,6 @@
   ];
   services.udisks2.enable = true;
 
-  environment.etc."nix/vars.ts".text = ''
-    export const MONITOR_1_COMMAND = "${config.monitor1Command}";
-    export const MONITOR_2_COMMAND = "${config.monitor2Command}";
-    export const LOCK_COMMAND = "${config.lockCommand}";
-  '';
-
   # Provide applications.menu for KDE apps (Dolphin) running outside Plasma
   # This enables proper MIME type associations and "Open With" functionality
   environment.etc."xdg/menus/applications.menu".text =
