@@ -146,7 +146,7 @@ in {
         (pkgs.writeTextDir
           "share/wireplumber/wireplumber.conf.d/51-device-setup.conf" ''
             monitor.alsa.rules = [
-                # Device-level rules to force profiles
+                # Device-level rules: set profile AND naming
                 {
                    matches = [
                      {
@@ -156,6 +156,8 @@ in {
                    actions = {
                      update-props = {
                        device.profile = "output:iec958-stereo+input:mono-fallback"
+                       device.nick = "Headset"
+                       device.description = "Headset"
                      }
                    }
                 }
@@ -168,6 +170,8 @@ in {
                    actions = {
                      update-props = {
                        device.profile = "pro-audio"
+                       device.nick = "Soundbar"
+                       device.description = "Soundbar"
                      }
                    }
                 }
@@ -180,46 +184,38 @@ in {
                    actions = {
                      update-props = {
                        device.profile = "pro-audio"
-                     }
-                   }
-                }
-                # Node-level rules to rename
-                {
-                   matches = [
-                     {
-                       node.name = "alsa_output.usb-GHW_Micro_GHW_USB_AUDIO_2020-02-20-0000-0000-0000--00.pro-output-0"
-                     }
-                   ]
-                   actions = {
-                     update-props = {
-                       node.description = "Soundbar"
+                       device.nick = "Quad Cortex"
+                       device.description = "Quad Cortex"
                      }
                    }
                 }
                 {
                    matches = [
                      {
-                       node.name = "alsa_output.usb-Macronix_Razer_Barracuda_Pro_2.4_1234-00.iec958-stereo"
+                       device.name = "alsa_card.pci-0000_01_00.1"
                      }
                    ]
                    actions = {
                      update-props = {
-                       node.description = "Headset"
+                       device.nick = "Steam Link"
+                       device.description = "Steam Link"
                      }
                    }
                 }
                 {
                    matches = [
                      {
-                       node.name = "alsa_output.pci-0000_01_00.1.hdmi-stereo"
+                       device.name = "alsa_card.usb-C-Media_Electronics_Inc._USB_Audio_Device-00"
                      }
                    ]
                    actions = {
                      update-props = {
-                       node.description = "Steam Link"
+                       device.nick = "Dongle"
+                       device.description = "Dongle"
                      }
                    }
                 }
+                # Node-level rules: disable unwanted nodes
                 {
                    matches = [
                      {

@@ -23,14 +23,17 @@ BarPopout {
         running: true
         command: ["bash", "-c", `
             wpctl status | awk '/Sinks:|Filters:/{flag=1} /Sources:|Video/{flag=0} flag' | grep -E '^\\s*│\\s+[*]?\\s*[0-9]+\\.' | grep -v 'Audio/Source' | while IFS= read -r line; do
-                if echo "$line" | grep -q "alsa_"; then
-                    id=$(echo "$line" | grep -oP '\\d+(?=\\.)')
-                    desc=$(wpctl inspect "$id" 2>/dev/null | grep 'node.description' | cut -d'"' -f2)
-                    if [ -n "$desc" ]; then
-                        echo "$line" | sed "s|alsa_[^ ]*|$desc|"
-                    else
-                        echo "$line"
-                    fi
+                id=$(echo "$line" | grep -oP '\\d+(?=\\.)')
+                # Try device.nick first (like wiremix), fall back to node.nick
+                device_id=$(wpctl inspect "$id" 2>/dev/null | grep 'device.id' | cut -d'"' -f2)
+                if [ -n "$device_id" ]; then
+                    nick=$(wpctl inspect "$device_id" 2>/dev/null | grep 'device.nick' | cut -d'"' -f2)
+                fi
+                if [ -z "$nick" ]; then
+                    nick=$(wpctl inspect "$id" 2>/dev/null | grep 'node.nick' | cut -d'"' -f2)
+                fi
+                if [ -n "$nick" ]; then
+                    echo "$line" | sed -E "s/([0-9]+\\.)\\s+[^[]+/\\1 $nick /"
                 else
                     echo "$line"
                 fi
@@ -134,7 +137,10 @@ BarPopout {
                                         return "󰋋";
                                     if (name.includes("Quad Cortex"))
                                         return "󰺢";
+                                    if (name.includes("Dongle"))
+                                        return "󱡬";
                                     if (name.includes("Soundbar"))
+                                        return "󰓃";
                                     return "󰓃";  // Default: speakers
                                 }
                                 font.family: Appearance.font.mono
