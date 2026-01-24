@@ -39,10 +39,16 @@ return {
 					unchecked = { icon = "󰄱 " },
 					checked = { icon = "󰸞 " },
 					custom = {
-						todo = { raw = "[~]", rendered = " ", highlight = "RenderMarkdownH5Fg" },
-						inprogress = { raw = "[>]", rendered = " ", highlight = "RenderMarkdownH7Fg" },
+						incomplete = { raw = "[/]", rendered = " ", highlight = "RenderMarkdownWarn" },
 						blocked = { raw = "[!]", rendered = "󱈸 ", highlight = "RenderMarkdownError" },
+						cancelled = {
+							raw = "[-]",
+							rendered = "󰜺 ",
+							highlight = "Comment",
+							scope_highlight = "@markup.strikethrough",
+						},
 					},
+					scope_priority = 100,
 				},
 				win_options = {
 					conceallevel = {

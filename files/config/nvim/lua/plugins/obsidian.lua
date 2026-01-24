@@ -28,7 +28,16 @@ return {
 
 		require("obsidian").setup({
 			legacy_commands = false,
-			ui = { enable = false },
+			ui = {
+				enable = false,
+				checkboxes = {
+					[" "] = { order = 1, char = " ", hl_group = "ObsidianTodo" },
+					["/"] = { order = 2, char = "/", hl_group = "ObsidianTodo" },
+					["x"] = { order = 3, char = "x", hl_group = "ObsidianDone" },
+					["!"] = { order = 4, char = "!", hl_group = "ObsidianImportant" },
+					["-"] = { order = 5, char = "-", hl_group = "ObsidianCanceled" },
+				},
+			},
 			workspaces = {
 				{
 					name = "notes",
