@@ -6,23 +6,23 @@ source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 lazygit_cmd="lazygit -ucf $HOME/.config/lazygit/tmuxconfig.yml,$HOME/.config/lazygit/config.yml"
 
 # Check if lazygit pane exists
-if pane_exists "Lazygit:"; then
-    if is_current_pane_titled "Lazygit:"; then
+if pane_exists "lazygit"; then
+    if is_current_pane_type "lazygit"; then
         # We're in the lazygit pane, relaunch lazygit
         exec $lazygit_cmd
     else
         # Not in lazygit pane, just switch to it
-        switch_to_titled_pane "Lazygit:"
+        switch_to_pane "lazygit"
     fi
 else
     # Check if current pane has default title - use it instead of creating new window
     if is_current_pane_default; then
         # Convert current pane to lazygit pane
-        convert_current_pane "Lazygit:" "lazygit"
+        convert_current_pane "lazygit" "lazygit"
         tmux send-keys "$lazygit_cmd" C-m
     else
         # Create new lazygit window
-        create_titled_window "Lazygit:" "lazygit"
+        create_typed_window "lazygit" "lazygit"
         
         # Send the lazygit command to the new window
         tmux send-keys "$lazygit_cmd" C-m

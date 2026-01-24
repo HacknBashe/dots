@@ -7,11 +7,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 target_path="$1"
 
 # Check if yazi pane exists and switch to it
-if pane_exists "Yazi"; then
-    switch_to_titled_pane "Yazi"
+if pane_exists "yazi"; then
+    switch_to_pane "yazi"
     # Navigate to the target path in the existing yazi instance if path provided
     if [[ -n "$target_path" ]]; then
-        yazi_pane=$(find_pane_by_title "Yazi")
+        yazi_pane=$(find_pane_by_type "yazi")
         tmux send-keys -t "$yazi_pane" "g "
         tmux send-keys -t "$yazi_pane" "$target_path" C-m
     fi
@@ -19,7 +19,7 @@ else
     # Check if current pane has default title - use it instead of creating new window
     if is_current_pane_default; then
         # Convert current pane to yazi pane
-        convert_current_pane "Yazi" "yazi"
+        convert_current_pane "yazi" "yazi"
         
         # Send the yazi command
         if [[ -n "$target_path" ]]; then
@@ -29,7 +29,7 @@ else
         fi
     else
         # Create new yazi window
-        create_titled_window "Yazi" "yazi"
+        create_typed_window "yazi" "yazi"
         
         # Send the yazi command to the new window
         if [[ -n "$target_path" ]]; then

@@ -1,9 +1,9 @@
+import { execSync } from 'child_process';
+
 export const IndicatorPlugin = async ({ directory, worktree, client, $ }) => {
-  // Only run in TUI mode, not CLI mode
-  if (process.argv.includes('run')) {
-    return {
-      event: async () => {}
-    };
+  // Only run if inside tmux (where we can set pane status)
+  if (!process.env.TMUX) {
+    return { event: async () => {} };
   }
 
   let paneId;
@@ -12,85 +12,81 @@ export const IndicatorPlugin = async ({ directory, worktree, client, $ }) => {
     // Find the pane where opencode is actually running by looking at process tree
     const ppid = process.ppid;
 
-    // Get the TTY of the parent opencode process
-    const ttyResult = await $`ps -p ${ppid} -o tty=`;
-    const ttyOutput =
-      ttyResult.stdout || ttyResult.stdOut || ttyResult.toString() || "";
-    const tty = (
-      typeof ttyOutput === "string" ? ttyOutput : String(ttyOutput)
-    ).trim();
+    // Get the TTY of the parent opencode process (using execSync to suppress output)
+    const tty = execSync(`ps -p ${ppid} -o tty=`, {
+      encoding: 'utf8',
+      stdio: ['pipe', 'pipe', 'pipe']
+    }).trim();
 
     if (tty && tty !== "??") {
-      // Find the tmux pane with matching TTY
-      const paneResult =
-        await $`tmux list-panes -a -F "#{pane_id} #{pane_tty}" | grep "/dev/${tty}"`;
-      const paneOutput =
-        paneResult.stdout || paneResult.stdOut || paneResult.toString() || "";
-      const paneStr =
-        typeof paneOutput === "string" ? paneOutput : String(paneOutput);
-      paneId = paneStr.trim().split(" ")[0];
+      // Find the tmux pane with matching TTY (use $ anchor to avoid pts/1 matching pts/11)
+      const paneOutput = execSync(
+        `tmux list-panes -a -F "#{pane_id} #{pane_tty}" | grep " /dev/${tty}$"`,
+        {
+          encoding: 'utf8',
+          stdio: ['pipe', 'pipe', 'pipe']
+        }
+      );
+      paneId = paneOutput.trim().split(" ")[0];
     }
   } catch (e) {
     paneId = undefined;
   }
 
-  const setTitle = async (title) => {
+  // Set @pane_status tmux option (can't be overwritten by applications)
+  const setStatus = async (status) => {
+    if (!paneId) return;
     try {
-      if (!paneId) {
-        return;
-      }
-      await $`tmux select-pane -t '${paneId}' -T '${title}'`;
+      await $`tmux set-option -p -t ${paneId} @pane_status ${status}`;
     } catch (e) {}
   };
 
   // Play a beep sound when agent finishes
-  // NOTE: This uses direct audio playback commands because Ghostty's native bell audio
-  // support (via '\a' character) is not yet available on macOS and requires a newer
-  // version on Linux (see https://github.com/ghostty-org/ghostty/discussions/2710).
-  // Once native bell support is available on both platforms, this can be simplified to:
-  //   await $`/bin/sh -lc 'printf "\\a" > /dev/tty'`;
-  // And the Ghostty config can be updated with:
-  //   bell-features = audio,attention,title
-  //   bell-audio-path = sounds/beep.wav
-  //   bell-audio-volume = 0.5
   const playBeep = async () => {
     try {
       const os = process.platform;
       const soundPath = `${process.env.HOME}/.config/dots/files/config/ghostty/sounds/beep.wav`;
       
       if (os === 'darwin') {
-        // macOS - use afplay (built-in)
         await $`afplay ${soundPath}`;
       } else if (os === 'linux') {
-        // Linux - try pw-play first, fall back to aplay
         try {
           await $`pw-play ${soundPath}`;
         } catch (e) {
           try {
             await $`aplay ${soundPath}`;
           } catch (e2) {
-            // If both fail, just do the terminal bell (no sound, but shows 🔔)
             await $`/bin/sh -lc 'printf "\\a" > /dev/tty'`;
           }
         }
       }
-    } catch (e) {
-      // Silently fail if sound can't be played
-    }
+    } catch (e) {}
   };
+
+  let isIdle = true; // Start idle until first real work
 
   return {
     event: async ({ event }) => {
       if (event.type === "session.updated") {
-        await setTitle("Agent: working");
+        // Only set working if we're not idle (session.updated fires after session.idle)
+        if (!isIdle) {
+          await setStatus("working");
+        }
       }
       if (event.type === "permission.asked") {
-        await setTitle("Agent: waiting");
+        isIdle = false;
+        await setStatus("waiting");
         await playBeep();
       }
       if (event.type === "session.idle") {
-        await setTitle("Agent: idle");
+        isIdle = true;
+        await setStatus("idle");
         await playBeep();
+      }
+      // session.status with running=true indicates actual work starting
+      if (event.type === "session.status") {
+        isIdle = false;
+        await setStatus("working");
       }
     },
   };

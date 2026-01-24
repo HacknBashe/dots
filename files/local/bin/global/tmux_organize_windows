@@ -5,7 +5,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 
 current_pane=$(tmux display-message -p "#{pane_id}")
 current_window_id=$(tmux display-message -p "#{window_id}")
-current_pane_title=$(get_current_pane_title)
+current_pane_type=$(get_current_pane_type)
 current_window_name=$(tmux display-message -p "#{window_name}")
 
 # Initialize all pane types
@@ -18,24 +18,24 @@ tmux_yazi
 # First, break any joined panes back into separate windows
 tmux list-windows -F "#{window_index}" | while read window_index; do
     if [ "$(tmux list-panes -t "$window_index" | wc -l)" -gt 1 ]; then
-        tmux list-panes -t "$window_index" -F "#{pane_id} #{pane_title}" | tail -n +2 | while read pane_id pane_title; do
-            case "$pane_title" in
-            "Lazygit:"*)
+        tmux list-panes -t "$window_index" -F "#{pane_id} #{@pane_type}" | tail -n +2 | while read pane_id pane_type; do
+            case "$pane_type" in
+            "lazygit")
                 tmux break-pane -s "$pane_id" -n "lazygit"
                 ;;
-            "Agent:"*)
+            "agent")
                 tmux break-pane -s "$pane_id" -n "agent"
                 ;;
-            "Nvim:"*)
+            "nvim")
                 tmux break-pane -s "$pane_id" -n "nvim"
                 ;;
-            "Yazi:"*)
+            "yazi")
                 tmux break-pane -s "$pane_id" -n "yazi"
                 ;;
-            "Shell:"*)
+            "shell")
                 tmux break-pane -s "$pane_id" -n "shell"
                 ;;
-            "Bender Proxy:"* | "Bend Reactor:"*)
+            "bender-proxy" | "bend-reactor")
                 # Keep bender panes with shell, don't break them out
                 ;;
             *)
@@ -46,51 +46,51 @@ tmux list-windows -F "#{window_index}" | while read window_index; do
     fi
 done
 
-# Organize windows by moving them to specific positions based on their pane titles
+# Organize windows by moving them to specific positions based on their pane types
 
 # nvim -> position 1
-nvim_window=$(find_window_by_pane_title "Nvim:")
+nvim_window=$(find_window_by_pane_type "nvim")
 current_at_1=$(tmux list-windows -F "#{window_index}:#{window_name}" | grep "^1:" | cut -d: -f2 2>/dev/null || echo "")
 if [ -n "$nvim_window" ] && [ "$current_at_1" != "nvim" ]; then
     tmux swap-window -s "$nvim_window" -t 1 2>/dev/null || true
 fi
 
 # agent -> position 2
-agent_window=$(find_window_by_pane_title "Agent:")
+agent_window=$(find_window_by_pane_type "agent")
 current_at_2=$(tmux list-windows -F "#{window_index}:#{window_name}" | grep "^2:" | cut -d: -f2 2>/dev/null || echo "")
 if [ -n "$agent_window" ] && [ "$current_at_2" != "agent" ]; then
     tmux swap-window -s "$agent_window" -t 2 2>/dev/null || true
 fi
 
 # shell -> position 3
-shell_window=$(find_window_by_pane_title "Shell:")
+shell_window=$(find_window_by_pane_type "shell")
 current_at_3=$(tmux list-windows -F "#{window_index}:#{window_name}" | grep "^3:" | cut -d: -f2 2>/dev/null || echo "")
 if [ -n "$shell_window" ] && [ "$current_at_3" != "shell" ]; then
     tmux swap-window -s "$shell_window" -t 3 2>/dev/null || true
 fi
 
 # lazygit -> position 4
-lazygit_window=$(find_window_by_pane_title "Lazygit:")
+lazygit_window=$(find_window_by_pane_type "lazygit")
 current_at_4=$(tmux list-windows -F "#{window_index}:#{window_name}" | grep "^4:" | cut -d: -f2 2>/dev/null || echo "")
 if [ -n "$lazygit_window" ] && [ "$current_at_4" != "lazygit" ]; then
     tmux swap-window -s "$lazygit_window" -t 4 2>/dev/null || true
 fi
 
 # yazi -> position 5
-yazi_window=$(find_window_by_pane_title "Yazi:")
+yazi_window=$(find_window_by_pane_type "yazi")
 current_at_5=$(tmux list-windows -F "#{window_index}:#{window_name}" | grep "^5:" | cut -d: -f2 2>/dev/null || echo "")
 if [ -n "$yazi_window" ] && [ "$current_at_5" != "yazi" ]; then
     tmux swap-window -s "$yazi_window" -t 5 2>/dev/null || true
 fi
 
 # After all window positioning, rejoin any separated bender panes with shell
-shell_window=$(find_window_by_pane_title "Shell:")
-bender_proxy_window=$(find_window_by_pane_title "Bender Proxy:")
-bend_reactor_window=$(find_window_by_pane_title "Bend Reactor:")
+shell_window=$(find_window_by_pane_type "shell")
+bender_proxy_window=$(find_window_by_pane_type "bender-proxy")
+bend_reactor_window=$(find_window_by_pane_type "bend-reactor")
 
 # Join bender-proxy pane to shell window if separated
 if [ -n "$bender_proxy_window" ] && [ -n "$shell_window" ] && [ "$bender_proxy_window" != "$shell_window" ]; then
-    bender_proxy_pane=$(find_pane_by_title "Bender Proxy:")
+    bender_proxy_pane=$(find_pane_by_type "bender-proxy")
     if [ -n "$bender_proxy_pane" ]; then
         tmux join-pane -s "$bender_proxy_pane" -t "$shell_window" -h 2>/dev/null || true
     fi
@@ -98,26 +98,26 @@ fi
 
 # Join bend-reactor pane to shell window if separated
 if [ -n "$bend_reactor_window" ] && [ -n "$shell_window" ] && [ "$bend_reactor_window" != "$shell_window" ]; then
-    bend_reactor_pane=$(find_pane_by_title "Bend Reactor:")
+    bend_reactor_pane=$(find_pane_by_type "bend-reactor")
     if [ -n "$bend_reactor_pane" ]; then
         tmux join-pane -s "$bend_reactor_pane" -t "$shell_window" -v 2>/dev/null || true
     fi
 fi
 
 # Check if the current pane was converted to a project pane
-current_pane_title_now=$(tmux display-message -t "$current_pane" -p '#{pane_title}' 2>/dev/null || echo "")
+current_pane_type_now=$(tmux display-message -t "$current_pane" -p '#{@pane_type}' 2>/dev/null || echo "")
 
 # Kill the current pane (the one this script was run from) after organizing,
 # but only if it's not one of the named project panes (either originally or after conversion)
-case "$current_pane_title_now" in
-"Nvim:"* | "Agent:"* | "Lazygit:"* | "Yazi:"* | "Shell:"* | "Bender Proxy:"* | "Bend Reactor:"*)
+case "$current_pane_type_now" in
+"nvim" | "agent" | "lazygit" | "yazi" | "shell" | "bender-proxy" | "bend-reactor")
     # Pane was converted to a project pane, keep it and go to nvim window
     tmux select-window -t 1 2>/dev/null || tmux select-window -t :^
     ;;
 *)
     # Pane is still not a project pane, safe to kill
-    case "$current_pane_title" in
-    "Nvim:"* | "Agent:"* | "Lazygit:"* | "Yazi:"* | "Shell:"* | "Bender Proxy:"* | "Bend Reactor:"*)
+    case "$current_pane_type" in
+    "nvim" | "agent" | "lazygit" | "yazi" | "shell" | "bender-proxy" | "bend-reactor")
         # Original pane was already a project pane, just go back to it
         tmux select-window -t "$current_window_id"
         ;;

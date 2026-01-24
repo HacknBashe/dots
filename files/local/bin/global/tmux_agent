@@ -7,18 +7,18 @@ source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 text_to_paste="$1"
 
 # Check if agent pane exists and switch to it
-if pane_exists "Agent:"; then
-    switch_to_titled_pane "Agent:"
+if pane_exists "agent"; then
+    switch_to_pane "agent"
     # Paste text into agent if provided
     if [[ -n "$text_to_paste" ]]; then
-        agent_pane=$(find_pane_by_title "Agent:")
+        agent_pane=$(find_pane_by_type "agent")
         tmux send-keys -t "$agent_pane" "$text_to_paste"
     fi
 else
     # Check if current pane has default title - use it instead of creating new window
     if is_current_pane_default; then
         # Convert current pane to agent pane
-        convert_current_pane "Agent:" "agent"
+        convert_current_pane "agent" "agent"
         tmux send-keys "opencode -c" C-m
         
         # Wait a moment for agent to start, then paste text if provided
@@ -28,7 +28,7 @@ else
         fi
     else
         # Create new agent window
-        create_titled_window "Agent:" "agent"
+        create_typed_window "agent" "agent"
         
         # Send the opencode command to the new window
         tmux send-keys "opencode -c" C-m

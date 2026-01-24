@@ -38,16 +38,16 @@ has_bpm_section() {
 }
 
 # Check if shell pane exists and switch to it
-if pane_exists "Shell:"; then
-    switch_to_titled_pane "Shell:"
+if pane_exists "shell"; then
+    switch_to_pane "shell"
 else
     # Check if current pane has default title - use it instead of creating new window
     if is_current_pane_default; then
         # Convert current pane to shell pane
-        convert_current_pane "Shell:" "shell"
+        convert_current_pane "shell" "shell"
     else
         # Create new shell window
-        create_titled_window "Shell:" "shell"
+        create_typed_window "shell" "shell"
     fi
     
     # Check if this is a bpm project and type bender_port command

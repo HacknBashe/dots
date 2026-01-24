@@ -1,39 +1,27 @@
 #!/usr/bin/env bash
 
-# Tmux helper functions for pane title management
+# Tmux helper functions using @pane_type user option for reliable pane identification
 # Source this file in other tmux scripts with:
 # source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 
-# Find pane by title (partial match on title prefix)
-find_pane_by_title() {
-    local title="$1"
-    # Match panes whose title starts with "$title"
-    local pane_id=$(tmux list-panes -s -F "#{pane_id} #{pane_title}" | grep "$title" | head -1 | awk '{print $1}')
-    
-    # Smart fallback: if "Agent:" not found, also try OpenCode naming patterns
-    # OpenCode uses: "OpenCode" (idle) or "OC | <description>" (working)
-    if [[ -z "$pane_id" ]] && [[ "$title" == "Agent:" ]]; then
-        pane_id=$(tmux list-panes -s -F "#{pane_id} #{pane_title}" | grep -E "(OpenCode|OC \|)" | head -1 | awk '{print $1}')
-    fi
-    
-    echo "$pane_id"
+# Find pane by @pane_type user option
+find_pane_by_type() {
+    local type="$1"
+    tmux list-panes -s -F "#{pane_id} #{@pane_type}" 2>/dev/null | grep " $type$" | head -1 | awk '{print $1}'
 }
 
-# Find window containing pane with title
-find_window_by_pane_title() {
-    local title="$1"
-    local pane_id=$(find_pane_by_title "$title")
-    if [[ -n "$pane_id" ]]; then
-        tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "$pane_id" | cut -d' ' -f2
-    fi
+# Find window containing pane with @pane_type
+find_window_by_pane_type() {
+    local type="$1"
+    tmux list-panes -s -F "#{@pane_type} #{window_id}" 2>/dev/null | grep "^$type " | head -1 | awk '{print $2}'
 }
 
-# Switch to pane with given title
-switch_to_titled_pane() {
-    local title="$1"
-    local pane_id=$(find_pane_by_title "$title")
+# Switch to pane with given @pane_type
+switch_to_pane() {
+    local type="$1"
+    local pane_id=$(find_pane_by_type "$type")
     if [[ -n "$pane_id" ]]; then
-        local window_id=$(find_window_by_pane_title "$title")
+        local window_id=$(tmux list-panes -s -F "#{pane_id} #{window_id}" | grep "^$pane_id " | awk '{print $2}')
         tmux select-window -t "$window_id"
         tmux select-pane -t "$pane_id"
         return 0
@@ -41,52 +29,52 @@ switch_to_titled_pane() {
     return 1
 }
 
-# Create new window with titled pane
-create_titled_window() {
-    local title="$1"
+# Create new window with @pane_type set
+create_typed_window() {
+    local type="$1"
     local window_name="$2"
-    tmux new-window -n "$window_name"
-    tmux select-pane -T "$title"
+    local pane_id=$(tmux new-window -P -F "#{pane_id}" -n "$window_name")
+    tmux set-option -p -t "$pane_id" @pane_type "$type"
 }
 
-# Create titled pane in current window (split)
-create_titled_split() {
-    local title="$1"
+# Create typed pane in current window (split)
+create_typed_split() {
+    local type="$1"
     local split_direction="$2"  # -h for horizontal, -v for vertical
-    tmux split-window $split_direction
-    tmux select-pane -T "$title"
+    local pane_id=$(tmux split-window -P -F "#{pane_id}" $split_direction)
+    tmux set-option -p -t "$pane_id" @pane_type "$type"
 }
 
-# Check if pane with title exists
+# Check if pane with @pane_type exists
 pane_exists() {
-    local title="$1"
-    local pane_id=$(find_pane_by_title "$title")
-    [[ -n "$pane_id" ]]
+    local type="$1"
+    [[ -n "$(find_pane_by_type "$type")" ]]
 }
 
-# Get current pane title
-get_current_pane_title() {
-    tmux display-message -p '#{pane_title}'
+# Get current pane's @pane_type
+get_current_pane_type() {
+    tmux display-message -p '#{@pane_type}'
 }
 
-# Check if current pane has specific title
-is_current_pane_titled() {
-    local title="$1"
-    local current_title=$(get_current_pane_title)
-    [[ "$current_title" == "$title"* ]]
+# Check if current pane has specific @pane_type
+is_current_pane_type() {
+    local type="$1"
+    local current_type=$(get_current_pane_type)
+    [[ "$current_type" == "$type" ]]
 }
 
-# Check if current pane has default title (hostname)
+# Check if current pane has default state (no @pane_type set, running shell)
 is_current_pane_default() {
-    local current_title=$(get_current_pane_title)
-    local hostname=$(hostname)
-    [[ "$current_title" == "$hostname" ]]
+    local current_type=$(get_current_pane_type)
+    local current_cmd=$(tmux display-message -p '#{pane_current_command}')
+    # Pane is default if no type set AND running a shell
+    [[ -z "$current_type" ]] && [[ "$current_cmd" == "zsh" || "$current_cmd" == "bash" || "$current_cmd" == "sh" ]]
 }
 
-# Convert current pane to titled pane and rename window
+# Convert current pane to typed pane and rename window
 convert_current_pane() {
-    local title="$1"
+    local type="$1"
     local window_name="$2"
-    tmux select-pane -T "$title"
+    tmux set-option -p @pane_type "$type"
     tmux rename-window "$window_name"
 }

@@ -2,8 +2,8 @@
 
 # FZF-based project pane picker with live preview
 # Usage: tmux_project_pane_peeker <pane_type>
-# Example: tmux_project_pane_peeker agent  # looks for Agent:
-#          tmux_project_pane_peeker nvim   # looks for Nvim:
+# Example: tmux_project_pane_peeker agent
+#          tmux_project_pane_peeker nvim
 
 # Check if argument is provided
 if [[ $# -eq 0 ]]; then
@@ -16,62 +16,44 @@ fi
 
 pane_type="$1"
 
+# Map special type names to grep patterns
+get_type_pattern() {
+    case "$1" in
+        bender) echo "bender-proxy$\|bend-reactor$" ;;
+        *) echo "$1\$" ;;
+    esac
+}
+
 # Get all project panes of the specified type and format them nicely
 get_project_panes() {
-    local panes_data
-    local search_pattern
-
-    # Map old pane_type names to new format
-    case "$pane_type" in
-    "agent") search_pattern="Agent:" ;;
-    "nvim") search_pattern="Nvim:" ;;
-    "lazygit") search_pattern="Lazygit:" ;;
-    "yazi") search_pattern="Yazi:" ;;
-    "shell") search_pattern="Shell:" ;;
-    "bender") search_pattern="Bend.*:" ;; # Matches both Bender Proxy: and Bend Reactor:
-    *) search_pattern="$pane_type" ;;
-    esac
-
-    panes_data=$(tmux list-panes -a -F "#{?window_bell_flag,,󰇘}|#{session_name}|#{pane_id}|#{pane_current_command}|#{pane_title}" |
-        grep "${search_pattern}")
-
-    # Calculate the width of the longest session name
-    local max_session_width
-    max_session_width=$(echo "$panes_data" | cut -d'|' -f2 | wc -L)
-
-    # Calculate total available width for session + command (original session width)
-    local total_left_width
-    total_left_width=$(($(tput cols) * 40 / 100 - 11))
-
-    # Calculate command column width (remaining space after session + " - ")
-    local command_width
-    command_width=$((total_left_width - max_session_width - 3))
-
-    # Format with calculated widths and sort by symbol priority
-    echo "$panes_data" | while IFS='|' read symbol session_name pane_id current_command pane_title; do
-        # If pane title indicates working, mark with ~ regardless of bell/activity
-        if [[ "$symbol" == "" ]]; then
-            symbol=''
-        elif echo "$pane_title" | grep -qi "Agent: *working"; then
-            symbol='󰜎'
-        # Check if pane title contains bender and has a running process
-        elif echo "$pane_title" | grep -qi "bender\|reactor" && [[ "$current_command" != "bash" && "$current_command" != "zsh" && "$current_command" != "sh" ]]; then
-            symbol='󰚩'
-        # Generic process icon for any non-shell process
-        elif [[ "$current_command" != "bash" && "$current_command" != "zsh" && "$current_command" != "sh" && "$current_command" != "" ]]; then
-            symbol=''
-        fi
-        printf "%-1s %-*s - %-*s %s\n" "$symbol" "$max_session_width" "$session_name" "$command_width" "$current_command" "$pane_id"
-    done | sort -k1,1 -t' ' --key=1.1,1.1 -s | {
-        # Custom sort
-        awk '{
-            if ($1 == "") print "1", $0
-            else if ($1 == "󰜎") print "2", $0
-            else if ($1 == "󰚩") print "3", $0  
-            else if ($1 == "") print "4", $0  
-            else print "5", $0
-        }' | sort -k1,1n | cut -d" " -f2-
-    }
+    local pattern=$(get_type_pattern "$pane_type")
+    
+    # Query panes by @pane_type across ALL sessions
+    # Include @pane_status for agent status detection (set by indicator plugin)
+    tmux list-panes -a -F "#{session_name}|#{pane_id}|#{pane_current_command}|#{@pane_status}|#{@pane_type}" |
+        grep "|${pattern}" |
+        while IFS='|' read -r session_name pane_id current_command pane_status pane_type_val; do
+            # Determine status icon
+            local symbol=""
+            if [[ "$current_command" != "bash" && "$current_command" != "zsh" && "$current_command" != "sh" ]]; then
+                case "$pane_type_val" in
+                    agent)
+                        # Check @pane_status set by indicator plugin
+                        case "$pane_status" in
+                            working) symbol="󰜎" ;;
+                            waiting) symbol="" ;;
+                            seen) symbol="" ;;
+                            *) symbol="" ;;  # idle or not set
+                        esac
+                        ;;
+                    bender-proxy|bend-reactor) symbol="󰚩" ;;
+                    *) symbol="" ;;
+                esac
+            else
+                symbol=""
+            fi
+            printf "%s %s %-20s %s\n" "$pane_id" "$symbol" "$current_command" "$session_name"
+        done
 }
 
 # Use fzf to select and preview
@@ -79,20 +61,27 @@ selected=$(get_project_panes | fzf \
     --ansi \
     --layout=reverse \
     --border \
+    --with-nth=2.. \
     --preview="
-        session_name=\$(echo {} | awk '{print \$2}')
-        pane_id=\$(echo {} | awk '{print \$NF}')
+        pane_id=\$(echo {} | awk '{print \$1}')
+        session_name=\$(echo {} | awk '{print \$4}')
         preview_height=\$(($(tput lines) - 7))
         echo \"=== \$session_name (${pane_type} pane) ===\"
         echo
-        tmux capture-pane -t \"\$pane_id\" -e -p | grep -v '^[[:space:]]*$' | tail -\$preview_height
+        tmux capture-pane -t \"\$pane_id\" -e -p | grep -v '^[[:space:]]*\$' | tail -\$preview_height
     " \
     --preview-window=right:60% \
     --header="Select the ${pane_type} pane to switch to")
 
 if [[ -n "$selected" ]]; then
-    session_name=$(echo "$selected" | awk '{print $2}')
-    pane_id=$(echo "$selected" | awk '{print $NF}')
+    pane_id=$(echo "$selected" | awk '{print $1}')
+
+    # Clear notification status if pane is idle (not working/waiting)
+    # This marks it as "seen" so we know we've checked it
+    pane_status=$(tmux display-message -p -t "$pane_id" '#{@pane_status}')
+    if [[ "$pane_status" != "working" && "$pane_status" != "waiting" ]]; then
+        tmux set-option -p -t "$pane_id" @pane_status "seen"
+    fi
 
     # Get the window containing this pane
     target_window=$(tmux list-panes -a -F "#{pane_id} #{session_name}:#{window_id}" | grep "^$pane_id " | cut -d' ' -f2)
