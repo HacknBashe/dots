@@ -14,7 +14,8 @@ tasks_file="$git_root/tasks.md"
 
 # First, mark any currently working task (>) as completed ([x])
 if grep -q "^- \[>\]" "$tasks_file"; then
-    sed -i '' 's/^- \[>\]/- [x]/' "$tasks_file"
+    # Use awk for cross-platform compatibility (works on both macOS and Linux)
+    awk '{gsub(/^- \[>\]/, "- [x]"); print}' "$tasks_file" > "$tasks_file.tmp" && mv "$tasks_file.tmp" "$tasks_file"
 fi
 
 # Check if there are any incomplete tasks
@@ -23,8 +24,30 @@ if ! grep -q "^- \[ \]" "$tasks_file"; then
     exit 0
 fi
 
-# Find first incomplete task and extract the text
-task=$(grep -m1 "^- \[ \]" "$tasks_file" | sed 's/^- \[ \] //')
+# Find first incomplete task and extract the text (including continuation lines)
+# This captures the checkbox line and any indented lines that follow
+task=$(awk '
+    /^- \[ \]/ && !found {
+        # Found first incomplete task
+        found = 1
+        # Remove checkbox and leading space
+        sub(/^- \[ \] /, "")
+        task_text = $0
+        next
+    }
+    found && /^[[:space:]]/ {
+        # Continuation line (indented)
+        task_text = task_text "\n" $0
+        next
+    }
+    found {
+        # Hit a non-indented line, stop collecting
+        exit
+    }
+    END {
+        print task_text
+    }
+' "$tasks_file")
 
 # Extra safety check - exit if task is empty
 [[ -z "$task" ]] && exit 0
