@@ -67,11 +67,24 @@ fi
 
 # Extract issue information from branch name (simplified)
 ISSUE_JSON='null'
-if [[ $CURRENT_BRANCH =~ ([a-zA-Z0-9_-]+)-([0-9]{4})-(.+) ]]; then
+if [[ $CURRENT_BRANCH =~ ([a-zA-Z0-9_-]+)-([0-9]+)-(.+) ]]; then
 	ISSUE_NUMBER="${BASH_REMATCH[2]}"
-	# Always look up issues in the canonical issues repo, not the current code repo
+	FOUND_OWNER=""
+	FOUND_REPO=""
+	ISSUE_INFO=""
+
+	# First try the canonical issues repo (SocialCoreTeam)
 	if ISSUE_INFO=$(gh issue view "$ISSUE_NUMBER" --repo "$ISSUES_OWNER/$ISSUES_REPO" --json title,body,state,url 2>/dev/null); then
-		ISSUE_JSON=$(jq -n --argjson issue "$ISSUE_INFO" --arg number "$ISSUE_NUMBER" --arg owner "$ISSUES_OWNER" --arg repo "$ISSUES_REPO" '{
+		FOUND_OWNER="$ISSUES_OWNER"
+		FOUND_REPO="$ISSUES_REPO"
+	# Fallback: try the current code repo (e.g., Social)
+	elif [ -n "$OWNER" ] && [ -n "$REPO" ] && ISSUE_INFO=$(gh issue view "$ISSUE_NUMBER" --repo "$OWNER/$REPO" --json title,body,state,url 2>/dev/null); then
+		FOUND_OWNER="$OWNER"
+		FOUND_REPO="$REPO"
+	fi
+
+	if [ -n "$ISSUE_INFO" ]; then
+		ISSUE_JSON=$(jq -n --argjson issue "$ISSUE_INFO" --arg number "$ISSUE_NUMBER" --arg owner "$FOUND_OWNER" --arg repo "$FOUND_REPO" '{
             issue: $issue,
             issueNumber: $number,
             owner: $owner,
