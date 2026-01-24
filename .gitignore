@@ -3,19 +3,3 @@ files/config/ags/@girs
 
 # Explicitly include bin directory even though hubspot ignores globally
 !files/local/bin
-# Reignore files hubspot added to bin
-like a principal
-files/local/bin/chirp
-files/local/bin/chirp-gen-py
-files/local/bin/devex-agents
-files/local/bin/devex-hooks
-files/local/bin/devex-mcp-server
-files/local/bin/devex-mcp-server-direct
-files/local/bin/dvx
-files/local/bin/hsclaude
-files/local/bin/hs-git-migration-tools
-files/local/bin/hs-local
-files/local/bin/m2-cleanup
-files/local/bin/mercedes-phev
-files/local/bin/project-monitor
-files/local/bin/python3.12
