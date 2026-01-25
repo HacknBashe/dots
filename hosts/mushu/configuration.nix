@@ -40,7 +40,12 @@ in {
     };
   };
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    extraConfig = ''
+      SetEnv TERM=xterm-256color
+    '';
+  };
 
   users = {
     users."${user}" = {
