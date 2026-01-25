@@ -1,6 +1,10 @@
 return {
 	{
 		"iamcco/markdown-preview.nvim",
+		-- Only enable if node is installed (needed for build and runtime)
+		enabled = function()
+			return require("lib.plugin-deps").check_executable("node", "markdown-preview.nvim")
+		end,
 		init = function()
 			vim.g.mkdp_filetypes = { "markdown" }
 		end,

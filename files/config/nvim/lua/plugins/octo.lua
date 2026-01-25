@@ -5,6 +5,10 @@ return {
 		"nvim-telescope/telescope.nvim",
 		"nvim-tree/nvim-web-devicons",
 	},
+	-- Only enable if gh (GitHub CLI) is installed
+	enabled = function()
+		return require("lib.plugin-deps").check_executable("gh", "octo.nvim")
+	end,
 	config = function()
 		require("octo").setup({})
 

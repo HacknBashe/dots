@@ -4,6 +4,10 @@ return {
 		"nvim-lua/plenary.nvim",
 		{
 			"nvim-telescope/telescope-fzf-native.nvim",
+			-- Only enable if make and cc are available (needed for build)
+			enabled = function()
+				return require("lib.plugin-deps").check_executables({ "make", "cc" }, "telescope-fzf-native.nvim")
+			end,
 			build = "make",
 		},
 	},
