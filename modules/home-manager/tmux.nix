@@ -42,7 +42,7 @@
         set -g status-right-style NONE
 
         set -g status-left "#[bg=$thm_bg,bold]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_blue]} #[fg=$thm_blue]#S $LEFT"
-        set -g status-right "#[bg=$thm_bg,fg=$thm_blue]%y-%m-%d $RIGHT %H:%M:%S "
+        set -g status-right "#[bg=$thm_bg,fg=$thm_orange]#h #[fg=$thm_blue]%y-%m-%d $RIGHT %H:%M:%S "
         setw -g window-status-activity-style "underscore,fg=$thm_grey,bg=$thm_black"
         setw -g window-status-separator ""
         setw -g window-status-format "#[fg=$thm_grey,bg=$thm_bg] #I #F #W $LEFT"
