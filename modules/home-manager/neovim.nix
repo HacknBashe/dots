@@ -83,7 +83,6 @@ in {
         # Markdown and Writing
         markdown-preview-nvim
         render-markdown-nvim
-        obsidian-nvim
         vim-markdown-toc
 
         # Treesitter and Syntax
