@@ -41,28 +41,6 @@ export const IndicatorPlugin = async ({ directory, worktree, client, $ }) => {
     } catch (e) {}
   };
 
-  // Play a beep sound when agent finishes
-  const playBeep = async () => {
-    try {
-      const os = process.platform;
-      const soundPath = `${process.env.HOME}/.config/dots/files/config/ghostty/sounds/beep.wav`;
-      
-      if (os === 'darwin') {
-        await $`afplay ${soundPath}`;
-      } else if (os === 'linux') {
-        try {
-          await $`pw-play ${soundPath}`;
-        } catch (e) {
-          try {
-            await $`aplay ${soundPath}`;
-          } catch (e2) {
-            await $`/bin/sh -lc 'printf "\\a" > /dev/tty'`;
-          }
-        }
-      }
-    } catch (e) {}
-  };
-
   let isIdle = true; // Start idle until first real work
 
   return {
@@ -76,12 +54,10 @@ export const IndicatorPlugin = async ({ directory, worktree, client, $ }) => {
       if (event.type === "permission.asked") {
         isIdle = false;
         await setStatus("waiting");
-        await playBeep();
       }
       if (event.type === "session.idle") {
         isIdle = true;
         await setStatus("idle");
-        await playBeep();
       }
       // session.status with running=true indicates actual work starting
       if (event.type === "session.status") {
