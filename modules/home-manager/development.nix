@@ -1,8 +1,16 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }: let
+  # Treesitter configuration from neovim-lazy.nix
+  treesitterWithGrammars = pkgs.vimPlugins.nvim-treesitter.withAllGrammars;
+  treesitter-parsers = pkgs.symlinkJoin {
+    name = "treesitter-parsers";
+    paths = treesitterWithGrammars.dependencies;
+  };
+
   linuxPackages =
     if pkgs.stdenv.isLinux
     then
@@ -37,74 +45,134 @@
     }
     else {};
 in {
-  programs.direnv.enable = true;
+  options.development = {
+    enableRust = lib.mkOption {
+      description = ''
+        Enable Rust development tools (rustc, rustup)
+      '';
+      type = lib.types.bool;
+      default = true;
+    };
 
-  home.packages = with pkgs;
-    [
-      git
-      gh
-      entr
-      lazygit
-      docker-compose
+    enablePython = lib.mkOption {
+      description = ''
+        Enable Python development tools (python312, pyright, black, uv)
+      '';
+      type = lib.types.bool;
+      default = true;
+    };
 
-      alejandra
-      nixd
-      shfmt
+    enableJava = lib.mkOption {
+      description = ''
+        Enable Java development tools (temurin, jdt-language-server, gradle, google-java-format)
+      '';
+      type = lib.types.bool;
+      default = true;
+    };
+  };
 
-      gnumake
+  config = {
+    programs.direnv.enable = true;
 
-      clang
-      clang-tools
+    programs.neovim = {
+      enable = true;
+      extraLuaPackages = luaPkgs: with luaPkgs; [luasocket];
+      plugins = [
+        treesitterWithGrammars
+      ];
+    };
 
-      go
-      gopls
+    home.packages = with pkgs;
+      [
+        # Core development tools (always included)
+        git
+        gh
+        entr
+        lazygit
+        docker-compose
 
-      black
-      (python312.withPackages (ps: with ps; [numpy requests pyserial]))
-      pyright
-      uv
+        # Core neovim plugin dependencies
+        gnumake # telescope-fzf-native.nvim build
 
-      rustc
-      rustup
+        # Build tools (also used for native plugin compilation)
+        clang
+        clang-tools
 
-      gradle
-      temurin-bin-21
-      jdt-language-server
-      google-java-format
+        # Language servers & formatters (always included for neovim)
+        alejandra
+        nixd
+        shfmt
+        lua-language-server
+        stylua
+        prettierd
 
-      lua
-      lua-language-server
-      stylua
+        # Lua runtime (for scripting)
+        lua
 
-      bun
-      nodejs_22
-      nodePackages.typescript-language-server
-      prettierd
-      yarn
-      yarn2nix
-    ]
-    ++ linuxPackages;
+        # Go (always included - needed for hexokinase)
+        go
+        gopls
 
-  home.file =
-    {
-      ".gitconfig" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/gitconfig";
-        target =
-          if config.isHubspot
-          then ".gitconfig.nix"
-          else ".gitconfig";
-      };
+        # Node.js (always included - needed for copilot, markdown-preview, opencode)
+        nodejs_22
+        nodePackages.typescript-language-server
+        bun
+      ]
+      ++ lib.optionals config.development.enableRust [
+        rustc
+        rustup
+      ]
+      ++ lib.optionals config.development.enablePython [
+        black
+        (python312.withPackages (ps: with ps; [numpy requests pyserial]))
+        pyright
+        uv
+      ]
+      ++ lib.optionals config.development.enableJava [
+        gradle
+        temurin-bin-21
+        jdt-language-server
+        google-java-format
+      ]
+      ++ linuxPackages;
 
-      "claude/commands" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/opencode/commands";
-        target = ".claude/commands/nix";
-        recursive = true;
-      };
-      "claude/agents" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/claude/agents";
-        target = ".claude/agents/nix";
-        recursive = true;
-      };
-    }
-    // linuxGitConfig;
+    home.file =
+      {
+        ".gitconfig" = {
+          source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/gitconfig";
+          target =
+            if config.isHubspot
+            then ".gitconfig.nix"
+            else ".gitconfig";
+        };
+
+        "claude/commands" = {
+          source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/opencode/commands";
+          target = ".claude/commands/nix";
+          recursive = true;
+        };
+        "claude/agents" = {
+          source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/claude/agents";
+          target = ".claude/agents/nix";
+          recursive = true;
+        };
+
+        # Neovim configuration (from neovim-lazy.nix)
+        "nvim" = {
+          source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/nvim";
+          target = ".config/nvim";
+          recursive = true;
+        };
+        "./.local/share/nvim/nix/nvim-treesitter" = {
+          recursive = true;
+          source = treesitterWithGrammars;
+        };
+        "./.local/share/nvim/nix/treesitter-path.lua" = {
+          text = ''
+            return "${treesitter-parsers}"
+          '';
+        };
+      }
+      // linuxGitConfig;
+  };
 }
