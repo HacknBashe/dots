@@ -1,56 +1,51 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
-  # Install cron
-  home.packages = [pkgs.cron];
-
-  # Enable cron service
-  services.cron.enable = true;
-
-  # Clone the repository
-  home.activation = {
-    cloneMyRepo = config.lib.dag.entryAfter ["writeBoundary"] ''
-      if [ ! -d "$HOME/.myrepo" ]; then
-        ${pkgs.git}/bin/git clone --depth 1 --branch master https://github.com/username/reponame.git $HOME/.myrepo
-      fi
-    '';
+  # Linux: Systemd timer to run every 10 minutes
+  systemd.user.timers.syncNotes = lib.mkIf pkgs.stdenv.isLinux {
+    Unit = {
+      Description = "Sync notes timer";
+    };
+    Timer = {
+      OnCalendar = "*:0/10";
+      Persistent = true;
+    };
+    Install = {
+      WantedBy = ["timers.target"];
+    };
   };
 
-  # Setup cron job script to pull and push the repository
-  home.file.".local/bin/update-myrepo".text = ''
-    #!/bin/bash
-    cd "$HOME/.myrepo" || exit
+  # Linux: Systemd service to sync notes using the existing script
+  systemd.user.services.syncNotes = lib.mkIf pkgs.stdenv.isLinux {
+    Unit = {
+      Description = "Sync notes service";
+    };
+    Service = {
+      ExecStart = "${config.home.homeDirectory}/.local/bin/global/auto_commit_notes.sh";
+      StandardOutput = "journal";
+      StandardError = "journal";
+      Environment = "PATH=${pkgs.bash}/bin:${pkgs.git}/bin:${pkgs.coreutils}/bin:${pkgs.openssh}/bin";
+    };
+  };
 
-    # Pull changes
-    ${pkgs.git}/bin/git pull --ff-only || exit
-
-    # Add all changes
-    ${pkgs.git}/bin/git add -A
-
-    # Check if there are changes to commit
-    if ${pkgs.git}/bin/git diff-index --quiet HEAD --; then
-      echo "No changes to commit."
-    else
-      # Commit changes if any
-      ${pkgs.git}/bin/git commit -m "Auto update at $(date)"
-      # Push changes
-      ${pkgs.git}/bin/git push origin master
-    fi
-  '';
-
-  home.file.".local/bin/update-myrepo".executable = true;
-
-  # Cron job to run update-myrepo script every 10 minutes
-  home.file.".local/share/cron/update-myrepo".text = "*/10 * * * * $HOME/.local/bin/update-myrepo";
-
-  # Ensure the cron job is added to cron table
-  home.activation = {
-    addCronJob = config.lib.dag.entryAfter ["writeBoundary"] ''
-      if ! crontab -l | grep -q "update-myrepo"; then
-        (crontab -l 2>/dev/null; echo "*/10 * * * * $HOME/.local/bin/update-myrepo") | crontab -
-      fi
-    '';
+  # macOS: Launchd agent to run every 10 minutes
+  launchd.agents.autoCommitNotes = lib.mkIf pkgs.stdenv.isDarwin {
+    enable = true;
+    config = {
+      ProgramArguments = ["${config.home.homeDirectory}/.local/bin/global/auto_commit_notes.sh"];
+      StandardOutPath = "/tmp/.auto_commit_notes.log";
+      StandardErrorPath = "/tmp/.auto_commit_notes.log";
+      StartCalendarInterval = [
+        {Minute = 0;}
+        {Minute = 10;}
+        {Minute = 20;}
+        {Minute = 30;}
+        {Minute = 40;}
+        {Minute = 50;}
+      ];
+    };
   };
 }

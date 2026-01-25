@@ -11,4 +11,5 @@
     registry.nixpkgs.flake = inputs.nixpkgs;
   };
   nixpkgs.config.allowUnfree = true;
+  time.timeZone = lib.mkDefault "America/New_York";
 }

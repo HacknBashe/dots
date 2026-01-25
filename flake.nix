@@ -120,6 +120,7 @@
                   ./modules/home-manager/gtk.nix
                   ./modules/home-manager/qt.nix
                   ./modules/home-manager/steam.nix
+                  ./modules/home-manager/notes.nix
                 ];
               };
             };
@@ -151,6 +152,7 @@
                   ./modules/home-manager/development.nix
                   ./modules/home-manager/opencode.nix
                   ./modules/home-manager/tmux.nix
+                  ./modules/home-manager/notes.nix
                   ./modules/home-manager/btop.nix
                 ];
               };
@@ -249,6 +251,7 @@
                 ./modules/home-manager/ghostty.nix
                 ./modules/home-manager/aerospace.nix
                 ./modules/home-manager/opencode.nix
+                ./modules/home-manager/notes.nix
               ];
             };
             home-manager.extraSpecialArgs = {inherit inputs;};
@@ -287,21 +290,6 @@
       };
     };
 
-    homeConfigurations = {
-      nick = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${systemDarwin};
-        modules = [
-          ./modules/nix.nix
-          ./modules/theme.nix
-          ./hosts/toothless/home.nix
-          ./modules/home-manager/shell.nix
-          ./modules/home-manager/development.nix
-          ./modules/home-manager/tmux.nix
-          ./modules/home-manager/btop.nix
-          ./modules/home-manager/alacritty.nix
-        ];
-        extraSpecialArgs = {inherit inputs;};
-      };
-    };
+
   };
 }

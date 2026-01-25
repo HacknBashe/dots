@@ -36,20 +36,4 @@
     };
   };
 
-  launchd.agents.autoCommitNotes = {
-    enable = true;
-    config = {
-      ProgramArguments = ["${config.home.homeDirectory}/.local/bin/auto_commit_notes.sh"];
-      StandardOutPath = "/tmp/.auto_commit_notes.log";
-      StandardErrorPath = "/tmp/.auto_commit_notes.log";
-      StartCalendarInterval = [
-        {Minute = 0;}
-        {Minute = 10;}
-        {Minute = 20;}
-        {Minute = 30;}
-        {Minute = 40;}
-        {Minute = 50;}
-      ];
-    };
-  };
 }
