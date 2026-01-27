@@ -1,7 +1,7 @@
 {
-  "theme": "system",
   "$schema": "https://opencode.ai/config.json",
-  "instructions": ["/Users/nhackford/.config/opencode/AGENTS_HUBSPOT.md"],
+  "theme": "system",
+  "instructions": ["/Users/nhackford/.claude/CLAUDE.md"],
   "lsp": {
     "typescript": {
       "disabled": true
@@ -20,10 +20,10 @@
       "type": "local",
       "command": [
         "npx",
+        "--registry=https://registry.npmjs.org",
+        "-y",
         "chrome-devtools-mcp@latest",
-        "--autoConnect",
-        "--browserUrl",
-        "http://127.0.0.1:9222"
+        "--auto-connect"
       ]
     }
   },
@@ -39,6 +39,7 @@
       "git branch": "allow",
       "git branch -l*": "allow",
       "git branch --list*": "allow",
+      "git branch --show-current": "allow",
       "git remote": "allow",
       "git remote -v*": "allow",
       "git ls-files*": "allow",

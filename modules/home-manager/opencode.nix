@@ -16,6 +16,12 @@
       target = ".config/opencode/opencode.json";
     };
 
+    # Global agent rules
+    "opencode/AGENTS.md" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/opencode/AGENTS.md";
+      target = ".config/opencode/AGENTS.md";
+    };
+
     # plugin: indicator.js
     "opencode/plugin/indicator.js" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/opencode/plugin";

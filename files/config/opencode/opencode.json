@@ -1,6 +1,7 @@
 {
   "theme": "system",
   "$schema": "https://opencode.ai/config.json",
+  "theme": "system",
   "lsp": {},
   "mcp": {
     "chrome-devtools": {
