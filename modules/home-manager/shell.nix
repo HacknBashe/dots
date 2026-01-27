@@ -111,6 +111,44 @@ in {
     };
   };
 
+  programs.starship = {
+    enable = true;
+    settings = {
+      add_newline = false;
+      format = "$character$directory$git_branch$git_status";
+      right_format = "$nix_shell$cmd_duration$time";
+
+      character = {
+        success_symbol = "[➜](bold green)";
+        error_symbol = "[➜](bold red)";
+      };
+
+      directory = {
+        style = "cyan";
+      };
+
+      git_branch = {
+        format = "[$symbol$branch(:$remote_branch)]($style) ";
+      };
+
+      cmd_duration = {
+        min_time = 3000;
+        format = "[$duration]($style) ";
+      };
+
+      time = {
+        disabled = false;
+        format = "[$time]($style)";
+        style = "blue";
+      };
+
+      nix_shell = {
+        format = "[$symbol$state]($style) ";
+        symbol = " ";
+      };
+    };
+  };
+
   home.sessionVariables = {NIX_SHELL_PRESERVE_PROMPT = 1;};
   home.packages = with pkgs;
     [
@@ -259,18 +297,7 @@ in {
         source = ../../files/config/zsh/nvm.plugin.zsh;
         target = ".config/zsh/nvm.plugin.zsh";
       };
-      ".p10l.zsh" = {
-        source = ../../files/config/zsh/.p10k.zsh;
-        target = ".config/zsh/.p10k.zsh";
-      };
-      "powerlevel10k" = {
-        source = builtins.fetchGit {
-          url = "https://github.com/romkatv/powerlevel10k.git";
-          ref = "master";
-          rev = "bd0fa8a08f62a6e49f8a2ef47f5103fa840d2198";
-        };
-        target = ".config/zsh/plugins/powerlevel10k";
-      };
+
       "zsh-autosuggestions" = {
         source = builtins.fetchGit {
           url = "https://github.com/zsh-users/zsh-autosuggestions.git";

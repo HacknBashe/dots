@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # Source plugin submodules
 source ~/.config/zsh/plugins/vim/vim.plugin.zsh
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.config/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme
-source ~/.config/zsh/plugins/powerlevel10k/config/p10k-robbyrussell.zsh
-source ~/.config/zsh/.p10k.zsh
+
+# Make nix shell detectable by starship
+nix() {
+  if [[ "$1" == "shell" ]]; then
+    IN_NIX_SHELL=impure command nix "$@"
+  else
+    command nix "$@"
+  fi
+}
+
+# Initialize starship prompt
+eval "$(starship init zsh)"
 
 autoload -Uz compinit
 if [[ $(find ~/.zcompdump -mtime -1 2>/dev/null) ]]; then
