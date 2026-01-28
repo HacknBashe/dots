@@ -105,7 +105,10 @@
     {
       description = "Automount Steam compatdata bind mount";
       where = "/run/media/nick/Spinner/SteamLibrary/steamapps/compatdata";
-      wantedBy = ["multi-user.target"];
+      # Start when drive mounts (not at boot)
+      wantedBy = ["run-media-nick-Spinner.mount"];
+      bindsTo = ["run-media-nick-Spinner.mount"];
+      after = ["run-media-nick-Spinner.mount"];
     }
   ];
 }
