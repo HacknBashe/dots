@@ -19,8 +19,8 @@ else
     if is_current_pane_default; then
         # Convert current pane to agent pane
         convert_current_pane "agent" "agent"
-        tmux send-keys "opencode -c" C-m
-        
+        tmux send-keys "opencode" C-m
+
         # Wait a moment for agent to start, then paste text if provided
         if [[ -n "$text_to_paste" ]]; then
             sleep 1
@@ -29,10 +29,10 @@ else
     else
         # Create new agent window
         create_typed_window "agent" "agent"
-        
+
         # Send the opencode command to the new window
-        tmux send-keys "opencode -c" C-m
-        
+        tmux send-keys "opencode" C-m
+
         # Wait a moment for agent to start, then paste text if provided
         if [[ -n "$text_to_paste" ]]; then
             sleep 1
