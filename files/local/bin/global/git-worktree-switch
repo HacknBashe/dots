@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 
-git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
+git_common_dir="$(realpath "$(git rev-parse --git-common-dir 2>/dev/null)")" || {
   echo "Not in a git repo"
   exit 1
 }
 
-# For worktree structure: my_project/master/, my_project/feature/
-# git-common-dir points to my_project/master/.git
-# We need to go up two levels: .git -> master -> my_project
-# Use realpath to ensure we get absolute paths
-git_dir_abs="$(realpath "$git_dir")"
-worktree_dir="$(dirname "$git_dir_abs")"
-
-top="$(dirname "$worktree_dir")"
+# New structure: repos live directly in a directory (e.g., ~/src/Social)
+# Worktrees are created as siblings with naming: {repo}_{branch}
+# git-common-dir points to the main repo's .git (even from worktrees)
+main_repo_dir="$(dirname "$git_common_dir")"
+repo_name="$(basename "$main_repo_dir")"
+parent_dir="$(dirname "$main_repo_dir")"
 
 # If a branch arg is provided, resolve its worktree directory; otherwise fallback to fzf selection
 if [ $# -ge 1 ] && [ -n "$1" ]; then
@@ -34,8 +32,8 @@ if [ $# -ge 1 ] && [ -n "$1" ]; then
   done <<< "$worktree_info"
 
   if [ -z "$dir" ]; then
-    # No existing worktree: create one following our convention top/<branch>
-    workdir="$top/$target_branch"
+    # No existing worktree: create one as sibling with {repo}_{branch} naming
+    workdir="${parent_dir}/${repo_name}_${target_branch}"
     echo "No worktree found for '$target_branch'. Creating at: $workdir"
 
     # If local branch exists, create worktree from it. Otherwise try origin, then master as a fallback.
@@ -62,15 +60,18 @@ if [ -n "$dir" ]; then
   # Save current directory
   current_dir="$PWD"
 
-  # Get repo name from directory
-  repo_name=$(basename "$top")
-
-  # Get branch name from git worktree list (no subshell needed)
-  branch_name=$(git worktree list --porcelain | awk -v target="$dir" '
-    /^worktree / { if ($2 == target) found=1 }
-    /^branch / && found { gsub(/^refs\/heads\//, "", $2); gsub(/\//, "-", $2); print $2; exit }
-  ')
-  session_name="${repo_name}_${branch_name}"
+  # Determine session name based on whether it's the main repo or a worktree
+  if [ "$(realpath "$dir")" = "$main_repo_dir" ]; then
+    # Main repo: session is just the repo name
+    session_name="$repo_name"
+  else
+    # Worktree: session is {repo}_{branch}
+    branch_name=$(git worktree list --porcelain | awk -v target="$dir" '
+      /^worktree / { if ($2 == target) found=1 }
+      /^branch / && found { gsub(/^refs\/heads\//, "", $2); gsub(/\//, "-", $2); print $2; exit }
+    ')
+    session_name="${repo_name}_${branch_name}"
+  fi
 
   # Check if already in a tmux session
   if [ -z "$TMUX" ]; then

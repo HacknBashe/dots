@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
+git_common_dir="$(realpath "$(git rev-parse --git-common-dir 2>/dev/null)")" || {
   echo "Not in a git repo"
   exit 1
 }
 
-# For worktree structure: my_project/master/, my_project/feature/
-# git-common-dir points to my_project/master/.git
-# We need to go up two levels: .git -> master -> my_project
-# Use realpath to ensure we get absolute paths
-git_dir_abs="$(realpath "$git_dir")"
-worktree_dir="$(dirname "$git_dir_abs")"
-top="$(dirname "$worktree_dir")"
+# New structure: repos live directly in a directory (e.g., ~/src/Social)
+# Worktrees are created as siblings with naming: {repo}_{branch}
+# git-common-dir points to the main repo's .git (even from worktrees)
+main_repo_dir="$(dirname "$git_common_dir")"
+repo_name="$(basename "$main_repo_dir")"
 
 # Check if a branch name was provided as an argument
 if [ $# -eq 1 ]; then
@@ -69,7 +67,6 @@ echo "Removing worktree at $selected_path"
 echo "and deleting branch $selected_branch"
 
 # Kill associated tmux session early in the process
-repo_name=$(basename "$top")
 formatted_branch=$(echo "$selected_branch" | tr '/' '-')
 session_name="${repo_name}_${formatted_branch}"
 
@@ -82,8 +79,8 @@ current_dir=$PWD
 
 # Make sure we're not in the worktree we're trying to delete
 if [[ "$current_dir" == "$selected_path"* ]]; then
-  echo "Cannot delete the worktree you're currently in. Moving to the main worktree..."
-  cd "$top/master"
+  echo "Cannot delete the worktree you're currently in. Moving to the main repo..."
+  cd "$main_repo_dir"
 fi
 
 # Remove the worktree and delete the branch

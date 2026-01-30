@@ -4,23 +4,22 @@
 set -e
 
 # Check if we're in a git repo
-git_dir=$(git rev-parse --git-common-dir 2>/dev/null) || {
+git_common_dir="$(realpath "$(git rev-parse --git-common-dir 2>/dev/null)")" || {
   echo "Error: Not in a git repository"
   exit 1
 }
 
-# Get current worktree info
-current_worktree=$(git worktree list --porcelain | awk '/^worktree / && getline && /^HEAD/ {print prev} {prev=substr($0,10)}' | head -1)
+# New structure: repos live directly in a directory (e.g., ~/src/Social)
+# Worktrees are created as siblings with naming: {repo}_{branch}
+# git-common-dir points to the main repo's .git (even from worktrees)
+main_repo_dir="$(dirname "$git_common_dir")"
+repo_name="$(basename "$main_repo_dir")"
+current_dir="$(realpath "$PWD")"
 current_branch=$(git branch --show-current)
 
-# Get absolute paths
-git_dir_abs="$(realpath "$git_dir")"
-current_dir="$PWD"
-
 # Check if we're in the main repository (not a separate worktree)
-main_worktree=$(git worktree list | head -1 | awk '{print $1}')
-if [[ "$(realpath "$current_dir")" == "$(realpath "$main_worktree")" ]]; then
-  echo "Error: You're in the main repository worktree. This script is for deleting separate worktrees."
+if [[ "$current_dir" == "$main_repo_dir" ]]; then
+  echo "Error: You're in the main repository. This script is for deleting separate worktrees."
   echo "Current branch: $current_branch"
   if [[ "$current_branch" == "master" ]] || [[ "$current_branch" == "main" ]]; then
     echo "You're on the main branch in the main repository."
@@ -30,11 +29,8 @@ if [[ "$(realpath "$current_dir")" == "$(realpath "$main_worktree")" ]]; then
   exit 1
 fi
 
-worktree_dir="$(dirname "$git_dir_abs")"
-top="$(dirname "$worktree_dir")"
-
 # Verify we're actually in a worktree (not the main repo)
-if ! git worktree list | grep -q "$(realpath "$current_dir")"; then
+if ! git worktree list | grep -q "$current_dir"; then
   echo "Error: Current directory doesn't appear to be a worktree"
   exit 1
 fi
@@ -45,7 +41,7 @@ if [[ -n "$TMUX" ]]; then
   current_session=$(tmux display-message -p '#S')
 fi
 
-echo "Current worktree: $worktree_dir"
+echo "Current worktree: $current_dir"
 echo "Current branch: $current_branch"
 if [[ -n "$current_session" ]]; then
   echo "Current tmux session: $current_session"
@@ -60,45 +56,34 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
   exit 0
 fi
 
-# Determine master directory (prefer 'master', fall back to 'main')
-master_dir="$top/master"
-if [[ ! -d "$master_dir" ]]; then
-  master_dir="$top/main"
-  if [[ ! -d "$master_dir" ]]; then
-    echo "Error: Could not find master or main worktree directory"
-    exit 1
-  fi
-fi
-
-# Create or switch to master tmux session first (before killing current session)
-repo_name=$(basename "$top")
-master_session_name="${repo_name}_master"
+# Main repo session name is just the repo name (no _master suffix)
+main_session_name="$repo_name"
 
 # Check if we're in tmux and handle session switching
 if [[ -n "$current_session" ]] && command -v tmux >/dev/null 2>&1; then
-  echo "Switching to master tmux session: $master_session_name"
+  echo "Switching to main repo tmux session: $main_session_name"
   
-  # Create master session if it doesn't exist
-  if ! tmux has-session -t "$master_session_name" 2>/dev/null; then
-    tmux new-session -ds "$master_session_name" -c "$master_dir"
+  # Create main repo session if it doesn't exist
+  if ! tmux has-session -t "$main_session_name" 2>/dev/null; then
+    tmux new-session -ds "$main_session_name" -c "$main_repo_dir"
   fi
   
-  # Switch to master session first
-  tmux switch-client -t "$master_session_name"
+  # Switch to main repo session first
+  tmux switch-client -t "$main_session_name"
   
-  # Now kill the old session (but only if it's different from master session)
-  if [[ "$current_session" != "$master_session_name" ]]; then
+  # Now kill the old session (but only if it's different from main session)
+  if [[ "$current_session" != "$main_session_name" ]]; then
     echo "Killing old tmux session: $current_session"
     tmux kill-session -t "$current_session" 2>/dev/null || true
   fi
 fi
 
-# Change to master directory before deleting current worktree
-cd "$master_dir"
+# Change to main repo directory before deleting current worktree
+cd "$main_repo_dir"
 
 # Remove the worktree and delete the branch
-echo "Removing worktree: $worktree_dir"
-git worktree remove --force "$worktree_dir"
+echo "Removing worktree: $current_dir"
+git worktree remove --force "$current_dir"
 
 echo "Deleting branch: $current_branch"
 git branch -D "$current_branch"
@@ -107,15 +92,15 @@ echo "Worktree and branch deleted successfully."
 
 # Handle case where we weren't in tmux initially
 if [[ -z "$current_session" ]] && command -v tmux >/dev/null 2>&1 && pgrep tmux >/dev/null 2>&1; then
-  echo "Creating/switching to master tmux session: $master_session_name"
+  echo "Creating/switching to main repo tmux session: $main_session_name"
   
   # Create session if it doesn't exist
-  if ! tmux has-session -t "$master_session_name" 2>/dev/null; then
-    tmux new-session -ds "$master_session_name" -c "$master_dir"
+  if ! tmux has-session -t "$main_session_name" 2>/dev/null; then
+    tmux new-session -ds "$main_session_name" -c "$main_repo_dir"
   fi
   
   # Attach to the session
-  exec tmux attach -t "$master_session_name"
+  exec tmux attach -t "$main_session_name"
 elif [[ -z "$current_session" ]]; then
-  echo "Tmux not running. You are now in: $master_dir"
+  echo "Tmux not running. You are now in: $main_repo_dir"
 fi
