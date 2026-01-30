@@ -205,7 +205,7 @@ return {
 					map.gen_integration.diff(),
 				},
 			})
-			vim.keymap.set("n", "<leader>vm", function()
+			vim.keymap.set("n", "<leader>vM", function()
 				map.toggle()
 			end, { desc = "View Map", noremap = true, silent = true, nowait = true })
 

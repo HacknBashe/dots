@@ -28,5 +28,4 @@ require("core.remap")
 require("core.github")
 require("core.tmux")
 require("core.notes")
--- TODO: NVIM-NIX Fix this
--- require("core.treesitter")
+require("core.marks")
