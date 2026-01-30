@@ -24,12 +24,13 @@ in {
 
     csharp-ls
     csharpier
+
+    monado
   ];
 
   environment.sessionVariables = {
     DOTNET_ROOT = "${combinedDotnet}/share/dotnet";
   };
 
-  programs.adb.enable = true;
   users.users.nick.extraGroups = ["adbusers"];
 }
