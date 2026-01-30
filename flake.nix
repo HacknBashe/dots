@@ -138,12 +138,16 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.sharedModules = [
+              sops-nix.homeManagerModules.sops
+            ];
             home-manager.users = {
               nick = {
                 imports = [
                   ./hosts/sindragosa/home.nix
                   ./modules/theme.nix
                   ./modules/home-manager/shell.nix
+                  ./modules/home-manager/sops.nix
                   ./modules/home-manager/development.nix
                   ./modules/home-manager/opencode.nix
                   ./modules/home-manager/tmux.nix
