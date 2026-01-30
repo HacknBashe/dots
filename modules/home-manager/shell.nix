@@ -118,11 +118,6 @@ in {
       format = "$character$directory$git_branch$git_status";
       right_format = "$nix_shell$cmd_duration$time";
 
-      character = {
-        success_symbol = "[➜](bold green)";
-        error_symbol = "[➜](bold red)";
-      };
-
       directory = {
         style = "cyan";
       };
