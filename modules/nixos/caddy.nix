@@ -7,10 +7,11 @@
         "hackford.us"
         "tv.hackford.us"
         "ads.hackford.us"
+        "dev.hackford.us"
       ];
 
       extraConfig = ''
-        @bare host hackford.us tv.hackford.us ads.hackford.us
+        @bare host hackford.us tv.hackford.us ads.hackford.us dev.hackford.us
         redir @bare https://www.{host}{uri} permanent
       '';
     };
@@ -21,10 +22,11 @@
         "www.tv.hackford.us"
         "www.ads.hackford.us"
         "www.dash.hackford.us"
+        "www.dev.hackford.us"
       ];
 
       extraConfig = ''
-        @bare host hackford.us tv.hackford.us ads.hackford.us
+        @bare host hackford.us tv.hackford.us ads.hackford.us dev.hackford.us
         redir @bare https://www.{host}{uri} permanent
 
         # Main
@@ -43,6 +45,15 @@
         @adguard host www.ads.hackford.us
         handle @adguard {
           reverse_proxy localhost:3000
+        }
+
+        # Motion Canvas dev server
+        @dev host www.dev.hackford.us
+        handle @dev {
+          basic_auth {
+            nick $2a$14$Hux.DB1So6okMY4lDU2EMOWcQIBiIXMrSPuvgnlHthcZgnSq.gjhe
+          }
+          reverse_proxy localhost:9000
         }
 
         handle {
