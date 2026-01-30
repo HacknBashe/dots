@@ -87,12 +87,32 @@ if [[ "$current_dir" == "$selected_path"* ]]; then
 fi
 
 # Remove the worktree and delete the branch
-git worktree remove --force "$selected_path" &&
-  git branch -D "$selected_branch" &&
-  echo "Worktree and branch deleted successfully."
+worktree_remove_output=$(git worktree remove --force "$selected_path" 2>&1)
+worktree_remove_exit=$?
+echo "$worktree_remove_output"
 
-# Clean up the directory if it still exists
-if [ -d "$selected_path" ]; then
-  echo "Removing remaining directory: $selected_path"
+# If git worktree remove failed but directory still exists, force cleanup
+if [ $worktree_remove_exit -ne 0 ] && [ -d "$selected_path" ]; then
+  echo "Worktree remove failed, forcing directory cleanup..."
   rm -rf "$selected_path"
+  
+  if [ $? -eq 0 ]; then
+    # Directory removed, now prune stale worktree entries
+    git worktree prune
+  fi
+fi
+
+# Delete the branch (regardless of how the directory was removed)
+if [ ! -d "$selected_path" ]; then
+  branch_delete_output=$(git branch -D "$selected_branch" 2>&1)
+  branch_delete_exit=$?
+  echo "$branch_delete_output"
+  
+  if [ $branch_delete_exit -eq 0 ]; then
+    echo "Worktree and branch deleted successfully."
+  else
+    echo "Warning: Directory removed but branch deletion failed"
+  fi
+else
+  echo "Error: Failed to remove directory $selected_path"
 fi
