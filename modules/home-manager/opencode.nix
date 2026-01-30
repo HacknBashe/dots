@@ -33,5 +33,10 @@
       target = ".config/opencode/commands";
       recursive = true;
     };
+    "opencode/skills" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/opencode/skills";
+      target = ".config/opencode/skills";
+      recursive = true;
+    };
   };
 }

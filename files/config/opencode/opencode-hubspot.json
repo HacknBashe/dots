@@ -1,7 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "theme": "system",
-  "instructions": ["/Users/nhackford/.claude/CLAUDE.md"],
   "lsp": {
     "typescript": {
       "disabled": true
