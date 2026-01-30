@@ -462,99 +462,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             spacing: 4
 
-            // Column 2: Monitor 2 workspaces
-            Item {
-                id: column2Container
-                Layout.preferredWidth: 30
-                Layout.preferredHeight: column2.implicitHeight
-                visible: column2Repeater.count > 0
-
-                Behavior on Layout.preferredHeight {
-                    NumberAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.Bezier
-                        easing.bezierCurve: Appearance.anim.standard
-                    }
-                }
-
-                ColumnLayout {
-                    id: column2
-
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    spacing: Appearance.spacing.larger
-
-                    Repeater {
-                        id: column2Repeater
-
-                        model: column2Model
-
-                        delegate: BarWorkspace {
-                            id: workspaceItem
-                            required property int index
-                            required property var model
-
-                            wsId: model.wsId
-                            isGhost: model.isGhost
-                            activeWsId: root.activeWsId
-                            occupied: root.occupied
-                            groupOffset: root.groupOffset
-
-                            // Store the target height - start at 0 for new items
-                            readonly property real targetHeight: {
-                                if (_isNewlyCreated && !isGhost) {
-                                    return 0;  // Start at 0 height for entrance animation
-                                }
-                                return isGhost ? 0 : implicitHeight;
-                            }
-
-                            // Explicitly set height and animate it
-                            Layout.preferredHeight: targetHeight
-                            
-                            // Pull up this item if the previous item is a ghost
-                            // This cancels out the spacing between the ghost and this item
-                            Layout.topMargin: {
-                                if (index === 0) return 0;  // First item has no previous
-                                const prevItem = column2Model.get(index - 1);
-                                return (prevItem && prevItem.isGhost) ? -Appearance.spacing.larger : 0;
-                            }
-
-                            Behavior on Layout.preferredHeight {
-                                NumberAnimation {
-                                    id: column2HeightAnim
-                                    duration: Appearance.anim.small
-                                    easing.type: Easing.Bezier
-                                    easing.bezierCurve: Appearance.anim.standard
-
-                                    onRunningChanged: {
-                                        if (!running && workspaceItem.isGhost && workspaceItem.Layout.preferredHeight <= 0.1) {
-
-                                            // Remove from ghost list
-                                            const newGhosts = animatingOutMon2.filter(id => id !== workspaceItem.wsId);
-                                            animatingOutMon2 = newGhosts;
-
-
-                                            // Manually trigger model update since we changed animatingOutMon2
-                                            const current = currentMonitor2Workspaces;
-                                            const combined = Array.from(new Set([...current, ...newGhosts])).sort((a, b) => a - b);
-
-                                            // Remove items not in combined
-                                            for (let i = column2Model.count - 1; i >= 0; i--) {
-                                                const item = column2Model.get(i);
-                                                if (!combined.includes(item.wsId)) {
-                                                    column2Model.remove(i);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Column 1: Monitor 1 workspaces
+            // Column 1: Monitor 1 workspaces (left column - matches left monitor)
             Item {
                 id: column1Container
                 Layout.preferredWidth: 30
@@ -635,6 +543,98 @@ Item {
                                                 const item = column1Model.get(i);
                                                 if (!combined.includes(item.wsId)) {
                                                     column1Model.remove(i);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Column 2: Monitor 2 workspaces (right column - matches right monitor)
+            Item {
+                id: column2Container
+                Layout.preferredWidth: 30
+                Layout.preferredHeight: column2.implicitHeight
+                visible: column2Repeater.count > 0
+
+                Behavior on Layout.preferredHeight {
+                    NumberAnimation {
+                        duration: Appearance.anim.small
+                        easing.type: Easing.Bezier
+                        easing.bezierCurve: Appearance.anim.standard
+                    }
+                }
+
+                ColumnLayout {
+                    id: column2
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    spacing: Appearance.spacing.larger
+
+                    Repeater {
+                        id: column2Repeater
+
+                        model: column2Model
+
+                        delegate: BarWorkspace {
+                            id: workspaceItem
+                            required property int index
+                            required property var model
+
+                            wsId: model.wsId
+                            isGhost: model.isGhost
+                            activeWsId: root.activeWsId
+                            occupied: root.occupied
+                            groupOffset: root.groupOffset
+
+                            // Store the target height - start at 0 for new items
+                            readonly property real targetHeight: {
+                                if (_isNewlyCreated && !isGhost) {
+                                    return 0;  // Start at 0 height for entrance animation
+                                }
+                                return isGhost ? 0 : implicitHeight;
+                            }
+
+                            // Explicitly set height and animate it
+                            Layout.preferredHeight: targetHeight
+                            
+                            // Pull up this item if the previous item is a ghost
+                            // This cancels out the spacing between the ghost and this item
+                            Layout.topMargin: {
+                                if (index === 0) return 0;  // First item has no previous
+                                const prevItem = column2Model.get(index - 1);
+                                return (prevItem && prevItem.isGhost) ? -Appearance.spacing.larger : 0;
+                            }
+
+                            Behavior on Layout.preferredHeight {
+                                NumberAnimation {
+                                    id: column2HeightAnim
+                                    duration: Appearance.anim.small
+                                    easing.type: Easing.Bezier
+                                    easing.bezierCurve: Appearance.anim.standard
+
+                                    onRunningChanged: {
+                                        if (!running && workspaceItem.isGhost && workspaceItem.Layout.preferredHeight <= 0.1) {
+
+                                            // Remove from ghost list
+                                            const newGhosts = animatingOutMon2.filter(id => id !== workspaceItem.wsId);
+                                            animatingOutMon2 = newGhosts;
+
+
+                                            // Manually trigger model update since we changed animatingOutMon2
+                                            const current = currentMonitor2Workspaces;
+                                            const combined = Array.from(new Set([...current, ...newGhosts])).sort((a, b) => a - b);
+
+                                            // Remove items not in combined
+                                            for (let i = column2Model.count - 1; i >= 0; i--) {
+                                                const item = column2Model.get(i);
+                                                if (!combined.includes(item.wsId)) {
+                                                    column2Model.remove(i);
                                                 }
                                             }
                                         }
