@@ -33,52 +33,6 @@
         "type": "github"
       }
     },
-    "caelestia-cli": {
-      "inputs": {
-        "caelestia-shell": [
-          "caelestia-shell"
-        ],
-        "nixpkgs": [
-          "caelestia-shell",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1764813773,
-        "narHash": "sha256-vpgjBAER+aoMjq6z9xuv/jvniXkRRgP/xfZMP2LbNlk=",
-        "owner": "caelestia-dots",
-        "repo": "cli",
-        "rev": "1eead8615108e1977ac09ed428e1329adbb80f00",
-        "type": "github"
-      },
-      "original": {
-        "owner": "caelestia-dots",
-        "repo": "cli",
-        "type": "github"
-      }
-    },
-    "caelestia-shell": {
-      "inputs": {
-        "caelestia-cli": "caelestia-cli",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "quickshell": "quickshell"
-      },
-      "locked": {
-        "lastModified": 1765071049,
-        "narHash": "sha256-HIJtxkYaGxUFZ03wOzF4pWhKWAvFuYBN9jAdhCzZvnI=",
-        "owner": "caelestia-dots",
-        "repo": "shell",
-        "rev": "982d64d5e5b9295d12dec37d45442ed6a05fe284",
-        "type": "github"
-      },
-      "original": {
-        "owner": "caelestia-dots",
-        "repo": "shell",
-        "type": "github"
-      }
-    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -957,27 +911,6 @@
     "quickshell": {
       "inputs": {
         "nixpkgs": [
-          "caelestia-shell",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1764663772,
-        "narHash": "sha256-sHqLmm0wAt3PC4vczJeBozI1/f4rv9yp3IjkClHDXDs=",
-        "ref": "refs/heads/master",
-        "rev": "26531fc46ef17e9365b03770edd3fb9206fcb460",
-        "revCount": 713,
-        "type": "git",
-        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
-      }
-    },
-    "quickshell_2": {
-      "inputs": {
-        "nixpkgs": [
           "nixpkgs"
         ]
       },
@@ -997,7 +930,6 @@
     },
     "root": {
       "inputs": {
-        "caelestia-shell": "caelestia-shell",
         "darwin": "darwin",
         "extest": "extest",
         "ghostty": "ghostty",
@@ -1009,7 +941,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgsold": "nixpkgsold",
         "opencode": "opencode",
-        "quickshell": "quickshell_2",
+        "quickshell": "quickshell",
         "sops-nix": "sops-nix",
         "wivrn": "wivrn"
       }
