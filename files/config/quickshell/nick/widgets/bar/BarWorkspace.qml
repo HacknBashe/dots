@@ -121,7 +121,7 @@ ColumnLayout {
     Item {
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignHCenter
-        Layout.topMargin: 5
+        Layout.topMargin: 12
         implicitHeight: numberText.implicitHeight
 
         Text {
@@ -151,7 +151,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignHCenter
         Layout.topMargin: 4
-        Layout.bottomMargin: 5
+        Layout.bottomMargin: 3
 
         visible: root.hasWindows
         spacing: 2
