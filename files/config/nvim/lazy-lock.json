@@ -1,7 +1,7 @@
 {
   "LuaSnip": { "branch": "master", "commit": "3d5bced1b9ae69fa3f9b1942e28af5dbc537f946" },
   "aerial.nvim": { "branch": "master", "commit": "da0ceef62eb58b9bec1975017beb2f28c3b1e72c" },
-  "bend.nvim": { "branch": "jsprinkle/config-flag", "commit": "c6a2a068072c56e0b58bd3e7da6d0aec11f17927" },
+  "bend.nvim": { "branch": "master", "commit": "2faeff610ca1771b4aeb3476e5129798be66bb31" },
   "better-vim-tmux-resizer": { "branch": "master", "commit": "a791fe5b4433ac43a4dad921e94b7b5f88751048" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "a8912b88ce488f411177fc8aed358b04dc246d7b" },
   "cmp_luasnip": { "branch": "master", "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90" },

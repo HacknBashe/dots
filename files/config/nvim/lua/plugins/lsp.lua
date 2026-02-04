@@ -9,7 +9,6 @@ return {
 			"saadparwaiz1/cmp_luasnip",
 			{
 				url = "git@git.hubteam.com:HubSpot/bend.nvim.git",
-				branch = "jsprinkle/config-flag",
 				enabled = function()
 					return vim.fn.hostname() == "JGR2T596J9"
 				end,
@@ -25,7 +24,7 @@ return {
 
 			if isHubspot then
 				vim.lsp.set_log_level("info")
-				bend.setup({ trust_me = true })
+				bend.setup({ v2 = true })
 			end
 
 			require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets/" } })
