@@ -13,9 +13,8 @@ in {
   #     "switchaudio-osx"
   #     "ical-buddy"
   #   ];
-  #   casks = [
-  #     "todoist"
-  #     "google-chrome"
+#   casks = [
+#     "google-chrome"
   #     "affinity-designer"
   #     "affinity-photo"
   #     "affinity-publisher"

@@ -24,7 +24,6 @@
     makemkv
 
     spotify
-    todoist-electron
     vesktop
 
     wine
