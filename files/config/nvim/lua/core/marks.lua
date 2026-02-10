@@ -112,83 +112,7 @@ local function clear_all_marks()
 	vim.cmd("delmarks A-Z")
 end
 
----Get the git root directory
----@return string|nil
-local function get_git_root()
-	local result = vim.fn.systemlist("git rev-parse --show-toplevel")
-	if vim.v.shell_error == 0 and result[1] then
-		return result[1]
-	end
-	return nil
-end
 
----Get the marks file path
----@return string|nil
-local function get_marks_file()
-	local git_root = get_git_root()
-	if git_root then
-		return git_root .. "/.git/nvim-marks.json"
-	end
-	return nil
-end
-
----Save marks to file
-local function save_marks()
-	local file = get_marks_file()
-	if not file then
-		return
-	end
-	local marks = get_all_marks()
-	local json = vim.fn.json_encode(marks)
-	local f = io.open(file, "w")
-	if f then
-		f:write(json)
-		f:close()
-	end
-end
-
----Load marks from file
-local function load_marks()
-	local file = get_marks_file()
-	if not file then
-		return
-	end
-	local f = io.open(file, "r")
-	if not f then
-		return
-	end
-	local content = f:read("*a")
-	f:close()
-	if content == "" then
-		return
-	end
-	local ok, marks = pcall(vim.fn.json_decode, content)
-	if not ok or type(marks) ~= "table" then
-		return
-	end
-	-- Save current position
-	local save_buf = vim.api.nvim_get_current_buf()
-	local save_view = vim.fn.winsaveview()
-
-	for _, m in ipairs(marks) do
-		if m.mark and m.file and m.file ~= "" and m.line and m.line > 0 then
-			pcall(function()
-				vim.cmd("silent! edit " .. vim.fn.fnameescape(m.file))
-				local line_count = vim.api.nvim_buf_line_count(0)
-				local target_line = math.min(m.line, line_count)
-				vim.api.nvim_win_set_cursor(0, { target_line, m.col or 0 })
-				vim.cmd("normal! m" .. m.mark)
-			end)
-		end
-	end
-
-	-- Restore position
-	pcall(function()
-		vim.api.nvim_set_current_buf(save_buf)
-		vim.fn.winrestview(save_view)
-	end)
-	vim.schedule(refresh_all_signs)
-end
 
 ---Add mark at cursor position
 function M.add_mark()
@@ -444,21 +368,6 @@ end
 
 -- Setup autocommands
 local augroup = vim.api.nvim_create_augroup("UserMarks", { clear = true })
-
--- Clear marks on startup, then load from file
-vim.api.nvim_create_autocmd("VimEnter", {
-	group = augroup,
-	callback = function()
-		clear_all_marks()
-		vim.schedule(load_marks)
-	end,
-})
-
--- Save marks on exit
-vim.api.nvim_create_autocmd("VimLeave", {
-	group = augroup,
-	callback = save_marks,
-})
 
 -- Refresh signs on buffer enter and CursorHold (catches native m{letter} usage)
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold" }, {
