@@ -96,9 +96,9 @@ in {
           on = ["c" "b"];
           run =
             if pkgs.stdenv.isLinux
-            then ''shell "wl-copy < \"$0\""''
+            then ''shell "printf '\\033]52;c;%s\\a' \"$(base64 < \"$0\")\" > /dev/tty"''
             else ''shell "osascript -e \"set the clipboard to POSIX file \\\"$0\\\"\" --" "$@"'';
-          desc = "Copy to clipboard";
+          desc = "Copy file contents to clipboard (OSC 52)";
         }
       ];
     };
