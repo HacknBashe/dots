@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 git_common_dir="$(realpath "$(git rev-parse --git-common-dir 2>/dev/null)")" || {
-  echo "Not in a git repo"
+  echo "ERROR: Not in a git repo"
   exit 1
 }
 
@@ -14,45 +14,55 @@ repo_name="$(basename "$main_repo_dir")"
 # Check if a branch name was provided as an argument
 if [ $# -eq 1 ]; then
   target_branch="$1"
-  echo "Looking for worktree with branch: $target_branch"
-  
+
   # Get all worktrees with their branches
   worktree_info=$(git worktree list --porcelain)
-  
+
   # Find the worktree path for the specified branch
   selected_path=""
   selected_branch=""
-  
+
   while IFS= read -r line; do
     if [[ $line == worktree* ]]; then
       current_path="${line#worktree }"
     elif [[ $line == branch* ]]; then
       current_branch="${line#branch }"
-      current_branch="${current_branch#refs/heads/}"  # Remove refs/heads/ prefix if present
-      
+      current_branch="${current_branch#refs/heads/}" # Remove refs/heads/ prefix if present
+
       if [[ "$current_branch" == "$target_branch" ]]; then
         selected_path="$current_path"
         selected_branch="$current_branch"
         break
       fi
     fi
-  done <<< "$worktree_info"
-  
+  done <<<"$worktree_info"
+
   if [ -z "$selected_path" ]; then
-    echo "Error: No worktree found for branch '$target_branch'"
-    exit 1
+    echo "No worktree found for branch '$target_branch'"
+    echo "Available worktrees:"
+    git worktree list
+    echo ""
+    echo "Attempting to delete branch directly..."
+    git branch -D "$target_branch"
+    exit $?
   fi
 else
   # No argument provided, use fzf selection (original behavior)
-  # Get all worktrees with their branches
   worktree_info=$(git worktree list --porcelain)
 
   # Extract and format worktree paths and branches for selection
+  # Filter out the main worktree (it contains the .git directory)
   formatted_worktrees=$(echo "$worktree_info" |
     awk 'BEGIN {path=""; branch=""} 
     /^worktree / {path=substr($0, 10)} 
     /^branch / {branch=substr($0, 8)} 
-    branch != "" && path != "" {print path " [" branch "]"; path=""; branch=""}')
+    branch != "" && path != "" {print path " [" branch "]"; path=""; branch=""}' |
+    grep -v "^${main_repo_dir} ")
+
+  if [ -z "$formatted_worktrees" ]; then
+    echo "No deletable worktrees found (main worktree is protected)."
+    exit 0
+  fi
 
   # Let user select a worktree to delete
   selected=$(echo "$formatted_worktrees" | fzf --height 10 --reverse) || exit 1
@@ -62,7 +72,17 @@ else
   selected_branch=$(echo "$selected" | sed -E 's/.*\[(.*)\].*/\1/' | sed 's/refs\/heads\///')
 fi
 
-# Display which worktree and branch will be deleted
+# Protect the main worktree — it contains the .git directory that all worktrees depend on
+selected_path_resolved="$(realpath "$selected_path" 2>/dev/null || echo "$selected_path")"
+main_repo_resolved="$(realpath "$main_repo_dir")"
+
+if [[ "$selected_path_resolved" == "$main_repo_resolved" ]]; then
+  echo "ERROR: Refusing to delete the main worktree at $selected_path"
+  echo "This is the primary repository that contains the .git directory."
+  echo "Deleting it would destroy all worktrees."
+  exit 1
+fi
+
 echo "Removing worktree at $selected_path"
 echo "and deleting branch $selected_branch"
 
@@ -75,41 +95,26 @@ if tmux has-session -t "$session_name" 2>/dev/null; then
   tmux kill-session -t "$session_name"
 fi
 
-current_dir=$PWD
-
 # Make sure we're not in the worktree we're trying to delete
-if [[ "$current_dir" == "$selected_path"* ]]; then
-  echo "Cannot delete the worktree you're currently in. Moving to the main repo..."
+if [[ "$PWD" == "$selected_path"* ]]; then
   cd "$main_repo_dir"
 fi
 
 # Remove the worktree and delete the branch
-worktree_remove_output=$(git worktree remove --force "$selected_path" 2>&1)
-worktree_remove_exit=$?
-echo "$worktree_remove_output"
+git worktree remove --force "$selected_path" 2>/dev/null
 
 # If git worktree remove failed but directory still exists, force cleanup
-if [ $worktree_remove_exit -ne 0 ] && [ -d "$selected_path" ]; then
-  echo "Worktree remove failed, forcing directory cleanup..."
+if [ -d "$selected_path" ]; then
   rm -rf "$selected_path"
-  
-  if [ $? -eq 0 ]; then
-    # Directory removed, now prune stale worktree entries
-    git worktree prune
-  fi
+  git worktree prune
 fi
 
 # Delete the branch (regardless of how the directory was removed)
-if [ ! -d "$selected_path" ]; then
-  branch_delete_output=$(git branch -D "$selected_branch" 2>&1)
-  branch_delete_exit=$?
-  echo "$branch_delete_output"
-  
-  if [ $branch_delete_exit -eq 0 ]; then
-    echo "Worktree and branch deleted successfully."
-  else
-    echo "Warning: Directory removed but branch deletion failed"
-  fi
+if [ -d "$selected_path" ]; then
+  echo "ERROR: Directory still exists at $selected_path"
+  exit 1
 else
-  echo "Error: Failed to remove directory $selected_path"
+  git branch -D "$selected_branch" 2>/dev/null
 fi
+
+git worktree list
