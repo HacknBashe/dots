@@ -25,6 +25,11 @@ in {
       };
       systemd-boot.enable = true;
     };
+    # USB audio quirk for Quad Cortex async clock handling
+    # quirk_flags=16 = PLAYBACK_FIRST: Start playback stream first in implicit feedback mode
+    extraModprobeConfig = ''
+      options snd-usb-audio vid=0x152a pid=0x880a quirk_flags=16
+    '';
   };
 
   time.timeZone = "America/New_York";
@@ -127,7 +132,17 @@ in {
       value = "unlimited";
     }
   ];
+
+  # Realtime priority for pulse audio is required for low-latency audio and to prevent xruns, especially with async USB audio (Quad Cortex)
   security.rtkit.enable = true;
+
+  # Use performance CPU governor for low-latency audio
+  powerManagement.cpuFreqGovernor = "performance";
+
+  # Disable USB autosuspend for Quad Cortex (defensively prevernting audio issues)
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="152a", ATTR{idProduct}=="880a", ATTR{power/autosuspend}="-1", ATTR{power/control}="on"
+  '';
 
   services.pulseaudio.enable = false;
   services.pipewire = {
@@ -137,10 +152,12 @@ in {
     pulse.enable = true;
     extraConfig = {
       pipewire = {
+        # quantum=256 provides buffer headroom for async USB audio (Quad Cortex)
+        # and fixes Rocksmith USB guitar adapter audio issues
         "10-clock-settings" = {
           "context.properties" = {
-            "default.clock.min-quantum" = 16;
-            "default.clock.quantum" = 32;
+            "default.clock.min-quantum" = 64;
+            "default.clock.quantum" = 256;
             "default.clock.rate" = 48000;
           };
         };
@@ -170,12 +187,11 @@ in {
                 {
                    matches = [
                      {
-                       device.name = "alsa_card.usb-GHW_Micro_GHW_USB_AUDIO_2020-02-20-0000-0000-0000--00"
+                       device.name = "alsa_card.usb-Generic_USB_Audio-00"
                      }
                    ]
                    actions = {
                      update-props = {
-                       device.profile = "pro-audio"
                        device.nick = "Soundbar"
                        device.description = "Soundbar"
                      }
@@ -234,18 +250,7 @@ in {
                      }
                    }
                 }
-                {
-                   matches = [
-                     {
-                       node.nick = "USB Audio"
-                     }
-                   ]
-                   actions = {
-                     update-props = {
-                       node.disabled = true
-                     }
-                   }
-                }
+
                 {
                    matches = [
                      {
