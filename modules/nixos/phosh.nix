@@ -7,6 +7,11 @@
     group = "users";
   };
 
+  # GNOME Keyring - unlocks secrets at login for Brave, git, etc.
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services.phosh.enableGnomeKeyring = true;
+
   # Mobile-friendly packages
   environment.systemPackages = with pkgs; [
     phosh
