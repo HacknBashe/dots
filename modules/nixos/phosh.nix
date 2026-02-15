@@ -3,11 +3,8 @@
   #services.xserver.enable = true;
   services.xserver.desktopManager.phosh = {
     enable = true;
-    user = "phosh";
+    user = "nick";
     group = "users";
-  };
-  services.displayManager.gdm = {
-    enable = true;
   };
 
   # Mobile-friendly packages
@@ -23,7 +20,7 @@
 
   # Mobile power management
   services.upower.enable = true;
-  services.logind.lidSwitch = "suspend";
+  services.logind.settings.Login.HandleLidSwitch = "suspend";
 
   # Mobile networking
   networking.networkmanager.enable = true;

@@ -21,6 +21,7 @@
     "ipu3_imgu"
   ];
 
+  hardware.microsoft-surface.kernelVersion = "stable";
   # Disable hardware auto brightness
   boot.kernelParams = [
     "acpi_backlight=vendor"
@@ -70,31 +71,11 @@
         extraGroups = ["networkmanager" "wheel" "users"];
         packages = with pkgs; [];
       };
-      kids = {
-        isNormalUser = true;
-        description = "kids";
-        hashedPassword = "";
-        extraGroups = ["users"];
-        packages = with pkgs; [];
-      };
-      phosh = {
-        group = "phosh";
-        isSystemUser = true;
-        description = "phosh";
-        extraGroups = [];
-      };
-    };
-    groups = {
-      phosh = {};
     };
   };
 
   # Enable automatic login for the user.
   # services.getty.autologinUser = "nick";
-
-  # Allow empty passwords for kids user
-  security.pam.services.login.allowNullPassword = true;
-  security.pam.services.passwd.allowNullPassword = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -106,9 +87,8 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     neovim
-    firefox
+    brave
     git
-    ghostty
     surface-control
     waydroid
     wine

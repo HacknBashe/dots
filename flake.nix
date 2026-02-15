@@ -16,7 +16,7 @@
     };
 
     ghostty = {
-      url = "git+ssh://git@github.com/ghostty-org/ghostty";
+      url = "git+https://github.com/ghostty-org/ghostty";
     };
 
     hyprland = {
@@ -39,7 +39,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
+    # nixos-hardware.url = "github:NixOS/nixos-hardware";
+    nixos-hardware.url = "github:mexisme/nixos-hardware/microsoft-surface/update-kernel-6.18.8";
 
     # For Steam
     extest = {
@@ -214,11 +215,7 @@
                   ./modules/home-manager/tmux.nix
                   ./modules/home-manager/btop.nix
                   ./modules/home-manager/opencode.nix
-                ];
-              };
-              kids = {
-                imports = [
-                  ./hosts/nightmare/kids.nix
+                  ./modules/home-manager/ghostty.nix
                 ];
               };
             };

@@ -16,7 +16,6 @@
     then
       with pkgs; [
         distrobox
-        vscode.fhs
         android-tools
         claude-code
       ]
