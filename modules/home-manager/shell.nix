@@ -16,20 +16,6 @@
     else
       with pkgs; [
       ];
-  hubspotFiles =
-    if config.isHubspot
-    then {
-      ".ssh/custom_ssh_config" = {
-        source = ../../files/config/ssh/config;
-        target = ".ssh/custom_ssh_config";
-      };
-    }
-    else {
-      ".ssh/config" = {
-        source = ../../files/config/ssh/config;
-        target = ".ssh/config";
-      };
-    };
 in {
   programs.zsh = {
     enable = false;
@@ -323,7 +309,7 @@ in {
         target = ".config/fastfetch/config.jsonc";
       };
     }
-    // hubspotFiles;
+;
 
   home.activation = {
     download-whisper-model = lib.hm.dag.entryAfter ["writeBoundary"] ''
