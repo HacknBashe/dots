@@ -80,11 +80,23 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # Enable Waydroid
+  # Enable Waydroid (use nftables backend - kernel lacks legacy iptables modules)
   virtualisation.waydroid.enable = true;
+  nixpkgs.overlays = [
+    (final: prev: {
+      waydroid = prev.waydroid.override {
+        withNftables = true;
+      };
+    })
+  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+  };
+
   environment.systemPackages = with pkgs; [
     neovim
     brave
@@ -92,6 +104,7 @@
     surface-control
     waydroid
     wine
+    prismlauncher
   ];
 
   # Surface low-power profile on boot
