@@ -135,6 +135,9 @@
           ./modules/nixos/jellyfin.nix
           ./modules/nixos/caddy.nix
           ./modules/nixos/adguard.nix
+          ./modules/nixos/silverbullet.nix
+          sops-nix.nixosModules.sops
+          ./modules/nixos/sops.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;

@@ -1,4 +1,4 @@
-{...}: {
+{config, pkgs, ...}: {
   services.caddy = {
     enable = true;
 
@@ -8,10 +8,11 @@
         "tv.hackford.us"
         "ads.hackford.us"
         "dev.hackford.us"
+        "notes.hackford.us"
       ];
 
       extraConfig = ''
-        @bare host hackford.us tv.hackford.us ads.hackford.us dev.hackford.us
+        @bare host hackford.us tv.hackford.us ads.hackford.us dev.hackford.us notes.hackford.us
         redir @bare https://www.{host}{uri} permanent
       '';
     };
@@ -23,6 +24,7 @@
         "www.ads.hackford.us"
         "www.dash.hackford.us"
         "www.dev.hackford.us"
+        "www.notes.hackford.us"
       ];
 
       extraConfig = ''
@@ -50,10 +52,14 @@
         # Motion Canvas dev server
         @dev host www.dev.hackford.us
         handle @dev {
-          basic_auth {
-            nick $2a$14$Hux.DB1So6okMY4lDU2EMOWcQIBiIXMrSPuvgnlHthcZgnSq.gjhe
-          }
+          import /run/caddy/basic_auth
           reverse_proxy localhost:9000
+        }
+
+        # SilverBullet notes
+        @notes host www.notes.hackford.us
+        handle @notes {
+          reverse_proxy localhost:3001
         }
 
         handle {
@@ -62,6 +68,20 @@
       '';
     };
   };
+
+  systemd.services.caddy.serviceConfig.ExecStartPre = let
+    hashFile = config.sops.secrets.caddy_basic_auth_hash.path;
+    script = pkgs.writeShellScript "caddy-gen-basic-auth" ''
+      mkdir -p /run/caddy
+      cat > /run/caddy/basic_auth <<EOF
+      basic_auth {
+        nick $(cat ${hashFile})
+      }
+      EOF
+      chown caddy:caddy /run/caddy/basic_auth
+      chmod 600 /run/caddy/basic_auth
+    '';
+  in ["!${script}"];
 
   networking.firewall.allowedTCPPorts = [80 443];
 
