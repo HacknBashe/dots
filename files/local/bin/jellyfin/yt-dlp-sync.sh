@@ -11,8 +11,8 @@ fi
 
 # format: "channel_url|directory_name"
 CHANNELS=(
-	"https://www.youtube.com/@msrachelforlittleones|Ms. Rachel"
-	"https://www.youtube.com/@DannyGoSongs|Danny Go"
+	"https://www.youtube.com/@msrachel|Ms. Rachel"
+	"https://www.youtube.com/@DannyGo|Danny Go"
 )
 
 for entry in "${CHANNELS[@]}"; do
