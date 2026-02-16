@@ -3,3 +3,23 @@ files/config/ags/@girs
 
 # Explicitly include bin directory even though hubspot ignores globally
 !files/local/bin
+
+# Private keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+*.age
+
+# Environment and credentials
+.env
+.env.*
+credentials.json
+service-account*.json
+
+# Decrypted sops files
+*.dec
+*.dec.*
+*.cleartext
