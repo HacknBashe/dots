@@ -125,3 +125,19 @@ local function ToggleScratch()
 	vim.wo[win_id].relativenumber = true
 end
 vim.keymap.set("n", "<leader>vp", ToggleScratch, { desc = "Toggle scratch buffer" })
+
+-- Shift+Tab to delete whitespace backwards (up to shiftwidth)
+vim.keymap.set("i", "<S-Tab>", function()
+	local col = vim.fn.col(".")
+	local line = vim.fn.getline(".")
+	local before_cursor = line:sub(1, col - 1)
+
+	-- Count trailing whitespace before cursor
+	local spaces = before_cursor:match("(%s*)$") or ""
+	local to_delete = math.min(#spaces, vim.bo.shiftwidth)
+
+	if to_delete > 0 then
+		local bs = vim.api.nvim_replace_termcodes(string.rep("<BS>", to_delete), true, false, true)
+		vim.api.nvim_feedkeys(bs, "n", false)
+	end
+end, { desc = "Delete whitespace backwards" })

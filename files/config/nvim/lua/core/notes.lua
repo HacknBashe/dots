@@ -78,7 +78,7 @@ local function create_note()
 	end)
 end
 
--- Visual selection → markdown link + create target file
+-- Visual selection → wiki-link + create target file
 local function link_selection()
 	-- Save current register
 	local save_reg = vim.fn.getreg('"')
@@ -92,33 +92,33 @@ local function link_selection()
 	vim.fn.setreg('"', save_reg, save_regtype)
 
 	if text and text ~= "" then
-		local filename = to_kebab(text) .. ".md"
-		local link = "[" .. text .. "](./" .. filename .. ")"
+		local pagename = to_kebab(text)
+		local link = "[[" .. pagename .. "|" .. text .. "]]"
 
 		-- Replace visual selection with link
 		vim.cmd('normal! gv"_c' .. link)
 		vim.cmd("normal! `<")
 
 		-- Create empty target file if it doesn't exist (autocmd will add frontmatter)
-		local filepath = notes_dir .. "/" .. filename
+		local filepath = notes_dir .. "/" .. pagename .. ".md"
 		if vim.fn.filereadable(filepath) == 0 then
 			vim.fn.writefile({}, filepath)
 		end
 	end
 end
 
--- Insert link: prompt for text, insert link at cursor + create target file
+-- Insert link: prompt for text, insert wiki-link at cursor + create target file
 local function insert_link()
 	vim.ui.input({ prompt = "Link text: " }, function(text)
 		if text and text ~= "" then
-			local filename = to_kebab(text) .. ".md"
-			local link = "[" .. text .. "](./" .. filename .. ")"
+			local pagename = to_kebab(text)
+			local link = "[[" .. pagename .. "|" .. text .. "]]"
 
 			-- Insert link at cursor
 			vim.api.nvim_put({ link }, "c", true, true)
 
 			-- Create empty target file if it doesn't exist (autocmd will add frontmatter)
-			local filepath = notes_dir .. "/" .. filename
+			local filepath = notes_dir .. "/" .. pagename .. ".md"
 			if vim.fn.filereadable(filepath) == 0 then
 				vim.fn.writefile({}, filepath)
 			end
@@ -126,19 +126,53 @@ local function insert_link()
 	end)
 end
 
--- Toggle checkbox: [ ] → [x] → [-] → [ ]
+-- Follow wiki-link under cursor (for gf)
+local function follow_wiki_link()
+	local line = vim.api.nvim_get_current_line()
+	local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 1-indexed
+
+	-- Find wiki-link at cursor position: [[page]] or [[page|text]]
+	local start_pos = 1
+	while true do
+		local link_start, link_end, pagename = line:find("%[%[([^%]|]+)[^%]]*%]%]", start_pos)
+		if not link_start then break end
+
+		if col >= link_start and col <= link_end then
+			-- Found the link under cursor
+			open_note(pagename .. ".md")
+			return true
+		end
+		start_pos = link_end + 1
+	end
+
+	-- No wiki-link found, fall back to default gf
+	return false
+end
+
+-- Toggle checkbox: [ ]/[] → [x] → [-] → [ ]
+-- Also converts plain lines/empty lines to tasks
 local function toggle_checkbox()
 	local line = vim.api.nvim_get_current_line()
 	local new_line = line
 
-	if line:match("^%s*- %[ %]") then
-		new_line = line:gsub("^(%s*- )%[ %]", "%1[x]")
+	if line:match("^%s*- %[ %]") or line:match("^%s*- %[%]") then
+		-- [ ] or [] → [x]
+		new_line = line:gsub("^(%s*- )%[%s?%]", "%1[x]")
 	elseif line:match("^%s*- %[x%]") then
+		-- [x] → [-]
 		new_line = line:gsub("^(%s*- )%[x%]", "%1[-]")
-	elseif line:match("^%s*- %[-%]") then
-		new_line = line:gsub("^(%s*- )%[-%]", "%1[ ]")
+	elseif line:match("^%s*- %[%-%]") then
+		-- [-] → [ ]
+		new_line = line:gsub("^(%s*- )%[%-%]", "%1[ ]")
 	elseif line:match("^%s*-") then
+		-- Bullet without checkbox → add checkbox
 		new_line = line:gsub("^(%s*-)", "%1 [ ]")
+	elseif line:match("^%s*$") then
+		-- Empty line → new task
+		new_line = "- [ ] "
+	else
+		-- Plain text → convert to task (preserve indentation)
+		new_line = line:gsub("^(%s*)(.*)", "%1- [ ] %2")
 	end
 
 	if new_line ~= line then
@@ -165,11 +199,20 @@ vim.keymap.set("n", "<leader>nl", insert_link, { desc = "Insert link" })
 
 vim.keymap.set("v", "<leader>nl", link_selection, { desc = "Create link from selection" })
 
--- Markdown-specific: checkbox toggle on Enter
+-- Insert today's date
+vim.keymap.set("i", "<C-d>", '<C-r>=strftime("%Y-%m-%d")<CR>', { desc = "Insert date" })
+
+-- Markdown-specific keymaps
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "markdown",
 	callback = function()
 		vim.keymap.set("n", "<CR>", toggle_checkbox, { buffer = true, desc = "Toggle checkbox" })
+		vim.keymap.set("n", "gf", function()
+			if not follow_wiki_link() then
+				-- Fall back to default gf behavior
+				vim.cmd("normal! gF")
+			end
+		end, { buffer = true, desc = "Follow wiki-link or file" })
 	end,
 })
 
