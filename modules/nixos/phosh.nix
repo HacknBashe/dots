@@ -7,6 +7,13 @@
     group = "users";
   };
 
+  # XDG Portal for file chooser dialogs, screen sharing, etc.
+  xdg.portal = {
+    enable = true;
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
+    config.phosh.default = ["gtk"];
+  };
+
   # GNOME Keyring - unlocks secrets at login for Brave, git, etc.
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.login.enableGnomeKeyring = true;
