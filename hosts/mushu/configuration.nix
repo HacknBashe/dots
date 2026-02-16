@@ -42,6 +42,10 @@ in {
 
   services.openssh = {
     enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+    };
     extraConfig = ''
       SetEnv TERM=xterm-256color
     '';

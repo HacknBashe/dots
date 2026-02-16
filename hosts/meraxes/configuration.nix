@@ -55,7 +55,13 @@ in {
     enable = true;
     allowInterfaces = ["enp4s0" "wlan0"];
   };
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+    };
+  };
 
   hardware = {
     bluetooth = {
