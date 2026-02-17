@@ -38,8 +38,9 @@
     builtins.readFile ../../files/local/bin/silverbullet/task-processor.py
   );
 
-  # Wrapper script that runs the Python script
+  # Wrapper script that runs the Python script with prettier available
   taskProcessorScript = pkgs.writeShellScriptBin "silverbullet-task-processor" ''
+    export PATH="${pkgs.nodePackages.prettier}/bin:$PATH"
     exec ${pythonWithPackages}/bin/python3 ${scriptFile}
   '';
 in {
