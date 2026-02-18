@@ -1,5 +1,3 @@
-local statusMap = require("lib.git-status-map").statusMap
-
 return {
 	"echasnovski/mini.nvim",
 	lazy = false,
@@ -91,8 +89,6 @@ return {
 						local mode, mode_hl = statusline.section_mode({ trunc_width = 120 })
 
 						local git_info = statusline.section_git({ trunc_width = 75 })
-						local branch, status = git_info:match("^(.-)%s*%((..)%s*%)$")
-						status = statusMap[status] or { symbol = "?", hlGroup = "NonText" }
 
 						local diff = statusline.section_diff({ trunc_width = 75 })
 						local added, changed, removed = "", "", ""
@@ -110,13 +106,16 @@ return {
 							infos = diagnostics:match("(I%d+)") or ""
 							hints = diagnostics:match("(H%d+)") or ""
 						end
-						local ai = require("lib.mini-ai-status")()
 
 						local filename = statusline.section_filename({ trunc_width = 140 })
 
 						local lsp = statusline.section_lsp({ trunc_width = 75 })
-						local fileinfo = statusline.section_fileinfo({ trunc_width = 120 })
 						local search = statusline.section_searchcount({ trunc_width = 75 })
+
+						-- Get filetype with language-colored icon from MiniIcons
+						local ft = vim.bo.filetype
+						local ft_icon, ft_hl = MiniIcons.get("filetype", ft ~= "" and ft or "text")
+						local ft_display = ft ~= "" and (ft_icon .. " " .. ft) or ""
 
 						local mode_map = {
 							["N"] = "󰒘",
@@ -127,7 +126,13 @@ return {
 
 						local status_hl = vim.api.nvim_get_hl(0, { name = "StatusLine" })
 
-						local git_status_hl = vim.api.nvim_get_hl(0, { name = status.hlGroup })
+						-- Get mode color (bg of mode_hl) and create inverted highlight for corners
+						local mode_hl_def = vim.api.nvim_get_hl(0, { name = mode_hl })
+						local night = require("tokyonight.colors").setup({ style = "night" })
+						vim.api.nvim_set_hl(0, "MiniStatuslineModeCorner", {
+							fg = mode_hl_def.bg,
+							bg = night.bg_dark,
+						})
 
 						local diff_add_hl = vim.api.nvim_get_hl(0, { name = "MiniDiffSignAdd" })
 						local changed_hl = vim.api.nvim_get_hl(0, { name = "Changed" })
@@ -138,8 +143,10 @@ return {
 						local diag_info_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticInfo" })
 						local diag_hint_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticHint" })
 
-						vim.api.nvim_set_hl(0, "MiniStatuslineGitStatus", {
-							fg = git_status_hl.fg,
+						-- Git branch in orange (matches MiniIcons git color)
+						local git_icon_hl = vim.api.nvim_get_hl(0, { name = "MiniIconsOrange", link = false })
+						vim.api.nvim_set_hl(0, "MiniStatuslineGit", {
+							fg = git_icon_hl.fg,
 							bg = status_hl.bg,
 						})
 
@@ -173,9 +180,47 @@ return {
 							bg = status_hl.bg,
 						})
 
+						-- Filetype with language-specific color (link=false resolves MiniIcons linked groups)
+						local ft_hl_def = vim.api.nvim_get_hl(0, { name = ft_hl, link = false })
+						vim.api.nvim_set_hl(0, "MiniStatuslineFileType", {
+							fg = ft_hl_def.fg,
+							bg = status_hl.bg,
+						})
+
+						-- File info with colored segments
+						local function get_filesize()
+							local size = vim.fn.getfsize(vim.fn.expand("%:p"))
+							if size <= 0 then return "" end
+							if size < 1024 then return size .. "B" end
+							if size < 1024 * 1024 then return string.format("%.1fK", size / 1024) end
+							return string.format("%.1fM", size / (1024 * 1024))
+						end
+
+						local filesize = get_filesize()
+						local encoding = vim.bo.fileencoding ~= "" and vim.bo.fileencoding or vim.o.encoding
+						local format = vim.bo.fileformat
+
+						-- Fileinfo colors: encoding=warning yellow, format=changed teal, size=comment grey
+						vim.api.nvim_set_hl(0, "MiniStatuslineFileSize", {
+							fg = night.comment,
+							bg = status_hl.bg,
+						})
+						vim.api.nvim_set_hl(0, "MiniStatuslineEncoding", {
+							fg = changed_hl.fg, -- cyan like git changed
+							bg = status_hl.bg,
+						})
+						vim.api.nvim_set_hl(0, "MiniStatuslineFormat", {
+							fg = night.green, -- green for unix
+							bg = status_hl.bg,
+						})
+						vim.api.nvim_set_hl(0, "MiniStatuslineLsp", {
+							fg = diag_warn_hl.fg, -- yellow like warnings
+							bg = status_hl.bg,
+						})
+
 						return statusline.combine_groups({
-							{ hl = mode_hl, strings = { mode_map[mode:sub(1, 1)] } },
-							{ hl = "MiniStatuslineGitStatus", strings = { branch, status.symbol } },
+							{ hl = "MiniStatuslineModeCorner", strings = { mode_map[mode:sub(1, 1)] } },
+							{ hl = "MiniStatuslineGit", strings = { git_info } },
 
 							{ hl = "MiniStatuslineDiffAdd", strings = { added } },
 							{ hl = "MiniStatuslineChanged", strings = { changed } },
@@ -189,8 +234,12 @@ return {
 							"%<", -- Mark general truncate point
 							{ hl = "Statusline", strings = { filename } },
 							"%=", -- End left alignment
-							{ hl = "Statusline", strings = { ai, lsp, fileinfo } },
-							{ hl = mode_hl, strings = { search, "%l:%2v" } },
+							{ hl = "MiniStatuslineLsp", strings = { lsp } },
+							{ hl = "MiniStatuslineFileType", strings = { ft_display } },
+							{ hl = "MiniStatuslineEncoding", strings = { encoding } },
+							{ hl = "MiniStatuslineFormat", strings = { format } },
+							{ hl = "MiniStatuslineFileSize", strings = { filesize } },
+							{ hl = "MiniStatuslineModeCorner", strings = { search, "%l:%2v" } },
 						})
 					end,
 				},
