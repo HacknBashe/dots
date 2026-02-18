@@ -175,15 +175,38 @@ For HubSpot Social team repositories:
 
 ## Output Format
 
-Output ONLY the appropriate GitHub CLI command:
+### When called from a script (context is piped in via stdin)
 
-### For New PRs
+If the prompt states you are being called from a script, or instructs you not to execute commands:
+
+- Output ONLY the `gh` command as text inside a single fenced code block
+- **DO NOT** execute any commands or use the bash tool
+- The calling script handles execution
+- Include `--web` for new PRs (it works in the terminal context the script runs in)
+
+**For new PRs:**
 
 ```bash
 gh pr create --title "TITLE_HERE" --body "BODY_HERE" --assignee nhackford --web
 ```
 
-### For Existing PRs
+**For existing PRs:**
+
+```bash
+gh pr edit --title "TITLE_HERE" --body "BODY_HERE"
+```
+
+### When running interactively (user asks in conversation)
+
+Execute the command directly.
+
+**For new PRs:**
+
+```bash
+gh pr create --title "TITLE_HERE" --body "BODY_HERE" --assignee nhackford --web
+```
+
+**For existing PRs:**
 
 ```bash
 gh pr edit --title "TITLE_HERE" --body "BODY_HERE"
@@ -191,6 +214,7 @@ gh pr edit --title "TITLE_HERE" --body "BODY_HERE"
 
 ### Critical Requirements
 
+- **Execute EXACTLY ONE `gh pr create` OR `gh pr edit` — never both. Do NOT run a follow-up edit after creating a PR. Do NOT run any additional `gh` commands that modify the PR after the initial command.**
 - Use proper shell escaping for the title and body
 - The PR body MUST start with "# Changes"
 - Escape quotes and special characters properly for shell execution
