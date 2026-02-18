@@ -4,7 +4,7 @@
   inputs,
   ...
 }: {
-  home.packages = [inputs.opencode.packages.${pkgs.system}.default];
+  home.packages = [inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default];
 
   home.file = {
     "opencode/opencode.json" = {
