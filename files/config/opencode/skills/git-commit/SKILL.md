@@ -25,15 +25,13 @@ Use this skill when:
 
 All commit messages must follow this structure:
 
-```
 <type>(<scope>): <subject>
 
 [optional body]
 
 [optional footer]
-```
 
-Type and scope are always required
+Type and scope are always required. The actual commit message is plain text - do NOT include markdown formatting like backticks
 
 ### Type (Required)
 
@@ -119,40 +117,26 @@ The scope should be the **name of the component/package/module** being modified:
 
 ### Good Commits
 
-```
-feat(auth): add password reset flow
-
-fix(parser): handle malformed JSON without crashing
-
-tweak(eslint): disable no-console for dev environment
-
-chore(deps): update all npm packages to latest
-
-refactor(api): extract database queries to repository layer
-
-docs(readme): add troubleshooting section
-
-test(auth): add unit tests for token validation
-
-perf(render): lazy load images below fold
-
-style(components): run prettier on all files
-
-ci(github): cache npm dependencies in workflow
-
-build(vite): enable gzip compression for production
-```
+- feat(auth): add password reset flow
+- fix(parser): handle malformed JSON without crashing
+- tweak(eslint): disable no-console for dev environment
+- chore(deps): update all npm packages to latest
+- refactor(api): extract database queries to repository layer
+- docs(readme): add troubleshooting section
+- test(auth): add unit tests for token validation
+- perf(render): lazy load images below fold
+- style(components): run prettier on all files
+- ci(github): cache npm dependencies in workflow
+- build(vite): enable gzip compression for production
 
 ### Bad Commits (Don't do this)
 
-```
-Fixed stuff                           # Too vague, no type/scope
-feat: Added new feature.              # Capitalized, has period, no scope
-update config                         # No type, not imperative
-WIP                                   # Not descriptive
-bug(auth): Fixes the login bug        # Use 'fix' not 'bug', capitalized
-feat(everything): made changes        # Scope too broad, vague
-```
+- Fixed stuff — too vague, no type/scope
+- feat: Added new feature. — capitalized, has period, no scope
+- update config — no type, not imperative
+- WIP — not descriptive
+- bug(auth): Fixes the login bug — use 'fix' not 'bug', capitalized
+- feat(everything): made changes — scope too broad, vague
 
 ---
 

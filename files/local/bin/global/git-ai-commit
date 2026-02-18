@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 # Determine the correct opencode command (dvx wrapper for HubSpot auth or direct)
+# Use Sonnet for speed/cost
 if command -v dvx &>/dev/null; then
-    OPENCODE_CMD="dvx opencode"
+    OPENCODE_CMD="dvx opencode run -m anthropic/claude-sonnet-4-0"
 else
-    OPENCODE_CMD="opencode"
+    OPENCODE_CMD="opencode run -m anthropic/claude-sonnet-4-0"
 fi
 
 # Get staged changes
@@ -17,7 +18,24 @@ if [ -z "$staged_diff" ]; then
 fi
 
 # Generate commit message using Claude
-commit_message=$(echo "$staged_diff" | $OPENCODE_CMD "run" "Generate a commit message for these staged changes. Return only the commit message, no explanations.")
+# The prompt must be VERY explicit to avoid explanations/analysis in output
+raw_output=$(echo "$staged_diff" | $OPENCODE_CMD "You are a commit message generator. Output ONLY a single-line commit message in the format: type(scope): description
+
+Rules:
+- Output NOTHING except the commit message itself
+- No explanations, no analysis, no markdown, no code blocks
+- Just one line: type(scope): description
+
+Generate the commit message now:")
+
+# Extract only the line that matches commit format: type(scope): description
+# This filters out any explanations or extra output
+commit_message=$(echo "$raw_output" | grep -E '^(feat|fix|tweak|chore|refactor|docs|test|perf|style|ci|build)\([^)]+\):' | head -1)
+
+# Fallback: if no matching line found, use first non-empty line
+if [ -z "$commit_message" ]; then
+    commit_message=$(echo "$raw_output" | grep -v '^```' | grep -v '^$' | head -1)
+fi
 
 # Commit with the generated message
 git commit -m "$commit_message"
