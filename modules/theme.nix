@@ -146,8 +146,8 @@ in {
       };
 
       colors = {
-        # Night background + Moon colors
-        background = "#1a1b26";
+        # Night main background + Moon everything else
+        background = "#1a1b26"; # Night
         foreground = "#c8d3f5";
         cursor = "#c8d3f5";
         text = "#1a1b26";
@@ -176,6 +176,7 @@ in {
           red1 = "#c53b53"; # Error color
           purple = "#fca7ea"; # Pink-ish, per folke's naming
           bgHighlight = "#2f334d";
+          bgStatusline = "#1e2030";
         };
         extended = {
           # Blues
@@ -184,7 +185,7 @@ in {
           blue2 = "#0db9d7"; # Info diagnostics
           blue5 = "#89ddff"; # Operators, punctuation
           # Greens
-          green1 = "#4fd6be"; # Properties, teal
+          green1 = "#4fd6be"; # Teal
           green2 = "#41a6b5"; # Hints
           # Other
           magenta2 = "#ff007c"; # Flash, emphasis
@@ -192,8 +193,7 @@ in {
           dark3 = "#545c7e"; # Dimmed text
           dark5 = "#737aa2"; # Concealed
           fgGutter = "#3b4261"; # Line numbers
-          # Night variant backgrounds
-          bgDark = "#16161e"; # Sidebars, floats
+          bgDark = "#16161e"; # Night
         };
       };
     };

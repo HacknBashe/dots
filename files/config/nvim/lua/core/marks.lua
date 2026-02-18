@@ -13,7 +13,7 @@ local mark_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 local last_mark = nil -- Track the last mark we jumped to or set
 
 -- Highlight for gutter signs
-vim.api.nvim_set_hl(0, "MarkSign", { fg = "#c099ff", bold = true })
+vim.api.nvim_set_hl(0, "MarkSign", { link = "Identifier" })
 
 ---Get all uppercase marks with their positions
 ---@return table[] marks Array of {mark, file, line, col}
