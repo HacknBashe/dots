@@ -38,12 +38,12 @@
         set -g status-left-style NONE
         set -g status-right-style NONE
 
-        set -g status-left "#[bg=$thm_dark]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_blue]}  #[fg=$thm_black,bg=$thm_blue] #S #[bg=$thm_grey] "
-        set -g status-right "#[fg=$thm_yellow] #h #[fg=$thm_white,bg=$thm_dark] %y-%m-%d #[fg=$thm_blue]%H:%M "
+        set -g status-left "#[bg=$thm_dark]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_blue]}  #[fg=$thm_blue,bg=$thm_dark] #S #[bg=$thm_grey] "
+        set -g status-right "#[fg=$thm_yellow] #h #[fg=$thm_blue,bg=$thm_dark] %y-%m-%d #[fg=$thm_blue]%H:%M "
         setw -g window-status-activity-style "fg=$thm_white,bg=$thm_orange"
         setw -g window-status-separator ""
         setw -g window-status-format "#[fg=$thm_white,bg=$thm_grey] #I #W "
-        setw -g window-status-current-format "#[fg=$thm_blue,bg=$thm_grey] #I #W "
+        setw -g window-status-current-format "#[fg=$thm_yellow,bg=$thm_grey] #I #W "
       '';
     };
     "tpm" = {
