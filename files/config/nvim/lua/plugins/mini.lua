@@ -129,6 +129,7 @@ return {
 						-- Get mode color (bg of mode_hl) and create inverted highlight for corners
 						local mode_hl_def = vim.api.nvim_get_hl(0, { name = mode_hl })
 						local night = require("tokyonight.colors").setup({ style = "night" })
+						local moon = require("tokyonight.colors").setup({ style = "moon" })
 						vim.api.nvim_set_hl(0, "MiniStatuslineModeCorner", {
 							fg = mode_hl_def.bg,
 							bg = night.bg_dark,
@@ -202,7 +203,7 @@ return {
 
 						-- Fileinfo colors: encoding=warning yellow, format=changed teal, size=comment grey
 						vim.api.nvim_set_hl(0, "MiniStatuslineFileSize", {
-							fg = night.comment,
+							fg = moon.comment,
 							bg = status_hl.bg,
 						})
 						vim.api.nvim_set_hl(0, "MiniStatuslineEncoding", {
@@ -210,11 +211,11 @@ return {
 							bg = status_hl.bg,
 						})
 						vim.api.nvim_set_hl(0, "MiniStatuslineFormat", {
-							fg = night.green, -- green for unix
+							fg = moon.green, -- green for unix
 							bg = status_hl.bg,
 						})
 						vim.api.nvim_set_hl(0, "MiniStatuslineLsp", {
-							fg = diag_warn_hl.fg, -- yellow like warnings
+							fg = moon.magenta, -- actual purple (moon.purple is pink)
 							bg = status_hl.bg,
 						})
 
