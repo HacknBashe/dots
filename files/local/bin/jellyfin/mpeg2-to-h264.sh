@@ -42,12 +42,9 @@ for file in "$@"; do
 	if ffmpeg \
 		-fflags +genpts \
 		-i "${file}.bak" \
-		-vf "fieldmatch,yadif=deint=interlaced,decimate" \
-		-r 24000/1001 \
 		-c:v libx264 -crf 18 -preset slow \
-		-c:a copy \
-		-c:s copy \
-		-map 0 \
+		-c:a aac -b:a 256k \
+		-map 0:v:0 -map 0:a:0 \
 		-y "$file" 2>"$logfile"; then
 		echo "$(date '+%H:%M:%S') OK: $file"
 		rm -f "$logfile"
