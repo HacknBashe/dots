@@ -810,8 +810,9 @@ Rectangle {
 
         // Divider
         Rectangle {
-    width: Math.max(buttonRow.width, monitorRow.width, calendar.width) + Appearance.padding.large * 2
+            width: Math.max(buttonRow.width, monitorRow.width, calendarContainer.width)
             height: 1
+            anchors.horizontalCenter: parent.horizontalCenter
             color: NixConfig.outline
             opacity: 0.3
         }
