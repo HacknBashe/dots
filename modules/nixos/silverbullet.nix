@@ -33,15 +33,15 @@
     ps.watchdog
   ]);
 
-  # Script content from the dots files directory
-  scriptFile = pkgs.writeText "task-processor.py" (
-    builtins.readFile ../../files/local/bin/silverbullet/task-processor.py
-  );
-
-  # Wrapper script that runs the Python script with prettier available
+  # Wrapper script that runs the Python script from the notes repo with prettier available
   taskProcessorScript = pkgs.writeShellScriptBin "silverbullet-task-processor" ''
+    SCRIPT="/home/nick/notes/.scripts/task-processor.py"
+    if [ ! -f "$SCRIPT" ]; then
+      echo "task-processor.py not found at $SCRIPT" >&2
+      exit 1
+    fi
     export PATH="${pkgs.nodePackages.prettier}/bin:$PATH"
-    exec ${pythonWithPackages}/bin/python3 ${scriptFile}
+    exec ${pythonWithPackages}/bin/python3 "$SCRIPT"
   '';
 in {
   systemd.services.silverbullet = {
