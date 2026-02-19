@@ -1,6 +1,5 @@
 {pkgs, ...}: let
-  # Fix TLS handshake errors by rebuilding with system certificates
-  # See: https://github.com/NixOS/nixpkgs/issues/454608
+  # Fix Godot TLS errors: https://github.com/NixOS/nixpkgs/issues/454608
   godot-mono-fixed = pkgs.godot-mono.overrideAttrs (final: prev: {
     unwrapped = prev.unwrapped.overrideAttrs (old: {
       sconsFlags =
@@ -12,25 +11,21 @@
     });
   });
 
-  # Combine Godot's .NET 8 SDK with .NET 9 so csharp-ls can target net8.0 projects
+  # .NET 8 (Godot) + exact .NET 10 runtime from csharp-ls
   combinedDotnet = pkgs.dotnetCorePackages.combinePackages [
     godot-mono-fixed.dotnet-sdk
-    pkgs.dotnet-sdk_9
+    pkgs.csharp-ls.dotnet-runtime
   ];
 in {
   environment.systemPackages = with pkgs; [
     godot-mono-fixed
     combinedDotnet
-
     csharp-ls
     csharpier
-
     monado
   ];
 
-  environment.sessionVariables = {
-    DOTNET_ROOT = "${combinedDotnet}/share/dotnet";
-  };
+  environment.sessionVariables.DOTNET_ROOT = "${combinedDotnet}/share/dotnet";
 
   users.users.nick.extraGroups = ["adbusers"];
 }

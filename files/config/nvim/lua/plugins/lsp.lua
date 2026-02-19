@@ -67,15 +67,21 @@ return {
 			-- Configure csharp_ls with DOTNET_ROOT
 			local dotnet_root = os.getenv("DOTNET_ROOT")
 			if dotnet_root then
-				vim.lsp.config("csharp_ls", {
-					capabilities = lsp_capabilities,
-					cmd = {
-						"env",
-						"DOTNET_ROOT=" .. dotnet_root,
-						"PATH=" .. dotnet_root .. ":" .. os.getenv("PATH"),
-						"csharp-ls",
-					},
-				})
+			vim.lsp.config("csharp_ls", {
+				capabilities = lsp_capabilities,
+				get_language_id = function(bufnr, filetype)
+					if filetype == "cs" then
+						return "csharp"
+					end
+					return filetype
+				end,
+				cmd = {
+					"env",
+					"DOTNET_ROOT=" .. dotnet_root,
+					"PATH=" .. dotnet_root .. ":" .. os.getenv("PATH"),
+					"csharp-ls",
+				},
+			})
 				vim.lsp.enable("csharp_ls")
 			end
 
