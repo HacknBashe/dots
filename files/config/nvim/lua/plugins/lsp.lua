@@ -29,6 +29,28 @@ return {
 
 			require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets/" } })
 
+			-- Workaround: neovim 0.11 LSP floating windows are 1 line too short.
+			-- The nvim_win_text_height() calculation in open_floating_preview
+			-- undercounts by 1 when treesitter markdown concealment is active.
+			-- See: https://github.com/neovim/neovim/issues/25718
+			local orig_open_floating_preview = vim.lsp.util.open_floating_preview
+			vim.lsp.util.open_floating_preview = function(contents, syntax, opts)
+				opts = opts or {}
+				opts.border = opts.border or "rounded"
+				local bufnr, winnr = orig_open_floating_preview(contents, syntax, opts)
+				if winnr and not vim.w[winnr].lsp_float_height_fixed then
+					vim.w[winnr].lsp_float_height_fixed = true
+					vim.defer_fn(function()
+						if vim.api.nvim_win_is_valid(winnr) then
+							local height = vim.api.nvim_win_get_height(winnr)
+							vim.api.nvim_win_set_height(winnr, height + 1)
+							vim.cmd("redraw")
+						end
+					end, 0)
+				end
+				return bufnr, winnr
+			end
+
 			-- Configure lua_ls with custom settings
 			vim.lsp.config("lua_ls", {
 				capabilities = lsp_capabilities,
