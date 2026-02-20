@@ -114,7 +114,8 @@ Singleton {
 
     // Get icon for an app by its class name
     // First checks direct app mapping, then falls back to category lookup
-    function getAppIcon(appClass) {
+    // If initialTitle is provided, tries it as a fallback (e.g., Godot debug windows)
+    function getAppIcon(appClass, initialTitle) {
         if (!appClass)
             return defaultIcon;
 
@@ -155,6 +156,12 @@ Singleton {
                     return icon;
                 }
             }
+        }
+
+        // Try initialTitle as a fallback (e.g., Godot debug windows have custom classes but initialTitle "Godot")
+        if (initialTitle) {
+            if (appIcons.hasOwnProperty(initialTitle)) return appIcons[initialTitle];
+            if (appIcons.hasOwnProperty(initialTitle.toLowerCase())) return appIcons[initialTitle.toLowerCase()];
         }
 
         return defaultIcon;

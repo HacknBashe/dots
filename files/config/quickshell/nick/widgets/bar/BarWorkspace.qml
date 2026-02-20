@@ -184,26 +184,15 @@ ColumnLayout {
                 // Directly compute windowClass from Hyprland.toplevels, making it reactive
                 // Workspaces.qml listens to Hyprland events and calls refreshToplevels()
                 // when windows open, which populates lastIpcObject.class
-                readonly property string windowClass: {
+                readonly property var _window: {
                     if (!windowId)
-                        return "";
-
-                    // Always re-query to get the latest data
-                    // This makes the property reactive to Hyprland.toplevels changes
+                        return null;
                     const toplevels = Hyprland.toplevels.values || [];
-                    const window = toplevels.find(w => w.address === windowId);
-
-                    if (!window)
-                        return "";
-
-                    // Try lastIpcObject.class
-                    const cls = window.lastIpcObject?.class;
-                    if (cls)
-                        return cls;
-
-                    // Fallback to empty
-                    return "";
+                    return toplevels.find(w => w.address === windowId) || null;
                 }
+
+                readonly property string windowClass: _window?.lastIpcObject?.class ?? ""
+                readonly property string initialTitle: _window?.lastIpcObject?.initialTitle ?? ""
 
                 implicitHeight: iconText.implicitHeight
                 width: root.width
@@ -212,7 +201,7 @@ ColumnLayout {
                     id: iconText
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    text: Icons.getAppIcon(parent.windowClass)
+                    text: Icons.getAppIcon(parent.windowClass, parent.initialTitle)
                     font.family: Appearance.font.mono
                     font.pixelSize: Appearance.font.large
                     color: root.isActive ? NixConfig.textOnPrimary : NixConfig.textOnSurface

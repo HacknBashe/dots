@@ -145,7 +145,7 @@ ColumnLayout {
         }
     }
 
-    // Top spacer to push content down a bit
+    // Top spacer
     Item {
         Layout.preferredHeight: Appearance.padding.small
     }
@@ -164,6 +164,7 @@ ColumnLayout {
 
         readonly property string windowClass: Hyprland.activeToplevel?.lastIpcObject.class ?? ""
         readonly property string windowTitle: Hyprland.activeToplevel?.title ?? "Desktop"
+        readonly property string initialTitle: Hyprland.activeToplevel?.lastIpcObject.initialTitle ?? ""
         property bool showFirst: true
         // Available height for title = section height minus icon and spacing
         readonly property real availableTitleHeight: height - appIcon.height - Appearance.spacing.small
@@ -178,7 +179,7 @@ ColumnLayout {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: -(titleContainer.height + Appearance.spacing.small) / 2
-            text: Icons.getAppIcon(activeWindowSection.windowClass)
+            text: Icons.getAppIcon(activeWindowSection.windowClass, activeWindowSection.initialTitle)
             font.family: Appearance.font.mono
             font.pixelSize: Appearance.font.large
             color: NixConfig.primary
@@ -354,7 +355,6 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter
         Layout.preferredWidth: 36
         Layout.preferredHeight: 36
-        Layout.bottomMargin: Appearance.padding.small
 
         width: 36
         height: 36
@@ -427,5 +427,10 @@ ColumnLayout {
                 }
             }
         }
+    }
+
+    // Bottom spacer (matches top spacer)
+    Item {
+        Layout.preferredHeight: Appearance.padding.small
     }
 }
