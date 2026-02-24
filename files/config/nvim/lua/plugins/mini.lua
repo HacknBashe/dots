@@ -260,6 +260,7 @@ return {
 			end, { desc = "View Map", noremap = true, silent = true, nowait = true })
 
 			local starter = require("mini.starter")
+			local logo = require("lib.mini-logo")
 			starter.setup({
 				evaluate_single = true,
 				items = {
@@ -267,17 +268,19 @@ return {
 					starter.sections.recent_files(9, true),
 				},
 				content_hooks = {
+					logo.hook,
 					starter.gen_hook.adding_bullet(),
 					starter.gen_hook.indexing("all", { "Builtin actions" }),
 					starter.gen_hook.padding(3, 2),
 					starter.gen_hook.aligning("center", "center"),
 				},
-				header = string.format([[
-█▀▀▄ █▀▀ █▀▀█ █  █ ▀█▀ █▀▄▀█
-█░░█ █▀▀ █░░█ ▜▖▗▛ ░█░ █░▀░█
-▀  ▀ ▀▀▀ ▀▀▀▀  ▝▘  ▀▀▀ ▀   ▀
-                     v%d.%d.%d]], vim.version().major, vim.version().minor, vim.version().patch),
+				header = logo.header,
 				footer = " ",
+			})
+			logo.setup_hl()
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				group = vim.api.nvim_create_augroup("StarterLogo", { clear = true }),
+				callback = logo.setup_hl,
 			})
 
 			-- This was breaking lazy, can't remember what it was for
