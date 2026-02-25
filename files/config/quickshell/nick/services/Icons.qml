@@ -83,6 +83,8 @@ Singleton {
             "Godot": "",
             "godot": "",
 
+            "blender": "",
+
             // Terminals (with common class name patterns)
             "ghostty": "󰊠",
             "Ghostty": "󰊠",
