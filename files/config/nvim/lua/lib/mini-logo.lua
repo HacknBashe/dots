@@ -4,14 +4,14 @@
 -- _ = space with shadow bg (letter body fill)
 -- ^ = ▀ with letter fg + shadow bg (half-block transition)
 -- ~ = ▀ with shadow fg only (dimmed half-block)
+-- | = separator between neo (darker) and vim (lighter) tones
 
 local M = {}
 
-M.header = string.format([[
-█▀▀▄ █▀▀█ █▀▀█ █  █ █ █▀▄▀▄
-█__█ █^^^ █__█ █__█ █ █_^_█
-▀~~▀ ▀▀▀▀ ▀▀▀▀  ▀▀  ▀ ▀~~~▀
-                    v%d.%d.%d]], vim.version().major, vim.version().minor, vim.version().patch)
+M.header = [[
+█▀▀▄ █▀▀█ █▀▀█| █  █ █ █▀▄▀▄
+█__█ █^^^ █__█| █__█ █ █_^_█
+▀~~▀ ▀▀▀▀ ▀▀▀▀|  ▀▀  ▀ ▀~~~▀]]
 
 local function tint(bg_color, fg_color, factor)
 	local bg_r = math.floor(bg_color / 65536)
@@ -34,10 +34,44 @@ function M.setup_hl()
 	local normal_hl = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
 	local fg = header_hl.fg or 0x82aaff
 	local bg = normal_hl.bg or 0x1a1b26
-	local shadow = tint(bg, fg, 0.25)
-	vim.api.nvim_set_hl(0, "StarterShadow", { bg = shadow })
-	vim.api.nvim_set_hl(0, "StarterHalf", { fg = fg, bg = shadow })
-	vim.api.nvim_set_hl(0, "StarterDim", { fg = shadow })
+
+	local neo_fg = tint(bg, fg, 0.75)
+	local vim_fg = tint(fg, 0xffffff, 0.2)
+
+	local neo_shadow = tint(bg, neo_fg, 0.25)
+	local vim_shadow = tint(bg, vim_fg, 0.25)
+
+	vim.api.nvim_set_hl(0, "StarterNeo", { fg = neo_fg })
+	vim.api.nvim_set_hl(0, "StarterNeoShadow", { bg = neo_shadow })
+	vim.api.nvim_set_hl(0, "StarterNeoHalf", { fg = neo_fg, bg = neo_shadow })
+	vim.api.nvim_set_hl(0, "StarterNeoDim", { fg = neo_shadow })
+
+	vim.api.nvim_set_hl(0, "StarterVim", { fg = vim_fg })
+	vim.api.nvim_set_hl(0, "StarterVimShadow", { bg = vim_shadow })
+	vim.api.nvim_set_hl(0, "StarterVimHalf", { fg = vim_fg, bg = vim_shadow })
+	vim.api.nvim_set_hl(0, "StarterVimDim", { fg = vim_shadow })
+
+	vim.api.nvim_set_hl(0, "MiniStarterFooter", { fg = fg, italic = false })
+end
+
+function M.footer_right(content)
+	local win = vim.fn.win_findbuf(vim.api.nvim_get_current_buf())[1] or 0
+	local width = vim.api.nvim_win_get_width(win)
+	local height = vim.api.nvim_win_get_height(win)
+	local coords = require("mini.starter").content_coords(content, "footer")
+	if #coords > 0 then
+		local first = coords[1].line
+		local pad_v = math.max(0, height - #content)
+		for _ = 1, pad_v do
+			table.insert(content, first, { { string = "", type = "empty" } })
+		end
+		for _, c in ipairs(require("mini.starter").content_coords(content, "footer")) do
+			local text = content[c.line][c.unit].string
+			local pad_h = width - vim.fn.strdisplaywidth(text) - 1
+			content[c.line] = { { string = string.rep(" ", math.max(0, pad_h)) .. text, type = "footer", hl = "MiniStarterFooter" } }
+		end
+	end
+	return content
 end
 
 function M.hook(content)
@@ -48,15 +82,22 @@ function M.hook(content)
 		local unit = content[c.line][c.unit]
 		local chars = vim.fn.split(unit.string, "\\zs")
 		local new_units = {}
+		local vim_mode = false
 		for _, ch in ipairs(chars) do
-			if ch == "_" then
-				table.insert(new_units, { string = " ", type = "header", hl = "StarterShadow" })
+			if ch == "|" then
+				vim_mode = true
+			elseif ch == "_" then
+				local hl = vim_mode and "StarterVimShadow" or "StarterNeoShadow"
+				table.insert(new_units, { string = " ", type = "header", hl = hl })
 			elseif ch == "^" then
-				table.insert(new_units, { string = "▀", type = "header", hl = "StarterHalf" })
+				local hl = vim_mode and "StarterVimHalf" or "StarterNeoHalf"
+				table.insert(new_units, { string = "▀", type = "header", hl = hl })
 			elseif ch == "~" then
-				table.insert(new_units, { string = "▀", type = "header", hl = "StarterDim" })
+				local hl = vim_mode and "StarterVimDim" or "StarterNeoDim"
+				table.insert(new_units, { string = "▀", type = "header", hl = hl })
 			else
-				table.insert(new_units, { string = ch, type = "header", hl = "MiniStarterHeader" })
+				local hl = vim_mode and "StarterVim" or "StarterNeo"
+				table.insert(new_units, { string = ch, type = "header", hl = hl })
 			end
 		end
 		table.remove(content[c.line], c.unit)

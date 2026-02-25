@@ -264,18 +264,18 @@ return {
 			starter.setup({
 				evaluate_single = true,
 				items = {
-					starter.sections.builtin_actions(),
 					starter.sections.recent_files(9, true),
 				},
 				content_hooks = {
-					logo.hook,
-					starter.gen_hook.adding_bullet(),
-					starter.gen_hook.indexing("all", { "Builtin actions" }),
-					starter.gen_hook.padding(3, 2),
-					starter.gen_hook.aligning("center", "center"),
-				},
+				logo.hook,
+				starter.gen_hook.adding_bullet(),
+				starter.gen_hook.indexing("all", { "Builtin actions" }),
+				starter.gen_hook.padding(3, 2),
+				starter.gen_hook.aligning("center", "center"),
+				logo.footer_right,
+			},
 				header = logo.header,
-				footer = " ",
+				footer = string.format("%d.%d.%d", vim.version().major, vim.version().minor, vim.version().patch),
 			})
 			logo.setup_hl()
 			vim.api.nvim_create_autocmd("ColorScheme", {
