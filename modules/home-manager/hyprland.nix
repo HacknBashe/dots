@@ -112,6 +112,11 @@ in {
       defaultApplications = {
         "text/plain" = "ghostty-nvim.desktop";
         "inode/directory" = "org.kde.dolphin.desktop";
+        "video/mp4" = "vlc.desktop";
+        "video/x-matroska" = "vlc.desktop";
+        "video/webm" = "vlc.desktop";
+        "video/x-msvideo" = "vlc.desktop";
+        "video/quicktime" = "vlc.desktop";
       };
     };
     # Ensure no user portal config overrides system config

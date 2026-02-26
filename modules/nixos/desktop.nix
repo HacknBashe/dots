@@ -22,6 +22,7 @@
 
     vlc
     makemkv
+    handbrake
 
     spotify
     vesktop
