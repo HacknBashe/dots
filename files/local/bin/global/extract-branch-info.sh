@@ -81,6 +81,10 @@ if [[ $CURRENT_BRANCH =~ ([a-zA-Z0-9_-]+)-([0-9]+)-(.+) ]]; then
 	elif [ -n "$OWNER" ] && [ -n "$REPO" ] && ISSUE_INFO=$(gh issue view "$ISSUE_NUMBER" --repo "$OWNER/$REPO" --json title,body,state,url 2>/dev/null); then
 		FOUND_OWNER="$OWNER"
 		FOUND_REPO="$REPO"
+	# Fallback: try ProductSupport repo (external support tickets)
+	elif ISSUE_INFO=$(gh issue view "$ISSUE_NUMBER" --repo "HubSpotProductSupport/ProductSupport" --json title,body,state,url 2>/dev/null); then
+		FOUND_OWNER="HubSpotProductSupport"
+		FOUND_REPO="ProductSupport"
 	fi
 
 	if [ -n "$ISSUE_INFO" ]; then

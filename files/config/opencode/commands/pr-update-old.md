@@ -81,7 +81,7 @@ Update the pr for this branch based on the following instructions
 
 ## Notes:
 
-- For Social team: Issues are typically in ProductSupport repo for external tickets or SocialCoreTeam for internal
+- For Social team: Issues are typically in SocialCoreTeam for internal, the current code repo, or `HubSpotProductSupport/ProductSupport` for external support tickets
 - Keep the same PR title unless specifically asked to change it
 - Only update the content, preserve the existing template structure
 - **NEVER add escape characters**: Write `type=info` not `type=\info\`, write `marginBlockEnd=400` not `marginBlockEnd=\400\`

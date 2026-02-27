@@ -21,7 +21,7 @@ This command creates a todo list based on the current branch's GitHub issue. It 
    ghe issue view --repo HubSpot/SocialCoreTeam ####
    ```
 
-   Note: For Social team, issues are in SocialCoreTeam repo by default. If the issue is not found there, try ProductSupport repo for external tickets.
+   Note: For Social team, issues are in SocialCoreTeam repo by default. If the issue is not found there, try the current code repo, then `HubSpotProductSupport/ProductSupport` for external support tickets.
 
 4. **Create todo list from issue content**:
 
