@@ -168,6 +168,23 @@ parse_eslint_errors() {
     echo "$result"
 }
 
+parse_generic_file_lines() {
+    local content="$1"
+    local result=""
+    
+    # Match file.ext:line patterns (grep output, AI references, stack traces, etc.)
+    while IFS= read -r match; do
+        if [[ -n "$match" ]]; then
+            file_path="${match%:*}"
+            line_num="${match##*:}"
+            desc=$(basename "$file_path")
+            result+="$desc|$file_path|$line_num"$'\n'
+        fi
+    done <<< "$(echo "$content" | grep -oE '(\./)?[a-zA-Z0-9_/.@-]+\.(js|ts|tsx|jsx|py|java|go|rs|cpp|c|h|md|txt|json|yaml|yml|toml|css|scss|html|vue|php|rb|sh|lua|nix):[0-9]+')"
+    
+    echo "$result"
+}
+
 # Detect format and parse accordingly
 files_with_lines=""
 
@@ -177,6 +194,9 @@ if echo "$scrollback_content" | grep -q "([0-9]\+,[0-9]\+): error TS[0-9]\+:"; t
 elif echo "$scrollback_content" | grep -q "^  *[0-9]\+:[0-9]\+  \+error"; then
     # ESLint errors  
     files_with_lines=$(parse_eslint_errors "$scrollback_content")
+else
+    # Generic file:line references (grep, AI output, stack traces, etc.)
+    files_with_lines=$(parse_generic_file_lines "$scrollback_content")
 fi
 
 # Reverse order to match scrollback visual order
