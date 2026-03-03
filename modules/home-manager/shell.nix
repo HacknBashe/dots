@@ -11,6 +11,7 @@
         cava
         ctpv
         efibootmgr
+        libnotify
         playerctl
       ]
     else

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Mark idle agent panes in the current window as seen when window is visible
+# Called by:
+#   - tmux hooks on window/session navigation (context is newly-active window)
+#   - indicator plugin on session idle (context is the plugin's pane window)
+
+# Only proceed if the window is active and session is attached
+visible=$(tmux display-message -p '#{window_active}#{session_attached}')
+[ "$visible" != "11" ] && exit 0
+
+tmux list-panes -F '#{pane_id} #{@pane_status}' | while read -r id status; do
+    [ "$status" = "idle" ] && tmux set-option -p -t "$id" @pane_status seen
+done
+
+exit 0
