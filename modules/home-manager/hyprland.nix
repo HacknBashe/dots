@@ -117,6 +117,13 @@ in {
         "video/webm" = "vlc.desktop";
         "video/x-msvideo" = "vlc.desktop";
         "video/quicktime" = "vlc.desktop";
+        "image/png" = ["org.kde.gwenview.desktop" "gimp.desktop"];
+        "image/jpeg" = ["org.kde.gwenview.desktop" "gimp.desktop"];
+        "image/gif" = ["org.kde.gwenview.desktop" "gimp.desktop"];
+        "image/webp" = ["org.kde.gwenview.desktop" "gimp.desktop"];
+        "image/svg+xml" = ["org.kde.gwenview.desktop" "gimp.desktop"];
+        "image/bmp" = ["org.kde.gwenview.desktop" "gimp.desktop"];
+        "image/tiff" = ["org.kde.gwenview.desktop" "gimp.desktop"];
       };
     };
     # Ensure no user portal config overrides system config
