@@ -19,11 +19,15 @@ Rectangle {
 
     // Keyboard navigation
     property int selectedButtonIndex: -1
-    readonly property int buttonCount: 7  // monitor1, monitor2, power, restart, logout, suspend, lock
+    readonly property var allButtons: [monitor1Btn, monitor2Btn, hypridleBtn, powerBtn, restartBtn, logoutBtn, suspendBtn, lockBtn]
+    readonly property int buttonCount: allButtons.length
 
     // Monitor status tracking
     property bool monitor1On: false
     property bool monitor2On: false
+
+    // Hypridle status tracking
+    property bool hypridleOn: false
 
     focus: true
 
@@ -53,24 +57,9 @@ Rectangle {
             }
             event.accepted = true;
         } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-            if (selectedButtonIndex >= 0) {
-                // Trigger the selected button action
+            if (selectedButtonIndex >= 0 && selectedButtonIndex < root.buttonCount) {
                 root.closeRequested();
-                if (selectedButtonIndex === 0) {
-                    monitor1ToggleProcess.running = true;
-                } else if (selectedButtonIndex === 1) {
-                    monitor2ToggleProcess.running = true;
-                } else if (selectedButtonIndex === 2) {
-                    powerProcess.running = true;
-                } else if (selectedButtonIndex === 3) {
-                    restartProcess.running = true;
-                } else if (selectedButtonIndex === 4) {
-                    logoutProcess.running = true;
-                } else if (selectedButtonIndex === 5) {
-                    suspendProcess.running = true;
-                } else if (selectedButtonIndex === 6) {
-                    lockTimer.start();
-                }
+                root.allButtons[selectedButtonIndex].activated();
                 event.accepted = true;
             }
         }
@@ -83,6 +72,7 @@ Rectangle {
             selectedButtonIndex = -1; // Reset selection
             calendar.currentDate = new Date(); // Reset to current month
             monitorCheckProcess.running = true; // Check monitor status
+            hypridleCheckProcess.running = true; // Check hypridle status
         }
     }
 
@@ -161,12 +151,42 @@ Rectangle {
         onTriggered: monitorCheckProcess.running = true
     }
 
-    // Timer to periodically check monitor status
+    // Hypridle status check process
+    Process {
+        id: hypridleCheckProcess
+        command: ["sh", "-c", "pgrep -x hypridle > /dev/null && echo ON || echo OFF"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                root.hypridleOn = text.trim() === "ON";
+            }
+        }
+    }
+
+    // Hypridle toggle process
+    Process {
+        id: hypridleToggleProcess
+        command: ["sh", "-c", "if pgrep -x hypridle > /dev/null; then pkill -x hypridle; else hyprctl dispatch exec hypridle; fi"]
+        onExited: {
+            hypridleCheckTimer.start();
+        }
+    }
+
+    // Timer to refresh hypridle status after toggle
+    Timer {
+        id: hypridleCheckTimer
+        interval: 500
+        onTriggered: hypridleCheckProcess.running = true
+    }
+
+    // Timer to periodically check monitor and hypridle status
     Timer {
         running: root.open
         interval: 5000
         repeat: true
-        onTriggered: monitorCheckProcess.running = true
+        onTriggered: {
+            monitorCheckProcess.running = true;
+            hypridleCheckProcess.running = true;
+        }
     }
 
     width: Math.max(buttonRow.width, monitorRow.width, calendar.width) + Appearance.padding.large * 2
@@ -237,6 +257,62 @@ Rectangle {
             font.pixelSize: Appearance.font.smaller
             color: resBar.barColor
             horizontalAlignment: Text.AlignRight
+        }
+    }
+
+    // MenuButton component definition
+    component MenuButton: Rectangle {
+        id: btn
+        required property string icon
+        property bool boldIcon: false
+        property bool isSelected: false
+        signal activated
+        signal hovered
+
+        width: 50
+        height: 50
+        radius: Appearance.rounding.small
+        color: btn.isSelected ? NixConfig.primary : NixConfig.surfaceContainer
+        scale: btnMouseArea.containsMouse || btn.isSelected ? 1.1 : 1.0
+        transformOrigin: Item.Center
+
+        Behavior on color {
+            ColorAnimation {
+                duration: Appearance.anim.small
+                easing.type: Easing.Linear
+            }
+        }
+
+        Behavior on scale {
+            NumberAnimation {
+                duration: Appearance.anim.small
+                easing.type: Easing.OutBack
+            }
+        }
+
+        Text {
+            anchors.centerIn: parent
+            text: btn.icon
+            font.family: Appearance.font.mono
+            font.pixelSize: Appearance.font.large
+            font.bold: btn.boldIcon
+            color: btn.isSelected ? NixConfig.textOnPrimary : NixConfig.primary
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Appearance.anim.small
+                    easing.type: Easing.Linear
+                }
+            }
+        }
+
+        MouseArea {
+            id: btnMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: btn.activated()
+            onEntered: btn.hovered()
         }
     }
 
@@ -699,112 +775,43 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Appearance.spacing.normal
 
-            // Monitor 1 button
-            Rectangle {
-                width: 50
-                height: 50
-                radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 0 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: monitor1MouseArea.containsMouse || root.selectedButtonIndex === 0 ? 1.1 : 1.0
-                transformOrigin: Item.Center
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.Linear
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.OutBack
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: root.monitor1On ? "󰎤" : "󰎦"
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.large
-                    font.bold: true
-                    color: root.selectedButtonIndex === 0 ? NixConfig.textOnPrimary : NixConfig.primary
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
-
-                MouseArea {
-                    id: monitor1MouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-
-                    onClicked: {
-                        root.closeRequested();
-                        monitor1ToggleProcess.running = true;
-                    }
-
-                    onEntered: root.selectedButtonIndex = 0
+            MenuButton {
+                id: monitor1Btn
+                icon: root.monitor1On ? "󰎤" : "󰎦"
+                boldIcon: true
+                isSelected: root.selectedButtonIndex === 0
+                onHovered: root.selectedButtonIndex = 0
+                onActivated: {
+                    root.closeRequested();
+                    monitor1ToggleProcess.running = true;
                 }
             }
 
-            // Monitor 2 button
-            Rectangle {
-                width: 50
-                height: 50
-                radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 1 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: monitor2MouseArea.containsMouse || root.selectedButtonIndex === 1 ? 1.1 : 1.0
-                transformOrigin: Item.Center
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.Linear
-                    }
+            MenuButton {
+                id: monitor2Btn
+                icon: root.monitor2On ? "󰎧" : "󰎩"
+                boldIcon: true
+                isSelected: root.selectedButtonIndex === 1
+                onHovered: root.selectedButtonIndex = 1
+                onActivated: {
+                    root.closeRequested();
+                    monitor2ToggleProcess.running = true;
                 }
+            }
 
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.OutBack
-                    }
-                }
+            // Gap between monitor buttons and hypridle button
+            Item {
+                width: Appearance.spacing.large
+                height: 1
+            }
 
-                Text {
-                    anchors.centerIn: parent
-                    text: root.monitor2On ? "󰎧" : "󰎩"
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.large
-                    font.bold: true
-                    color: root.selectedButtonIndex === 1 ? NixConfig.textOnPrimary : NixConfig.primary
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
-
-                MouseArea {
-                    id: monitor2MouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-
-                    onClicked: {
-                        root.closeRequested();
-                        monitor2ToggleProcess.running = true;
-                    }
-
-                    onEntered: root.selectedButtonIndex = 1
-                }
+            MenuButton {
+                id: hypridleBtn
+                icon: root.hypridleOn ? "󱎫" : "󰔞"
+                boldIcon: true
+                isSelected: root.selectedButtonIndex === 2
+                onHovered: root.selectedButtonIndex = 2
+                onActivated: hypridleToggleProcess.running = true
             }
         }
 
@@ -823,269 +830,59 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Appearance.spacing.normal
 
-            // Power off button
-            Rectangle {
-                width: 50
-                height: 50
-                radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 2 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: powerMouseArea.containsMouse || root.selectedButtonIndex === 2 ? 1.1 : 1.0
-                transformOrigin: Item.Center
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.Linear
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.OutBack
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "󰐥"
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 2 ? NixConfig.textOnPrimary : NixConfig.primary
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
-
-                MouseArea {
-                    id: powerMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-
-                    onClicked: {
-                        root.closeRequested();
-                        powerProcess.running = true;
-                    }
-
-                    onEntered: root.selectedButtonIndex = 2
+            MenuButton {
+                id: powerBtn
+                icon: "󰐥"
+                isSelected: root.selectedButtonIndex === 3
+                onHovered: root.selectedButtonIndex = 3
+                onActivated: {
+                    root.closeRequested();
+                    powerProcess.running = true;
                 }
             }
 
-            // Restart button
-            Rectangle {
-                width: 50
-                height: 50
-                radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 3 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: restartMouseArea.containsMouse || root.selectedButtonIndex === 3 ? 1.1 : 1.0
-                transformOrigin: Item.Center
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.Linear
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.OutBack
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "󰜉"
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 3 ? NixConfig.textOnPrimary : NixConfig.primary
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
-
-                MouseArea {
-                    id: restartMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-
-                    onClicked: {
-                        root.closeRequested();
-                        restartProcess.running = true;
-                    }
-
-                    onEntered: root.selectedButtonIndex = 3
+            MenuButton {
+                id: restartBtn
+                icon: "󰜉"
+                isSelected: root.selectedButtonIndex === 4
+                onHovered: root.selectedButtonIndex = 4
+                onActivated: {
+                    root.closeRequested();
+                    restartProcess.running = true;
                 }
             }
 
-            // Logout button
-            Rectangle {
-                width: 50
-                height: 50
-                radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 4 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: logoutMouseArea.containsMouse || root.selectedButtonIndex === 4 ? 1.1 : 1.0
-                transformOrigin: Item.Center
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.Linear
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.OutBack
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "󰍃"
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 4 ? NixConfig.textOnPrimary : NixConfig.primary
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
-
-                MouseArea {
-                    id: logoutMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-
-                    onClicked: {
-                        root.closeRequested();
-                        logoutProcess.running = true;
-                    }
-
-                    onEntered: root.selectedButtonIndex = 4
+            MenuButton {
+                id: logoutBtn
+                icon: "󰍃"
+                isSelected: root.selectedButtonIndex === 5
+                onHovered: root.selectedButtonIndex = 5
+                onActivated: {
+                    root.closeRequested();
+                    logoutProcess.running = true;
                 }
             }
 
-            // Suspend button
-            Rectangle {
-                width: 50
-                height: 50
-                radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 5 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: suspendMouseArea.containsMouse || root.selectedButtonIndex === 5 ? 1.1 : 1.0
-                transformOrigin: Item.Center
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.Linear
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.OutBack
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "󰒲"
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.large
-                    color: root.selectedButtonIndex === 5 ? NixConfig.textOnPrimary : NixConfig.primary
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
-
-                MouseArea {
-                    id: suspendMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-
-                    onClicked: {
-                        root.closeRequested();
-                        suspendProcess.running = true;
-                    }
-
-                    onEntered: root.selectedButtonIndex = 5
+            MenuButton {
+                id: suspendBtn
+                icon: "󰒲"
+                isSelected: root.selectedButtonIndex === 6
+                onHovered: root.selectedButtonIndex = 6
+                onActivated: {
+                    root.closeRequested();
+                    suspendProcess.running = true;
                 }
             }
 
-            // Lock button
-            Rectangle {
-                width: 50
-                height: 50
-                radius: Appearance.rounding.small
-                color: root.selectedButtonIndex === 6 ? NixConfig.primary : NixConfig.surfaceContainer
-                scale: lockMouseArea.containsMouse || root.selectedButtonIndex === 6 ? 1.1 : 1.0
-                transformOrigin: Item.Center
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.Linear
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.anim.small
-                        easing.type: Easing.OutBack
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: ""
-                    font.family: Appearance.font.mono
-                    font.pixelSize: Appearance.font.large
-                    font.bold: true
-                    color: root.selectedButtonIndex === 6 ? NixConfig.textOnPrimary : NixConfig.primary
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Appearance.anim.small
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
-
-                MouseArea {
-                    id: lockMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-
-                    onClicked: {
-                        root.closeRequested();
-                        lockTimer.start();
-                    }
-
-                    onEntered: root.selectedButtonIndex = 6
+            MenuButton {
+                id: lockBtn
+                icon: ""
+                boldIcon: true
+                isSelected: root.selectedButtonIndex === 7
+                onHovered: root.selectedButtonIndex = 7
+                onActivated: {
+                    root.closeRequested();
+                    lockTimer.start();
                 }
             }
         }
