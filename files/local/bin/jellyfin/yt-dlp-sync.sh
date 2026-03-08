@@ -9,10 +9,14 @@ if ! mountpoint -q /run/media/nick/Passport; then
 	exit 1
 fi
 
-# format: "channel_url|directory_name"
+# format: "url|directory_name" (channels or playlists)
 CHANNELS=(
 	"https://www.youtube.com/@msrachel|Ms. Rachel"
 	"https://www.youtube.com/@DannyGo|Danny Go"
+	"https://youtube.com/playlist?list=PLZS3MUjYqjUGa09r5Y7SXuEcJ13e6-DVt|Smile and Learn - Math"
+	"https://youtube.com/playlist?list=PLZS3MUjYqjUHCxHJUnzMsxwKyPyNXR3Fm|Smile and Learn - Yoga"
+	"https://youtube.com/playlist?list=PLZS3MUjYqjUGm4h4nBLgn3HGZubVTJ1NS|Smile and Learn - Alphabet"
+	"https://youtube.com/playlist?list=PLZS3MUjYqjUEdir2JmYEmcoPjLPD0izDI|Smile and Learn - STEM"
 )
 
 for entry in "${CHANNELS[@]}"; do
