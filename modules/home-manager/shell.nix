@@ -87,6 +87,19 @@ in {
             else ''shell "osascript -e \"set the clipboard to POSIX file \\\"$0\\\"\" --" "$@"'';
           desc = "Copy file contents to clipboard (OSC 52)";
         }
+        {
+          on = ["g" "e"];
+          run =
+            if pkgs.stdenv.isLinux
+            then ''shell -- dolphin "$PWD"''
+            else ''shell -- open "$PWD"'';
+          desc = "Open file explorer in current directory";
+        }
+        {
+          on = ["g" "s"];
+          run = ''shell -- tmux split-window -h -c %d'';
+          desc = "Open tmux split in current directory";
+        }
       ];
     };
     plugins = with pkgs.yaziPlugins; {
