@@ -164,13 +164,6 @@ If the repository has a custom PR template:
 - Adapt the structure accordingly
 - Preserve required sections from the template
 
-### HubSpot Social Team
-
-For HubSpot Social team repositories:
-- Issues may be in `SocialCoreTeam`, the current code repo, or `HubSpotProductSupport/ProductSupport` repos
-- Use the exact repository from the context data
-- Always include the AT tests checklist item
-
 ---
 
 ## Output Format

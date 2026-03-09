@@ -1,0 +1,49 @@
+---
+name: github-issue-lookup
+description: Find and read GitHub issues from branch names. Use when looking up, reading, or fetching issues related to the current branch.
+license: MIT
+compatibility: opencode
+---
+
+## What I do
+
+Resolve a GitHub issue from the current branch name.
+
+## When to use me
+
+Use this skill when:
+- Looking up the issue for the current branch
+- Reading or fetching issue details related to ongoing work
+- Needing issue context before creating a PR or planning work
+
+---
+
+## Branch Name Pattern
+
+Branch names follow the pattern: `username-1234-description`
+
+Extract the **number** as the issue number. Examples:
+- `nh-3609-complete-postform-migration` -> issue `3609`
+- `nhackford-142-fix-tooltip` -> issue `142`
+
+---
+
+## Repository Search Order (HubSpot Social)
+
+For HubSpot Social team repositories, issues may live in multiple repos. Search in this order:
+
+1. `HubSpotEngineering/SocialCoreTeam` (planning/tracking repo)
+2. The current code repository
+3. `HubSpotProductSupport/ProductSupport`
+
+Stop at the first repo that returns a result.
+
+---
+
+## How to fetch
+
+```bash
+gh issue view <number> --repo <owner>/<repo>
+```
+
+Try each repo in order until one succeeds.
