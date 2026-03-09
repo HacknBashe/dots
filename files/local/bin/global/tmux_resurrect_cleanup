@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Post-resurrect hook: collapse each session to a single window
+for session in $(tmux list-sessions -F '#{session_name}'); do
+  for win in $(tmux list-windows -t "$session" -F '#{window_index}' | tail -n +2); do
+    tmux kill-window -t "$session:$win"
+  done
+done
