@@ -40,7 +40,7 @@
     };
 
     # nixos-hardware.url = "github:NixOS/nixos-hardware";
-    nixos-hardware.url = "github:mexisme/nixos-hardware/microsoft-surface/update-kernel-6.18.8";
+    nixos-hardware.url = "github:mexisme/nixos-hardware/microsoft-surface/update-kernel-6.18.13";
 
     # For Steam
     extest = {
