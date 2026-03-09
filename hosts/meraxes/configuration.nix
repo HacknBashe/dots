@@ -139,6 +139,12 @@ in {
   # Use performance CPU governor for low-latency audio
   powerManagement.cpuFreqGovernor = "performance";
 
+  # Compressed in-memory swap to prevent OOM kills during large nix builds
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  };
+
   # Disable USB autosuspend for Quad Cortex (defensively prevernting audio issues)
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="152a", ATTR{idProduct}=="880a", ATTR{power/autosuspend}="-1", ATTR{power/control}="on"
