@@ -191,9 +191,15 @@ return {
 						-- File info with colored segments
 						local function get_filesize()
 							local size = vim.fn.getfsize(vim.fn.expand("%:p"))
-							if size <= 0 then return "" end
-							if size < 1024 then return size .. "B" end
-							if size < 1024 * 1024 then return string.format("%.1fK", size / 1024) end
+							if size <= 0 then
+								return ""
+							end
+							if size < 1024 then
+								return size .. "B"
+							end
+							if size < 1024 * 1024 then
+								return string.format("%.1fK", size / 1024)
+							end
 							return string.format("%.1fM", size / (1024 * 1024))
 						end
 
@@ -262,18 +268,18 @@ return {
 			local starter = require("mini.starter")
 			local logo = require("lib.mini-logo")
 			starter.setup({
-				evaluate_single = true,
 				items = {
+					starter.sections.builtin_actions(),
 					starter.sections.recent_files(9, true),
 				},
 				content_hooks = {
-				logo.hook,
-				starter.gen_hook.adding_bullet(),
-				starter.gen_hook.indexing("all", { "Builtin actions" }),
-				starter.gen_hook.padding(3, 2),
-				starter.gen_hook.aligning("center", "center"),
-				logo.footer_right,
-			},
+					logo.hook,
+					starter.gen_hook.adding_bullet(),
+					starter.gen_hook.indexing("all", { "Builtin actions" }),
+					starter.gen_hook.padding(3, 2),
+					starter.gen_hook.aligning("center", "center"),
+					logo.footer_right,
+				},
 				header = logo.header,
 				footer = string.format("%d.%d.%d", vim.version().major, vim.version().minor, vim.version().patch),
 			})
