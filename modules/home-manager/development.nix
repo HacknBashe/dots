@@ -75,10 +75,10 @@ in {
 
     programs.neovim = {
       enable = true;
-      extraLuaPackages = luaPkgs: with luaPkgs; [luasocket];
-      plugins = [
-        treesitterWithGrammars
-      ];
+      # extraLuaPackages = luaPkgs: with luaPkgs; [luasocket];
+      # plugins = [
+      #   treesitterWithGrammars
+      # ];
     };
 
     home.packages = with pkgs;
@@ -156,7 +156,7 @@ in {
           recursive = true;
         };
 
-        # Neovim configuration (from neovim-lazy.nix)
+        # Neovim configuration
         "nvim" = {
           source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/dots/files/config/nvim";
           target = ".config/nvim";
