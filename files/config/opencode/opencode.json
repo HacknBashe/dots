@@ -48,5 +48,25 @@
       "git config --get*": "allow",
       "git config --list*": "allow"
     }
+  },
+  "agent": {
+    "ship": {
+      "description": "Ship code with full git and GitHub CLI permissions",
+      "mode": "primary",
+      "permission": {
+        "bash": {
+          "git add *": "allow",
+          "git commit *": "allow",
+          "git push *": "allow",
+          "git checkout *": "allow",
+          "git switch *": "allow",
+          "git branch *": "allow",
+          "git merge *": "allow",
+          "git rebase *": "allow",
+          "git stash *": "allow",
+          "gh *": "allow"
+        }
+      }
+    }
   }
 }

@@ -51,8 +51,6 @@ Child issues define **what needs to be done** and **why it matters** to achievin
 ```markdown
 # Add network configuration data model
 
-Part of #122 - [EPIC] Enable per-network post configuration
-
 ## Goal
 
 Create the foundational data structures for storing network-specific rules, unblocking the validation logic and UI work.
