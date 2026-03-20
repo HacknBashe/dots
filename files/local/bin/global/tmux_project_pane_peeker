@@ -16,12 +16,8 @@ fi
 
 pane_type="$1"
 
-# Map special type names to grep patterns
 get_type_pattern() {
-    case "$1" in
-        bender) echo "bender-proxy$\|bend-reactor$" ;;
-        *) echo "$1\$" ;;
-    esac
+    echo "$1\$"
 }
 
 # Get all project panes of the specified type and format them nicely
@@ -48,7 +44,6 @@ get_project_panes() {
                             *) symbol=""; sort_key="2" ;;  # idle or not set
                         esac
                         ;;
-                    bender-proxy|bend-reactor) symbol="󰚩"; sort_key="1" ;;
                     *) symbol=""; sort_key="3" ;;
                 esac
             else

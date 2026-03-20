@@ -8,6 +8,19 @@ current_window_id=$(tmux display-message -p "#{window_id}")
 current_pane_type=$(get_current_pane_type)
 current_window_name=$(tmux display-message -p "#{window_name}")
 
+# If no project windows exist yet and this is a bend project, run bend yarn first
+has_project_windows() {
+    pane_exists "nvim" || pane_exists "agent" || pane_exists "shell" || pane_exists "lazygit" || pane_exists "yazi"
+}
+
+is_bend_project() {
+    [ -f "package.json" ] && grep -q '"bpm"' package.json
+}
+
+if ! has_project_windows && is_bend_project; then
+    bend yarn
+fi
+
 # Initialize all pane types
 tmux_nvim
 tmux_agent
@@ -34,9 +47,6 @@ tmux list-windows -F "#{window_index}" | while read window_index; do
                 ;;
             "shell")
                 tmux break-pane -s "$pane_id" -n "shell"
-                ;;
-            "bender-proxy" | "bend-reactor")
-                # Keep bender panes with shell, don't break them out
                 ;;
             *)
                 tmux break-pane -s "$pane_id" -n "shell"
@@ -83,41 +93,20 @@ if [ -n "$yazi_window" ] && [ "$current_at_5" != "yazi" ]; then
     tmux swap-window -s "$yazi_window" -t 5 2>/dev/null || true
 fi
 
-# After all window positioning, rejoin any separated bender panes with shell
-shell_window=$(find_window_by_pane_type "shell")
-bender_proxy_window=$(find_window_by_pane_type "bender-proxy")
-bend_reactor_window=$(find_window_by_pane_type "bend-reactor")
-
-# Join bender-proxy pane to shell window if separated
-if [ -n "$bender_proxy_window" ] && [ -n "$shell_window" ] && [ "$bender_proxy_window" != "$shell_window" ]; then
-    bender_proxy_pane=$(find_pane_by_type "bender-proxy")
-    if [ -n "$bender_proxy_pane" ]; then
-        tmux join-pane -s "$bender_proxy_pane" -t "$shell_window" -h 2>/dev/null || true
-    fi
-fi
-
-# Join bend-reactor pane to shell window if separated
-if [ -n "$bend_reactor_window" ] && [ -n "$shell_window" ] && [ "$bend_reactor_window" != "$shell_window" ]; then
-    bend_reactor_pane=$(find_pane_by_type "bend-reactor")
-    if [ -n "$bend_reactor_pane" ]; then
-        tmux join-pane -s "$bend_reactor_pane" -t "$shell_window" -v 2>/dev/null || true
-    fi
-fi
-
 # Check if the current pane was converted to a project pane
 current_pane_type_now=$(tmux display-message -t "$current_pane" -p '#{@pane_type}' 2>/dev/null || echo "")
 
 # Kill the current pane (the one this script was run from) after organizing,
 # but only if it's not one of the named project panes (either originally or after conversion)
 case "$current_pane_type_now" in
-"nvim" | "agent" | "lazygit" | "yazi" | "shell" | "bender-proxy" | "bend-reactor")
+"nvim" | "agent" | "lazygit" | "yazi" | "shell")
     # Pane was converted to a project pane, keep it and go to nvim window
     tmux select-window -t 1 2>/dev/null || tmux select-window -t :^
     ;;
 *)
     # Pane is still not a project pane, safe to kill
     case "$current_pane_type" in
-    "nvim" | "agent" | "lazygit" | "yazi" | "shell" | "bender-proxy" | "bend-reactor")
+    "nvim" | "agent" | "lazygit" | "yazi" | "shell")
         # Original pane was already a project pane, just go back to it
         tmux select-window -t "$current_window_id"
         ;;
