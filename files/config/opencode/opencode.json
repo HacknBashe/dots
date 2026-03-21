@@ -53,6 +53,7 @@
     "ship": {
       "description": "Ship code with full git and GitHub CLI permissions",
       "mode": "primary",
+      "color": "warning",
       "permission": {
         "bash": {
           "git add *": "allow",
