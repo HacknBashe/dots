@@ -268,6 +268,7 @@ return {
 			local starter = require("mini.starter")
 			local logo = require("lib.mini-logo")
 			starter.setup({
+				evaluate_single = true,
 				items = {
 					starter.sections.builtin_actions(),
 					starter.sections.recent_files(9, true),
