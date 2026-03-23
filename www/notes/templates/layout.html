@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Notes</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/htmx.min.js"></script>
+    <script src="/static/sortable.min.js"></script>
+</head>
+<body class="bg-white text-gray-900 font-sans" hx-boost="true">
+
+    <div id="overlay" onclick="closeSidebar()"></div>
+
+    <div id="app">
+        <aside id="sidebar">
+            <div class="p-4">
+                <div class="mb-4">
+                    <a href="/" hx-get="/" hx-target="#content" hx-push-url="true" class="text-lg font-bold">Notes</a>
+                </div>
+                <input type="text" placeholder="Filter notes..."
+                       class="w-full px-3 py-2 border rounded-lg text-sm mb-4"
+                       name="q"
+                       hx-get="/nav"
+                       hx-trigger="keyup changed delay:300ms"
+                       hx-target="#nav-list">
+                <div id="nav-list"
+                     hx-get="/nav"
+                     hx-trigger="load"
+                     hx-target="this">
+                </div>
+            </div>
+        </aside>
+
+        <div id="main">
+            <main id="content" class="px-4 py-4 max-w-4xl mx-auto">
+                {{if eq .Page "index"}}
+                    {{template "index.html" .Content}}
+                {{else if eq .Page "note"}}
+                    {{template "note.html" .Content}}
+                {{end}}
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile-only menu button -->
+    <button id="menu-btn" onclick="openSidebar()">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+    </button>
+
+    <script>
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('overlay').classList.add('open');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('open');
+        }
+
+        // Close sidebar on mobile after navigation
+        document.body.addEventListener('htmx:afterSwap', function(e) {
+            if (e.detail.target.id === 'content') closeSidebar();
+        });
+
+        // Close FAB menu on outside click
+        document.addEventListener('click', function(e) {
+            var menu = document.getElementById('fab-menu');
+            var fab = document.getElementById('fab-btn');
+            if (menu && !menu.contains(e.target) && !fab.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        function toggleFab() {
+            document.getElementById('fab-menu').classList.toggle('hidden');
+        }
+
+        // Accordion state persistence
+        document.body.addEventListener('toggle', function(e) {
+            if (e.target.tagName === 'DETAILS') {
+                var key = 'nav-' + (e.target.dataset.group || '');
+                if (key !== 'nav-') localStorage.setItem(key, e.target.open);
+            }
+        }, true);
+
+        function restoreAccordionState() {
+            document.querySelectorAll('details[data-group]').forEach(function(d) {
+                var saved = localStorage.getItem('nav-' + d.dataset.group);
+                if (saved !== null) d.open = saved === 'true';
+            });
+        }
+        document.body.addEventListener('htmx:afterSwap', restoreAccordionState);
+        document.addEventListener('DOMContentLoaded', restoreAccordionState);
+
+        // Auto-resize textareas
+        function autoResizeTextareas() {
+            document.querySelectorAll('textarea[data-autoresize]').forEach(function(ta) {
+                var scrollY = window.scrollY;
+                ta.style.height = 'auto';
+                ta.style.height = ta.scrollHeight + 'px';
+                window.scrollTo(0, scrollY);
+                if (!ta._hasListener) {
+                    ta.addEventListener('input', function() {
+                        var sy = window.scrollY;
+                        this.style.height = 'auto';
+                        this.style.height = this.scrollHeight + 'px';
+                        window.scrollTo(0, sy);
+                    });
+                    ta._hasListener = true;
+                }
+            });
+        }
+        document.body.addEventListener('htmx:afterSwap', autoResizeTextareas);
+        document.addEventListener('DOMContentLoaded', autoResizeTextareas);
+
+        // Sortable drag-and-drop for blocks
+        var _sortableInstance = null;
+        function initSortable() {
+            if (_sortableInstance) { _sortableInstance.destroy(); _sortableInstance = null; }
+            var el = document.getElementById('blocks');
+            if (!el || !window.Sortable) return;
+            _sortableInstance = Sortable.create(el, {
+                handle: '.drag-handle',
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
+                onEnd: function() {
+                    var items = el.querySelectorAll('.block-wrap[data-index]');
+                    var order = Array.from(items).map(function(item) {
+                        return parseInt(item.getAttribute('data-index'), 10);
+                    });
+                    var noteId = el.getAttribute('data-note-id');
+                    if (!noteId) return;
+                    fetch('/note/' + noteId + '/reorder', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({order: order})
+                    });
+                }
+            });
+        }
+        document.body.addEventListener('htmx:afterSwap', initSortable);
+        document.addEventListener('DOMContentLoaded', initSortable);
+    </script>
+</body>
+</html>

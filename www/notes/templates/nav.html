@@ -1,0 +1,118 @@
+{{define "navchildren"}}
+{{range .}}
+    {{if .Children}}
+    <details open data-group="{{.Name}}">
+        <summary class="px-3 py-1.5 text-sm cursor-pointer list-none flex items-center gap-1.5">
+            <svg class="w-4 h-4 shrink-0 transition-transform details-arrow"{{if .Color}} style="color: {{.Color}}"{{end}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+            <a href="/note/{{.Name}}"
+               hx-get="/note/{{.Name}}"
+               hx-target="#content"
+               hx-push-url="true"
+               onclick="event.stopPropagation()"
+               class="hover:opacity-70"
+               {{if .Color}}style="color: {{.Color}}"{{end}}>
+                {{toTitle .Name}}
+            </a>
+        </summary>
+        <div class="ml-4 border-l pl-2"{{if .Color}} style="border-color: {{.Color}}20"{{end}}>
+            {{template "navchildren" .Children}}
+        </div>
+    </details>
+    {{else}}
+    <a href="/note/{{.Name}}"
+       hx-get="/note/{{.Name}}"
+       hx-target="#content"
+       hx-push-url="true"
+       class="px-3 py-1.5 rounded-lg hover:bg-gray-50 active:bg-gray-100 text-sm flex items-center gap-1.5"
+       {{if .Color}}style="color: {{.Color}}"{{end}}>
+        <svg width="5" height="5" class="shrink-0" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+        {{toTitle .Name}}
+    </a>
+    {{end}}
+{{end}}
+{{end}}
+
+{{define "navgroups"}}
+{{range .Groups}}
+<details open data-group="{{.Name}}">
+    {{if .Children}}
+    <summary class="px-3 py-2 font-medium cursor-pointer list-none flex items-center gap-1.5">
+        <svg class="w-5 h-5 shrink-0 transition-transform details-arrow"{{if .Color}} style="color: {{.Color}}"{{end}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <a href="/note/{{.Name}}"
+           hx-get="/note/{{.Name}}"
+           hx-target="#content"
+           hx-push-url="true"
+           onclick="event.stopPropagation()"
+           class="hover:opacity-70"
+           {{if .Color}}style="color: {{.Color}}"{{end}}>
+            {{toTitle .Name}}
+        </a>
+    </summary>
+    <div class="ml-5 border-l pl-2"{{if .Color}} style="border-color: {{.Color}}20"{{end}}>
+        {{template "navchildren" .Children}}
+    </div>
+    {{else}}
+    <summary class="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wide cursor-pointer list-none flex items-center gap-1.5">
+        <svg class="w-4 h-4 shrink-0 text-gray-300 transition-transform details-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        {{toTitle .Name}}
+    </summary>
+    <div class="ml-5">
+        {{range .Notes}}
+        <a href="/note/{{.Name}}"
+           hx-get="/note/{{.Name}}"
+           hx-target="#content"
+           hx-push-url="true"
+           class="px-3 py-1.5 rounded-lg hover:bg-gray-50 active:bg-gray-100 text-gray-600 text-sm flex items-center gap-1.5">
+            <svg width="5" height="5" class="shrink-0" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+            {{toTitle .Name}}
+        </a>
+        {{end}}
+    </div>
+    {{end}}
+</details>
+{{end}}
+
+{{if .Uncategorized}}
+<details open data-group="other">
+    <summary class="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wide cursor-pointer list-none flex items-center gap-1.5">
+        <svg class="w-4 h-4 shrink-0 text-gray-300 transition-transform details-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        Other
+    </summary>
+    <div class="ml-5">
+        {{range .Uncategorized}}
+        <a href="/note/{{.Name}}"
+           hx-get="/note/{{.Name}}"
+           hx-target="#content"
+           hx-push-url="true"
+           class="px-3 py-1.5 rounded-lg hover:bg-gray-50 active:bg-gray-100 text-gray-600 text-sm flex items-center gap-1.5">
+            <svg width="5" height="5" class="shrink-0" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+            {{toTitle .Name}}
+        </a>
+        {{end}}
+    </div>
+</details>
+{{end}}
+{{end}}
+
+{{define "nav.html"}}
+<div class="space-y-1">
+    <div>
+        <a href="/"
+           hx-get="/"
+           hx-target="#content"
+           hx-push-url="true"
+           class="block px-3 py-2.5 rounded-lg hover:bg-gray-50 active:bg-gray-100 font-semibold text-gray-700">
+            Home
+        </a>
+    </div>
+    {{template "navgroups" .}}
+</div>
+{{end}}

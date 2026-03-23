@@ -93,7 +93,7 @@ local function link_selection()
 
 	if text and text ~= "" then
 		local pagename = to_kebab(text)
-		local link = "[[" .. pagename .. "|" .. text .. "]]"
+		local link = "[" .. text .. "](" .. pagename .. ".md)"
 
 		-- Replace visual selection with link
 		vim.cmd('normal! gv"_c' .. link)
@@ -112,7 +112,7 @@ local function insert_link()
 	vim.ui.input({ prompt = "Link text: " }, function(text)
 		if text and text ~= "" then
 			local pagename = to_kebab(text)
-			local link = "[[" .. pagename .. "|" .. text .. "]]"
+			local link = "[" .. text .. "](" .. pagename .. ".md)"
 
 			-- Insert link at cursor
 			vim.api.nvim_put({ link }, "c", true, true)
@@ -124,29 +124,6 @@ local function insert_link()
 			end
 		end
 	end)
-end
-
--- Follow wiki-link under cursor (for gf)
-local function follow_wiki_link()
-	local line = vim.api.nvim_get_current_line()
-	local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 1-indexed
-
-	-- Find wiki-link at cursor position: [[page]] or [[page|text]]
-	local start_pos = 1
-	while true do
-		local link_start, link_end, pagename = line:find("%[%[([^%]|]+)[^%]]*%]%]", start_pos)
-		if not link_start then break end
-
-		if col >= link_start and col <= link_end then
-			-- Found the link under cursor
-			open_note(pagename .. ".md")
-			return true
-		end
-		start_pos = link_end + 1
-	end
-
-	-- No wiki-link found, fall back to default gf
-	return false
 end
 
 -- Toggle checkbox: [ ]/[] → [x] → [-] → [ ]
@@ -207,12 +184,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = "markdown",
 	callback = function()
 		vim.keymap.set("n", "<CR>", toggle_checkbox, { buffer = true, desc = "Toggle checkbox" })
-		vim.keymap.set("n", "gf", function()
-			if not follow_wiki_link() then
-				-- Fall back to default gf behavior
-				vim.cmd("normal! gF")
-			end
-		end, { buffer = true, desc = "Follow wiki-link or file" })
 	end,
 })
 

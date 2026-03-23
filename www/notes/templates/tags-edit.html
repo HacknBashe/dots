@@ -1,0 +1,22 @@
+{{define "tags-edit.html"}}
+<div id="tag-editor" class="flex flex-wrap gap-1.5 items-center mt-1">
+    {{range .Tags}}
+    <span class="inline-flex items-center gap-0.5 bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-medium">
+        {{.}}
+        <button hx-delete="/note/{{$.ID}}/tags?remove={{.}}"
+                hx-target="#tag-editor"
+                hx-swap="outerHTML"
+                class="ml-0.5 text-blue-400 hover:text-red-500 font-bold">&times;</button>
+    </span>
+    {{end}}
+    <form hx-post="/note/{{.ID}}/tags"
+          hx-target="#tag-editor"
+          hx-swap="outerHTML"
+          class="inline-flex">
+        <input type="text" name="add" placeholder="+"
+               class="w-8 px-2 py-0.5 text-xs border border-dashed border-gray-300 rounded-full
+                      text-center focus:w-28 focus:text-left focus:border-blue-400
+                      transition-all duration-200 focus:ring-1 focus:ring-blue-500 outline-none">
+    </form>
+</div>
+{{end}}

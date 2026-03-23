@@ -1,0 +1,78 @@
+{{define "duetask"}}
+<div class="due-task flex items-start gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-50"
+     id="block-{{.NoteID}}-{{.Block.Index}}">
+    <button class="mt-0.5 shrink-0 w-5 h-5 flex items-center justify-center"
+            hx-put="/note/{{.NoteID}}/block/{{.Block.Index}}/toggle"
+            hx-target="closest .due-task"
+            hx-swap="delete">
+        {{if eq .Block.Checked 0}}
+            <span class="w-4 h-4 border-2 border-gray-400 rounded block"></span>
+        {{else if eq .Block.Checked 1}}
+            <span class="w-4 h-4 bg-blue-500 rounded flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                </svg>
+            </span>
+        {{else if eq .Block.Checked 2}}
+            <span class="w-4 h-4 bg-gray-400 rounded flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 12h12"/>
+                </svg>
+            </span>
+        {{end}}
+    </button>
+    <div class="flex-1 min-w-0 {{if eq .Block.Checked 1}}task-done{{end}}{{if eq .Block.Checked 2}}task-cancelled{{end}}">
+        <div class="text-sm">{{taskText .Block.Raw}}</div>
+        <div class="due-date">{{formatDate .DueDate}} · <a href="/note/{{.NoteID}}" hx-get="/note/{{.NoteID}}" hx-target="#content" hx-push-url="true"{{if .NoteColor}} style="color: {{.NoteColor}}"{{end}}>{{toTitle .NoteName}}</a></div>
+    </div>
+</div>
+{{end}}
+
+{{define "index.html"}}
+<div class="space-y-4">
+
+    <section>
+        <h2 class="section-header section-overdue">Overdue</h2>
+        {{if .Overdue}}
+        <div>
+            {{range .Overdue}}
+            {{template "duetask" (map "NoteID" .NoteID "NoteName" .NoteName "NoteColor" .NoteColor "Block" .Block "DueDate" .DueDate "DaysAway" .DaysAway)}}
+            {{end}}
+        </div>
+        {{else}}
+        <p class="px-3 py-1 text-xs text-gray-400">None</p>
+        {{end}}
+    </section>
+
+    <section>
+        <h2 class="section-header section-upcoming">Upcoming</h2>
+        {{if .Upcoming}}
+        <div>
+            {{range .Upcoming}}
+            {{template "duetask" (map "NoteID" .NoteID "NoteName" .NoteName "NoteColor" .NoteColor "Block" .Block "DueDate" .DueDate "DaysAway" .DaysAway)}}
+            {{end}}
+        </div>
+        {{else}}
+        <p class="px-3 py-1 text-xs text-gray-400">None</p>
+        {{end}}
+    </section>
+
+    {{if .Recent}}
+    <section>
+        <h2 class="section-header section-recent">Recently Modified</h2>
+        <div>
+            {{range .Recent}}
+            <a href="/note/{{.Name}}"
+               hx-get="/note/{{.Name}}"
+               hx-target="#content"
+               hx-push-url="true"
+               class="block px-3 py-1.5 rounded-lg hover:bg-gray-50 text-sm text-gray-600">
+                {{toTitle .Name}}
+            </a>
+            {{end}}
+        </div>
+    </section>
+    {{end}}
+
+</div>
+{{end}}

@@ -136,6 +136,7 @@
           ./modules/nixos/caddy.nix
           ./modules/nixos/adguard.nix
           ./modules/nixos/silverbullet.nix
+          ./modules/nixos/notes-app.nix
           sops-nix.nixosModules.sops
           ./modules/nixos/sops.nix
           home-manager.nixosModules.home-manager

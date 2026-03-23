@@ -1,0 +1,20 @@
+{{define "add-menu.html"}}
+<div class="bg-white rounded-xl shadow-lg border p-2 space-y-1 min-w-[10rem]">
+    <button hx-post="/note/{{.NoteID}}/block?type=task"
+            hx-target="#blocks"
+            hx-swap="beforeend"
+            class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-gray-50 active:bg-gray-100 text-sm font-medium">
+        + Task
+    </button>
+    <button hx-post="/note/{{.NoteID}}/block?type=text"
+            hx-target="#blocks"
+            hx-swap="beforeend"
+            class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-gray-50 active:bg-gray-100 text-sm font-medium">
+        + Text
+    </button>
+    <button onclick="showNewNoteForm()"
+            class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-gray-50 active:bg-gray-100 text-sm font-medium">
+        + Note
+    </button>
+</div>
+{{end}}

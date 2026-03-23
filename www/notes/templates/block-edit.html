@@ -1,0 +1,29 @@
+{{define "block-edit.html"}}
+<div class="block-wrap pl-2 py-1 rounded border-l-blue-500 border-l-3 bg-blue-50/50"
+     id="block-{{.NoteID}}-{{.Block.Index}}"
+     {{if gt .Block.Level 0}}style="margin-left: {{.Block.Level}}rem"{{end}}>
+    <form hx-put="/note/{{.NoteID}}/block/{{.Block.Index}}"
+          hx-target="#block-{{.NoteID}}-{{.Block.Index}}"
+          hx-swap="outerHTML"
+          class="space-y-2">
+        <textarea name="content"
+                  data-autoresize
+                  rows="1"
+                  class="w-full px-3 py-2 border rounded-lg text-sm font-mono resize-y min-h-[2.5rem] overflow-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  autofocus>{{.Block.Raw}}</textarea>
+        <div class="flex gap-2">
+            <button type="submit"
+                    class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800">
+                Save
+            </button>
+            <button type="button"
+                    hx-get="/note/{{.NoteID}}/block/{{.Block.Index}}"
+                    hx-target="#block-{{.NoteID}}-{{.Block.Index}}"
+                    hx-swap="outerHTML"
+                    class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>
+{{end}}

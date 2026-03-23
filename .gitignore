@@ -19,6 +19,9 @@ id_ed25519
 credentials.json
 service-account*.json
 
+# Go build artifacts
+www/notes/notes-app
+
 # Decrypted sops files
 *.dec
 *.dec.*

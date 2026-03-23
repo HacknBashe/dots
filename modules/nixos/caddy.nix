@@ -56,10 +56,11 @@
           reverse_proxy localhost:9000
         }
 
-        # SilverBullet notes
+        # Notes web app
         @notes host www.notes.hackford.us
         handle @notes {
-          reverse_proxy localhost:3001
+          import /run/caddy/basic_auth
+          reverse_proxy localhost:3002
         }
 
         handle {
