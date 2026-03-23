@@ -24,6 +24,15 @@
         %hidden thm_dark="${config.theme.colors.extended.bgDark}"
         %hidden thm_orange="${config.theme.colors.indexed.orange}"
 
+        # Export theme colors as server options for status bar scripts
+        set -g @thm_yellow "$thm_yellow"
+        set -g @thm_blue "$thm_blue"
+        set -g @thm_orange "$thm_orange"
+        set -g @thm_white "$thm_white"
+        set -g @thm_black "$thm_black"
+        set -g @thm_grey "$thm_grey"
+        set -g @thm_dark "$thm_dark"
+
         set -g mode-style "fg=$thm_black,bg=$thm_white"
         set -g message-style "fg=$thm_yellow,bg=$thm_bg"
         set -g message-command-style "fg=$thm_yellow,bg=$thm_bg"
@@ -34,16 +43,17 @@
         set -g status-justify "left"
         set -g status-style "fg=$thm_white,bg=$thm_grey"
         set -g status-left-length "100"
-        set -g status-right-length "100"
+        set -g status-right-length "200"
         set -g status-left-style NONE
         set -g status-right-style NONE
 
         set -g status-left "#[bg=$thm_dark]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_blue]} 󰄚#[fg=$thm_blue,bg=$thm_dark] #S #[bg=$thm_grey] "
-        set -g status-right "#[fg=$thm_yellow] #h #[fg=$thm_blue,bg=$thm_dark] %y-%m-%d #[fg=$thm_blue]%H:%M "
+        set -g status-right "#[fg=$thm_yellow] #h #[bg=$thm_dark]#(tmux_session_status)"
         setw -g window-status-activity-style "fg=$thm_white,bg=$thm_orange"
         setw -g window-status-separator ""
         setw -g window-status-format "#[fg=$thm_white,bg=$thm_grey] #I #W "
         setw -g window-status-current-format "#[fg=$thm_yellow,bg=$thm_grey] #I #W "
+
       '';
     };
     "tpm" = {

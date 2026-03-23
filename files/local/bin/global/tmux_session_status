@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Generates tmux status-left segment showing all sessions with pane status icons
+# Called by tmux via #(tmux_session_status) in status-left
+#
+# Each session shows: [number][agent_icon][shell_icon]
+# - Current session number is highlighted (yellow), others are white
+# - Agent icon colored by status: orange=waiting, blue=working, dim=idle/seen
+# - Shell icon shown when a command is running, dim when idle
+
+source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
+
+# Read current session and theme colors in a single tmux call
+IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_white <<< \
+    "$(tmux display-message -p '#S|#{@thm_yellow}|#{@thm_blue}|#{@thm_orange}|#{@thm_white}|#{@thm_white}')"
+
+# Collect agent/shell pane data per session in a single pass
+declare -A agent_status agent_cmd shell_cmd
+
+while IFS='|' read -r session ptype pstatus pcmd; do
+    case "$ptype" in
+        agent) agent_status["$session"]="$pstatus"; agent_cmd["$session"]="$pcmd" ;;
+        shell) shell_cmd["$session"]="$pcmd" ;;
+    esac
+done < <(tmux list-panes -a -F "#{session_name}|#{@pane_type}|#{@pane_status}|#{pane_current_command}")
+
+# Build status output
+output=""
+
+while IFS='|' read -r session session_id; do
+    # Use the actual tmux session ID (strip the $ prefix)
+    sid="${session_id#\$}"
+
+    # Session number: yellow for current, white for others
+    if [[ "$session" == "$current_session" ]]; then
+        entry="#[fg=${thm_yellow}]${sid}"
+    else
+        entry="#[fg=${thm_white}]${sid}"
+    fi
+
+    # Shell pane icon
+    if [[ -n "${shell_cmd[$session]+x}" ]]; then
+        if is_shell_prompt "${shell_cmd[$session]}"; then
+            entry+="#[fg=${thm_white}]${ICON_SHELL}"
+        else
+            entry+="#[fg=${thm_white}]${ICON_RUNNING}"
+        fi
+    fi
+
+    # Agent pane icon
+    if [[ -n "${agent_cmd[$session]+x}" ]]; then
+        if is_shell_prompt "${agent_cmd[$session]}"; then
+            entry+="#[fg=${thm_white}]${ICON_SHELL}"
+        else
+            icon=$(get_agent_status_icon "${agent_status[$session]}")
+            case "${agent_status[$session]}" in
+                waiting) entry+="#[fg=${thm_orange}]${icon}" ;;
+                working) entry+="#[fg=${thm_blue}]${icon}" ;;
+                *)       entry+="#[fg=${thm_white}]${icon}" ;;
+            esac
+        fi
+    fi
+
+    output+=" ${entry}"
+done < <(tmux list-sessions -F "#{session_name}|#{session_id}" | sort -t'$' -k2 -n)
+
+printf '%s ' "$output"

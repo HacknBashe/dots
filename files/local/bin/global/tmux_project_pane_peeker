@@ -5,6 +5,8 @@
 # Example: tmux_project_pane_peeker agent
 #          tmux_project_pane_peeker nvim
 
+source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
+
 # Check if argument is provided
 if [[ $# -eq 0 ]]; then
     echo "Usage: $0 <pane_type>"
@@ -16,38 +18,28 @@ fi
 
 pane_type="$1"
 
-get_type_pattern() {
-    echo "$1\$"
-}
-
 # Get all project panes of the specified type and format them nicely
-# Sorted by icon priority: working > waiting > seen > idle (empty bell at bottom)
+# Sorted by icon priority: waiting > idle > working > seen > shell-prompt
 get_project_panes() {
-    local pattern=$(get_type_pattern "$pane_type")
-    
+    local pattern="${pane_type}\$"
+
     # Query panes by @pane_type across ALL sessions
     # Include @pane_status for agent status detection (set by indicator plugin)
     tmux list-panes -a -F "#{session_name}|#{pane_id}|#{pane_current_command}|#{@pane_status}|#{@pane_type}" |
         grep "|${pattern}" |
         while IFS='|' read -r session_name pane_id current_command pane_status pane_type_val; do
-            # Determine status icon and sort priority (lower = higher in list)
             local symbol=""
             local sort_key="5"  # Default: lowest priority
-            if [[ "$current_command" != "bash" && "$current_command" != "zsh" && "$current_command" != "sh" ]]; then
+            if ! is_shell_prompt "$current_command"; then
                 case "$pane_type_val" in
                     agent)
-                        # Check @pane_status set by indicator plugin
-                        case "$pane_status" in
-                            working) symbol="󰜎"; sort_key="3" ;;
-                            waiting) symbol=""; sort_key="1" ;;
-                            seen) symbol=""; sort_key="4" ;;
-                            *) symbol=""; sort_key="2" ;;  # idle or not set
-                        esac
+                        symbol=$(get_agent_status_icon "$pane_status")
+                        sort_key=$(get_agent_sort_priority "$pane_status")
                         ;;
-                    *) symbol=""; sort_key="3" ;;
+                    *) symbol="$ICON_RUNNING"; sort_key="3" ;;
                 esac
             else
-                symbol=""; sort_key="5"  # Shell prompt = lowest priority
+                symbol="$ICON_SHELL"; sort_key="5"
             fi
             # Prefix with sort_key (will be stripped before display)
             printf "%s|%s %s %-20s %s\n" "$sort_key" "$pane_id" "$symbol" "$current_command" "$session_name"

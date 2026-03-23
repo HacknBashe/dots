@@ -78,3 +78,37 @@ convert_current_pane() {
     tmux set-option -p @pane_type "$type"
     tmux rename-window "$window_name"
 }
+
+# --- Pane Status Icons & Helpers ---
+# Icons used for pane status display (Nerd Font)
+ICON_AGENT_WORKING="󰜎"
+ICON_AGENT_WAITING=""
+ICON_AGENT_SEEN=""
+ICON_AGENT_IDLE=""
+ICON_RUNNING=""
+ICON_SHELL=""
+
+# Check if a command name indicates an idle shell prompt
+is_shell_prompt() {
+    [[ "$1" == "bash" || "$1" == "zsh" || "$1" == "sh" ]]
+}
+
+# Get the status icon for an agent pane based on @pane_status
+get_agent_status_icon() {
+    case "$1" in
+        working) printf '%s' "$ICON_AGENT_WORKING" ;;
+        waiting) printf '%s' "$ICON_AGENT_WAITING" ;;
+        seen)    printf '%s' "$ICON_AGENT_SEEN" ;;
+        *)       printf '%s' "$ICON_AGENT_IDLE" ;;
+    esac
+}
+
+# Get sort priority for agent pane status (lower = more urgent)
+get_agent_sort_priority() {
+    case "$1" in
+        waiting) echo 1 ;;
+        working) echo 3 ;;
+        seen)    echo 4 ;;
+        *)       echo 2 ;;
+    esac
+}
