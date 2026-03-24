@@ -116,6 +116,89 @@
         document.body.addEventListener('htmx:afterSwap', autoResizeTextareas);
         document.addEventListener('DOMContentLoaded', autoResizeTextareas);
 
+        // Quick-add task on home page
+        function showQuickAdd() {
+            var btn = document.getElementById('quick-add-btn');
+            var form = document.getElementById('quick-add-form');
+            if (!btn || !form) return;
+            btn.classList.add('hidden');
+            form.classList.remove('hidden');
+            document.getElementById('quick-add-content').focus();
+            // Populate datalist from /api/notes
+            fetch('/api/notes').then(function(r) { return r.json(); }).then(function(notes) {
+                var dl = document.getElementById('note-list');
+                if (!dl) return;
+                dl.innerHTML = '';
+                notes.forEach(function(n) {
+                    var opt = document.createElement('option');
+                    opt.value = n.Name;
+                    opt.textContent = n.Name.replace(/-/g, ' ');
+                    dl.appendChild(opt);
+                });
+            });
+        }
+        function hideQuickAdd() {
+            var btn = document.getElementById('quick-add-btn');
+            var form = document.getElementById('quick-add-form');
+            if (btn) btn.classList.remove('hidden');
+            if (form) { form.classList.add('hidden'); form.reset(); }
+        }
+        // Reset quick-add state after HTMX swap replaces #content
+        document.body.addEventListener('htmx:afterSwap', function(e) {
+            if (e.detail.target.id === 'content') {
+                var btn = document.getElementById('quick-add-btn');
+                var form = document.getElementById('quick-add-form');
+                if (btn) btn.classList.remove('hidden');
+                if (form) form.classList.add('hidden');
+            }
+        });
+
+        // Due date picker sync
+        var _dueRegex = /\[due:\s*(\d{4}-\d{2}-\d{2})(?:\s+[^\]]+)?\]/;
+        function initDueDatePickers() {
+            document.querySelectorAll('.due-date-input').forEach(function(input) {
+                if (input._dueInit) return;
+                input._dueInit = true;
+                var ta = document.getElementById(input.dataset.textareaId);
+                var clearBtn = input.parentElement.querySelector('.due-date-clear');
+                if (!ta) return;
+                // Parse existing due date from textarea
+                var m = ta.value.match(_dueRegex);
+                if (m) {
+                    input.value = m[1];
+                    if (clearBtn) clearBtn.classList.remove('hidden');
+                }
+                // On date change, update textarea
+                input.addEventListener('change', function() {
+                    var val = ta.value;
+                    var date = input.value;
+                    if (!date) {
+                        // Clear: remove the due tag
+                        ta.value = val.replace(_dueRegex, '').replace(/\s+$/, '');
+                        if (clearBtn) clearBtn.classList.add('hidden');
+                    } else {
+                        var tag = '[due: ' + date + ']';
+                        if (_dueRegex.test(val)) {
+                            ta.value = val.replace(_dueRegex, tag);
+                        } else {
+                            ta.value = val.trimEnd() + ' ' + tag;
+                        }
+                        if (clearBtn) clearBtn.classList.remove('hidden');
+                    }
+                });
+                // Clear button
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', function() {
+                        input.value = '';
+                        ta.value = ta.value.replace(_dueRegex, '').replace(/\s+$/, '');
+                        clearBtn.classList.add('hidden');
+                    });
+                }
+            });
+        }
+        document.body.addEventListener('htmx:afterSwap', initDueDatePickers);
+        document.addEventListener('DOMContentLoaded', initDueDatePickers);
+
         // Sortable drag-and-drop for blocks
         var _sortableInstance = null;
         function initSortable() {

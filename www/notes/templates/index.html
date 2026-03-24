@@ -31,6 +31,36 @@
 {{define "index.html"}}
 <div class="space-y-4">
 
+    <!-- Quick Add Task -->
+    <div id="quick-add-wrap">
+        <button id="quick-add-btn" onclick="showQuickAdd()"
+                class="w-full px-3 py-2 text-sm text-gray-400 border border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:text-blue-500 text-left">
+            + Add task...
+        </button>
+        <form id="quick-add-form" class="hidden space-y-2 p-3 border rounded-lg bg-gray-50/50"
+              hx-post="/task"
+              hx-target="#content"
+              hx-swap="innerHTML">
+            <input type="text" name="content" placeholder="Task description..."
+                   class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                   id="quick-add-content" autocomplete="off">
+            <div class="flex gap-2 items-center">
+                <input type="text" name="note" list="note-list" placeholder="Note..."
+                       class="px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-48"
+                       id="quick-add-note" autocomplete="off" required>
+                <datalist id="note-list"></datalist>
+                <input type="date" name="due"
+                       class="px-2 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <div class="ml-auto flex gap-2">
+                    <button type="button" onclick="hideQuickAdd()"
+                            class="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit"
+                            class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800">Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <section>
         <h2 class="section-header section-overdue">Overdue</h2>
         {{if .Overdue}}

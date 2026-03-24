@@ -7,11 +7,12 @@
           hx-swap="outerHTML"
           class="space-y-2">
         <textarea name="content"
+                  id="block-edit-ta-{{.NoteID}}-{{.Block.Index}}"
                   data-autoresize
                   rows="1"
                   class="w-full px-3 py-2 border rounded-lg text-sm font-mono resize-y min-h-[2.5rem] overflow-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   autofocus>{{.Block.Raw}}</textarea>
-        <div class="flex gap-2">
+        <div class="flex gap-2 items-center">
             <button type="submit"
                     class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800">
                 Save
@@ -23,6 +24,18 @@
                     class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
                 Cancel
             </button>
+            {{if eq .Block.Type "task"}}
+            <span class="ml-auto flex items-center gap-1">
+                <label class="text-xs text-gray-500">Due</label>
+                <input type="date"
+                       class="due-date-input px-2 py-1 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                       data-textarea-id="block-edit-ta-{{.NoteID}}-{{.Block.Index}}">
+                <button type="button"
+                        class="due-date-clear px-1.5 py-1 text-xs text-gray-400 hover:text-red-500 rounded hidden"
+                        title="Remove due date"
+                        data-textarea-id="block-edit-ta-{{.NoteID}}-{{.Block.Index}}">✕</button>
+            </span>
+            {{end}}
         </div>
     </form>
 </div>

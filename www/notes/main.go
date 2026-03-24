@@ -1286,6 +1286,54 @@ func (app *App) handleNewNote(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 }
 
+func (app *App) handleQuickTask(w http.ResponseWriter, r *http.Request) {
+	// POST /task — add a task to a note from the home page
+	r.ParseForm()
+	noteName := strings.TrimSpace(r.FormValue("note"))
+	taskContent := strings.TrimSpace(r.FormValue("content"))
+	dueDate := strings.TrimSpace(r.FormValue("due"))
+
+	if noteName == "" || taskContent == "" {
+		http.Error(w, "note and content required", 400)
+		return
+	}
+
+	// Resolve note name to ID (try as-is first, then kebab-case)
+	id := noteName
+	content, err := app.readNote(id)
+	if err != nil {
+		id = strings.ToLower(strings.ReplaceAll(noteName, " ", "-"))
+		content, err = app.readNote(id)
+		if err != nil {
+			http.Error(w, "note not found: "+noteName, 404)
+			return
+		}
+	}
+
+	fmID, tags, fmSort, fmColor, body := parseFrontmatter(content)
+
+	// Build the task line
+	taskLine := "- [ ] " + taskContent
+	if dueDate != "" {
+		taskLine += " [due: " + dueDate + "]"
+	}
+
+	body = strings.TrimRight(body, "\n") + "\n" + taskLine + "\n"
+
+	if fmID == "" {
+		fmID = id
+	}
+	fullContent := buildFrontmatter(fmID, tags, fmSort, fmColor) + "\n" + body
+	if err := app.writeNote(id, fullContent); err != nil {
+		http.Error(w, "write failed", 500)
+		return
+	}
+
+	// Re-render the index content
+	r.URL.Path = "/"
+	app.handleIndex(w, r)
+}
+
 func (app *App) handleNotesAPI(w http.ResponseWriter, r *http.Request) {
 	notes := app.getNotes()
 	w.Header().Set("Content-Type", "application/json")
@@ -1393,6 +1441,8 @@ func (app *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		app.handleIndex(w, r)
 	case path == "/nav" && r.Method == "GET":
 		app.handleNav(w, r)
+	case path == "/task" && r.Method == "POST":
+		app.handleQuickTask(w, r)
 	case strings.HasPrefix(path, "/note/") && strings.HasSuffix(path, "/tags"):
 		switch r.Method {
 		case "POST":
