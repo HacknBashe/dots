@@ -7,11 +7,10 @@
 set -e
 
 # Determine the correct opencode command (dvx wrapper for HubSpot auth or direct)
-# Use Sonnet for speed/cost
 if command -v dvx &>/dev/null; then
-	OPENCODE_CMD="dvx opencode run -m anthropic/claude-sonnet-4-0"
+	OPENCODE_CMD="dvx opencode run"
 else
-	OPENCODE_CMD="opencode run -m anthropic/claude-sonnet-4-0"
+	OPENCODE_CMD="opencode run"
 fi
 
 echo "🔍 Gathering repository context..."
