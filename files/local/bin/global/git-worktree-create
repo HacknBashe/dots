@@ -53,8 +53,9 @@ if [ $# -ne 0 ]; then
     branch="$1"
   fi
   
+  base_branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo "master")
   workdir="${parent_dir}/${repo_name}_${branch}"
-  if git worktree add -b "$branch" "$workdir" master; then
+  if git worktree add -b "$branch" "$workdir" "$base_branch"; then
     # Format session name: {repo}_{branch}
     session_name="${repo_name}_${branch}"
     
