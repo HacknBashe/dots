@@ -63,26 +63,26 @@ in {
           palette = 0=${colors.default.black}
           palette = 8=${colors.bright.black}
           # red
-          palette = 1=${colors.bright.red}
+          palette = 1=${colors.default.red}
           palette = 9=${colors.bright.red}
           # green
           palette = 2=${colors.default.green}
-          palette = 10=${colors.default.green}
+          palette = 10=${colors.bright.green}
           # yellow
           palette = 3=${colors.default.yellow}
-          palette = 11=${colors.default.yellow}
+          palette = 11=${colors.bright.yellow}
           # blue
           palette = 4=${colors.default.blue}
-          palette = 12=${colors.default.blue}
+          palette = 12=${colors.bright.blue}
           # magenta
           palette = 5=${colors.default.magenta}
-          palette = 13=${colors.default.magenta}
+          palette = 13=${colors.bright.magenta}
           # cyan
           palette = 6=${colors.default.cyan}
-          palette = 14=${colors.default.cyan}
+          palette = 14=${colors.bright.cyan}
           # white
           palette = 7=${colors.default.white}
-          palette = 15=${colors.default.white}
+          palette = 15=${colors.bright.white}
         '';
         target = ".config/ghostty/theme";
       };

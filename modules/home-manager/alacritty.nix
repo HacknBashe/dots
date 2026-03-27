@@ -28,7 +28,6 @@
           };
           normal = config.theme.colors.default;
           bright = config.theme.colors.bright;
-          dim = config.theme.colors.default;
           indexed_colors = [
             {
               index = 16;

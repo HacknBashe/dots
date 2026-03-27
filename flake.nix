@@ -277,6 +277,7 @@
                 ./modules/home-manager/shell.nix
                 ./modules/home-manager/development.nix
                 ./modules/home-manager/tmux.nix
+                ./modules/home-manager/alacritty.nix
                 ./modules/home-manager/btop.nix
                 ./modules/home-manager/ghostty.nix
                 ./modules/home-manager/aerospace.nix
