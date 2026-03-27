@@ -12,8 +12,56 @@ main_repo_dir="$(dirname "$git_common_dir")"
 repo_name="$(basename "$main_repo_dir")"
 parent_dir="$(dirname "$main_repo_dir")"
 
-if [ $# -ne 0 ]; then
-  # Check if argument is a GitHub URL
+create_worktree_and_session() {
+  local branch="$1"
+  local workdir="${parent_dir}/${repo_name}_${branch}"
+
+  if git worktree add -b "$branch" "$workdir" master; then
+    # Format session name: {repo}_{branch}
+    session_name="${repo_name}_${branch}"
+
+    # Debug output
+    echo "DEBUG: Creating session - repo_name='$repo_name', branch='$branch', session_name='$session_name'"
+
+    # Check if already in a tmux session
+    if [ -z "$TMUX" ]; then
+      if tmux has-session -t "$session_name" 2>/dev/null; then
+        tmux attach-session -t "$session_name"
+      else
+        tmux new-session -s "$session_name" -c "$workdir"
+      fi
+    else
+      if tmux has-session -t "$session_name" 2>/dev/null; then
+        tmux switch-client -t "$session_name"
+      else
+        tmux new-session -d -s "$session_name" -c "$workdir"
+        tmux switch-client -t "$session_name"
+      fi
+    fi
+  fi
+}
+
+if [ $# -eq 2 ]; then
+  # Two-arg mode: extract issue number from $1, use $2 as branch name suffix
+  ISSUE_REF="$1"
+  BRANCH_NAME="$2"
+
+  # Extract issue number from URL or bare number
+  if [[ "$ISSUE_REF" =~ ^https://github\.com/.*/(issues|pull)/([0-9]+)$ ]]; then
+    ISSUE_NUM="${BASH_REMATCH[2]}"
+  elif [[ "$ISSUE_REF" =~ ^[0-9]+$ ]]; then
+    ISSUE_NUM="$ISSUE_REF"
+  else
+    echo "Could not extract issue number from: $ISSUE_REF"
+    exit 1
+  fi
+
+  branch="nh-${ISSUE_NUM}-${BRANCH_NAME}"
+  echo "Generated branch name: $branch"
+  create_worktree_and_session "$branch"
+
+elif [ $# -eq 1 ]; then
+  # Single-arg mode: GitHub URL (auto-generate name) or plain branch name
   if [[ "$1" =~ ^https://github\.com/.*/(issues|pull)/[0-9]+$ ]]; then
     # Extract repo and issue/PR ID from URL
     GITHUB_URL="$1"
@@ -52,35 +100,11 @@ if [ $# -ne 0 ]; then
   else
     branch="$1"
   fi
-  
-  base_branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo "master")
-  workdir="${parent_dir}/${repo_name}_${branch}"
-  if git worktree add -b "$branch" "$workdir" "$base_branch"; then
-    # Format session name: {repo}_{branch}
-    session_name="${repo_name}_${branch}"
-    
-    # Debug output
-    echo "DEBUG: Creating session - repo_name='$repo_name', branch='$branch', session_name='$session_name'"
-    
-    # Check if already in a tmux session
-    if [ -z "$TMUX" ]; then
-      # Not in a tmux session, create or attach to one
-      if tmux has-session -t "$session_name" 2>/dev/null; then
-        tmux attach-session -t "$session_name"
-      else
-        tmux new-session -s "$session_name" -c "$workdir"
-      fi
-    else
-      # Already in a tmux session, switch to the session directly
-      if tmux has-session -t "$session_name" 2>/dev/null; then
-        tmux switch-client -t "$session_name"
-      else
-        tmux new-session -d -s "$session_name" -c "$workdir"
-        tmux switch-client -t "$session_name"
-      fi
-    fi
-  fi
+
+  create_worktree_and_session "$branch"
+
 else
+  # No args: pick from remote branches via fzf
   echo "Remote branches:"
   git fetch --prune
   branch=$(git branch -r | grep -v HEAD | sed 's|.*origin/||' | sed 's/^[[:space:]]*//' | sort -u | fzf | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
@@ -123,14 +147,12 @@ else
       
       # Check if already in a tmux session
       if [ -z "$TMUX" ]; then
-        # Not in a tmux session, create or attach to one
         if tmux has-session -t "$session_name" 2>/dev/null; then
           tmux attach-session -t "$session_name"
         else
           tmux new-session -s "$session_name" -c "$workdir"
         fi
       else
-        # Already in a tmux session, switch to the session directly
         if tmux has-session -t "$session_name" 2>/dev/null; then
           tmux switch-client -t "$session_name"
         else

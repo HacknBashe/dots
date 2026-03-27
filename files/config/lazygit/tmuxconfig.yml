@@ -10,10 +10,12 @@ customCommands:
   - key: "<c-n>"
     prompts:
       - type: "input"
-        title: "GitHub Issue/Branch name:"
-        initialValue: ""
-        key: "WorktreeToCreate"
-    command: 'tmux neww ''zsh -i -c "git-worktree-create {{.Form.WorktreeToCreate}}"'''
+        title: "GitHub Issue URL or number:"
+        key: "IssueRef"
+      - type: "input"
+        title: "Branch name:"
+        key: "BranchName"
+    command: 'tmux neww ''zsh -i -c "git-worktree-create {{.Form.IssueRef}} {{.Form.BranchName}}"'''
     context: "localBranches"
     loadingText: "Create new branch+worktree"
   - key: "<c-d>"

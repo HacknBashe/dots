@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Prints the bend worktree label for the current session (if any).
+# Scans shell pane scrollback for "bend worktree: <name>" output.
+# Called by tmux via #(tmux_worktree_label) in status-right.
+
+# Find shell pane in current session
+pane_id=$(tmux list-panes -s -F "#{pane_id} #{@pane_type}" 2>/dev/null | grep ' shell$' | head -1 | awk '{print $1}')
+[[ -z "$pane_id" ]] && exit 0
+
+wt=$(tmux capture-pane -t "$pane_id" -p -S -200 < /dev/null 2>/dev/null | sed -n 's/.*bend worktree: \([^ ]*\).*/\1/p' | tail -1)
+[[ -n "$wt" ]] && printf '%s ' "$wt"

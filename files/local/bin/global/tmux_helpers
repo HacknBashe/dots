@@ -87,6 +87,9 @@ ICON_AGENT_SEEN=""
 ICON_AGENT_IDLE=""
 ICON_RUNNING=""
 ICON_SHELL=""
+ICON_BLAZAR_SUCCESS="󰄬"
+ICON_BLAZAR_PENDING="󰔟"
+ICON_BLAZAR_FAILURE="󰅖"
 
 # Check if a command name indicates an idle shell prompt
 is_shell_prompt() {

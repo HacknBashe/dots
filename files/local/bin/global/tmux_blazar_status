@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# Returns cached Blazar build state for a git repo directory.
+# Usage: tmux_blazar_status <session_path> <session_name>
+#
+# Output: "success", "pending", "failure", "error", or "" (no build / not a repo)
+# Uses file-based caching to avoid blocking the tmux status bar.
+# Background gh api calls refresh the cache when stale.
+
+CACHE_DIR="/tmp/tmux_blazar"
+CACHE_TTL=60  # seconds
+
+session_path="$1"
+session_name="$2"
+
+[[ -z "$session_path" || -z "$session_name" ]] && exit 0
+
+# Must be a git repo
+git -C "$session_path" rev-parse --git-dir &>/dev/null || exit 0
+
+# Get current branch - skip master/main
+branch=$(git -C "$session_path" branch --show-current 2>/dev/null)
+[[ -z "$branch" || "$branch" == "master" || "$branch" == "main" ]] && exit 0
+
+# Check cache
+mkdir -p "$CACHE_DIR"
+cache_file="$CACHE_DIR/$session_name"
+
+if [[ -f "$cache_file" ]]; then
+    # Check age
+    if [[ "$(uname)" == "Darwin" ]]; then
+        file_age=$(( $(date +%s) - $(stat -f %m "$cache_file") ))
+    else
+        file_age=$(( $(date +%s) - $(stat -c %Y "$cache_file") ))
+    fi
+
+    if (( file_age < CACHE_TTL )); then
+        cat "$cache_file"
+        exit 0
+    fi
+fi
+
+# Cache is stale or missing - print whatever we have and refresh in background
+[[ -f "$cache_file" ]] && cat "$cache_file"
+
+# Background refresh - avoid spawning multiple concurrent fetches
+lock_file="$CACHE_DIR/.lock_${session_name}"
+if ! mkdir "$lock_file" 2>/dev/null; then
+    exit 0
+fi
+
+(
+    trap 'rmdir "$lock_file" 2>/dev/null' EXIT
+
+    remote_url=$(git -C "$session_path" remote get-url origin 2>/dev/null)
+    [[ -z "$remote_url" ]] && exit 0
+
+    # Parse owner/repo from remote URL (handles ssh and https)
+    owner_repo=$(echo "$remote_url" | sed -E 's#^.*[:/]([^/]+/[^/]+)$#\1#' | sed 's/\.git$//')
+    [[ -z "$owner_repo" ]] && exit 0
+
+    # Determine hostname for gh api
+    hostname_flag=""
+    if echo "$remote_url" | grep -q "git.hubteam.com"; then
+        hostname_flag="--hostname git.hubteam.com"
+    fi
+
+    # Fetch latest Blazar status for this branch
+    state=$(gh api $hostname_flag "repos/${owner_repo}/commits/${branch}/statuses?per_page=100" \
+        --jq '[.[] | select(.context == "Blazar")][0].state // empty' 2>/dev/null) || state=""
+
+    # Only cache valid states
+    case "$state" in
+        success|pending|failure|error) printf '%s' "$state" > "$cache_file" ;;
+        *) printf '' > "$cache_file" ;;
+    esac
+) &
+
+exit 0

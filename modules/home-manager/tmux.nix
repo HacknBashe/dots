@@ -23,6 +23,7 @@
         %hidden thm_grey="${config.theme.colors.indexed.bgStatusline}"
         %hidden thm_dark="${config.theme.colors.extended.bgDark}"
         %hidden thm_orange="${config.theme.colors.indexed.orange}"
+        %hidden thm_green="${config.theme.colors.default.green}"
 
         # Export theme colors as server options for status bar scripts
         set -g @thm_yellow "$thm_yellow"
@@ -32,6 +33,7 @@
         set -g @thm_black "$thm_black"
         set -g @thm_grey "$thm_grey"
         set -g @thm_dark "$thm_dark"
+        set -g @thm_green "$thm_green"
 
         set -g mode-style "fg=$thm_black,bg=$thm_white"
         set -g message-style "fg=$thm_yellow,bg=$thm_bg"
@@ -48,7 +50,7 @@
         set -g status-right-style NONE
 
         set -g status-left "#[bg=$thm_dark]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_blue]} 󰄚#[fg=$thm_blue,bg=$thm_dark] #S #[bg=$thm_grey] "
-        set -g status-right "#[fg=$thm_yellow] #h #[bg=$thm_dark]#(tmux_session_status)"
+        set -g status-right "#[fg=$thm_white]#(tmux_worktree_label)#[fg=$thm_yellow]#h #[bg=$thm_dark]#(tmux_session_status)"
         setw -g window-status-activity-style "fg=$thm_white,bg=$thm_orange"
         setw -g window-status-separator ""
         setw -g window-status-format "#[fg=$thm_white,bg=$thm_grey] #I #W "

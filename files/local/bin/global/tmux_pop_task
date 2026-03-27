@@ -4,7 +4,7 @@
 
 # Find git root or use current directory
 git_root=$(git rev-parse --show-toplevel 2>/dev/null) || git_root=$(pwd)
-tasks_file="$git_root/tasks.md"
+tasks_file="$git_root/.agents/tasks.md"
 
 # Exit silently if no tasks file exists
 [[ ! -f "$tasks_file" ]] && exit 0

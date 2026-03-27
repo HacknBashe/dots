@@ -10,8 +10,14 @@
 source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 
 # Read current session and theme colors in a single tmux call
-IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_white <<< \
-    "$(tmux display-message -p '#S|#{@thm_yellow}|#{@thm_blue}|#{@thm_orange}|#{@thm_white}|#{@thm_white}')"
+IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_green <<< \
+    "$(tmux display-message -p '#S|#{@thm_yellow}|#{@thm_blue}|#{@thm_orange}|#{@thm_white}|#{@thm_green}')"
+
+# Collect session paths for Blazar status lookup
+declare -A session_path
+while IFS='|' read -r sname spath; do
+    session_path["$sname"]="$spath"
+done < <(tmux list-sessions -F "#{session_name}|#{session_path}")
 
 # Collect agent/shell pane data per session in a single pass
 declare -A agent_status agent_cmd shell_cmd
@@ -59,6 +65,14 @@ while IFS='|' read -r session session_id; do
             esac
         fi
     fi
+
+    # Blazar build status icon
+    blazar_state=$(tmux_blazar_status "${session_path[$session]}" "$session" 2>/dev/null)
+    case "$blazar_state" in
+        success) entry+="#[fg=${thm_green}]${ICON_BLAZAR_SUCCESS}" ;;
+        pending) entry+="#[fg=${thm_yellow}]${ICON_BLAZAR_PENDING}" ;;
+        failure|error) entry+="#[fg=${thm_orange}]${ICON_BLAZAR_FAILURE}" ;;
+    esac
 
     output+=" ${entry}"
 done < <(tmux list-sessions -F "#{session_name}|#{session_id}" | sort -t'$' -k2 -n)
