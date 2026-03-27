@@ -85,7 +85,7 @@ ICON_AGENT_WORKING="󰜎"
 ICON_AGENT_WAITING=""
 ICON_AGENT_SEEN=""
 ICON_AGENT_IDLE=""
-ICON_RUNNING=""
+ICON_RUNNING=""
 ICON_SHELL=""
 
 # Check if a command name indicates an idle shell prompt

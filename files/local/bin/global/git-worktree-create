@@ -33,14 +33,16 @@ if [ $# -ne 0 ]; then
       echo "Fetched title: $TITLE"
       
       # Sanitize the title for the branch name
-      # Limit to first 5 words, replace non-alphanumeric with '-', collapse '-', trim '-', lowercase
+      # Limit to first 4 words, replace non-alphanumeric with '-', collapse '-', trim '-', lowercase, cap at 15 chars
       SANITIZED_TITLE=$(echo "$TITLE" |
-        awk '{for(i=1;i<=5&&i<=NF;i++) printf "%s ", $i; print ""}' |
+        awk '{for(i=1;i<=4&&i<=NF;i++) printf "%s ", $i; print ""}' |
         sed -e 's/[^a-zA-Z0-9 ]/-/g' |
         sed -e 's/ /-/g' |
         tr -s '-' |
         sed -e 's/^-//' -e 's/-$//' |
-        tr '[:upper:]' '[:lower:]')
+        tr '[:upper:]' '[:lower:]' |
+        cut -c1-15 |
+        sed -e 's/-$//')
       
       # Include issue ID to ensure branch name uniqueness
       branch="nh-${ISSUE_ID}-${SANITIZED_TITLE}"

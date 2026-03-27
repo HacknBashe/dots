@@ -25,17 +25,16 @@ done < <(tmux list-panes -a -F "#{session_name}|#{@pane_type}|#{@pane_status}|#{
 
 # Build status output
 output=""
+idx=0
 
 while IFS='|' read -r session session_id; do
-    # Use the actual tmux session ID (strip the $ prefix)
-    sid="${session_id#\$}"
-
-    # Session number: yellow for current, white for others
+    # Session number: sequential index, yellow for current, white for others
     if [[ "$session" == "$current_session" ]]; then
-        entry="#[fg=${thm_yellow}]${sid}"
+        entry="#[fg=${thm_yellow}]${idx}"
     else
-        entry="#[fg=${thm_white}]${sid}"
+        entry="#[fg=${thm_white}]${idx}"
     fi
+    ((idx++))
 
     # Shell pane icon
     if [[ -n "${shell_cmd[$session]+x}" ]]; then
@@ -55,7 +54,8 @@ while IFS='|' read -r session session_id; do
             case "${agent_status[$session]}" in
                 waiting) entry+="#[fg=${thm_orange}]${icon}" ;;
                 working) entry+="#[fg=${thm_blue}]${icon}" ;;
-                *)       entry+="#[fg=${thm_white}]${icon}" ;;
+                seen)    entry+="#[fg=${thm_white}]${icon}" ;;
+                *)       entry+="#[fg=${thm_blue}]${icon}" ;;
             esac
         fi
     fi
