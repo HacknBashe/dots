@@ -1,6 +1,9 @@
-{...}: let
+{pkgs, ...}: let
   user = "nhackford";
 in {
+  environment.systemPackages = with pkgs; [
+    alacritty
+  ];
   nixpkgs = {
     hostPlatform = "aarch64-darwin";
     config.allowUnfree = true;
