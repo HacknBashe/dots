@@ -2,9 +2,10 @@ return {
 	{
 		"zbirenbaum/copilot.lua",
 		-- Only enable if node is installed (needed for runtime)
-		enabled = function()
-			return require("lib.plugin-deps").check_executable("node", "copilot.lua")
-		end,
+		-- enabled = function()
+		-- 	return require("lib.plugin-deps").check_executable("node", "copilot.lua")
+		-- end,
+		enabled = false,
 		cmd = "Copilot",
 		event = "VeryLazy",
 		config = function()
