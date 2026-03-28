@@ -10,8 +10,8 @@
 source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 
 # Read current session and theme colors in a single tmux call
-IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_green <<< \
-    "$(tmux display-message -p '#S|#{@thm_yellow}|#{@thm_blue}|#{@thm_orange}|#{@thm_white}|#{@thm_green}')"
+IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_green thm_grey thm_dark <<< \
+    "$(tmux display-message -p '#S|#{@thm_yellow}|#{@thm_blue}|#{@thm_orange}|#{@thm_white}|#{@thm_green}|#{@thm_grey}|#{@thm_dark}')"
 
 # Collect session paths for Blazar status lookup
 declare -A session_path
@@ -35,19 +35,25 @@ idx=0
 
 while IFS='|' read -r session session_id; do
     # Session number: sequential index, yellow for current, white for others
+    # Current session gets a lighter background to stand out
     if [[ "$session" == "$current_session" ]]; then
-        entry="#[fg=${thm_yellow}]${idx}"
+        entry="#[bg=${thm_grey}]#[fg=${thm_yellow}]${idx}"
     else
-        entry="#[fg=${thm_white}]${idx}"
+        entry="#[bg=${thm_dark}]#[fg=${thm_white}]${idx}"
     fi
     ((idx++))
 
-    # Shell pane icon
+    # Shell pane icon (yellow for current session, white for others)
     if [[ -n "${shell_cmd[$session]+x}" ]]; then
-        if is_shell_prompt "${shell_cmd[$session]}"; then
-            entry+="#[fg=${thm_white}]${ICON_SHELL}"
+        if [[ "$session" == "$current_session" ]]; then
+            shell_color="$thm_yellow"
         else
-            entry+="#[fg=${thm_white}]${ICON_RUNNING}"
+            shell_color="$thm_white"
+        fi
+        if is_shell_prompt "${shell_cmd[$session]}"; then
+            entry+="#[fg=${shell_color}]${ICON_SHELL}"
+        else
+            entry+="#[fg=${shell_color}]${ICON_RUNNING}"
         fi
     fi
 
@@ -74,7 +80,7 @@ while IFS='|' read -r session session_id; do
         failure|error) entry+="#[fg=${thm_orange}]${ICON_BLAZAR_FAILURE}" ;;
     esac
 
-    output+=" ${entry}"
+    output+=" ${entry}#[bg=${thm_dark}]"
 done < <(tmux list-sessions -F "#{session_name}|#{session_id}" | sort -t'$' -k2 -n)
 
 printf '%s ' "$output"
