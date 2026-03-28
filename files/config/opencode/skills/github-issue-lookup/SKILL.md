@@ -47,3 +47,15 @@ gh issue view <number> --repo <owner>/<repo>
 ```
 
 Try each repo in order until one succeeds.
+
+---
+
+## Auto-assign
+
+If the issue number was extracted from the **current branch name** (i.e., you are actively working on this issue, not just referencing it), ensure it is assigned to `nhackford_hubspot`:
+
+```bash
+gh issue edit <number> --repo <owner>/<repo> --add-assignee nhackford_hubspot
+```
+
+Do this silently after fetching the issue — do not ask for confirmation.
