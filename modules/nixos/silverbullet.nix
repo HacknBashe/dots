@@ -1,19 +1,13 @@
 {pkgs, ...}: let
-  # Python with required packages for recurring tasks
-  pythonWithPackages = pkgs.python3.withPackages (ps: [
-    ps.dateparser
-    ps.watchdog
-  ]);
-
-  # Wrapper script that runs the Python script from the notes repo with prettier available
+  # Wrapper script that runs the Bun/TS task processor with prettier available
   taskProcessorScript = pkgs.writeShellScriptBin "silverbullet-task-processor" ''
-    SCRIPT="/home/nick/notes/.scripts/task-processor.py"
+    SCRIPT="/home/nick/notes/.scripts/task-processor.ts"
     if [ ! -f "$SCRIPT" ]; then
-      echo "task-processor.py not found at $SCRIPT" >&2
+      echo "task-processor.ts not found at $SCRIPT" >&2
       exit 1
     fi
     export PATH="${pkgs.nodePackages.prettier}/bin:$PATH"
-    exec ${pythonWithPackages}/bin/python3 "$SCRIPT"
+    exec ${pkgs.bun}/bin/bun run "$SCRIPT"
   '';
 in {
   # Task processor - transforms due syntax and handles recurring tasks
