@@ -107,16 +107,16 @@
     prismlauncher
   ];
 
-  # Surface low-power profile on boot
-  systemd.services.surface-low-power = {
-    description = "Set Surface to low-power profile";
-    wantedBy = ["multi-user.target"];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.surface-control}/bin/surface profile set low-power";
-      RemainAfterExit = true;
-    };
-  };
+  # TODO: Surface low-power profile on boot
+  # systemd.services.surface-low-power = {
+  #   description = "Set Surface to low-power profile";
+  #   wantedBy = ["multi-user.target"];
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     ExecStart = "${pkgs.surface-control}/bin/surface profile set low-power";
+  #     RemainAfterExit = true;
+  #   };
+  # };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
