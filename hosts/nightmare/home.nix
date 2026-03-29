@@ -47,10 +47,7 @@ in {
       ubuntu-lock-on-suspend = false;
     };
     "org/gnome/desktop/session" = {
-      idle-delay = 180;
-    };
-    "org/gnome/settings-daemon/plugins/power" = {
-      power-button-action = "suspend";
+      idle-delay = 900;
     };
 
   };
