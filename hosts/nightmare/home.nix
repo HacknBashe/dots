@@ -34,7 +34,6 @@ in {
   home.packages = with pkgs; [
     gcompris
     tuxtype
-    rili
   ];
 
   dconf.settings = {
