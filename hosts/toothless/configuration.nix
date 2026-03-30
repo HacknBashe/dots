@@ -1,4 +1,4 @@
-{...}: let
+{pkgs, ...}: let
   user = "nick";
 in {
   nixpkgs = {
@@ -7,14 +7,17 @@ in {
   };
   nix.settings.experimental-features = "nix-command flakes";
 
+  environment.systemPackages = with pkgs; [
+    brave
+  ];
   # homebrew = {
   #   enable = true;
   #   brews = [
   #     "switchaudio-osx"
   #     "ical-buddy"
   #   ];
-#   casks = [
-#     "google-chrome"
+  #   casks = [
+  #     "google-chrome"
   #     "affinity-designer"
   #     "affinity-photo"
   #     "affinity-publisher"
