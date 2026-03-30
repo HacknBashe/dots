@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Generates tmux status-left segment showing all sessions with pane status icons
-# Called by tmux via #(tmux_session_status) in status-left
+# Generates tmux status bar showing all sessions in a window-tab style
+# Called by tmux via #(tmux_session_status) in status-format[0]
 #
-# Each session shows: [number][agent_icon][shell_icon]
-# - Current session number is highlighted (yellow), others are white
+# Each session shows: [label][icons]
+# - Label is the first two words of the session name (hyphen/underscore separated)
+# - Current session is highlighted (yellow text, grey bg), others are white on dark bg
 # - Agent icon colored by status: orange=waiting, blue=working, dim=idle/seen
 # - Shell icon shown when a command is running, dim when idle
 
@@ -12,6 +13,19 @@ source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 # Read current session and theme colors in a single tmux call
 IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_green thm_grey thm_dark <<< \
     "$(tmux display-message -p '#S|#{@thm_yellow}|#{@thm_blue}|#{@thm_orange}|#{@thm_white}|#{@thm_green}|#{@thm_grey}|#{@thm_dark}')"
+
+# Extract first two words from a session name (split on - or _)
+session_label() {
+    local name="$1"
+    # Replace underscores with hyphens, split on hyphens, take first two words
+    local words
+    IFS='-' read -ra words <<< "${name//_/-}"
+    if [[ ${#words[@]} -ge 2 ]]; then
+        printf '%s %s' "${words[0]}" "${words[1]}"
+    else
+        printf '%s' "${words[0]}"
+    fi
+}
 
 # Collect session paths for Blazar status lookup
 declare -A session_path
@@ -34,53 +48,50 @@ output=""
 idx=0
 
 while IFS='|' read -r session session_id; do
-    # Session number: sequential index, yellow for current, white for others
-    # Current session gets a lighter background to stand out
-    if [[ "$session" == "$current_session" ]]; then
-        entry="#[bg=${thm_grey}]#[fg=${thm_yellow}]${idx}"
-    else
-        entry="#[bg=${thm_dark}]#[fg=${thm_white}]${idx}"
-    fi
-    ((idx++))
-
-    # Shell pane icon (yellow for current session, white for others)
-    if [[ -n "${shell_cmd[$session]+x}" ]]; then
-        if [[ "$session" == "$current_session" ]]; then
-            shell_color="$thm_yellow"
-        else
-            shell_color="$thm_white"
-        fi
-        if is_shell_prompt "${shell_cmd[$session]}"; then
-            entry+="#[fg=${shell_color}]${ICON_SHELL}"
-        else
-            entry+="#[fg=${shell_color}]${ICON_RUNNING}"
-        fi
-    fi
+    label=$(session_label "$session")
+    icons=""
 
     # Agent pane icon
     if [[ -n "${agent_cmd[$session]+x}" ]]; then
         if is_shell_prompt "${agent_cmd[$session]}"; then
-            entry+="#[fg=${thm_white}]${ICON_SHELL}"
+            icons+="#[fg=${thm_white}]${ICON_SHELL}"
         else
             icon=$(get_agent_status_icon "${agent_status[$session]}")
             case "${agent_status[$session]}" in
-                waiting) entry+="#[fg=${thm_orange}]${icon}" ;;
-                working) entry+="#[fg=${thm_blue}]${icon}" ;;
-                seen)    entry+="#[fg=${thm_white}]${icon}" ;;
-                *)       entry+="#[fg=${thm_blue}]${icon}" ;;
+                waiting) icons+="#[fg=${thm_orange}]${icon}" ;;
+                working) icons+="#[fg=${thm_blue}]${icon}" ;;
+                seen)    icons+="#[fg=${thm_white}]${icon}" ;;
+                *)       icons+="#[fg=${thm_blue}]${icon}" ;;
             esac
         fi
     fi
 
-    # Blazar build status icon
+    # Shell pane icon (colored by status: blue=running, white=idle)
+    if [[ -n "${shell_cmd[$session]+x}" ]]; then
+        if is_shell_prompt "${shell_cmd[$session]}"; then
+            icons+="#[fg=${thm_white}]${ICON_SHELL}"
+        else
+            icons+="#[fg=${thm_blue}]${ICON_RUNNING}"
+        fi
+    fi
+
+    # Blazar build status icon (appended after label with no leading space)
+    blazar_icon=""
     blazar_state=$(tmux_blazar_status "${session_path[$session]}" "$session" 2>/dev/null)
     case "$blazar_state" in
-        success) entry+="#[fg=${thm_green}]${ICON_BLAZAR_SUCCESS}" ;;
-        pending) entry+="#[fg=${thm_yellow}]${ICON_BLAZAR_PENDING}" ;;
-        failure|error) entry+="#[fg=${thm_orange}]${ICON_BLAZAR_FAILURE}" ;;
+        success) blazar_icon="#[fg=${thm_green}]${ICON_BLAZAR_SUCCESS}" ;;
+        pending) blazar_icon="#[fg=${thm_yellow}]${ICON_BLAZAR_PENDING}" ;;
+        failure|error) blazar_icon="#[fg=${thm_orange}]${ICON_BLAZAR_FAILURE}" ;;
     esac
 
-    output+=" ${entry}#[bg=${thm_dark}]"
+    # Format: " index icons name "
+    all_icons="${icons}${blazar_icon}"
+    if [[ "$session" == "$current_session" ]]; then
+        output+="#[fg=${thm_yellow},bg=${thm_grey}] ${idx} ${all_icons} #[fg=${thm_yellow}]${label} "
+    else
+        output+="#[fg=${thm_white},bg=${thm_dark}] ${idx} ${all_icons} #[fg=${thm_white}]${label} "
+    fi
+    ((idx++))
 done < <(tmux list-sessions -F "#{session_name}|#{session_id}" | sort -t'$' -k2 -n)
 
-printf '%s ' "$output"
+printf '%s' "$output"

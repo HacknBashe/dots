@@ -14,48 +14,19 @@
       target = ".config/tmux/theme.tmux";
       text = ''
         #!/usr/bin/env bash
-        # Blocky theme - uses background colors for visual separation
-        %hidden thm_bg="default"
-        %hidden thm_black="${config.theme.colors.default.black}"
-        %hidden thm_yellow="${config.theme.colors.default.yellow}"
-        %hidden thm_blue="${config.theme.colors.default.blue}"
-        %hidden thm_white="${config.theme.colors.default.white}"
-        %hidden thm_grey="${config.theme.colors.indexed.bgStatusline}"
-        %hidden thm_dark="${config.theme.colors.extended.bgDark}"
-        %hidden thm_orange="${config.theme.colors.indexed.orange}"
-        %hidden thm_green="${config.theme.colors.default.green}"
+        # Theme color definitions (nix-managed, requires rebuild to change)
+        # All status bar layout config lives in tmux.conf
 
-        # Export theme colors as server options for status bar scripts
-        set -g @thm_yellow "$thm_yellow"
-        set -g @thm_blue "$thm_blue"
-        set -g @thm_orange "$thm_orange"
-        set -g @thm_white "$thm_white"
-        set -g @thm_black "$thm_black"
-        set -g @thm_grey "$thm_grey"
-        set -g @thm_dark "$thm_dark"
-        set -g @thm_green "$thm_green"
-
-        set -g mode-style "fg=$thm_black,bg=$thm_white"
-        set -g message-style "fg=$thm_yellow,bg=$thm_bg"
-        set -g message-command-style "fg=$thm_yellow,bg=$thm_bg"
-        set -g pane-border-indicators "colour"
-        set -g pane-border-style "fg=$thm_black"
-        set -g pane-active-border-style "fg=$thm_blue"
-        set -g status "on"
-        set -g status-justify "left"
-        set -g status-style "fg=$thm_white,bg=$thm_grey"
-        set -g status-left-length "100"
-        set -g status-right-length "200"
-        set -g status-left-style NONE
-        set -g status-right-style NONE
-
-        set -g status-left "#[bg=$thm_dark]#{?client_prefix,#[fg=$thm_orange],#[fg=$thm_blue]} 󰄚#[fg=$thm_blue,bg=$thm_dark] #S #[bg=$thm_grey] "
-        set -g status-right "#[fg=$thm_white]#(tmux_worktree_label)#[fg=$thm_yellow]#h #[bg=$thm_dark]#(tmux_session_status)"
-        setw -g window-status-activity-style "fg=$thm_white,bg=$thm_orange"
-        setw -g window-status-separator ""
-        setw -g window-status-format "#[fg=$thm_white,bg=$thm_grey] #I #W "
-        setw -g window-status-current-format "#[fg=$thm_yellow,bg=$thm_grey] #I #W "
-
+        # Export theme colors as server options for use in tmux.conf and scripts
+        set -g @thm_bg "default"
+        set -g @thm_black "${config.theme.colors.default.black}"
+        set -g @thm_yellow "${config.theme.colors.default.yellow}"
+        set -g @thm_blue "${config.theme.colors.default.blue}"
+        set -g @thm_white "${config.theme.colors.default.white}"
+        set -g @thm_grey "${config.theme.colors.indexed.bgStatusline}"
+        set -g @thm_dark "${config.theme.colors.extended.bgDark}"
+        set -g @thm_orange "${config.theme.colors.indexed.orange}"
+        set -g @thm_green "${config.theme.colors.default.green}"
       '';
     };
     "tpm" = {
