@@ -18,6 +18,18 @@ Use this skill when:
 
 ---
 
+## Detecting Repository from Context
+
+**IMPORTANT**: Detect the repository from the working directory path WITHOUT running commands.
+
+- OpenCode is always run at the root of a repo (worktree or plain repo)
+- Directories one level below `src/` are projects/repos
+- Directories inside that are branches
+
+**DO NOT** run `gh repo view` or `git branch --show-current` unnecessarily.
+
+---
+
 ## Branch Name Pattern
 
 Branch names follow the pattern: `username-1234-description`
@@ -37,6 +49,12 @@ For HubSpot Social team repositories, issues may live in multiple repos. Search 
 3. `HubSpotProductSupport/ProductSupport`
 
 Stop at the first repo that returns a result.
+
+### Issue tracking repo vs code repo
+
+- Sprint planning, KTLO, and epic issues live in **`HubSpotEngineering/SocialCoreTeam`**, NOT in the code repo (`HubSpotEngineering/Social`).
+- When creating task issues that track work (e.g., KTLO tasks, sprint tasks), create them in `HubSpotEngineering/SocialCoreTeam` and link as sub-issues to the relevant sprint/epic.
+- Branch issue numbers (from `username-1234-description`) also refer to `SocialCoreTeam` issues.
 
 ---
 
