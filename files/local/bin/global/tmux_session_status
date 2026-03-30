@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
 # Generates tmux status bar showing all sessions in a window-tab style
-# Called by tmux via #(tmux_session_status) in status-format[0]
+# Called periodically via tmux_session_status_poll (status-interval polling)
 #
-# Each session shows: [label][icons]
+# Each session shows: [index icons label]
 # - Label is the first two words of the session name (hyphen/underscore separated)
 # - Current session is highlighted (yellow text, grey bg), others are white on dark bg
 # - Agent icon colored by status: orange=waiting, blue=working, dim=idle/seen
 # - Shell icon shown when a command is running, dim when idle
+#
+# Writes per-session icon/label data to a cache file so that
+# tmux_session_status_fast can re-render highlighting instantly on session switch
+# without re-polling pane data or Blazar status.
+
+CACHE_FILE="/tmp/tmux_session_icons"
 
 source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 
@@ -17,7 +23,6 @@ IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_gre
 # Extract first two words from a session name (split on - or _)
 session_label() {
     local name="$1"
-    # Replace underscores with hyphens, split on hyphens, take first two words
     local words
     IFS='-' read -ra words <<< "${name//_/-}"
     if [[ ${#words[@]} -ge 2 ]]; then
@@ -43,8 +48,9 @@ while IFS='|' read -r session ptype pstatus pcmd; do
     esac
 done < <(tmux list-panes -a -F "#{session_name}|#{@pane_type}|#{@pane_status}|#{pane_current_command}")
 
-# Build status output
+# Build status output and cache file
 output=""
+cache_lines=""
 idx=0
 
 while IFS='|' read -r session session_id; do
@@ -75,7 +81,7 @@ while IFS='|' read -r session session_id; do
         fi
     fi
 
-    # Blazar build status icon (appended after label with no leading space)
+    # Blazar build status icon
     blazar_icon=""
     blazar_state=$(tmux_blazar_status "${session_path[$session]}" "$session" 2>/dev/null)
     case "$blazar_state" in
@@ -84,8 +90,12 @@ while IFS='|' read -r session session_id; do
         failure|error) blazar_icon="#[fg=${thm_orange}]${ICON_BLAZAR_FAILURE}" ;;
     esac
 
-    # Format: " index icons name "
     all_icons="${icons}${blazar_icon}"
+
+    # Write to cache: session_name|icons|label (one line per session, ordered)
+    cache_lines+="${session}|${all_icons}|${label}"$'\n'
+
+    # Format: " index icons name "
     if [[ "$session" == "$current_session" ]]; then
         output+="#[fg=${thm_yellow},bg=${thm_grey}] ${idx} ${all_icons} #[fg=${thm_yellow}]${label} "
     else
@@ -94,4 +104,9 @@ while IFS='|' read -r session session_id; do
     ((idx++))
 done < <(tmux list-sessions -F "#{session_name}|#{session_id}" | sort -t'$' -k2 -n)
 
-printf '%s' "$output"
+# Write cache file atomically
+printf '%s' "$cache_lines" > "${CACHE_FILE}.tmp" && mv "${CACHE_FILE}.tmp" "$CACHE_FILE"
+
+# Set tmux option for instant display and refresh
+tmux set -g @session_bar "$output"
+tmux refresh-client -S 2>/dev/null
