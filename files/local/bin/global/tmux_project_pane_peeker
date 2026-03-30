@@ -7,6 +7,10 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 
+# Read theme colors for icon colorization
+IFS='|' read -r thm_yellow thm_blue thm_orange thm_white thm_green <<< \
+    "$(tmux display-message -p '#{@thm_yellow}|#{@thm_blue}|#{@thm_orange}|#{@thm_white}|#{@thm_green}')"
+
 # Check if argument is provided
 if [[ $# -eq 0 ]]; then
     echo "Usage: $0 <pane_type>"
@@ -41,9 +45,9 @@ get_project_panes() {
         swt=$(tmux capture-pane -t "$sid" -p -S -200 < /dev/null 2>/dev/null | sed -n 's/.*bend worktree: \([^ ]*\).*/\1/p' | tail -1)
         [[ -n "$swt" ]] && session_wt["$sess"]="$swt"
         if is_shell_prompt "$shell_cmd"; then
-            session_shell_icon["$sess"]="$ICON_SHELL"
+            session_shell_icon["$sess"]="$(ansi_fg "$thm_white")${ICON_SHELL}${ANSI_RESET}"
         else
-            session_shell_icon["$sess"]="$ICON_RUNNING"
+            session_shell_icon["$sess"]="$(ansi_fg "$thm_blue")${ICON_RUNNING}${ANSI_RESET}"
         fi
     done < <(tmux list-panes -a -F "#{session_name}|#{pane_id}|#{@pane_type}|#{pane_current_command}" | grep '|shell|')
 
@@ -57,13 +61,19 @@ get_project_panes() {
         if ! is_shell_prompt "$current_command"; then
             case "$pane_type_val" in
                 agent)
-                    symbol=$(get_agent_status_icon "$pane_status")
+                    local icon=$(get_agent_status_icon "$pane_status")
                     sort_key=$(get_agent_sort_priority "$pane_status")
+                    case "$pane_status" in
+                        waiting) symbol="$(ansi_fg "$thm_orange")${icon}${ANSI_RESET}" ;;
+                        working) symbol="$(ansi_fg "$thm_blue")${icon}${ANSI_RESET}" ;;
+                        seen)    symbol="$(ansi_fg "$thm_white")${icon}${ANSI_RESET}" ;;
+                        *)       symbol="$(ansi_fg "$thm_blue")${icon}${ANSI_RESET}" ;;
+                    esac
                     ;;
-                *) symbol="$ICON_RUNNING"; sort_key="3" ;;
+                *) symbol="$(ansi_fg "$thm_blue")${ICON_RUNNING}${ANSI_RESET}"; sort_key="3" ;;
             esac
         else
-            symbol="$ICON_SHELL"; sort_key="5"
+            symbol="$(ansi_fg "$thm_white")${ICON_SHELL}${ANSI_RESET}"; sort_key="5"
         fi
 
         # Worktree: check pane's own scrollback first, fall back to session's shell pane

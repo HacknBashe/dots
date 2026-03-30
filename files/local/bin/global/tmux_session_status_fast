@@ -21,16 +21,21 @@ IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_gre
 output=""
 idx=0
 
-while IFS='|' read -r session all_icons label; do
+while IFS='|' read -r session all_icons label session_id; do
     [[ -z "$session" ]] && continue
+    # Separator between tabs (skip before first)
+    if [[ $idx -gt 0 ]]; then
+        output+="#[fg=${thm_white},bg=${thm_dark}]│"
+    fi
+
     if [[ "$session" == "$current_session" ]]; then
-        output+="#[fg=${thm_yellow},bg=${thm_grey}] ${idx} ${all_icons} #[fg=${thm_yellow}]${label} "
+        output+="#[range=session|${session_id}]#[fg=${thm_yellow},bg=${thm_grey}] ${idx} ${all_icons} #[fg=${thm_yellow}]${label} #[norange]"
     else
-        output+="#[fg=${thm_white},bg=${thm_dark}] ${idx} ${all_icons} #[fg=${thm_white}]${label} "
+        output+="#[range=session|${session_id}]#[fg=${thm_white},bg=${thm_dark}] ${idx} ${all_icons} #[fg=${thm_white}]${label} #[norange]"
     fi
     ((idx++))
 done < "$CACHE_FILE"
 
 # Update tmux option and refresh display
 tmux set -g @session_bar "$output"
-tmux refresh-client -S 2>/dev/null
+tmux refresh-client 2>/dev/null

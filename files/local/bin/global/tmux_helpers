@@ -79,6 +79,14 @@ convert_current_pane() {
     tmux rename-window "$window_name"
 }
 
+# --- ANSI Color Helpers ---
+# Convert #RRGGBB hex to ANSI true-color escape (for fzf/terminal output)
+ansi_fg() {
+    local hex="${1#\#}"
+    printf '\033[38;2;%d;%d;%dm' "0x${hex:0:2}" "0x${hex:2:2}" "0x${hex:4:2}"
+}
+ANSI_RESET=$'\033[0m'
+
 # --- Pane Status Icons & Helpers ---
 # Icons used for pane status display (Nerd Font)
 ICON_AGENT_WORKING="󰜎"

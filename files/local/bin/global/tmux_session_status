@@ -3,7 +3,7 @@
 # Called periodically via tmux_session_status_poll (status-interval polling)
 #
 # Each session shows: [index icons label]
-# - Label is the first two words of the session name (hyphen/underscore separated)
+# - Label is the first two descriptive words of the session name (issue prefix stripped)
 # - Current session is highlighted (yellow text, grey bg), others are white on dark bg
 # - Agent icon colored by status: orange=waiting, blue=working, dim=idle/seen
 # - Shell icon shown when a command is running, dim when idle
@@ -20,12 +20,20 @@ source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_green thm_grey thm_dark <<< \
     "$(tmux display-message -p '#S|#{@thm_yellow}|#{@thm_blue}|#{@thm_orange}|#{@thm_white}|#{@thm_green}|#{@thm_grey}|#{@thm_dark}')"
 
-# Extract first two words from a session name (split on - or _)
+# Extract first three descriptive words from a session name (split on - or _).
+# Strips issue prefix (e.g. "nh-3609") wherever it appears so the label shows
+# the descriptive part of the branch name instead.
 session_label() {
     local name="$1"
+    # Strip issue prefix like "nh-13466" (short alpha + digits) with surrounding separators
+    local stripped
+    stripped=$(printf '%s' "$name" | sed -E 's/(^|[_-])[a-zA-Z]{1,4}-[0-9]+([_-]|$)/\1/; s/^[-_]+//; s/[-_]+/-/g; s/[-_]$//')
+    [[ -z "$stripped" ]] && stripped="$name"
     local words
-    IFS='-' read -ra words <<< "${name//_/-}"
-    if [[ ${#words[@]} -ge 2 ]]; then
+    IFS='-' read -ra words <<< "${stripped//_/-}"
+    if [[ ${#words[@]} -ge 3 ]]; then
+        printf '%s %s %s' "${words[0]}" "${words[1]}" "${words[2]}"
+    elif [[ ${#words[@]} -ge 2 ]]; then
         printf '%s %s' "${words[0]}" "${words[1]}"
     else
         printf '%s' "${words[0]}"
@@ -92,14 +100,19 @@ while IFS='|' read -r session session_id; do
 
     all_icons="${icons}${blazar_icon}"
 
-    # Write to cache: session_name|icons|label (one line per session, ordered)
-    cache_lines+="${session}|${all_icons}|${label}"$'\n'
+    # Write to cache: session_name|icons|label|session_id (one line per session, ordered)
+    cache_lines+="${session}|${all_icons}|${label}|${session_id}"$'\n'
 
-    # Format: " index icons name "
+    # Separator between tabs (skip before first)
+    if [[ $idx -gt 0 ]]; then
+        output+="#[fg=${thm_white},bg=${thm_dark}]│"
+    fi
+
+    # Format: " index icons name " (clickable via range=session)
     if [[ "$session" == "$current_session" ]]; then
-        output+="#[fg=${thm_yellow},bg=${thm_grey}] ${idx} ${all_icons} #[fg=${thm_yellow}]${label} "
+        output+="#[range=session|${session_id}]#[fg=${thm_yellow},bg=${thm_grey}] ${idx} ${all_icons} #[fg=${thm_yellow}]${label} #[norange]"
     else
-        output+="#[fg=${thm_white},bg=${thm_dark}] ${idx} ${all_icons} #[fg=${thm_white}]${label} "
+        output+="#[range=session|${session_id}]#[fg=${thm_white},bg=${thm_dark}] ${idx} ${all_icons} #[fg=${thm_white}]${label} #[norange]"
     fi
     ((idx++))
 done < <(tmux list-sessions -F "#{session_name}|#{session_id}" | sort -t'$' -k2 -n)
@@ -107,5 +120,12 @@ done < <(tmux list-sessions -F "#{session_name}|#{session_id}" | sort -t'$' -k2 
 # Write cache file atomically
 printf '%s' "$cache_lines" > "${CACHE_FILE}.tmp" && mv "${CACHE_FILE}.tmp" "$CACHE_FILE"
 
-# Set tmux option for instant display and refresh
+# If the session changed while we were rendering (e.g. user switched mid-poll),
+# skip updating the bar — the fast renderer already has the correct highlighting.
+actual_session=$(tmux display-message -p '#S')
+if [[ "$actual_session" != "$current_session" ]]; then
+    exit 0
+fi
+
+# Set tmux option for display
 tmux set -g @session_bar "$output"
