@@ -114,10 +114,15 @@ get_project_panes > "$tmpfile"
 fzf_opts=(
     --ansi
     --layout=reverse
-    --border
+    --no-border
     --with-nth=2..
     --select-1
     --exit-0
+    --disabled
+    --no-info
+    --prompt=''
+    --bind 'j:down,k:up'
+    --bind 'q:abort'
 )
 
 # Bind digit keys to jump directly to the matching session index
@@ -131,24 +136,42 @@ if [[ "$pane_type" == "agent" ]]; then
         --preview="
             pane_id=\$(echo {} | awk '{print \$1}')
             session_name=\$(echo {} | awk '{print \$NF}')
-            preview_lines=\$(tput lines)
-            agent_lines=\$(( preview_lines * 45 / 100 ))
-            shell_lines=\$(( preview_lines - agent_lines - 3 ))
+            preview_lines=\${FZF_PREVIEW_LINES:-\$(tput lines)}
+            max_shell=\$(( preview_lines * 20 / 100 ))
 
-            # Agent output
-            tmux capture-pane -t \"\$pane_id\" -e -p | grep -v '^[[:space:]]*\$' | tail -\$agent_lines
+            # Shell content first — trim trailing blanks, cap to max_shell
+            shell_pane=\$(tmux list-panes -s -t \"\$session_name\" -F '#{pane_id} #{@pane_type}' 2>/dev/null | grep ' shell\$' | head -1 | awk '{print \$1}')
+            shell_content=''
+            shell_count=0
+            if [[ -n \"\$shell_pane\" ]]; then
+                last=\$(tmux capture-pane -t \"\$shell_pane\" -p | grep -n '[^[:space:]]' | tail -1 | cut -d: -f1)
+                shell_content=\$(tmux capture-pane -t \"\$shell_pane\" -e -p | head -\${last:-1} | tail -\$max_shell)
+                [[ -n \"\$shell_content\" ]] && shell_count=\$(echo \"\$shell_content\" | wc -l)
+            fi
+
+            # Agent gets everything else (minus 1 for separator)
+            agent_lines=\$(( preview_lines - shell_count - 1 ))
+
+            # Agent output — use scrollback (-S) to fill space when pane is
+            # shorter than the preview area, and trim trailing blank lines
+            agent_last=\$(tmux capture-pane -t \"\$pane_id\" -p -S -\$agent_lines | grep -n '[^[:space:]]' | tail -1 | cut -d: -f1)
+            raw=\$(tmux capture-pane -t \"\$pane_id\" -e -p -S -\$agent_lines | head -\${agent_last:-1} | tail -\$agent_lines)
+            min=\$(echo \"\$raw\" | grep -v '^[[:space:]]*\$' | sed 's/[^ ].*//' | awk '{print length}' | sort -n | head -1)
+            min=\${min:-0}
+            if [ \$min -gt 0 ]; then
+                echo \"\$raw\" | sed \"s/^ \\{1,\$min\\}//\"
+            else
+                echo \"\$raw\"
+            fi
 
             # Separator
-            printf '%0.s─' \$(seq 1 \$(tput cols))
+            printf '%0.s─' \$(seq 1 \$FZF_PREVIEW_COLUMNS)
             echo
 
-            # Shell output - find shell pane in same session
-            shell_pane=\$(tmux list-panes -s -t \"\$session_name\" -F '#{pane_id} #{@pane_type}' 2>/dev/null | grep ' shell\$' | head -1 | awk '{print \$1}')
-            if [[ -n \"\$shell_pane\" ]]; then
-                tmux capture-pane -t \"\$shell_pane\" -e -p | grep -v '^[[:space:]]*\$' | tail -\$shell_lines
-            fi
+            # Shell content
+            [[ -n \"\$shell_content\" ]] && echo \"\$shell_content\"
         "
-        --preview-window=up:80%
+        --preview-window=up:80%:border-none
         --header="Select the agent pane to switch to"
     )
 else
