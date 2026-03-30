@@ -109,4 +109,3 @@ printf '%s' "$cache_lines" > "${CACHE_FILE}.tmp" && mv "${CACHE_FILE}.tmp" "$CAC
 
 # Set tmux option for instant display and refresh
 tmux set -g @session_bar "$output"
-tmux refresh-client -S 2>/dev/null
