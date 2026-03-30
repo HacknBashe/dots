@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Thin wrapper called via #() in status-format to keep periodic polling alive.
-# Runs the full tmux_session_status (which updates @session_bar and the cache),
-# then outputs nothing — display comes from #{@session_bar}.
+# Wrapper called via #() in status-format to keep periodic polling alive.
+# Runs tmux_session_status (which updates @session_bar), then outputs nothing
+# — display comes from #{@session_bar}.
 
 tmux_session_status &>/dev/null

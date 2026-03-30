@@ -1,20 +1,22 @@
 #!/usr/bin/env bash
-# Generates tmux status bar showing all sessions in a window-tab style
-# Called periodically via tmux_session_status_poll (status-interval polling)
+# Generates tmux status bar showing all sessions in a window-tab style.
+# Queries tmux directly for live pane/session data (fast, ~10ms) and reads
+# Blazar build state from cache files (updated in background by tmux_blazar_status).
 #
-# Each session shows: [index icons label]
-# - Label is the first two descriptive words of the session name (issue prefix stripped)
+# Called from:
+#   - tmux_session_status_poll (status-interval periodic polling)
+#   - client-session-changed hook (instant re-render on session switch)
+#
+# Each session tab shows: [index icons label]
+# - Label is the first descriptive words of the session name (issue prefix stripped)
 # - Current session is highlighted (yellow text, grey bg), others are white on dark bg
 # - Agent icon colored by status: orange=waiting, blue=working, dim=idle/seen
 # - Shell icon shown when a command is running, dim when idle
-#
-# Writes per-session icon/label data to a cache file so that
-# tmux_session_status_fast can re-render highlighting instantly on session switch
-# without re-polling pane data or Blazar status.
-
-CACHE_FILE="/tmp/tmux_session_icons"
+# - Blazar build icon: green=success, yellow=pending, orange=failure
 
 source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
+
+BLAZAR_CACHE_DIR="/tmp/tmux_status/blazar"
 
 # Read current session and theme colors in a single tmux call
 IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_green thm_grey thm_dark <<< \
@@ -56,9 +58,8 @@ while IFS='|' read -r session ptype pstatus pcmd; do
     esac
 done < <(tmux list-panes -a -F "#{session_name}|#{@pane_type}|#{@pane_status}|#{pane_current_command}")
 
-# Build status output and cache file
+# Build status output
 output=""
-cache_lines=""
 idx=0
 
 while IFS='|' read -r session session_id; do
@@ -89,7 +90,7 @@ while IFS='|' read -r session session_id; do
         fi
     fi
 
-    # Blazar build status icon
+    # Blazar build status icon (read from cache, background-refreshed by tmux_blazar_status)
     blazar_icon=""
     blazar_state=$(tmux_blazar_status "${session_path[$session]}" "$session" 2>/dev/null)
     case "$blazar_state" in
@@ -99,9 +100,6 @@ while IFS='|' read -r session session_id; do
     esac
 
     all_icons="${icons}${blazar_icon}"
-
-    # Write to cache: session_name|icons|label|session_id (one line per session, ordered)
-    cache_lines+="${session}|${all_icons}|${label}|${session_id}"$'\n'
 
     # Separator between tabs (skip before first)
     if [[ $idx -gt 0 ]]; then
@@ -116,16 +114,6 @@ while IFS='|' read -r session session_id; do
     fi
     ((idx++))
 done < <(tmux list-sessions -F "#{session_name}|#{session_id}" | sort -t'$' -k2 -n)
-
-# Write cache file atomically
-printf '%s' "$cache_lines" > "${CACHE_FILE}.tmp" && mv "${CACHE_FILE}.tmp" "$CACHE_FILE"
-
-# If the session changed while we were rendering (e.g. user switched mid-poll),
-# skip updating the bar — the fast renderer already has the correct highlighting.
-actual_session=$(tmux display-message -p '#S')
-if [[ "$actual_session" != "$current_session" ]]; then
-    exit 0
-fi
 
 # Set tmux option for display
 tmux set -g @session_bar "$output"

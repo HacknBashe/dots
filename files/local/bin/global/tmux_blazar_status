@@ -6,7 +6,7 @@
 # Uses file-based caching to avoid blocking the tmux status bar.
 # Background gh api calls refresh the cache when stale.
 
-CACHE_DIR="/tmp/tmux_blazar"
+CACHE_DIR="/tmp/tmux_status/blazar"
 CACHE_TTL=60  # seconds
 
 session_path="$1"
