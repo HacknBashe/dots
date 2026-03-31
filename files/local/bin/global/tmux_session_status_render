@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Fast session status renderer: reads cached icon/label data from
+# /tmp/tmux_status/sessions and builds the tab bar with correct highlighting
+# for the current session. No pane queries, no Blazar API calls — just one
+# tmux display-message call for the current session + theme colors.
+#
+# Called from:
+#   - client-session-changed hook (instant re-render on session switch)
+#   - tmux_session_status (after writing fresh cache)
+
+CACHE_FILE="/tmp/tmux_status/sessions"
+
+# If cache doesn't exist yet, fall back to full refresh
+if [[ ! -f "$CACHE_FILE" ]]; then
+    exec tmux_session_status
+fi
+
+# Read current session and theme colors in a single tmux call
+IFS='|' read -r current_session thm_yellow thm_white thm_grey thm_dark <<< \
+    "$(tmux display-message -p '#S|#{@thm_yellow}|#{@thm_white}|#{@thm_grey}|#{@thm_dark}')"
+
+# Build output from cache
+output=""
+idx=0
+
+while IFS='|' read -r session all_icons label session_id; do
+    [[ -z "$session" ]] && continue
+
+    # Separator between tabs (skip before first)
+    if [[ $idx -gt 0 ]]; then
+        output+="#[fg=${thm_white},bg=${thm_dark}]│"
+    fi
+
+    if [[ "$session" == "$current_session" ]]; then
+        output+="#[range=session|${session_id}]#[fg=${thm_yellow},bg=${thm_grey}] ${idx} ${all_icons} #[fg=${thm_yellow}]${label} #[norange]"
+    else
+        output+="#[range=session|${session_id}]#[fg=${thm_white},bg=${thm_dark}] ${idx} ${all_icons} #[fg=${thm_white}]${label} #[norange]"
+    fi
+    ((idx++))
+done < "$CACHE_FILE"
+
+# Update tmux option and refresh display
+tmux set -g @session_bar "$output"
+tmux refresh-client 2>/dev/null

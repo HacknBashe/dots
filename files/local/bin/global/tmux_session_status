@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
-# Generates tmux status bar showing all sessions in a window-tab style.
-# Queries tmux directly for live pane/session data (fast, ~10ms) and reads
-# Blazar build state from cache files (updated in background by tmux_blazar_status).
+# Full session status refresh: queries tmux panes, computes icons/labels,
+# reads Blazar build state from cache, then writes per-session data to a
+# cache file and calls tmux_session_status_render to update the status bar.
 #
 # Called from:
 #   - tmux_session_status_poll (status-interval periodic polling)
-#   - client-session-changed hook (instant re-render on session switch)
+#   - client-session-changed hook (background, after instant render from cache)
 #
-# Each session tab shows: [index icons label]
-# - Label is the first descriptive words of the session name (issue prefix stripped)
-# - Current session is highlighted (yellow text, grey bg), others are white on dark bg
-# - Agent icon colored by status: orange=waiting, blue=working, dim=idle/seen
-# - Shell icon shown when a command is running, dim when idle
-# - Blazar build icon: green=success, yellow=pending, orange=failure
+# Cache format (one line per session, pipe-delimited, ordered by session):
+#   session_name|all_icons_with_tmux_formatting|label|session_id
 
 source "$(dirname "${BASH_SOURCE[0]}")/tmux_helpers"
 
-BLAZAR_CACHE_DIR="/tmp/tmux_status/blazar"
+CACHE_DIR="/tmp/tmux_status"
+CACHE_FILE="${CACHE_DIR}/sessions"
+BLAZAR_CACHE_DIR="${CACHE_DIR}/blazar"
 
-# Read current session and theme colors in a single tmux call
-IFS='|' read -r current_session thm_yellow thm_blue thm_orange thm_white thm_green thm_grey thm_dark <<< \
-    "$(tmux display-message -p '#S|#{@thm_yellow}|#{@thm_blue}|#{@thm_orange}|#{@thm_white}|#{@thm_green}|#{@thm_grey}|#{@thm_dark}')"
+mkdir -p "$CACHE_DIR"
+
+# Read theme colors in a single tmux call (render script reads current session separately)
+IFS='|' read -r thm_yellow thm_blue thm_orange thm_white thm_green thm_grey thm_dark <<< \
+    "$(tmux display-message -p '#{@thm_yellow}|#{@thm_blue}|#{@thm_orange}|#{@thm_white}|#{@thm_green}|#{@thm_grey}|#{@thm_dark}')"
 
 # Extract first three descriptive words from a session name (split on - or _).
 # Strips issue prefix (e.g. "nh-3609") wherever it appears so the label shows
@@ -58,9 +58,8 @@ while IFS='|' read -r session ptype pstatus pcmd; do
     esac
 done < <(tmux list-panes -a -F "#{session_name}|#{@pane_type}|#{@pane_status}|#{pane_current_command}")
 
-# Build status output
-output=""
-idx=0
+# Build cache lines
+cache_lines=""
 
 while IFS='|' read -r session session_id; do
     label=$(session_label "$session")
@@ -101,19 +100,12 @@ while IFS='|' read -r session session_id; do
 
     all_icons="${icons}${blazar_icon}"
 
-    # Separator between tabs (skip before first)
-    if [[ $idx -gt 0 ]]; then
-        output+="#[fg=${thm_white},bg=${thm_dark}]│"
-    fi
-
-    # Format: " index icons name " (clickable via range=session)
-    if [[ "$session" == "$current_session" ]]; then
-        output+="#[range=session|${session_id}]#[fg=${thm_yellow},bg=${thm_grey}] ${idx} ${all_icons} #[fg=${thm_yellow}]${label} #[norange]"
-    else
-        output+="#[range=session|${session_id}]#[fg=${thm_white},bg=${thm_dark}] ${idx} ${all_icons} #[fg=${thm_white}]${label} #[norange]"
-    fi
-    ((idx++))
+    # Write to cache: session_name|icons|label|session_id (one line per session, ordered)
+    cache_lines+="${session}|${all_icons}|${label}|${session_id}"$'\n'
 done < <(tmux list-sessions -F "#{session_name}|#{session_id}" | sort -t'$' -k2 -n)
 
-# Set tmux option for display
-tmux set -g @session_bar "$output"
+# Write cache file atomically
+printf '%s' "$cache_lines" > "${CACHE_FILE}.tmp" && mv "${CACHE_FILE}.tmp" "$CACHE_FILE"
+
+# Render the status bar from the cache we just wrote
+exec tmux_session_status_render
