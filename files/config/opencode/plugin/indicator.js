@@ -89,6 +89,9 @@ export const IndicatorPlugin = async ({ directory, worktree, client, $ }) => {
     }
   };
 
+  // Whether the session is in the background (not directly visible to the user)
+  const isBackground = () => !process.stdout.isTTY || !isWindowVisible();
+
   // Set @pane_status tmux option
   const setStatus = async (status) => {
     if (!paneId) return;
@@ -141,8 +144,19 @@ export const IndicatorPlugin = async ({ directory, worktree, client, $ }) => {
         try {
           execSync('tmux_mark_idle_seen', { stdio: ['pipe', 'pipe', 'pipe'] });
         } catch (e) {}
-        await playSound("complete.wav");
-        await notify("Task complete");
+        if (isBackground()) {
+          await playSound("complete-bg.wav");
+        } else {
+          await playSound("complete.wav");
+          await notify("Task complete");
+        }
+      }
+    },
+
+    // Subtle sound when a subagent/task finishes
+    "tool.execute.after": async (input) => {
+      if (input.tool === "task") {
+        await playSound("complete-bg.wav");
       }
     },
   };
