@@ -64,8 +64,8 @@ fi
         hostname_flag="--hostname git.hubteam.com"
     fi
 
-    # Fetch latest Blazar status for this branch
-    state=$(gh api $hostname_flag "repos/${owner_repo}/commits/${branch}/statuses?per_page=100" \
+    # Fetch latest Blazar status for this branch (timeout prevents indefinite hangs)
+    state=$(timeout 10 gh api $hostname_flag "repos/${owner_repo}/commits/${branch}/statuses?per_page=100" \
         --jq '[.[] | select(.context == "Blazar")][0].state // empty' 2>/dev/null) || state=""
 
     # Only cache valid states
@@ -73,6 +73,6 @@ fi
         success|pending|failure|error) printf '%s' "$state" > "$cache_file" ;;
         *) printf '' > "$cache_file" ;;
     esac
-) &
+) &>/dev/null &
 
 exit 0
