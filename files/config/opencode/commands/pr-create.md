@@ -13,7 +13,7 @@ Create or update a pull request for the current branch.
 
    **For new PRs:**
    ```bash
-   gh pr create --title "TITLE" --body "BODY" --assignee nhackford --web
+   gh pr create --title "TITLE" --body "BODY" --assignee nhackford_hubspot --web
    ```
 
    **For existing PRs:**

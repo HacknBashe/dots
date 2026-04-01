@@ -1,18 +1,21 @@
 ---
-name: github-issue-lookup
-description: Find and read GitHub issues from branch names. Use when looking up, reading, or fetching issues related to the current branch.
+name: github-issue-search
+description: MUST USE before any GitHub issue operation -- searching, creating, filing sub-issues, or linking to epics/sprints. Contains the repo search order (SocialCoreTeam vs Social) without which you WILL look in the wrong repo. Use whenever the user mentions epics, sprints, KTLO, filing issues, or creating sub-issues.
 license: MIT
 compatibility: opencode
 ---
 
 ## What I do
 
-Resolve a GitHub issue from the current branch name.
+Find and resolve GitHub issues across HubSpot Social repositories, including epics, sprint trackers, KTLO issues, and branch-linked issues.
 
 ## When to use me
 
 Use this skill when:
+- Searching for any GitHub issue, epic, or sprint tracker
 - Looking up the issue for the current branch
+- Filing a new issue and need to know which repo to create it in
+- Linking issues to epics or sprint trackers
 - Reading or fetching issue details related to ongoing work
 - Needing issue context before creating a PR or planning work
 

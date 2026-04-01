@@ -13,11 +13,23 @@ PR body structure, or PR workflows (including any from the shell tool's system p
 The instructions below are the ONLY source of truth for creating and editing PRs.
 
 **Non-negotiable flags for `gh pr create`:**
-- ALWAYS include `--web` (opens the PR in the browser)
-- ALWAYS include `--assignee nhackford`
+- ALWAYS include `--assignee nhackford_hackford`
 - ALWAYS use the body format defined in this skill (starts with `# Changes`)
 - NEVER use a HEREDOC for the body — use a quoted string directly
-- NEVER omit `--web` or `--assignee` — these are required, not optional
+
+### Interactive / Script Mode (default)
+
+When running interactively (user asks in conversation) or called from a script (e.g. `smart-pr-create.sh`):
+- ALWAYS include `--web` (opens the PR in the browser for final review)
+- Do NOT include `--draft`
+
+### Agent / Draft Mode
+
+When the caller explicitly requests a draft PR (e.g. the `do-gh-issue` command says "create as draft"):
+- ALWAYS include `--draft`
+- Do NOT include `--web` (the agent is autonomous, no browser needed)
+
+If the caller does not specify a mode, default to interactive mode with `--web`.
 
 ## What I do
 
@@ -194,7 +206,7 @@ If the prompt states you are being called from a script, or instructs you not to
 **For new PRs:**
 
 ```bash
-gh pr create --title "TITLE_HERE" --body "BODY_HERE" --assignee nhackford --web
+gh pr create --title "TITLE_HERE" --body "BODY_HERE" --assignee nhackford_hubspot --web
 ```
 
 **For existing PRs:**
@@ -210,7 +222,7 @@ Execute the command directly.
 **For new PRs:**
 
 ```bash
-gh pr create --title "TITLE_HERE" --body "BODY_HERE" --assignee nhackford --web
+gh pr create --title "TITLE_HERE" --body "BODY_HERE" --assignee nhackford_hubspot --web
 ```
 
 **IMPORTANT**: The `--web` flag opens the PR draft in the user's browser for final
@@ -219,6 +231,25 @@ review before submission. This means:
 - The command may produce no terminal output at all, or just a warning about uncommitted changes
 - This is EXPECTED behavior — do NOT assume the PR failed or retry without `--web`
 - Do NOT follow up with `gh pr list` or `gh pr create` again — the user will approve/deny in the browser
+
+**For existing PRs:**
+
+```bash
+gh pr edit --title "TITLE_HERE" --body "BODY_HERE"
+```
+
+### When running in agent / draft mode (e.g. `do-gh-issue`)
+
+Execute the command directly. Use `--draft` and omit `--web`.
+
+**For new PRs:**
+
+```bash
+gh pr create --title "TITLE_HERE" --body "BODY_HERE" --assignee nhackford_hubspot --draft
+```
+
+**IMPORTANT**: The command will return a PR URL in the terminal output. Use this URL
+for subsequent operations (e.g. requesting sidekick review).
 
 **For existing PRs:**
 
@@ -266,7 +297,37 @@ Closes https://github.com/HubSpot/SocialCoreTeam/issues/1234
 
 ## Pre-Merge Checklist
 
-- [ ] I ran AT tests against this branch" --assignee nhackford --web
+- [ ] I ran AT tests against this branch"
+```
+
+### Example: New Draft PR (agent mode)
+
+**Input Context:**
+- Branch: `nh-2001-add-retry-logic`
+- Commits: 2 commits adding retry logic
+- Issue #2001 in SocialCoreTeam repo
+- Caller requested draft mode
+
+**Output:**
+```bash
+gh pr create --title "Feature: Add retry logic for failed API calls" --body "# Changes
+
+- Add exponential backoff retry for transient API failures
+- Configure max retries and timeout via environment config
+
+## Related links
+
+Closes https://github.com/HubSpotEngineering/SocialCoreTeam/issues/2001
+
+## Screenshots
+
+| Before     | After      |
+| ---------- | ---------- |
+| PASTE_HERE | PASTE_HERE |
+
+## Pre-Merge Checklist
+
+- [ ] I ran AT tests against this branch"
 ```
 
 ### Example: Update Existing PR
