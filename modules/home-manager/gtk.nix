@@ -174,6 +174,8 @@ in {
       package = pkgs.kdePackages.breeze-icons;
       name = "breeze-dark";
     };
+
+    gtk4.theme = null;
   };
 
   # For GTK4/libadwaita apps, set the color scheme preference
