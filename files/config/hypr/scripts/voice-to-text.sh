@@ -31,10 +31,11 @@ cleanup() {
 
 # Start recording
 start_recording() {
+	rm -f "$AUDIO_FILE"
 	notify "Recording started..."
 
-	# Record audio in background
-	ffmpeg -f pulse -i default -ar 16000 -ac 1 "$AUDIO_FILE" 2>/dev/null &
+	# Record audio — run ffmpeg in foreground but nohup so it survives script exit
+	nohup ffmpeg -f pulse -i default -ar 16000 -ac 1 -y "$AUDIO_FILE" </dev/null >/dev/null 2>&1 &
 	local ffmpeg_pid=$!
 	echo $ffmpeg_pid >"$RECORDING_FLAG"
 }
@@ -46,12 +47,18 @@ stop_recording() {
 		exit 1
 	fi
 
-	# Kill recording process
+	# Kill recording process gracefully
 	local pid=$(cat "$RECORDING_FLAG")
-	kill -TERM "$pid" 2>/dev/null
-	sleep 0.5
-	wait "$pid" 2>/dev/null
 	rm -f "$RECORDING_FLAG"
+
+	# Send SIGTERM and wait for ffmpeg to finalize the WAV file
+	kill -TERM "$pid" 2>/dev/null
+
+	# Wait for the process to actually exit (can't use wait since it's not our child)
+	for i in $(seq 1 20); do
+		kill -0 "$pid" 2>/dev/null || break
+		sleep 0.1
+	done
 
 	notify "Recording stopped. Transcribing..."
 
@@ -103,8 +110,5 @@ main() {
 		start_recording
 	fi
 }
-
-# Handle cleanup on script exit
-trap cleanup EXIT
 
 main "$@"

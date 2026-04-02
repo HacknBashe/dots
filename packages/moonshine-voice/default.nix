@@ -94,8 +94,12 @@ stdenv.mkDerivation rec {
     fi
   '';
 
+  env.NIX_CFLAGS_COMPILE = "-Wno-error=unused-result";
+
   cmakeFlags = [
     "-DCMAKE_BUILD_TYPE=Release"
+    "-DCMAKE_SKIP_BUILD_RPATH=ON"
+    "-DCMAKE_INSTALL_RPATH=${lib.makeLibraryPath [onnxruntime stdenv.cc.cc.lib]}:${placeholder "out"}/lib"
   ];
 
   installPhase = ''
@@ -112,8 +116,8 @@ stdenv.mkDerivation rec {
 
   # Set rpath so the binary can find libmoonshine and libonnxruntime
   postFixup = lib.optionalString stdenv.hostPlatform.isLinux ''
-    patchelf --set-rpath "${lib.makeLibraryPath [onnxruntime]}:$out/lib" $out/bin/moonshine-cli
-    patchelf --set-rpath "${lib.makeLibraryPath [onnxruntime]}" $out/lib/libmoonshine.so
+    patchelf --force-rpath --set-rpath "${lib.makeLibraryPath [onnxruntime stdenv.cc.cc.lib]}:$out/lib" $out/bin/moonshine-cli
+    patchelf --force-rpath --set-rpath "${lib.makeLibraryPath [onnxruntime stdenv.cc.cc.lib]}" $out/lib/libmoonshine.so
   '' + lib.optionalString stdenv.hostPlatform.isDarwin ''
     # Fix moonshine-cli: rewrite @rpath references to absolute paths
     install_name_tool -change @rpath/libmoonshine.dylib $out/lib/libmoonshine.dylib $out/bin/moonshine-cli
