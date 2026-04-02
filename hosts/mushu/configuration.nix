@@ -59,5 +59,6 @@ in {
   };
 
   hardware.enableRedistributableFirmware = true;
+  nixpkgs.hostPlatform = "aarch64-linux";
   system.stateVersion = "23.11";
 }

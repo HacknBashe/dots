@@ -70,13 +70,9 @@
     home-manager,
     sops-nix,
     ...
-  } @ inputs: let
-    systemLinux = "x86_64-linux";
-    systemDarwin = "aarch64-darwin";
-  in {
+  } @ inputs: {
     nixosConfigurations = {
       meraxes = nixpkgs.lib.nixosSystem {
-        system = systemLinux;
         modules = [
           ./modules/nix.nix
           ./modules/theme.nix
@@ -126,7 +122,6 @@
         specialArgs = {inherit inputs;};
       };
       sindragosa = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
         modules = [
           ./modules/nix.nix
           ./modules/theme.nix
@@ -167,7 +162,6 @@
         specialArgs = {inherit inputs;};
       };
       mushu = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
         modules = [
           ./modules/nix.nix
           ./modules/theme.nix
@@ -195,7 +189,6 @@
         specialArgs = {inherit inputs;};
       };
       nightmare = nixpkgs.lib.nixosSystem {
-        system = systemLinux;
         modules = [
           ./modules/nix.nix
           ./hosts/nightmare/configuration.nix
