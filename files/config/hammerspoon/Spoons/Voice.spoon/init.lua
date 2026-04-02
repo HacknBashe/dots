@@ -33,45 +33,30 @@ hs.hotkey.bind({ "cmd", "alt" }, "v", function()
 
 			hs.alert.show("Recording stopped. Transcribing...")
 
-			hs.task
-				.new("/etc/profiles/per-user/nhackford/bin/whisper-cli", function(exitCode, stdOut, stdErr)
-					if exitCode == 0 then
-						local file = io.open("/tmp/voice.txt", "r")
-						if file then
-							local text = file:read("*all")
-							file:close()
+		hs.task
+			.new("/etc/profiles/per-user/nhackford/bin/moonshine-cli", function(exitCode, stdOut, stdErr)
+				if exitCode == 0 then
+					local text = stdOut or ""
 
-							-- Remove trailing newline if present
-							text = text:gsub("\n$", "")
+					-- Remove trailing newline if present
+					text = text:gsub("\n$", "")
 
-							if #text == 0 then
-								hs.alert.show("WARNING: Transcription is empty")
-							elseif text == "Thank you." or text == "Thank you" then
-								hs.alert.show("WARNING: No audio detected")
-							else
-								hs.eventtap.keyStrokes(text)
-							end
-
-							os.execute("rm /tmp/voice.wav /tmp/voice.mp3 /tmp/voice.txt 2>/dev/null")
-						else
-							hs.alert.show("Failed to read transcription file")
-						end
+					if #text == 0 then
+						hs.alert.show("WARNING: Transcription is empty")
 					else
-						hs.alert.show("Transcription failed (exit code: " .. exitCode .. ")")
-						hs.console.printStyledtext("STDOUT: " .. (stdOut or ""))
-						hs.console.printStyledtext("STDERR: " .. (stdErr or ""))
+						hs.eventtap.keyStrokes(text)
 					end
-				end, {
-					"-m",
-					"/Users/nhackford/models/ggml-large-v3-turbo",
-					"-l",
-					"en",
-					"-otxt",
-					"-of",
-					"/tmp/voice",
-					audioFile,
-				})
-				:start()
+
+					os.execute("rm /tmp/voice.wav 2>/dev/null")
+				else
+					hs.alert.show("Transcription failed (exit code: " .. exitCode .. ")")
+					hs.console.printStyledtext("STDOUT: " .. (stdOut or ""))
+					hs.console.printStyledtext("STDERR: " .. (stdErr or ""))
+				end
+			end, {
+				audioFile,
+			})
+			:start()
 		end)
 
 		isRecording = false
@@ -79,7 +64,7 @@ hs.hotkey.bind({ "cmd", "alt" }, "v", function()
 		hs.alert.show("Recording started...")
 
 		-- Clean up any old files
-		os.execute("rm /tmp/voice.wav /tmp/voice.txt 2>/dev/null")
+		os.execute("rm /tmp/voice.wav 2>/dev/null")
 
 		-- Get the system's default audio input device dynamically
 		local audioDeviceTask = hs.task.new("/opt/homebrew/bin/SwitchAudioSource", function(exitCode, stdOut, stdErr)

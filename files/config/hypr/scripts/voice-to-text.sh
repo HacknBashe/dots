@@ -2,13 +2,12 @@
 
 RECORDING_FLAG="/tmp/voice_recording"
 AUDIO_FILE="/tmp/voice.wav"
-TEXT_FILE="/tmp/voice.txt"
 
 # Check for required dependencies
 check_deps() {
 	local missing=()
 	command -v ffmpeg >/dev/null || missing+=("ffmpeg")
-	command -v whisper-cli >/dev/null || missing+=("whisper-cli")
+	command -v moonshine-cli >/dev/null || missing+=("moonshine-cli")
 	command -v wl-copy >/dev/null || missing+=("wl-copy")
 	command -v hyprctl >/dev/null || missing+=("hyprctl")
 	command -v wtype >/dev/null || missing+=("wtype")
@@ -27,7 +26,7 @@ notify() {
 
 # Clean up temp files
 cleanup() {
-	rm -f "$AUDIO_FILE" "$TEXT_FILE"
+	rm -f "$AUDIO_FILE"
 }
 
 # Start recording
@@ -63,37 +62,30 @@ stop_recording() {
 		exit 1
 	fi
 
-	# Transcribe with whisper-cli
-	if whisper-cli -m "/home/nick/models/ggml-large-v3-turbo" -otxt -of "/tmp/voice" -nt "$AUDIO_FILE" 2>/dev/null; then
-		if [[ -f "$TEXT_FILE" ]] && [[ -s "$TEXT_FILE" ]]; then
-			notify "Transcription complete. Typing text..."
+	# Transcribe with moonshine-cli
+	local text
+	text=$(moonshine-cli "$AUDIO_FILE" 2>/dev/null)
+	if [[ $? -eq 0 ]] && [[ -n "$text" ]]; then
+		# Remove trailing whitespace
+		text=$(echo "$text" | sed 's/[[:space:]]*$//')
+		notify "Transcription complete. Typing text..."
 
-			# Read transcribed text and remove trailing newline
-			local text=$(cat "$TEXT_FILE" | sed 's/[[:space:]]*$//')
-
-			# Copy to clipboard and type text
-			if [[ -n "$text" ]]; then
-				echo "$text" | wl-copy
-				sleep 0.1
-				# Escape spaces for wtype (fixes Chromium/Electron apps)
-				# Ghostty doesn't need escaping
-				local window_class=$(hyprctl activewindow -j | jq -r '.class')
-				case "$window_class" in
-				com.mitchellh.ghostty)
-					wtype "$text"
-					;;
-				*)
-					local escaped_text="${text// /\\ }"
-					wtype "$escaped_text"
-					;;
-				esac
-				notify "Text typed successfully"
-			else
-				notify "No text transcribed"
-			fi
-		else
-			notify "Transcription file empty or missing"
-		fi
+		# Copy to clipboard and type text
+		echo "$text" | wl-copy
+		sleep 0.1
+		# Escape spaces for wtype (fixes Chromium/Electron apps)
+		# Ghostty doesn't need escaping
+		local window_class=$(hyprctl activewindow -j | jq -r '.class')
+		case "$window_class" in
+		com.mitchellh.ghostty)
+			wtype "$text"
+			;;
+		*)
+			local escaped_text="${text// /\\ }"
+			wtype "$escaped_text"
+			;;
+		esac
+		notify "Text typed successfully"
 	else
 		notify "Transcription failed"
 	fi

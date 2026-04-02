@@ -134,9 +134,9 @@ in {
     '';
   };
 
-  home.packages = with pkgs; [
-    vimix-cursors
-    (whisper-cpp.override {cudaSupport = true;})
+  home.packages = [
+    pkgs.vimix-cursors
+    (pkgs.callPackage ../../packages/moonshine-voice {})
   ];
 
   home.file = {

@@ -3,8 +3,8 @@
   config,
   ...
 }: {
-  home.packages = with pkgs; [
-    whisper-cpp
+  home.packages = [
+    (pkgs.callPackage ../../packages/moonshine-voice {})
   ];
 
   home.file = {
