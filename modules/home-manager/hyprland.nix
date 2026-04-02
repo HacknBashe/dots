@@ -117,6 +117,9 @@ in {
         "video/webm" = "vlc.desktop";
         "video/x-msvideo" = "vlc.desktop";
         "video/quicktime" = "vlc.desktop";
+        "audio/wav" = "vlc.desktop";
+        "audio/x-wav" = "vlc.desktop";
+        "audio/vnd.wave" = "vlc.desktop";
         "image/png" = ["org.kde.gwenview.desktop" "gimp.desktop"];
         "image/jpeg" = ["org.kde.gwenview.desktop" "gimp.desktop"];
         "image/gif" = ["org.kde.gwenview.desktop" "gimp.desktop"];
